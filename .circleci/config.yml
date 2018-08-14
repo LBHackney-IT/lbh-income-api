@@ -58,6 +58,7 @@ jobs:
       - run:
           name: Force new deployment
           command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout 32000
+          no_output_timout: 30m
 
 workflows:
   version: 2
