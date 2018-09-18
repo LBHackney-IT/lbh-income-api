@@ -1,23 +1,14 @@
 module Hackney
   module Income
     class DangerousSyncCases
-      def initialize(prioritisation_gateway:, uh_tenancies_gateway:, stored_tenancies_gateway:)
-        @prioritisation_gateway = prioritisation_gateway
+      def initialize(uh_tenancies_gateway:, background_job_gateway:)
         @uh_tenancies_gateway = uh_tenancies_gateway
-        @stored_tenancies_gateway = stored_tenancies_gateway
+        @background_job_gateway = background_job_gateway
       end
 
       def execute
-        tenancy_refs = @uh_tenancies_gateway.tenancies_in_arrears
-        tenancy_refs.each do |tenancy_ref|
-          priorities = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref)
-          @stored_tenancies_gateway.store_tenancy(
-            tenancy_ref: tenancy_ref,
-            priority_band: priorities.fetch(:priority_band),
-            priority_score: priorities.fetch(:priority_score),
-            criteria: priorities.fetch(:criteria),
-            weightings: priorities.fetch(:weightings)
-          )
+        @uh_tenancies_gateway.tenancies_in_arrears.each do |tenancy_ref|
+          @background_job_gateway.schedule_case_priority_sync(tenancy_ref: tenancy_ref)
         end
       end
     end
