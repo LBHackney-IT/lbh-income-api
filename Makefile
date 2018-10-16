@@ -1,5 +1,5 @@
 build:
-	docker-compose build
+	docker-compose -f docker-compose.yml -f docker-compose.local.yml build
 
 serve:
 	-rm tmp/pids/server.pid &> /dev/null

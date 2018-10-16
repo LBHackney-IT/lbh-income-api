@@ -2,9 +2,10 @@
 
 ## Setup
 
-```sh
-$ make build
-```
+1. Clone the following repo (private sorry) into your parent directory.
+    * https://github.com/LBHackney-IT/lbh-universal-housing-simulator
+
+2. run `make build`
 
 ## Development
 
