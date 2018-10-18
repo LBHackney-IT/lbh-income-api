@@ -1,22 +1,30 @@
 require 'rails_helper'
 
-describe Hackney::Income::Jobs::SyncCasesJob do
+describe Hackney::Income::Jobs::SyncCasesJob, universal: true  do
   subject { described_class }
+  before { create_uh_tenancy_agreement(tenancy_ref: 'tenancy_ref', current_balance: 9999.00) }
+  after { truncate_uh_tables }
+
+  # before { create_uh_tenancy_agreement(tenancy_ref: tenancy_ref, current_balance: current_balance) }
+  # after { truncate_uh_tables }
 
   it 'should run the DangerousSyncCases use case' do
     expect_any_instance_of(Hackney::Income::DangerousSyncCases).to receive(:execute).with(no_args)
     subject.perform_now
   end
 
-  it 'should be able to be scheduled' do
-    expect {
-      subject.set(wait_until: Time.now + 5.minutes).perform_later
-    }.to_not raise_error
-  end
+  context 'Syncs for tenancies_in_arrears' do 
+    it 'should be able to be scheduled' do
+      expect {
+        subject.set(wait_until: Time.now + 5.minutes).perform_later
+      }.to_not raise_error
+    end
 
-  it 'should still schedule a new job for tomorrow on completion' do
-    subject.perform_now
-    expect(Delayed::Job.last).to have_attributes(run_at: next_expected_run_time)
+    it 'should still schedule a new job for tomorrow on completion' do
+      subject.perform_now
+      expect(Delayed::Job.last).to have_attributes(run_at: next_expected_run_time)
+    end
+
   end
 
   context 'when the DangerousSyncCases use case fails' do
