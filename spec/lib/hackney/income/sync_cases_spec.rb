@@ -1,6 +1,6 @@
-require_relative '../../../../lib/hackney/income/dangerous_sync_cases'
+require_relative '../../../../lib/hackney/income/sync_cases'
 
-describe Hackney::Income::DangerousSyncCases do
+describe Hackney::Income::SyncCases do
   let(:uh_tenancies_gateway) { double(tenancies_in_arrears: []) }
   let(:background_job_gateway) { double(schedule_case_priority_sync: nil) }
 

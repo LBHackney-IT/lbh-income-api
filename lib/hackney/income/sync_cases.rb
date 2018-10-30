@@ -1,6 +1,6 @@
 module Hackney
   module Income
-    class DangerousSyncCases
+    class SyncCases
       def initialize(uh_tenancies_gateway:, background_job_gateway:)
         @uh_tenancies_gateway = uh_tenancies_gateway
         @background_job_gateway = background_job_gateway

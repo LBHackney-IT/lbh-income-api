@@ -2,14 +2,14 @@ module Hackney
   module Income
     class UseCaseFactory
       def view_my_cases
-        Hackney::Income::DangerousViewMyCases.new(
+        Hackney::Income::ViewMyCases.new(
           tenancy_api_gateway: tenancy_api_gateway,
           stored_tenancies_gateway: stored_tenancies_gateway
         )
       end
 
       def sync_cases
-        Hackney::Income::DangerousSyncCases.new(
+        Hackney::Income::SyncCases.new(
           uh_tenancies_gateway: uh_tenancies_gateway,
           background_job_gateway: background_job_gateway
         )

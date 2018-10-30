@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::Income::DangerousViewMyCases do
+describe Hackney::Income::ViewMyCases do
   let(:user_id) { Faker::Number.number(2).to_i }
   let(:page_number) { Faker::Number.number(2).to_i }
   let(:number_per_page) { Faker::Number.number(2).to_i }

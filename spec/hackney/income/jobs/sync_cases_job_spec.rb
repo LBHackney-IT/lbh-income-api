@@ -11,7 +11,7 @@ describe Hackney::Income::Jobs::SyncCasesJob do
     end
 
     it 'should not run use case' do
-      expect_any_instance_of(Hackney::Income::DangerousSyncCases).to_not receive(:execute)
+      expect_any_instance_of(Hackney::Income::SyncCases).to_not receive(:execute)
       subject.perform_now
     end
   end
@@ -23,8 +23,8 @@ describe Hackney::Income::Jobs::SyncCasesJob do
           .and_return(true)
     end
 
-    it 'should run the DangerousSyncCases use case' do
-      expect_any_instance_of(Hackney::Income::DangerousSyncCases).to receive(:execute).with(no_args)
+    it 'should run the SyncCases use case' do
+      expect_any_instance_of(Hackney::Income::SyncCases).to receive(:execute).with(no_args)
       subject.perform_now
     end
 
@@ -39,9 +39,9 @@ describe Hackney::Income::Jobs::SyncCasesJob do
       expect(Delayed::Job.last).to have_attributes(run_at: next_expected_run_time)
     end
 
-    context 'when the DangerousSyncCases use case fails' do
+    context 'when the SyncCases use case fails' do
       before do
-        allow_any_instance_of(Hackney::Income::DangerousSyncCases).to receive(:execute).and_raise('oh no!')
+        allow_any_instance_of(Hackney::Income::SyncCases).to receive(:execute).and_raise('oh no!')
         subject.perform_later
       end
 

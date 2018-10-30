@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe MyCasesController do
   describe '#index' do
-    let(:view_my_cases_instance) { instance_double(Hackney::Income::DangerousViewMyCases) }
+    let(:view_my_cases_instance) { instance_double(Hackney::Income::ViewMyCases) }
 
     before do
-      allow(Hackney::Income::DangerousViewMyCases).to receive(:new).with(
+      allow(Hackney::Income::ViewMyCases).to receive(:new).with(
         tenancy_api_gateway: instance_of(Hackney::Income::TenancyApiGateway),
         stored_tenancies_gateway: instance_of(Hackney::Income::StoredTenanciesGateway)
       ).and_return(view_my_cases_instance)
@@ -72,12 +72,12 @@ describe MyCasesController do
 
   describe '#sync' do
     it 'should create the sync tenancies use case' do
-      expect(Hackney::Income::DangerousSyncCases).to receive(:new).with(
+      expect(Hackney::Income::SyncCases).to receive(:new).with(
         uh_tenancies_gateway: instance_of(Hackney::Income::UniversalHousingTenanciesGateway),
         background_job_gateway: instance_of(Hackney::Income::BackgroundJobGateway)
       ).and_call_original
 
-      allow_any_instance_of(Hackney::Income::DangerousSyncCases)
+      allow_any_instance_of(Hackney::Income::SyncCases)
         .to receive(:execute)
         .and_return(cases: [], number_per_page: 1)
 
@@ -85,7 +85,7 @@ describe MyCasesController do
     end
 
     it 'should call the sync tenancies use case' do
-      expect_any_instance_of(Hackney::Income::DangerousSyncCases)
+      expect_any_instance_of(Hackney::Income::SyncCases)
         .to receive(:execute)
         .and_return(cases: [], number_per_page: 1)
 
@@ -93,7 +93,7 @@ describe MyCasesController do
     end
 
     it 'should respond with { success: true }' do
-      allow_any_instance_of(Hackney::Income::DangerousSyncCases)
+      allow_any_instance_of(Hackney::Income::SyncCases)
         .to receive(:execute)
         .and_return(cases: [], number_per_page: 1)
 
