@@ -19,11 +19,17 @@ class MyCasesController < ApplicationController
     allowed_params = params.permit(REQUIRED_INDEX_PARAMS + [:is_paused])
 
     allowed_params[:user_id] = allowed_params[:user_id].to_i
-    allowed_params[:page_number] = allowed_params[:page_number].to_i
-    allowed_params[:number_per_page] = allowed_params[:number_per_page].to_i
+
     allowed_params[:is_paused] = ActiveModel::Type::Boolean.new.cast(allowed_params[:is_paused])
 
+    allowed_params[:page_number] = min_1(allowed_params[:page_number].to_i)
+    allowed_params[:number_per_page] = min_1(allowed_params[:number_per_page].to_i)
+
     allowed_params
+  end
+
+  def min_1(number)
+    [1, number].max
   end
 
   def sync

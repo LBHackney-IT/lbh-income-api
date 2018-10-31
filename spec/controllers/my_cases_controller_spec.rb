@@ -15,6 +15,18 @@ describe MyCasesController do
       expect { get :index }.to raise_error(ActionController::ParameterMissing)
     end
 
+    context 'when a page numebr or number of results per page requested is less than 1' do
+      let(:user_id) { Faker::Number.number(2).to_i }
+
+      it 'min of 1 should be used' do
+        allow(view_my_cases_instance)
+          .to receive(:execute)
+                .and_return(cases: [], page_number: 1, number_per_page: 1)
+
+        get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
+      end
+    end
+
     context 'when retrieving cases' do
       let(:user_id) { Faker::Number.number(2).to_i }
       let(:page_number) { Faker::Number.number(2).to_i }
