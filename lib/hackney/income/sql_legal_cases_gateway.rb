@@ -16,7 +16,7 @@ module Hackney
 
       private
 
-      LEGAL_STAGES = ['4RS', '5RP', '6RC', '6RO', '7RE'].freeze
+      LEGAL_STAGES = %w[4RS 5RP 6RC 6RO 7RE].freeze
       SECURE_TENURE_TYPE = 'SEC'.freeze
 
       def database

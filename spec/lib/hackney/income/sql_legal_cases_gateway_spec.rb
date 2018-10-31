@@ -5,7 +5,7 @@ describe Hackney::Income::SqlLegalCasesGateway, universal: true do
 
   after { truncate_uh_tables }
 
-  let(:high_actions_above_stage_4) { ['4RS', '5RP', '6RC', '6RO', '7RE'] }
+  let(:high_actions_above_stage_4) { %w[4RS 5RP 6RC 6RO 7RE] }
 
   let(:tenancy_ref_array) do
     [
@@ -33,7 +33,7 @@ describe Hackney::Income::SqlLegalCasesGateway, universal: true do
     [
       Faker::Lorem.characters(3),
       Faker::Lorem.characters(3),
-      Faker::Lorem.characters(3),
+      Faker::Lorem.characters(3)
     ]
   end
 
