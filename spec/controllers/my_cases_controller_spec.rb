@@ -21,7 +21,7 @@ describe MyCasesController do
       it 'min of 1 should be used' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-                .and_return(cases: [], page_number: 1, number_per_page: 1)
+          .with(user_id: user_id, page_number: 1, number_per_page: 1, is_paused: nil)
 
         get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
       end
