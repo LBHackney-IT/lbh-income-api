@@ -11,8 +11,8 @@ namespace :income do
   end
 
   desc 'Manual task, list all tenants that are eligible for message'
-  task :show_tenancies_ready_for_message do |_task|
+  task :show_tenancies_for_message_1 do |_task|
     use_case_factory = Hackney::Income::UseCaseFactory.new
-    use_case_factory.show_tenancies_ready_for_message.execute
+    use_case_factory.show_tenancies_for_message_1.execute
   end
 end

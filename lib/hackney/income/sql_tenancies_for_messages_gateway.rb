@@ -1,7 +1,7 @@
 module Hackney
   module Income
-    class SqlsTenanciesReadyForMessageGateway
-      def get_message_level_1_tenancies
+    class SqlTenanciesForMessagesGateway
+      def get_tenancies_for_message_1
         Hackney::Income::Models::Tenancy
           .where(priority_band: 'green')
           .where('days_in_arrears >= ?', 5)

@@ -42,9 +42,9 @@ module Hackney
         Hackney::Income::AssignTenancyToUser.new(user_assignment_gateway: user_assignment_gateway)
       end
 
-      def show_tenancies_ready_for_message
-        Hackney::Income::ShowTenancysReadyForMessage.new(
-          tenancies_ready_for_message_gateway: tenancies_ready_for_message_gateway
+      def show_tenancies_for_message_1
+        Hackney::Income::ShowTenanciesForMessageOne.new(
+          sql_tenancies_for_messages_gateway: sql_tenancies_for_messages_gateway
         )
       end
 
@@ -88,8 +88,8 @@ module Hackney
         )
       end
 
-      def tenancies_ready_for_message_gateway
-        Hackney::Income::SqlsTenanciesReadyForMessageGateway.new
+      def sql_tenancies_for_messages_gateway
+        Hackney::Income::SqlTenanciesForMessagesGateway.new
       end
 
       def background_job_gateway

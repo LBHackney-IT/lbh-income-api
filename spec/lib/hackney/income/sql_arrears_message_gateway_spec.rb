@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
+describe Hackney::Income::SqlTenanciesForMessagesGateway do
   subject { described_class.new }
 
   it 'returns an empty array when critira do not match' do
-    expect(subject.get_message_level_1_tenancies).to eq([])
+    expect(subject.get_tenancies_for_message_1).to eq([])
   end
 
   let(:case_worker) do
@@ -18,8 +18,8 @@ describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
     end
 
     it 'returns only green tennacys' do
-      expect(subject.get_message_level_1_tenancies.count).to eq(1)
-      expect(subject.get_message_level_1_tenancies).to all(be_an(Hackney::Income::Models::Tenancy))
+      expect(subject.get_tenancies_for_message_1.count).to eq(1)
+      expect(subject.get_tenancies_for_message_1).to all(be_an(Hackney::Income::Models::Tenancy))
     end
   end
 
@@ -34,8 +34,8 @@ describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
     end
 
     it 'returns only tennacys that are over £9.99' do
-      expect(subject.get_message_level_1_tenancies.count).to eq(2)
-      expect(subject.get_message_level_1_tenancies).to all(be_an(Hackney::Income::Models::Tenancy))
+      expect(subject.get_tenancies_for_message_1.count).to eq(2)
+      expect(subject.get_tenancies_for_message_1).to all(be_an(Hackney::Income::Models::Tenancy))
     end
   end
 
@@ -53,8 +53,8 @@ describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
     end
 
     it 'returns only tennacys in arrers for more than 4 days' do
-      expect(subject.get_message_level_1_tenancies.count).to eq(num_tenancy_over_and_at_5_days)
-      expect(subject.get_message_level_1_tenancies).to all(be_an(Hackney::Income::Models::Tenancy))
+      expect(subject.get_tenancies_for_message_1.count).to eq(num_tenancy_over_and_at_5_days)
+      expect(subject.get_tenancies_for_message_1).to all(be_an(Hackney::Income::Models::Tenancy))
     end
   end
 
@@ -72,8 +72,8 @@ describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
     end
 
     it 'returns only tennacys that do not have an active agrement' do
-      expect(subject.get_message_level_1_tenancies.count).to eq(num_tenancy_inactive)
-      expect(subject.get_message_level_1_tenancies).to all(be_an(Hackney::Income::Models::Tenancy))
+      expect(subject.get_tenancies_for_message_1.count).to eq(num_tenancy_inactive)
+      expect(subject.get_tenancies_for_message_1).to all(be_an(Hackney::Income::Models::Tenancy))
     end
   end
 
@@ -93,8 +93,8 @@ describe Hackney::Income::SqlsTenanciesReadyForMessageGateway do
     end
 
     it 'returns only unpaused tenancies' do
-      expect(subject.get_message_level_1_tenancies.count).to eq(num_tenancy_unpaused)
-      expect(subject.get_message_level_1_tenancies).to all(be_an(Hackney::Income::Models::Tenancy))
+      expect(subject.get_tenancies_for_message_1.count).to eq(num_tenancy_unpaused)
+      expect(subject.get_tenancies_for_message_1).to all(be_an(Hackney::Income::Models::Tenancy))
     end
   end
 end
