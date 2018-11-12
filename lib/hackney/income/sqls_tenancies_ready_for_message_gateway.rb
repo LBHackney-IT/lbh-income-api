@@ -1,6 +1,6 @@
 module Hackney
   module Income
-    class SqlTenancysReadyForMessageGateway
+    class SqlsTenanciesReadyForMessageGateway
       def get_message_level_1_tenancies
         Hackney::Income::Models::Tenancy
           .where(priority_band: 'green')
