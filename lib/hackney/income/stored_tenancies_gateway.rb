@@ -65,7 +65,7 @@ module Hackney
         if is_paused
           query = query.where('is_paused_until >= ?', Date.today)
         else
-          query = query.where('is_paused_until < ? OR is_paused_until is null', Date.today)
+          query = query.not_paused
         end
         query
       end
