@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Hackney::Income::Models::Tenancy do
-
   context 'when trying to create 2 tenancys with the same refrence' do
     let(:tenancy_ref) { Faker::Internet.slug }
 
@@ -16,5 +15,3 @@ describe Hackney::Income::Models::Tenancy do
     end
   end
 end
- 
- 
