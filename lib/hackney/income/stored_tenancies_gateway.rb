@@ -8,34 +8,38 @@ module Hackney
           criteria,
           weightings
         )
+        begin
+          Hackney::Income::Models::Tenancy.find_or_create_by(tenancy_ref: tenancy_ref).tap do |tenancy|
+            tenancy.update(
+              priority_band: priority_band,
+              priority_score: priority_score,
 
-        Hackney::Income::Models::Tenancy.find_or_create_by(tenancy_ref: tenancy_ref).tap do |tenancy|
-          tenancy.update(
-            priority_band: priority_band,
-            priority_score: priority_score,
+              balance_contribution: score_calculator.balance,
+              days_in_arrears_contribution: score_calculator.days_in_arrears,
+              days_since_last_payment_contribution: score_calculator.days_since_last_payment,
+              payment_amount_delta_contribution: score_calculator.payment_amount_delta,
+              payment_date_delta_contribution: score_calculator.payment_date_delta,
+              number_of_broken_agreements_contribution: score_calculator.number_of_broken_agreements,
+              active_agreement_contribution: score_calculator.active_agreement,
+              broken_court_order_contribution: score_calculator.broken_court_order,
+              nosp_served_contribution: score_calculator.nosp_served,
+              active_nosp_contribution: score_calculator.active_nosp,
 
-            balance_contribution: score_calculator.balance,
-            days_in_arrears_contribution: score_calculator.days_in_arrears,
-            days_since_last_payment_contribution: score_calculator.days_since_last_payment,
-            payment_amount_delta_contribution: score_calculator.payment_amount_delta,
-            payment_date_delta_contribution: score_calculator.payment_date_delta,
-            number_of_broken_agreements_contribution: score_calculator.number_of_broken_agreements,
-            active_agreement_contribution: score_calculator.active_agreement,
-            broken_court_order_contribution: score_calculator.broken_court_order,
-            nosp_served_contribution: score_calculator.nosp_served,
-            active_nosp_contribution: score_calculator.active_nosp,
-
-            balance: criteria.balance,
-            days_in_arrears: criteria.days_in_arrears,
-            days_since_last_payment: criteria.days_since_last_payment,
-            payment_amount_delta: criteria.payment_amount_delta,
-            payment_date_delta: criteria.payment_date_delta,
-            number_of_broken_agreements: criteria.number_of_broken_agreements,
-            active_agreement: criteria.active_agreement?,
-            broken_court_order: criteria.broken_court_order?,
-            nosp_served: criteria.nosp_served?,
-            active_nosp: criteria.active_nosp?
-          )
+              balance: criteria.balance,
+              days_in_arrears: criteria.days_in_arrears,
+              days_since_last_payment: criteria.days_since_last_payment,
+              payment_amount_delta: criteria.payment_amount_delta,
+              payment_date_delta: criteria.payment_date_delta,
+              number_of_broken_agreements: criteria.number_of_broken_agreements,
+              active_agreement: criteria.active_agreement?,
+              broken_court_order: criteria.broken_court_order?,
+              nosp_served: criteria.nosp_served?,
+              active_nosp: criteria.active_nosp?
+            )
+          end
+        rescue ActiveRecord::RecordNotUnique
+          Rails.logger.error("A Tenancy with tenancy_ref: '#{tenancy_ref}'' was inserted during find_or_create_by create operation, retrying...")
+          retry
         end
       end
 

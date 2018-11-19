@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181022140440) do
+ActiveRecord::Schema.define(version: 20181119154931) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20181022140440) do
     t.integer "assigned_user_id"
     t.datetime "is_paused_until"
     t.index ["assigned_user_id"], name: "index_tenancies_on_assigned_user_id"
+    t.index ["tenancy_ref"], name: "index_tenancies_on_tenancy_ref", unique: true
   end
 
   create_table "users", force: :cascade do |t|
