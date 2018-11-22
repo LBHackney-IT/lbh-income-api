@@ -6,10 +6,12 @@ describe Hackney::Tenancy::ActionDiaryGateway do
   let(:tenancy_ref) { Faker::Lorem.characters(8) }
   let(:action_balance) { Faker::Commerce.price }
   let(:username) { Faker::Name.name }
+  let(:action_code) { Faker::Internet.slug }
+  let(:comment) { Faker::Lorem.paragraph }
 
   API_HEADER_NAME = 'x-api-key'.freeze
 
-  subject { described_class.new(host: host, key: key) }
+  subject { described_class.new(host: host, api_key: key) }
 
   context 'when creating an action diary entry' do
     before do
@@ -19,9 +21,9 @@ describe Hackney::Tenancy::ActionDiaryGateway do
     it 'shoud create an system entry' do
       subject.create_entry(
         tenancy_ref: tenancy_ref,
-        action_code: '111',
+        action_code: action_code,
         action_balance: action_balance,
-        comment: 'bar'
+        comment: comment
       )
 
       assert_requested(
@@ -29,9 +31,9 @@ describe Hackney::Tenancy::ActionDiaryGateway do
         headers: { API_HEADER_NAME => key },
         body: {
           tenancyAgreementRef: tenancy_ref,
-          actionCode: '111',
+          actionCode: action_code,
           actionBalance: action_balance,
-          comment: 'bar'
+          comment: comment
         }.to_json,
         times: 1
       )
@@ -39,9 +41,9 @@ describe Hackney::Tenancy::ActionDiaryGateway do
 
     it 'shoud create a entry with user user if username supplyed' do
       subject.create_entry(tenancy_ref: tenancy_ref,
-                           action_code: '111',
+                           action_code: action_code,
                            action_balance: action_balance,
-                           comment: 'bar',
+                           comment: comment,
                            username: username)
 
       assert_requested(
@@ -49,9 +51,9 @@ describe Hackney::Tenancy::ActionDiaryGateway do
         headers: { API_HEADER_NAME => key },
         body: {
           tenancyAgreementRef: tenancy_ref,
-          actionCode: '111',
+          actionCode: action_code,
           actionBalance: action_balance,
-          comment: 'bar',
+          comment: comment,
           username: username
         }.to_json,
         times: 1
