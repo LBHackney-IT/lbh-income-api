@@ -7,6 +7,10 @@ module Hackney
 
         { id: user.id, name: user.name, email: user.email, first_name: user.first_name, last_name: user.last_name, provider_permissions: user.provider_permissions }
       end
+
+      def find_user(id:)
+        Hackney::Income::Models::User.find_by(id: id)
+      end
     end
   end
 end

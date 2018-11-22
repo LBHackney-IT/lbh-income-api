@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe Hackney::Income::SqlUsersGateway do
   let(:gateway) { described_class.new }
 
@@ -60,6 +62,36 @@ describe Hackney::Income::SqlUsersGateway do
           id: 1,
           name: 'Robert Smith'
         )
+      end
+    end
+  end
+
+  context 'when finding a individual User' do
+    subject do
+      gateway.find_user(
+        id: user.id
+      )
+    end
+
+    context 'and this user does not already exist' do
+      let(:user) do
+        Hackney::Income::Models::User.new(
+          provider_uid: 'close-to-me',
+          provider: 'universal',
+          name: 'Robert Smith',
+          email: 'old-email@the-cure.com',
+          first_name: 'Robert',
+          last_name: 'Smith',
+          provider_permissions: '12345.98765'
+        )
+      end
+
+      before do
+        user.save!
+      end
+
+      it 'should create a new User instance for that user' do
+        expect(subject).to eq(user)
       end
     end
   end
