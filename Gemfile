@@ -30,6 +30,8 @@ gem 'mysql2'
 gem 'sequel'
 gem 'tiny_tds'
 
+gem 'httparty'
+
 gem 'notifications-ruby-client'
 
 gem 'daemons'
