@@ -34,7 +34,8 @@ module Hackney
 
       def send_email
         Hackney::Income::SendEmail.new(
-          notification_gateway: notifications_gateway
+          notification_gateway: notifications_gateway,
+          add_action_diary_usecase: add_action_diary
         )
       end
 

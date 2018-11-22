@@ -18,6 +18,7 @@ describe MessagesController, type: :controller do
   end
   let(:email_params) do
     {
+      user_id: Faker::Number.number(2),
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
       template_id: Faker::HitchhikersGuideToTheGalaxy.planet,
       email_address: Faker::Internet.email,
@@ -28,12 +29,18 @@ describe MessagesController, type: :controller do
     }
   end
 
+  let(:dummy_action_diary_gateway) { double(Hackney::Tenancy::ActionDiaryGateway) }
+
   before do
     stub_const(
       'Hackney::Income::GovNotifyGateway',
       Hackney::Income::StubGovNotifyGateway,
       transfer_nested_constants: true
     )
+
+    stub_const('Hackney::Tenancy::ActionDiaryGateway', dummy_action_diary_gateway)
+    allow(dummy_action_diary_gateway).to receive(:new).and_return(dummy_action_diary_gateway)
+    allow(dummy_action_diary_gateway).to receive(:create_entry)
   end
 
   let(:expeted_templates) do
@@ -55,7 +62,10 @@ describe MessagesController, type: :controller do
   end
 
   it 'sends an email' do
+    expect(dummy_action_diary_gateway).to receive(:create_entry)
+
     expect_any_instance_of(Hackney::Income::SendEmail).to receive(:execute).with(
+      user_id: email_params.fetch(:user_id),
       tenancy_ref: email_params.fetch(:tenancy_ref),
       template_id: email_params.fetch(:template_id),
       recipient: email_params.fetch(:email_address),
