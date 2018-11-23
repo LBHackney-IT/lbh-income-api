@@ -13,7 +13,7 @@ module Hackney
         username = user_id.nil? ? nil : @users_gateway.find_user(id: user_id)&.name
 
         if !user_id.nil? && username.nil?
-          raise ArgumentError, 'user_id supplyed to AddActionDiaryEntry does not exist'
+          raise ArgumentError, 'user_id supplyed does not exist'
         end
 
         Rails.logger.info('Adding comment to action diary')

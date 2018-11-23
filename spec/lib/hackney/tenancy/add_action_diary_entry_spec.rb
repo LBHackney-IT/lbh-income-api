@@ -47,7 +47,7 @@ describe Hackney::Tenancy::AddActionDiaryEntry do
     it 'should thow an invalid argument exption' do
       expect(users_gateway).to receive(:find_user).with(id: user_id).and_return(nil).once
 
-      expect { subject }.to raise_error(ArgumentError, 'user_id supplyed to AddActionDiaryEntry does not exist')
+      expect { subject }.to raise_error(ArgumentError, 'user_id supplyed does not exist')
     end
   end
 end
