@@ -7,6 +7,7 @@ describe MessagesController, type: :controller do
 
   let(:sms_params) do
     {
+      user_id: Faker::Number.number(2),
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
       template_id: Faker::HitchhikersGuideToTheGalaxy.planet,
       phone_number: Faker::PhoneNumber.phone_number,
@@ -48,7 +49,10 @@ describe MessagesController, type: :controller do
   end
 
   it 'sends an sms' do
+    expect(dummy_action_diary_gateway).to receive(:create_entry)
+
     expect_any_instance_of(Hackney::Income::SendSms).to receive(:execute).with(
+      user_id: sms_params.fetch(:user_id),
       tenancy_ref: sms_params.fetch(:tenancy_ref),
       template_id: sms_params.fetch(:template_id),
       phone_number: sms_params.fetch(:phone_number),

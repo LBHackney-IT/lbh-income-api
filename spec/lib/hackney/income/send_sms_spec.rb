@@ -1,17 +1,18 @@
 require 'rails_helper'
 
 describe Hackney::Income::SendSms do
-  let(:tenancy_1) { create_tenancy_model }
+  let(:tenancy) { create_tenancy_model }
   let(:notification_gateway) { Hackney::Income::StubNotificationsGateway.new }
+  let(:add_action_diary_usecase) { double(Hackney::Tenancy::AddActionDiaryEntry) }
 
   before do
-    tenancy_1.save
+    tenancy.save
   end
 
   let(:send_sms) do
     described_class.new(
       notification_gateway: notification_gateway,
-      # events_gateway: events_gateway
+      add_action_diary_usecase: add_action_diary_usecase
     )
   end
 
@@ -20,10 +21,16 @@ describe Hackney::Income::SendSms do
     let(:phone_number) { Faker::Number.leading_zero_number(11) }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }
+    let(:user_id) { Faker::Number.number(2) }
+
+    before do
+      allow(add_action_diary_usecase).to receive(:execute)
+    end
 
     subject do
       send_sms.execute(
-        tenancy_ref: tenancy_1.tenancy_ref,
+        user_id: user_id,
+        tenancy_ref: tenancy.tenancy_ref,
         template_id: template_id,
         phone_number: phone_number,
         reference: reference,
@@ -58,6 +65,20 @@ describe Hackney::Income::SendSms do
       expect(subject).to include(
         reference: reference
       )
+    end
+
+    it 'should call action_diary_usecase' do
+      expect(add_action_diary_usecase).to receive(:execute)
+      .with(
+        user_id: user_id,
+        tenancy_ref: tenancy.tenancy_ref,
+        action_code: '', # TODO: this needs to be decided
+        action_balance: nil, # TODO: this should not be required
+        comment: "An SMS has been sent to '#{phone_number}'"
+      )
+      .once
+
+      subject
     end
   end
 end
