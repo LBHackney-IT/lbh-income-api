@@ -38,4 +38,16 @@ describe Hackney::Tenancy::AddActionDiaryEntry do
       subject
     end
   end
+
+  context 'when using a non existing user id' do
+    let(:user_id) { SecureRandom.uuid }
+
+    subject { usecase.execute(user_id: user_id, tenancy_ref: tenancy_ref, action_code: action_code, action_balance: action_balance, comment: comment) }
+
+    it 'should thow an invalid argument exption' do
+      expect(users_gateway).to receive(:find_user).with(id: user_id).and_return(nil).once
+
+      expect { subject }.to raise_error(ArgumentError, 'user_id supplyed to AddActionDiaryEntry does not exist')
+    end
+  end
 end

@@ -30,7 +30,7 @@ describe MessagesController, type: :controller do
     }
   end
 
-  let(:dummy_action_diary_gateway) { double(Hackney::Tenancy::ActionDiaryGateway) }
+  let(:dummy_action_diary_usecase) { double(Hackney::Tenancy::AddActionDiaryEntry) }
 
   before do
     stub_const(
@@ -39,9 +39,9 @@ describe MessagesController, type: :controller do
       transfer_nested_constants: true
     )
 
-    stub_const('Hackney::Tenancy::ActionDiaryGateway', dummy_action_diary_gateway)
-    allow(dummy_action_diary_gateway).to receive(:new).and_return(dummy_action_diary_gateway)
-    allow(dummy_action_diary_gateway).to receive(:create_entry)
+    stub_const('Hackney::Tenancy::AddActionDiaryEntry', dummy_action_diary_usecase)
+    allow(dummy_action_diary_usecase).to receive(:new).and_return(dummy_action_diary_usecase)
+    allow(dummy_action_diary_usecase).to receive(:execute)
   end
 
   let(:expeted_templates) do
@@ -49,8 +49,6 @@ describe MessagesController, type: :controller do
   end
 
   it 'sends an sms' do
-    expect(dummy_action_diary_gateway).to receive(:create_entry)
-
     expect_any_instance_of(Hackney::Income::SendSms).to receive(:execute).with(
       user_id: sms_params.fetch(:user_id),
       tenancy_ref: sms_params.fetch(:tenancy_ref),
@@ -66,8 +64,6 @@ describe MessagesController, type: :controller do
   end
 
   it 'sends an email' do
-    expect(dummy_action_diary_gateway).to receive(:create_entry)
-
     expect_any_instance_of(Hackney::Income::SendEmail).to receive(:execute).with(
       user_id: email_params.fetch(:user_id),
       tenancy_ref: email_params.fetch(:tenancy_ref),

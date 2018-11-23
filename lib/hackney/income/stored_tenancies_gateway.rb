@@ -38,7 +38,7 @@ module Hackney
             )
           end
         rescue ActiveRecord::RecordNotUnique
-          Rails.logger.error("A Tenancy with tenancy_ref: '#{tenancy_ref}'' was inserted during find_or_create_by create operation, retrying...")
+          Rails.logger.error("A Tenancy with tenancy_ref: '#{tenancy_ref}' was inserted during find_or_create_by create operation, retrying...")
           retry
         end
       end
