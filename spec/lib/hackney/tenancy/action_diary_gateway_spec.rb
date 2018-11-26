@@ -60,4 +60,22 @@ describe Hackney::Tenancy::ActionDiaryGateway do
       )
     end
   end
+
+  context 'when tenancy api returns an error' do
+    before do
+      stub_request(:post, /#{host}/).with(headers: { API_HEADER_NAME => key }).to_return(status: 500)
+    end
+
+    it 'an exception should be thrown' do
+      expect {
+        subject.create_entry(
+          tenancy_ref: tenancy_ref,
+          action_code: action_code,
+          action_balance: action_balance,
+          comment: comment,
+          username: username
+        )
+      }.to raise_error(Hackney::Tenancy::TenancyApiException)
+    end
+  end
 end

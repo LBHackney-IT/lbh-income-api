@@ -1,9 +1,11 @@
 require 'httparty'
+require_relative 'exceptions/tenancy_api_exception.rb'
 
 module Hackney
   module Tenancy
     class ActionDiaryGateway
       include HTTParty
+      format :json
 
       def initialize(host:, api_key:)
         self.class.base_uri host
@@ -21,12 +23,9 @@ module Hackney
         }
         body[:username] = username unless username.nil?
 
-        self.class.post(
-          '/tenancies/arrears-action-diary',
-          @options.merge(
-            body: body.to_json
-          )
-        )
+        request = self.class.post('/tenancies/arrears-action-diary', @options.merge(body: body.to_json))
+        raise TenancyApiException unless request.success?
+        request
       end
     end
   end
