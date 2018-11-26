@@ -14,13 +14,14 @@ module Hackney
           reference: reference,
           variables: variables
         )
-        @add_action_diary_usecase.execute(
-          user_id: user_id,
-          tenancy_ref: tenancy_ref,
-          action_code: '', # this needs to be decided
-          action_balance: nil,
-          comment: "An SMS has been sent to '#{phone_number}'"
-        )
+        # removed until there is an agreed action_code and comment
+        # @add_action_diary_usecase.execute(
+        #   user_id: user_id,
+        #   tenancy_ref: tenancy_ref,
+        #   action_code: '',
+        #   action_balance: nil,
+        #   comment: "An SMS has been sent to '#{phone_number}'"
+        # )
       end
     end
   end
