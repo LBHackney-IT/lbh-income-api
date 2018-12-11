@@ -40,29 +40,21 @@ describe Hackney::Income::SendManualSms do
     end
 
     it 'should map the tenancy to a set of variables' do
-      expect(subject).to include(
-        variables: include(
-          'first name' => first_name
-        )
-      )
+      expect(subject.variables).to eq({'first name' => first_name})
     end
 
     it 'should pass through the phone number' do
-      expect(subject).to include(
-        phone_number: phone_number
-      )
+      expect(subject.phone_number).to eq(phone_number)
     end
 
     it 'should pass through the template id' do
-      expect(subject).to include(
+      expect(subject.template).to include(
         template_id: template_id
       )
     end
 
     it 'should generate a tenant and message representative reference' do
-      expect(subject).to include(
-        reference: reference
-      )
+      expect(subject.reference).to eq(reference)
     end
 
     it 'should write a entry to the action diary' do

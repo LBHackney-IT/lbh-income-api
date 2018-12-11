@@ -36,6 +36,15 @@ module Hackney
         end
       end
 
+      # def get_sent_template(template_id:, version:, variables:)
+      #   @client.generate_template_preview(
+      #     template_id,
+      #     version: version,
+      #     personalisation: variables
+      #   )
+      #   # @client.generate_template_preview("b3daa233-3e13-405f-ad09-1dfa0fa9f955",version: 4,personalisation: {'first name': 'thing'})
+      # end
+
       private
 
       def pre_release_phone_number(phone_number)

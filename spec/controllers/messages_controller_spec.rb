@@ -31,6 +31,7 @@ describe MessagesController, type: :controller do
   end
 
   let(:dummy_action_diary_usecase) { double(Hackney::Tenancy::AddActionDiaryEntry) }
+  let(:dummy_sent_messages_usecase) { double(Hackney::Income::SqlSentMessages) }
 
   before do
     stub_const(
@@ -42,6 +43,10 @@ describe MessagesController, type: :controller do
     stub_const('Hackney::Tenancy::AddActionDiaryEntry', dummy_action_diary_usecase)
     allow(dummy_action_diary_usecase).to receive(:new).and_return(dummy_action_diary_usecase)
     allow(dummy_action_diary_usecase).to receive(:execute)
+
+    stub_const('Hackney::Income::SqlSentMessages', dummy_sent_messages_usecase)
+    allow(dummy_sent_messages_usecase).to receive(:new).and_return(dummy_sent_messages_usecase)
+    allow(dummy_sent_messages_usecase).to receive(:add_message)
   end
 
   let(:expeted_templates) do
@@ -71,7 +76,7 @@ describe MessagesController, type: :controller do
       recipient: email_params.fetch(:email_address),
       reference: email_params.fetch(:reference),
       variables: email_params.fetch(:variables)
-    ).and_call_original
+    ).and_return(OpenStruct.new(template: {'version': 3}))
 
     patch :send_email, params: email_params
 

@@ -25,21 +25,21 @@ module Hackney
       end
 
       def send_text_message(phone_number:, template_id:, reference:, variables:)
-        @last_text_message = {
+        @last_text_message = OpenStruct.new(
           phone_number: phone_number,
-          template_id: template_id,
+          template: {template_id: template_id, version: 2},
           reference: reference,
           variables: variables
-        }
+        )
       end
 
       def send_email(recipient:, template_id:, reference:, variables:)
-        @last_email = {
+        @last_email = OpenStruct.new(
           recipient: recipient,
-          template_id: template_id,
+          template: {template_id: template_id, 'version'=> 2},
           reference: reference,
           variables: variables
-        }
+        )
       end
     end
   end

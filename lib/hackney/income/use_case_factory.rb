@@ -36,7 +36,8 @@ module Hackney
       def send_email
         Hackney::Income::SendManualEmail.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_usecase: add_action_diary
+          add_action_diary_usecase: add_action_diary,
+          sql_sent_messages_usecase: sql_sent_messages_usecase
         )
       end
 
@@ -109,6 +110,10 @@ module Hackney
 
       def sql_pause_tenancy_gateway
         Hackney::Income::SqlPauseTenancyGateway.new
+      end
+
+      def sql_sent_messages_usecase
+        Hackney::Income::SqlSentMessages.new
       end
 
       def stored_tenancies_gateway
