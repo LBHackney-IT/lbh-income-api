@@ -27,7 +27,7 @@ module Hackney
       def send_text_message(phone_number:, template_id:, reference:, variables:)
         @last_text_message = OpenStruct.new(
           phone_number: phone_number,
-          template: {template_id: template_id, version: 2},
+          template: { template_id: template_id, version: 2 },
           reference: reference,
           variables: variables
         )
@@ -36,7 +36,7 @@ module Hackney
       def send_email(recipient:, template_id:, reference:, variables:)
         @last_email = OpenStruct.new(
           recipient: recipient,
-          template: {template_id: template_id, 'version'=> 2},
+          template: { template_id: template_id, 'version' => 2 },
           reference: reference,
           variables: variables
         )

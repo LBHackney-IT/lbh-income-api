@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181126112318) do
+ActiveRecord::Schema.define(version: 20181211134925) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
@@ -25,6 +25,14 @@ ActiveRecord::Schema.define(version: 20181126112318) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "sent_messages", force: :cascade do |t|
+    t.string "tenancy_ref"
+    t.string "template_id"
+    t.string "version"
+    t.string "message_type"
+    t.text "personalisation"
   end
 
   create_table "tenancies", force: :cascade do |t|

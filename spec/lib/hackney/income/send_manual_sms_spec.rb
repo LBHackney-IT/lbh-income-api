@@ -40,7 +40,7 @@ describe Hackney::Income::SendManualSms do
     end
 
     it 'should map the tenancy to a set of variables' do
-      expect(subject.variables).to eq({'first name' => first_name})
+      expect(subject.variables).to eq('first name' => first_name)
     end
 
     it 'should pass through the phone number' do

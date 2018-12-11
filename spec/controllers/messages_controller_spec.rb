@@ -76,7 +76,7 @@ describe MessagesController, type: :controller do
       recipient: email_params.fetch(:email_address),
       reference: email_params.fetch(:reference),
       variables: email_params.fetch(:variables)
-    ).and_return(OpenStruct.new(template: {'version': 3}))
+    ).and_return(OpenStruct.new(template: { 'version': 3 }))
 
     patch :send_email, params: email_params
 

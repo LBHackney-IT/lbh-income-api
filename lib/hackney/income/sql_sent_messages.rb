@@ -4,7 +4,7 @@ require 'active_record/errors'
 module Hackney
   module Income
     class SqlSentMessages
-      def add_message (tenancy_ref:, template_id:, version:, message_type:, personalisation:)
+      def add_message(tenancy_ref:, template_id:, version:, message_type:, personalisation:)
         sent_message = Hackney::Income::Models::SentMessage.create(
           tenancy_ref: tenancy_ref,
           template_id: template_id,
