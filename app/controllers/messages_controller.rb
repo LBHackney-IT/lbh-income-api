@@ -26,4 +26,11 @@ class MessagesController < ApplicationController
       type: params.fetch(:type)
     )
   end
+
+  def get_sent_messages
+    render json: income_use_case_factory.get_sent_messages.execute(
+      tenancy_ref: params.fetch(:tenancy_ref),
+      type: params.fetch(:type)
+    )
+  end
 end

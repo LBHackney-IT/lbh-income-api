@@ -14,9 +14,11 @@ describe MessagesController, type: :controller do
       reference: Faker::HitchhikersGuideToTheGalaxy.starship,
       variables: {
         'first name' => Faker::HitchhikersGuideToTheGalaxy.character
-      }.to_s
+      }
     }
   end
+
+  let(:email_version) { Faker::Number.number(2) }
   let(:email_params) do
     {
       user_id: Faker::Number.number(2),
@@ -26,7 +28,7 @@ describe MessagesController, type: :controller do
       reference: Faker::HitchhikersGuideToTheGalaxy.starship,
       variables: {
         'first name' => Faker::HitchhikersGuideToTheGalaxy.character
-      }.to_s
+      }
     }
   end
 
@@ -47,6 +49,16 @@ describe MessagesController, type: :controller do
     stub_const('Hackney::Income::SqlSentMessages', dummy_sent_messages_usecase)
     allow(dummy_sent_messages_usecase).to receive(:new).and_return(dummy_sent_messages_usecase)
     allow(dummy_sent_messages_usecase).to receive(:add_message)
+    allow(dummy_sent_messages_usecase).to receive(:get_sent_messages).and_return([
+                                          OpenStruct.new(
+                                            id: 1,
+                                            tenancy_ref: email_params.fetch(:tenancy_ref),
+                                            template_id: email_params.fetch(:template_id),
+                                            version: email_version,
+                                            message_type: 'email',
+                                            personalisation: email_params.fetch(:variables).to_json
+                                          )
+])
   end
 
   let(:expeted_templates) do
@@ -92,6 +104,7 @@ describe MessagesController, type: :controller do
 
     expect(response.body).to eq(expeted_templates)
   end
+
   it 'gets sms templates' do
     expect_any_instance_of(Hackney::Income::GetTemplates).to receive(:execute).with(
       type: 'sms'
@@ -100,5 +113,22 @@ describe MessagesController, type: :controller do
     patch :get_templates, params: { type: 'sms' }
 
     expect(response.body).to eq(expeted_templates)
+  end
+
+  it 'gets sent emails' do
+    expect_any_instance_of(Hackney::Income::GetSentMessages).to receive(:execute).with(
+      type: 'email',
+      tenancy_ref: email_params.fetch(:tenancy_ref)
+    ).and_call_original
+
+    get :get_sent_messages, params: { type: 'email', tenancy_ref: email_params.fetch(:tenancy_ref) }
+
+    expect(response.body).to eq([{
+                                  "id": email_params.fetch(:template_id),
+                                  "version": email_version,
+                                  "body": email_params.fetch(:variables),
+                                  "subject": '',
+                                  "type": 'email'
+                                }].to_json)
   end
 end

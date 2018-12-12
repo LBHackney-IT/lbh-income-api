@@ -13,7 +13,7 @@ describe Hackney::Income::SqlSentMessages do
     tenancy_1.save
   end
 
-  context 'save sent messages' do
+  context 'sent messages' do
     before {
       subject.add_message(
         tenancy_ref: tenancy_1.tenancy_ref,
@@ -24,7 +24,7 @@ describe Hackney::Income::SqlSentMessages do
       )
     }
 
-    it 'should create a new sent messahe' do
+    it 'should create a new sent message' do
       expect(Hackney::Income::Models::SentMessage.first).to have_attributes(
         tenancy_ref: tenancy_1.tenancy_ref,
         template_id: template_id,
@@ -32,6 +32,15 @@ describe Hackney::Income::SqlSentMessages do
         message_type: email_type,
         personalisation: personalisation
       )
+    end
+
+    it 'should retrieve all saved email given a tenancy ref' do
+      expect(
+        subject.get_sent_messages(
+          tenancy_ref: tenancy_1.tenancy_ref,
+          message_type: 'email'
+        )
+      ).to eq([Hackney::Income::Models::SentMessage.first])
     end
   end
 end

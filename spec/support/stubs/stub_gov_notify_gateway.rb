@@ -13,6 +13,16 @@ module Hackney
       def get_templates(type:)
         EXAMPLE_TEMPLATES
       end
+
+      def get_sent_template(template_id:, version:, personalisation:)
+        {
+          "id": template_id,
+          "version": version,
+          "body": personalisation,
+          "subject": '',
+          "type": 'email'
+        }
+      end
     end
   end
 end
