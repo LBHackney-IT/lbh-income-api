@@ -5,6 +5,7 @@ require 'rails_helper'
 describe MessagesController, type: :controller do
   include MessagesHelper
 
+  let(:first_name) { Faker::HitchhikersGuideToTheGalaxy.character }
   let(:sms_params) do
     {
       user_id: Faker::Number.number(2),
@@ -13,7 +14,7 @@ describe MessagesController, type: :controller do
       phone_number: Faker::PhoneNumber.phone_number,
       reference: Faker::HitchhikersGuideToTheGalaxy.starship,
       variables: {
-        'first name' => Faker::HitchhikersGuideToTheGalaxy.character
+        'first name' => first_name
       }
     }
   end
@@ -27,7 +28,7 @@ describe MessagesController, type: :controller do
       email_address: Faker::Internet.email,
       reference: Faker::HitchhikersGuideToTheGalaxy.starship,
       variables: {
-        'first name' => Faker::HitchhikersGuideToTheGalaxy.character
+        'first name' => first_name
       }
     }
   end
@@ -123,12 +124,12 @@ describe MessagesController, type: :controller do
 
     get :get_sent_messages, params: { type: 'email', tenancy_ref: email_params.fetch(:tenancy_ref) }
 
-    expect(response.body).to eq([{
+    expect(response.body).to eq([{ "table": {
                                   "id": email_params.fetch(:template_id),
                                   "version": email_version,
-                                  "body": email_params.fetch(:variables),
-                                  "subject": '',
+                                  "body": "Hi #{first_name}",
+                                  "subject": 'subject',
                                   "type": 'email'
-                                }].to_json)
+                                } }].to_json)
   end
 end

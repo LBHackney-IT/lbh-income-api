@@ -16,7 +16,7 @@ module Hackney
       end
 
       def get_sent_messages(tenancy_ref:, message_type:)
-        Hackney::Income::Models::SentMessage.where(tenancy_ref: tenancy_ref)
+        Hackney::Income::Models::SentMessage.where(tenancy_ref: tenancy_ref).order(created_at: :desc)
       end
     end
   end

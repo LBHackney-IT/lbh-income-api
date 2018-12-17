@@ -12,18 +12,27 @@ module Hackney
           message_type: type
         )
         sent_messages = []
-
         unless sent_templates.empty?
           sent_templates.each do |tmp|
-            sent_messages << @notifications_gateway.get_sent_template(
+            template = @notifications_gateway.get_sent_template(
               template_id: tmp.template_id,
-              version: tmp.version,
-              personalisation: JSON.parse(tmp.personalisation)
+              version: tmp.version
             )
+            sent_messages << personalise_template(template, JSON.parse(tmp.personalisation))
           end
         end
-
         sent_messages
+      end
+
+      private
+
+      def personalise_template(template, personalisation)
+        personalisation.each do |key, value|
+          template.body["((#{key}))"] = value if template.body["((#{key}))"]
+          template.subject["((#{key}))"] = value if template.subject["((#{key}))"]
+        end
+
+        template
       end
     end
   end

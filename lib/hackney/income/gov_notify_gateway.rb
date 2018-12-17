@@ -36,11 +36,9 @@ module Hackney
         end
       end
 
-      def get_sent_template(template_id:, version:, personalisation:)
-        @client.generate_template_preview(
-          template_id,
-          version: version,
-          personalisation: personalisation
+      def get_sent_template(template_id:, version:)
+        @client.get_template_version(
+          template_id, version
         )
       end
 

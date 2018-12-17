@@ -6,6 +6,7 @@ class CreateSentMessages < ActiveRecord::Migration[5.1]
       t.string :version
       t.string :message_type
       t.text :personalisation
+      t.timestamps
     end
   end
 end

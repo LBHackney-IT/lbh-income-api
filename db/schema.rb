@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 20181211134925) do
     t.string "version"
     t.string "message_type"
     t.text "personalisation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tenancies", force: :cascade do |t|

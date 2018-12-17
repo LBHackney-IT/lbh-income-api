@@ -14,14 +14,14 @@ module Hackney
         EXAMPLE_TEMPLATES
       end
 
-      def get_sent_template(template_id:, version:, personalisation:)
-        {
-          "id": template_id,
-          "version": version,
-          "body": personalisation,
-          "subject": '',
-          "type": 'email'
-        }
+      def get_sent_template(template_id:, version:)
+        OpenStruct.new(
+          id: template_id,
+          version: version,
+          body: 'Hi ((first name))',
+          subject: 'subject',
+          type: 'email'
+        )
       end
     end
   end
