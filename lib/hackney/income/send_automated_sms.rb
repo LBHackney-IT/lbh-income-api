@@ -11,7 +11,7 @@ module Hackney
       def execute(tenancy_ref:, template_id:, phone_number:, reference:, variables:)
         phone = Phonelib.parse(phone_number)
         if phone.valid?
-          @notification_gateway.send_text_message(
+          notification_receipt = @notification_gateway.send_text_message(
             phone_number: phone.full_e164,
             template_id: template_id,
             reference: reference,
@@ -23,7 +23,7 @@ module Hackney
           @background_job_gateway.add_action_diary_entry(
             tenancy_ref: tenancy_ref,
             action_code: Hackney::Tenancy::ActionCodes::AUTOMATED_SMS_ACTION_CODE,
-            comment: "'#{template_name}' SMS sent to '#{phone.full_e164}'"
+            comment: "'#{template_name}' SMS sent to '#{phone.full_e164}' with content '#{notification_receipt.body_without_newlines}'"
           )
         else
           # don't log the phone number to keep our logs free from personal data

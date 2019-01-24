@@ -18,10 +18,70 @@ describe Hackney::Income::GovNotifyGateway do
   let(:test_phone_number) { Faker::PhoneNumber.phone_number }
   let(:test_email) { Faker::Internet.email }
 
+  let(:example_gov_content_body) do
+    "Hello bob,\n" \
+      "\n" \
+      "Your account has gone into arrears, please call us as soon as possible to arrange repayment.\n" \
+      "\n" \
+      'You can reach us on 0123 456 789.'
+  end
+  let(:example_gov_notify_sms_responce) do
+    uuid = SecureRandom.uuid
+    {
+      'content' => {
+        'body' => example_gov_content_body,
+        'from_number' => 'Hackney'
+      },
+      'id' => uuid.to_s,
+      'reference' => nil,
+      'template' => {
+        'id' => uuid.to_s,
+        'uri' => "https://api.notifications.service.gov.uk/services/#{uuid}/templates/#{uuid}",
+        'version' => 4
+      },
+      'uri' => "https://api.notifications.service.gov.uk/v2/notifications/#{uuid}"
+    }
+  end
+  let(:example_gov_notify_email_responce) do
+    uuid = SecureRandom.uuid
+    {
+      'content' => {
+        'subject' => 'test subject name',
+        'body' => example_gov_content_body,
+        'from_email' => 'sender@example.com'
+      },
+      'id' => uuid.to_s,
+      'reference' => nil,
+      'template' => {
+        'id' => uuid.to_s,
+        'uri' => "https://api.notifications.service.gov.uk/services/#{uuid}/templates/#{uuid}",
+        'version' => 4
+      },
+      'uri' => "https://api.notifications.service.gov.uk/v2/notifications/#{uuid}"
+    }
+  end
+
   before do
     allow(Notifications::Client).to receive(:new)
       .with(api_key)
       .and_return(mock_gov_notify)
+
+    allow(mock_gov_notify).to receive(:send_sms).and_return(Notifications::Client::ResponseNotification.new(example_gov_notify_sms_responce)).once
+    allow(mock_gov_notify).to receive(:send_email).and_return(Notifications::Client::ResponseNotification.new(example_gov_notify_email_responce)).once
+  end
+
+  it 'send_sms returns notification_receipt object' do
+    notification_receipt = subject.send_text_message(phone_number: nil, template_id: nil, variables: nil, reference: nil)
+
+    expect(notification_receipt).to be_an(Hackney::Income::Domain::NotificationReceipt)
+    expect(notification_receipt.body).to eq(example_gov_content_body)
+  end
+
+  it 'send_email returns notification_receipt object' do
+    notification_receipt = subject.send_email(recipient: nil, template_id: nil, reference: nil, variables: nil)
+
+    expect(notification_receipt).to be_an(Hackney::Income::Domain::NotificationReceipt)
+    expect(notification_receipt.body).to eq(example_gov_content_body)
   end
 
   context 'when sending a text message to a live tenant' do

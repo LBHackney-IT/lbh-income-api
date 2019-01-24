@@ -24,7 +24,7 @@ describe Hackney::Tenancy::Gateway::ContactsGateway do
       expect(WebMock).to have_requested(:get, hostname + "/api/v1/tenancies/#{tenancy_ref_url_encoded}/contacts").once
     end
 
-    it 'returns an array of Hackney::Income::Domain::Contact objects' do
+    it 'returns an array of Hackney::Income::domain::Contact objects' do
       expect(subject).to all(be_an(Hackney::Income::Domain::Contact))
     end
 

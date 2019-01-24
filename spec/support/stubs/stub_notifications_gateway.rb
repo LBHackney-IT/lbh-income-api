@@ -35,6 +35,7 @@ module Hackney
           reference: reference,
           variables: variables
         }
+        Hackney::Income::Domain::NotificationReceipt.new
       end
 
       def send_email(recipient:, template_id:, reference:, variables:)
@@ -44,6 +45,7 @@ module Hackney
           reference: reference,
           variables: variables
         }
+        Hackney::Income::Domain::NotificationReceipt.new
       end
     end
   end

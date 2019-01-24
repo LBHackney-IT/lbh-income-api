@@ -12,22 +12,24 @@ module Hackney
       end
 
       def send_text_message(phone_number:, template_id:, reference:, variables:)
-        @client.send_sms(
+        responce = @client.send_sms(
           phone_number: pre_release_phone_number(phone_number),
           template_id: template_id,
           personalisation: variables,
           reference: reference,
           sms_sender_id: @sms_sender_id
         )
+        create_notification_receipt(responce)
       end
 
       def send_email(recipient:, template_id:, reference:, variables:)
-        @client.send_email(
+        responce = @client.send_email(
           email_address: pre_release_email(recipient),
           template_id: template_id,
           personalisation: variables,
           reference: reference
         )
+        create_notification_receipt(responce)
       end
 
       def get_template_name(template_id)
@@ -44,6 +46,12 @@ module Hackney
       end
 
       private
+
+      def create_notification_receipt(responce)
+        Hackney::Income::Domain::NotificationReceipt.new.tap do |notification_receipt|
+          notification_receipt.body = responce.content&.fetch('body', nil)
+        end
+      end
 
       def all_templates_request
         @client.get_all_templates.collection.map do |template|

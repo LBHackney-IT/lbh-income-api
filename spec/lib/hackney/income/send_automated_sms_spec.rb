@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe Hackney::Income::SendAutomatedSms do
   let(:tenancy) { create_tenancy_model }
-  let(:notification_gateway) { double(Hackney::Income::GovNotifyGateway) }
+  let(:notification_gateway) { instance_double(Hackney::Income::GovNotifyGateway) }
+  let(:send_responce) { Hackney::Income::Domain::NotificationReceipt.new }
   let(:background_job_gateway) { double(Hackney::Income::BackgroundJobGateway) }
   let(:gov_notify_template_name) { Faker::Superhero.name }
   let(:send_sms) do
@@ -40,15 +41,14 @@ describe Hackney::Income::SendAutomatedSms do
 
       it 'passes vars to the gateway' do
         allow(background_job_gateway).to receive(:add_action_diary_entry)
-        expect(notification_gateway).to receive(:send_text_message)
-          .with(
-            variables: {
-              'first name': first_name
-            },
-            phone_number: e164_phone_number,
-            template_id: template_id,
-            reference: reference
-          ).once
+        expect(notification_gateway).to receive(:send_text_message).with(
+          variables: {
+            'first name': first_name
+          },
+          phone_number: e164_phone_number,
+          template_id: template_id,
+          reference: reference
+        ).and_return(send_responce).once
         subject
       end
 
@@ -58,20 +58,43 @@ describe Hackney::Income::SendAutomatedSms do
         expect(notification_gateway)
           .to receive(:send_text_message)
           .with(include(phone_number: e164_phone_number))
+          .and_return(send_responce)
           .once
 
         subject
       end
 
       it 'queues a job to write to the action diary' do
-        allow(notification_gateway).to receive(:send_text_message)
-        expect(background_job_gateway).to receive(:add_action_diary_entry)
-          .with(
+        expect(notification_gateway).to receive(:send_text_message)
+          .and_return(send_responce)
+          .once
+
+        expect(background_job_gateway).to receive(:add_action_diary_entry).with(
+          a_hash_including(
             tenancy_ref: tenancy.tenancy_ref,
-            action_code: Hackney::Tenancy::ActionCodes::AUTOMATED_SMS_ACTION_CODE,
-            comment: "'#{gov_notify_template_name}' SMS sent to '#{e164_phone_number}'"
+            action_code: Hackney::Tenancy::ActionCodes::AUTOMATED_SMS_ACTION_CODE
           )
+        ).once
         subject
+      end
+
+      context 'when a message body is returned' do
+        let(:send_responce) do
+          Hackney::Income::Domain::NotificationReceipt.new.tap do |nr|
+            nr.body = "some body text with perhaps a \newline?"
+          end
+        end
+
+        it 'queues a job to write to the action diary' do
+          expect(notification_gateway).to receive(:send_text_message).and_return(send_responce).once
+
+          expect(background_job_gateway).to receive(:add_action_diary_entry)
+            .with(a_hash_including(
+                    comment: "'#{gov_notify_template_name}' SMS sent to '#{e164_phone_number}' with content 'some body text with perhaps a ewline?'"
+                  )).once
+
+          subject
+        end
       end
     end
 
