@@ -5,8 +5,8 @@ module Hackney
         Hackney::Income::Jobs::SyncCasePriorityJob.perform_later(tenancy_ref: tenancy_ref)
       end
 
-      def schedule_send_green_in_arrears_msg(tenancy_ref:, balance:)
-        Hackney::Income::Jobs::SendGreenInArrearsMsgJob.perform_later(tenancy_ref: tenancy_ref, balance: balance)
+      def schedule_send_green_in_arrears_msg(case_id:)
+        Hackney::Income::Jobs::SendGreenInArrearsMsgJob.perform_later(case_id: case_id)
       end
 
       def add_action_diary_entry(tenancy_ref:, action_code:, comment:)

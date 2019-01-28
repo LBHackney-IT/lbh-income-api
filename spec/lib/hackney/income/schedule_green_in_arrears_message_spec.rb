@@ -13,7 +13,7 @@ describe Hackney::Income::ScheduleGreenInArrearsMessage do
   end
 
   context 'when syncing cases' do
-    context 'without finding any cases' do
+    context 'with no cases found' do
       before do
         expect(matching_criteria_gateway).to receive(:criteria_for_green_in_arrears).and_return([]).once
       end
@@ -24,17 +24,17 @@ describe Hackney::Income::ScheduleGreenInArrearsMessage do
       end
     end
 
-    context 'when finding cases' do
-      let(:tenancy_1) { create_tenancy_model }
-      let(:tenancy_2) { create_tenancy_model }
+    context 'with cases found' do
+      let(:case_priority_1) { create(:case_priority) }
+      let(:case_priority_2) { create(:case_priority) }
 
       before do
-        expect(matching_criteria_gateway).to receive(:criteria_for_green_in_arrears).and_return([tenancy_1, tenancy_2]).once
+        expect(matching_criteria_gateway).to receive(:criteria_for_green_in_arrears).and_return([case_priority_1, case_priority_2]).once
       end
 
       it 'queues a job to sync that case' do
-        expect(background_job_gateway).to receive(:schedule_send_green_in_arrears_msg).with(tenancy_ref: tenancy_1.tenancy_ref, balance: tenancy_1.balance).once
-        expect(background_job_gateway).to receive(:schedule_send_green_in_arrears_msg).with(tenancy_ref: tenancy_2.tenancy_ref, balance: tenancy_2.balance).once
+        expect(background_job_gateway).to receive(:schedule_send_green_in_arrears_msg).with(case_id: case_priority_1.case_id).once
+        expect(background_job_gateway).to receive(:schedule_send_green_in_arrears_msg).with(case_id: case_priority_2.case_id).once
         subject
       end
     end

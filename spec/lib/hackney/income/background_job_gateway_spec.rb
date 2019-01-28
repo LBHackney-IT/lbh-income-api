@@ -16,16 +16,12 @@ describe Hackney::Income::BackgroundJobGateway do
   end
 
   context 'when scheduling a job to schedule_send_green_in_arrears_msg' do
-    subject { described_class.new.schedule_send_green_in_arrears_msg(tenancy_ref: tenancy_ref, balance: balance) }
+    subject { described_class.new.schedule_send_green_in_arrears_msg(case_id: case_id) }
 
-    let(:tenancy_ref) { Faker::IDNumber.valid }
-    let(:balance) { Faker::Commerce.price }
+    let(:case_id) { Faker::IDNumber.valid }
 
     it 'enqueues the job to run as soon as possible' do
-      expect { subject }.to have_enqueued_job(Hackney::Income::Jobs::SendGreenInArrearsMsgJob).with(
-        tenancy_ref: tenancy_ref,
-        balance: balance
-      )
+      expect { subject }.to have_enqueued_job(Hackney::Income::Jobs::SendGreenInArrearsMsgJob).with(case_id: case_id)
     end
   end
 
