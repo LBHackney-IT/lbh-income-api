@@ -2,9 +2,7 @@ require 'rails_helper'
 
 describe Hackney::Income::Domain::NotificationReceipt do
   subject do
-    described_class.new.tap do |nr|
-      nr.body = body
-    end
+    described_class.new(body: body)
   end
 
   context 'with a nil body' do

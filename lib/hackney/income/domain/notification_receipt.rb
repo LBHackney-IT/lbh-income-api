@@ -4,6 +4,10 @@ module Hackney
       class NotificationReceipt
         attr_accessor :body
 
+        def initialize(body:)
+          @body = body
+        end
+
         def body_without_newlines
           @body&.squish
         end

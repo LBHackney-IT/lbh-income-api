@@ -48,9 +48,8 @@ module Hackney
       private
 
       def create_notification_receipt(responce)
-        Hackney::Income::Domain::NotificationReceipt.new.tap do |notification_receipt|
-          notification_receipt.body = responce.content&.fetch('body', nil)
-        end
+        body = responce.content&.fetch('body', nil)
+        Hackney::Income::Domain::NotificationReceipt.new(body: body)
       end
 
       def all_templates_request
