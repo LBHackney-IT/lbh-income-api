@@ -8,9 +8,13 @@ module Hackney
 
       def get_template_name(id); end
 
-      def send_text_message(phone_number:, template_id:, reference:, variables:); end
+      def send_text_message(phone_number:, template_id:, reference:, variables:)
+        Hackney::Income::Domain::NotificationReceipt.new(body: 'DummyGovNotifyGateway body')
+      end
 
-      def send_email(recipient:, template_id:, reference:, variables:); end
+      def send_email(recipient:, template_id:, reference:, variables:)
+        Hackney::Income::Domain::NotificationReceipt.new(body: 'DummyGovNotifyGateway body')
+      end
 
       def get_templates(type:)
         EXAMPLE_TEMPLATES
