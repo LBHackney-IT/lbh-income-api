@@ -11,7 +11,7 @@ module Hackney
       def execute(user_id:, tenancy_ref:, template_id:, phone_number:, reference:, variables:)
         phone = Phonelib.parse(phone_number)
         if phone.valid?
-          @notification_gateway.send_text_message(
+          notification_receipt = @notification_gateway.send_text_message(
             phone_number: phone.full_e164,
             template_id: template_id,
             reference: reference,
@@ -24,7 +24,7 @@ module Hackney
             user_id: user_id,
             tenancy_ref: tenancy_ref,
             action_code: Hackney::Tenancy::ActionCodes::MANUAL_SMS_ACTION_CODE,
-            comment: "#{template_name}' SMS sent to '#{phone.full_e164}'"
+            comment: "#{template_name}' SMS sent to '#{phone.full_e164}' with content '#{notification_receipt.body_without_newlines}'"
           )
         else
           Rails.logger.warn("Invalid phone number when trying to send manual SMS (reference: '#{reference}') using template_id: #{template_id}, ignoring")

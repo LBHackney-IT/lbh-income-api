@@ -19,7 +19,7 @@ describe Hackney::Income::SendManualEmail do
       notification_gateway.last_email
     end
 
-    let(:template_id) { Faker::Superhero.power }
+    let(:template_id) { '00001' }
     let(:recipient) { Faker::Internet.safe_email }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }

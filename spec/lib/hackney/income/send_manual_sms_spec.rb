@@ -28,7 +28,7 @@ describe Hackney::Income::SendManualSms do
       notification_gateway.last_text_message
     end
 
-    let(:template_id) { Faker::Superhero.power }
+    let(:template_id) { '00004' }
     let(:phone_number) { '020 8356 3000' }
     let(:e164_phone_number) { '+442083563000' }
     let(:reference) { Faker::Superhero.prefix }
@@ -71,7 +71,7 @@ describe Hackney::Income::SendManualSms do
           user_id: user_id,
           tenancy_ref: tenancy.tenancy_ref,
           action_code: 'GMS',
-          comment: "Quick Template' SMS sent to '+442083563000'"
+          comment: "A Quicker Template' SMS sent to '+442083563000' with content 'a body should be here?'"
         )
         .once
 

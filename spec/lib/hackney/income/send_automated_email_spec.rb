@@ -19,7 +19,7 @@ describe Hackney::Income::SendAutomatedEmail do
     end
 
     let(:recipient) { Faker::Internet.email }
-    let(:template_id) { Faker::Superhero.power }
+    let(:template_id) { '00001' }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }
 
