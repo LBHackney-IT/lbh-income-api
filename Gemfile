@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # security patch pins min versions
+gem 'aws-sdk-s3'
 gem 'loofah', '>= 2.2.3'
 gem 'rack', '>= 2.0.6'
 

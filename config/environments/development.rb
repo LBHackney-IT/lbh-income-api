@@ -45,4 +45,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.gov_notify_api_key = 'DevApiKEY12345'
+
+  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(stub: true)
 end

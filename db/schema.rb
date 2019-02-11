@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_14_151859) do
+ActiveRecord::Schema.define(version: 2019_02_12_114317) do
 
   create_table "case_priorities", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -67,6 +67,18 @@ ActiveRecord::Schema.define(version: 2019_01_14_151859) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.string "uuid"
+    t.string "extension"
+    t.string "metadata"
+    t.string "filename"
+    t.string "url"
+    t.string "mime_type"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -79,4 +79,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.x.gov_notify.api_key = ENV.fetch('GOV_NOTIFY_API_KEY')
+
+  # This specify the Cloud storage service that we are using
+  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new
 end

@@ -1,0 +1,11 @@
+test:
+  bucket_docs: hackney-docs-test
+
+development:
+  bucket_docs: hackney-docs-development
+
+production:
+  bucket_docs: hackney-docs-production
+
+staging:
+  bucket_docs: hackney-docs-staging

@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'pry'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
+
 abort('The Universal Housing credentials do not look like the simulator!') if ENV['UH_DATABASE_NAME'] != 'uhsimulator'
 abort('The Rails environment is not running in test mode!') unless Rails.env.test?
 require 'rspec/rails'
