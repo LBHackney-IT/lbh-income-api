@@ -45,4 +45,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.gov_notify_api_key = 'DevApiKEY12345'
+
+  # config.hackney_cloud_adapter = HackneyCloud::Adapter::AwsS3.new
+  config.cloud_storage = HackneyCloud::Storage.new(HackneyCloud::Adapter::AwsS3.new)
 end

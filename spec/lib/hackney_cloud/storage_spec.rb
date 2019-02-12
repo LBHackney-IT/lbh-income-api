@@ -6,9 +6,9 @@ describe HackneyCloud::Storage do
       cloud_adapter_fake = double(:upload)
       cloud_storage = described_class.new(cloud_adapter_fake)
 
-      expect(cloud_adapter_fake).to receive(:upload).with('my-bucket', 'my-file')
+      expect(cloud_adapter_fake).to receive(:upload).with('my-bucket', 'my-file', 'new-filename')
 
-      cloud_storage.save('my-bucket', 'my-file')
+      cloud_storage.save('my-bucket', 'my-file', 'new-filename')
     end
   end
 end

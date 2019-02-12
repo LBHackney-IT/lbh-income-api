@@ -7,9 +7,8 @@ module HackneyCloud
         @s3 = Aws::S3::Resource.new(client: client)
       end
 
-      def upload(bucketname, filename)
-        name = File.basename filename
-        obj = @s3.bucket(bucketname).object(name)
+      def upload(bucketname, filename, new_filename)
+        obj = @s3.bucket(bucketname).object(new_filename)
 
         obj.upload_file(filename)
       end

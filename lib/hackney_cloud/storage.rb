@@ -4,8 +4,8 @@ module HackneyCloud
       @storage_adapter = storage_adapter
     end
 
-    def save(bucket_name, filename)
-      @storage_adapter.upload(bucket_name, filename)
+    def save(bucket_name, filename, new_filename)
+      @storage_adapter.upload(bucket_name, filename, new_filename)
     end
   end
 end
