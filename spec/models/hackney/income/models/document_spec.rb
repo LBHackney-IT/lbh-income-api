@@ -19,15 +19,18 @@ RSpec.describe Hackney::Income::Models::Document, type: :model do
 
     context 'when the document exists' do
       it 'create a new entry containing uuid' do
-        filename = './lib/hackney_cloud/adapter/upload_test.txt'
+
+        filename = 'my-doc.txt'
 
         expect(Rails.configuration.cloud_storage).to receive(:save)
-        expect { Document.cloud_save(filename) }.to(change(described_class, :count)).by(1)
+
+        expect { Document.cloud_save(filename) }.to(change(described_class, :count).by(1))
 
         doc = Document.last
         expect(doc.uuid).not_to be_empty
-        expect(doc.format).to eq('txt')
+        expect(doc.format).to eq('.txt')
         expect(doc.filename).to include('.txt')
+        expect(doc.mime_type).to eq('text/plain')
       end
     end
   end

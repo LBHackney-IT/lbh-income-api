@@ -6,10 +6,12 @@ class Document < ApplicationRecord
 
   def self.cloud_save(filename)
     uuid = SecureRandom.uuid
-    format = filename.include?('.') ? filename.split('.').last : nil
+    format = File.extname(filename)
     new_filename = "#{uuid}.#{format}"
-
-    new_doc = Document.create(filename: filename, uuid: uuid, format: format)
+    new_doc = Document.create(filename: filename,
+                              uuid: uuid,
+                              format: format,
+                              mime_type: Rack::Mime.mime_type(format))
 
     cloud_storage.save(HACKNEY_BUCKET_DOCS, filename, new_filename) if new_doc.errors.empty?
   end
