@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # security patch pins min versions
+gem 'aws-sdk-s3'
 gem 'loofah', '>= 2.2.3'
 gem 'rack', '>= 2.0.6'
 
@@ -36,7 +37,6 @@ gem 'daemons'
 gem 'delayed_job'
 gem 'delayed_job_active_record'
 gem 'sentry-raven'
-gem 'aws-sdk-s3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

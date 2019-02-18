@@ -10,27 +10,37 @@ RSpec.describe Hackney::Income::Models::Document, type: :model do
   describe '#cloud_save' do
     subject(:Document) { described_class }
 
-    context 'when filename is NIL' do
-      it 'expect to NOT create a new entry' do
-        expect(Rails.configuration.cloud_storage).not_to receive(:save)
-        expect { Document.cloud_save('') }.not_to(change(Document, :count))
-      end
-    end
+    context 'when the file exists' do
+      let(:filename) { './spec/lib/hackney_cloud/adapter/upload_test.txt' }
 
-    context 'when the document exists' do
       it 'create a new entry containing uuid' do
-
-        filename = 'my-doc.txt'
-
         expect(Rails.configuration.cloud_storage).to receive(:save)
-
         expect { Document.cloud_save(filename) }.to(change(described_class, :count).by(1))
 
         doc = Document.last
+
         expect(doc.uuid).not_to be_empty
         expect(doc.format).to eq('.txt')
         expect(doc.filename).to include('.txt')
         expect(doc.mime_type).to eq('text/plain')
+      end
+    end
+
+    context 'when the file DOES NOT exist' do
+      let(:filename) { 'non-existent-file.txt' }
+
+      it 'raises and exception AND does not create a new entry in Document' do
+        expect { Document.cloud_save(filename) }.to raise_exception('No such file: non-existent-file.txt')
+      end
+
+      it 'does not create a new entry in Document' do
+        expect {
+          begin
+            Document.cloud_save(filename)
+          rescue StandardError
+            nil
+          end
+        }.not_to change(Document, :count)
       end
     end
   end
