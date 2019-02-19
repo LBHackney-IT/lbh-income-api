@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Hackney::Cloud::Adapter::AwsS3 do
   subject(:s3) { described_class.new(stub: true) }
 
-  let(:filename) {'./spec/lib/hackney/cloud/adapter/upload_test.txt'}
+  let(:filename) { './spec/lib/hackney/cloud/adapter/upload_test.txt' }
   let(:new_filename) { SecureRandom.uuid }
 
   it 'uploads a file on S3' do
