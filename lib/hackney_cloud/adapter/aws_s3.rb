@@ -10,7 +10,9 @@ module HackneyCloud
       def upload(bucketname, filename, new_filename)
         obj = @s3.bucket(bucketname).object(new_filename)
 
-        obj.upload_file(filename)
+        success_store = obj.upload_file(filename)
+
+        success_store ? "#{obj.public_url}/#{new_filename}" : nil
       end
     end
   end

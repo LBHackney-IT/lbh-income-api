@@ -14,7 +14,6 @@ RSpec.describe Hackney::Income::Models::Document, type: :model do
       let(:filename) { './spec/lib/hackney_cloud/adapter/upload_test.txt' }
 
       it 'create a new entry containing uuid' do
-        expect(Rails.configuration.cloud_storage).to receive(:save)
         expect { Document.cloud_save(filename) }.to(change(described_class, :count).by(1))
 
         doc = Document.last
@@ -23,6 +22,7 @@ RSpec.describe Hackney::Income::Models::Document, type: :model do
         expect(doc.format).to eq('.txt')
         expect(doc.filename).to include('.txt')
         expect(doc.mime_type).to eq('text/plain')
+        expect(doc.url).to match /https:.*#{doc.uuid}#{doc.format}/
       end
     end
 

@@ -8,14 +8,17 @@ class Document < ApplicationRecord
 
     uuid = SecureRandom.uuid
     format = File.extname(filename)
-    new_filename = "#{uuid}.#{format}"
+    new_filename = "#{uuid}#{format}"
 
     new_doc = Document.create(filename: filename,
                               uuid: uuid,
                               format: format,
                               mime_type: Rack::Mime.mime_type(format))
 
-    cloud_storage.save(HACKNEY_BUCKET_DOCS, filename, new_filename) if new_doc.errors.empty?
+    if new_doc.errors.empty?
+      url = cloud_storage.save(HACKNEY_BUCKET_DOCS, filename, new_filename)
+      new_doc.update(url: url)
+    end
 
     { errors: new_doc.errors.full_messages }
   end

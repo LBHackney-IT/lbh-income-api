@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 2019_02_12_114317) do
     t.string "format"
     t.string "metadata"
     t.string "filename"
+    t.string "url"
     t.string "mime_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
