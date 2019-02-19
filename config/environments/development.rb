@@ -46,5 +46,5 @@ Rails.application.configure do
 
   config.gov_notify_api_key = 'DevApiKEY12345'
 
-  config.cloud_storage = HackneyCloud::Storage.new(HackneyCloud::Adapter::AwsS3.new)
+  config.cloud_storage = HackneyCloud::Storage.new(HackneyCloud::Adapter::AwsS3.new(stub: true))
 end

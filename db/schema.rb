@@ -54,6 +54,17 @@ ActiveRecord::Schema.define(version: 2019_02_12_114317) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cloud_documents", force: :cascade do |t|
+    t.string "uuid"
+    t.string "extension"
+    t.string "metadata"
+    t.string "filename"
+    t.string "url"
+    t.string "mime_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -67,17 +78,6 @@ ActiveRecord::Schema.define(version: 2019_02_12_114317) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-  end
-
-  create_table "documents", force: :cascade do |t|
-    t.string "uuid"
-    t.string "format"
-    t.string "metadata"
-    t.string "filename"
-    t.string "url"
-    t.string "mime_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

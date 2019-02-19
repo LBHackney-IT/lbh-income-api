@@ -3,7 +3,7 @@ namespace :cloud do
   task :save, [:filename] do |_task, args|
     puts 'Saving to the cloud'
 
-    response = Document.cloud_save(args.filename)
+    response = CloudDocument.cloud_save(args.filename)
 
     if response.errors.empty?
       puts 'File successfully saved.'

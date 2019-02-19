@@ -1,8 +1,8 @@
-class CreateDocuments < ActiveRecord::Migration[5.2]
+class CreateCloudDocuments < ActiveRecord::Migration[5.2]
   def change
-    create_table :documents do |t|
+    create_table :cloud_documents do |t|
       t.string :uuid
-      t.string :format
+      t.string :extension
       t.string :metadata
       t.string :filename
       t.string :url

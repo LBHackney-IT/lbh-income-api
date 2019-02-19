@@ -43,5 +43,5 @@ Rails.application.configure do
   config.x.run_tenancy_sync_jobs = true
   config.x.gov_notify.api_key = 'TestApiKEY12345'
 
-  config.cloud_storage = HackneyCloud::Storage.new(HackneyCloud::Adapter::Fake.new)
+  config.cloud_storage = Hackney::Cloud::Storage.new(Hackney::Cloud::Adapter::Fake.new)
 end

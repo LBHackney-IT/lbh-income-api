@@ -1,28 +1,28 @@
 require 'rails_helper'
 
-RSpec.describe Hackney::Income::Models::Document, type: :model do
+RSpec.describe Hackney::CloudDocument, type: :model do
   describe 'attributes' do
     subject { described_class.new.attributes }
 
-    it { is_expected.to include('uuid', 'filename', 'format', 'metadata', 'created_at') }
+    it { is_expected.to include('uuid', 'filename', 'extension', 'metadata', 'created_at') }
   end
 
   describe '#cloud_save' do
-    subject(:Document) { described_class }
+    subject(:cloud_doc) { described_class }
 
     context 'when the file exists' do
-      let(:filename) { './spec/lib/hackney_cloud/adapter/upload_test.txt' }
+      let(:filename) { './spec/lib/hackney/cloud/adapter/upload_test.txt' }
 
       it 'create a new entry containing uuid' do
-        expect { Document.cloud_save(filename) }.to(change(described_class, :count).by(1))
+        expect { cloud_doc.cloud_save(filename) }.to(change(described_class, :count).by(1))
 
-        doc = Document.last
+        doc = cloud_doc.last
 
         expect(doc.uuid).not_to be_empty
-        expect(doc.format).to eq('.txt')
+        expect(doc.extension).to eq('.txt')
         expect(doc.filename).to include('.txt')
         expect(doc.mime_type).to eq('text/plain')
-        expect(doc.url).to match /https:.*#{doc.uuid}#{doc.format}/
+        expect(doc.url).to match /https:.*#{doc.uuid}#{doc.extension}/
       end
     end
 
@@ -30,17 +30,17 @@ RSpec.describe Hackney::Income::Models::Document, type: :model do
       let(:filename) { 'non-existent-file.txt' }
 
       it 'raises and exception AND does not create a new entry in Document' do
-        expect { Document.cloud_save(filename) }.to raise_exception('No such file: non-existent-file.txt')
+        expect { cloud_doc.cloud_save(filename) }.to raise_exception('No such file: non-existent-file.txt')
       end
 
       it 'does not create a new entry in Document' do
         expect {
           begin
-            Document.cloud_save(filename)
+            cloud_doc.cloud_save(filename)
           rescue StandardError
             nil
           end
-        }.not_to change(Document, :count)
+        }.not_to change(cloud_doc, :count)
       end
     end
   end
