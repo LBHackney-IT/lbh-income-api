@@ -27,12 +27,13 @@ module Hackney
             DECLARE @BreachedAgreementsCount INT = (SELECT COUNT(tag_ref) FROM [dbo].[arag] WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND arag_status = @BreachedArrearsAgreementStatus)
             DECLARE @NospsInLastYear INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(year, -1, GETDATE())))
             DECLARE @NospsInLastMonth INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(month, -1, GETDATE())))
+            
             DECLARE @NextBalance NUMERIC(9, 2) = @CurrentBalance
             DECLARE @CurrentTransactionRow INT = 1
-            DECLARE @LastTransactionDate SMALLDATETIME = GETDATE()
+            DECLARE @ArrearsStartDate SMALLDATETIME = GETDATE()
             WHILE (@NextBalance > 0 AND @RemainingTransactions > 0)
             BEGIN
-              SELECT @NextBalance = @NextBalance - real_value, @LastTransactionDate = post_date
+              SELECT @NextBalance = @NextBalance - real_value, @ArrearsStartDate = post_date
               FROM (
                 SELECT ROW_NUMBER() OVER (ORDER BY post_date DESC) as row, real_value, post_date
                 FROM rtrans WITH (NOLOCK)
@@ -54,7 +55,7 @@ module Hackney
             SELECT
               @CurrentBalance as current_balance,
               @LastPaymentDate as last_payment_date,
-              @LastTransactionDate as pre_arrears_date,
+              @ArrearsStartDate as arrears_start_date,
               @ActiveAgreementsCount as active_agreements_count,
               @BreachedAgreementsCount as breached_agreements_count,
               @NospsInLastYear as nosps_in_last_year,
@@ -88,7 +89,7 @@ module Hackney
         end
 
         def days_in_arrears
-          day_difference(Date.today, attributes.fetch(:pre_arrears_date))
+          day_difference(Date.today, attributes.fetch(:arrears_start_date))
         end
 
         def days_since_last_payment
