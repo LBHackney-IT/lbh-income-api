@@ -8,7 +8,7 @@ require 'delayed/command'
 job_identifier_prefix = '--identifier=' + rand(1_000...1_000_000).to_s
 
 queues = [
-  '--queues=action_diary_writer,message_jobs,uh_sync_cases'
+  '--queues=action_diary_writer,message_jobs,uh_sync_cases,cloud_storage'
   # this is currency being used with the 'run' command,
   # this seems to disable separate threads. Therefore until:
   #  - jobs are run using 'start'

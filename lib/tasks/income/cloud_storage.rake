@@ -3,7 +3,7 @@ namespace :cloud do
   task :save, [:filename] do |_task, args|
     puts 'Saving to the cloud'
 
-    storage = Hackney::Cloud::Storage.new(Rails.configuration.cloud_adapter, Hackney::Document)
+    storage = Hackney::Cloud::Storage.new(Rails.configuration.cloud_adapter, Hackney::Cloud::Document)
     response = storage.save(args[:filename])
 
     if response[:errors].empty?
