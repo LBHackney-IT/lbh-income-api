@@ -2,8 +2,8 @@ module Hackney
   module Cloud
     module Adapter
       class Fake
-        def upload(bucketname, _filename, new_filename)
-          "https://#{bucketname}/#{new_filename}"
+        def upload(bucket_name:, filename:, new_filename:)
+          "https://#{bucket_name}/#{new_filename}"
         end
       end
     end

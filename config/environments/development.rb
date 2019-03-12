@@ -46,5 +46,7 @@ Rails.application.configure do
 
   config.gov_notify_api_key = 'DevApiKEY12345'
 
-  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(stub: true)
+  # Configure the Cloud storage service
+  encryption_client = Hackney::Cloud::EncryptionClient.new(config_for('cloud_storage')['customer_managed_key']).create
+  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(encryption_client)
 end

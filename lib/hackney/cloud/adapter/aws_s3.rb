@@ -2,18 +2,33 @@ module Hackney
   module Cloud
     module Adapter
       class AwsS3
-        def initialize(stub: false)
-          client = Aws::S3::Client.new(stub_responses: stub)
-
-          @s3 = Aws::S3::Resource.new(client: client)
+        def initialize(encryption_client)
+          @client = encryption_client
         end
 
-        def upload(bucketname, filename, new_filename)
-          s3_file_obj = @s3.bucket(bucketname).object(new_filename)
+        def upload(bucket_name:, filename:, new_filename:)
+          content = File.read(filename)
 
-          success = s3_file_obj.upload_file(filename)
+          # Add encrypted item to bucket
+          resp = client.put_object(
+            body: content,
+            bucket: bucket_name,
+            key: new_filename
+          )
 
-          success ? "#{s3_file_obj.public_url}/#{new_filename}" : nil
+          resp.successful? || raise('Cloud Storage Error!')
+        end
+
+        def download(bucket_name, filename)
+          client.get_object(bucket: bucket_name, key: filename)
+        end
+
+        private
+
+        attr_reader :client
+
+        def customer_managed_key
+          Rails.application.config_for('cloud_storage')['customer_managed_key']
         end
       end
     end

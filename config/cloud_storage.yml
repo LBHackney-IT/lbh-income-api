@@ -1,11 +1,15 @@
 test:
   bucket_docs: hackney-docs-test
+  customer_managed_key: '-'
 
 development:
   bucket_docs: hackney-docs-development
+  customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 production:
   bucket_docs: hackney-docs-production
+  customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 staging:
   bucket_docs: hackney-docs-staging
+  customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
