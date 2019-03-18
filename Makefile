@@ -1,8 +1,7 @@
-COMPOSE_FILES = -f docker-compose.yml -f docker-compose.local.yml
 
 .PHONY: docker-build
 docker-build:
-	docker-compose $(COMPOSE_FILES) build
+	docker-compose build
 
 .PHONY: docker-down
 docker-down:
@@ -18,7 +17,7 @@ setup: docker-build bundle
 .PHONY: serve
 serve:
 	-rm tmp/pids/server.pid &> /dev/null
-	docker-compose $(COMPOSE_FILES) up
+	docker-compose up
 
 .PHONY: test
 test:
