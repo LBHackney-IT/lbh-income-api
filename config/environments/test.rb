@@ -44,5 +44,7 @@ Rails.application.configure do
   config.x.gov_notify.api_key = 'TestApiKEY12345'
 
   config.active_job.queue_adapter = :test
+
+  # Configure the Cloud storage service
   config.cloud_adapter = Hackney::Cloud::Adapter::Fake.new
 end

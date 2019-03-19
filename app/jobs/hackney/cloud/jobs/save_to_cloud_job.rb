@@ -7,7 +7,9 @@ module Hackney
         queue_as :cloud_storage
 
         def perform(bucket_name:, filename:, new_filename:, model_document:, uuid:)
-          url = cloud_provider.upload(bucket_name, filename, new_filename)
+          url = cloud_provider.upload(bucket_name: bucket_name,
+                                      filename: filename,
+                                      new_filename: new_filename)
 
           document(model_document, uuid).update(url: url, status: UPLOADED_CLOUD_STATUS)
         end

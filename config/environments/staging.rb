@@ -80,6 +80,7 @@ Rails.application.configure do
 
   config.x.gov_notify.api_key = ENV.fetch('GOV_NOTIFY_API_KEY')
 
-  # This specify the Cloud storage service that we are using
-  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new
+  # Configure the Cloud storage service
+  encryption_client = Hackney::Cloud::EncryptionClient.new(config_for('cloud_storage')['customer_managed_key']).create
+  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(encryption_client)
 end
