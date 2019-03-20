@@ -62,7 +62,8 @@ module UniversalHousingHelper
       prop_deb: false,
       none_rent: false,
       receipted: 0.0,
-      line_segno: false
+      line_segno: false,
+      vat: '1'
     )
   end
 
