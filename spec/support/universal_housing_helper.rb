@@ -63,7 +63,7 @@ module UniversalHousingHelper
       none_rent: false,
       receipted: 0.0,
       line_segno: false,
-      vat: '1'
+      vat: false
     )
   end
 
