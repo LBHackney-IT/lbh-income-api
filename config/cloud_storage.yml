@@ -7,7 +7,7 @@ development:
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 production:
-  bucket_docs: hackney-docs-production
+  bucket_docs: hackney-income-document-production
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 staging:
