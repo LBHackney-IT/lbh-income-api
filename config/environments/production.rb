@@ -81,8 +81,4 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.x.gov_notify.api_key = ENV.fetch('GOV_NOTIFY_API_KEY')
-
-  # Configure the Cloud storage service
-  encryption_client = Hackney::Cloud::EncryptionClient.new(config_for('cloud_storage')['customer_managed_key']).create
-  config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(encryption_client)
 end

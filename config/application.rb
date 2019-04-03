@@ -47,5 +47,9 @@ module App
 
     config.x.green_in_arrears.sms_template_id = ENV.fetch('GREEN_IN_ARREARS_SMS_TEMPLATE_ID', 'b168529b-2d87-467e-ab51-7e50aeae9c2e')
     config.x.green_in_arrears.email_template_id = ENV.fetch('GREEN_IN_ARREARS_EMAIL_TEMPLATE_ID', 'd36cb99b-7e7e-4859-a1d0-d8083d0f0391')
+
+    # Configure the Cloud storage service
+    encryption_client = Hackney::Cloud::EncryptionClient.new(config_for('cloud_storage')['customer_managed_key']).create
+    config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(encryption_client)
   end
 end
