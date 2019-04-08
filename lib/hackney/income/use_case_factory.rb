@@ -69,6 +69,16 @@ module Hackney
         )
       end
 
+      def enqueue_request_all_precompiled_letter_states
+        enqueue_job = Hackney::Income::Jobs::RequestPrecompiledLetterStateJob
+        document_store = Hackney::Cloud::Document
+
+        Hackney::Notification::EnqueueRequestAllPrecompiledLetterState.new(
+          enqueue_job: enqueue_job,
+          document_store: document_store
+        )
+      end
+
       def send_automated_sms
         Hackney::Notification::SendAutomatedSms.new(
           notification_gateway: notifications_gateway,
