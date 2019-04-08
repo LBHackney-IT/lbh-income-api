@@ -16,8 +16,8 @@ module Hackney
       end
 
       def execute
-        documents.each do
-          enqueue_job.perform_later(document_id: document_id)
+        documents.each do |document|
+          enqueue_job.perform_later(document_id: document.id)
         end
       end
     end
