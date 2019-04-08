@@ -15,4 +15,4 @@
 
   request_all_precompiled_letter_states:
     class: RequestAllPrecompiledLetterStates
-    every: 5m
+    cron: '0 0 10,15 * * *' # 10am and 3pm utc every day
