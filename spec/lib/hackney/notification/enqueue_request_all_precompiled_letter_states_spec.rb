@@ -18,7 +18,6 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
     let!(:document) { create(:document) }
 
     it do
-      # expect_any_instance_of(enqueue_job).to receive(:perform)
       expect {
         subject.execute
       }.to(have_enqueued_job(enqueue_job).with(document_id: document.id))
