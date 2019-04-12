@@ -11,7 +11,7 @@
 
   green_in_arrears_messages:
     class: GreenInArrearsMessages
-    cron: '0 0 9 * * 5' # 9am utc every friday
+    cron: '0 0 9 * * 5 Europe/London' # 9am utc every friday
 
   request_all_precompiled_letter_states:
     class: RequestAllPrecompiledLetterStates
