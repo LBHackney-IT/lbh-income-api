@@ -9,11 +9,13 @@ describe DocumentsController do
     let(:document) { create(:document, metadata: metadata) }
     let(:filename) { payment_ref + '_' + template_id + document.extension }
 
+    let(:download_use_case) { Hackney::Letter::DownloadUseCase }
+
     context 'when the document is present' do
       before do
-        expect_any_instance_of(Hackney::Letter::DownloadUseCase).to
-        receive(:execute).with(id: document.id.to_s)
-                         .and_return(filepath: Tempfile.new.path, document: document)
+        expect_any_instance_of(download_use_case)
+          .to receive(:execute).with(id: document.id.to_s)
+                               .and_return(filepath: Tempfile.new.path, document: document)
         get :download, params: { id: document.id }
       end
 
