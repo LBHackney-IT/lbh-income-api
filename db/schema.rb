@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_03_133842) do
+ActiveRecord::Schema.define(version: 2019_04_15_000000) do
 
   create_table "case_priorities", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -70,16 +70,17 @@ ActiveRecord::Schema.define(version: 2019_04_03_133842) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string "uuid"
-    t.string "extension"
+    t.string "uuid", null: false
+    t.string "extension", null: false
     t.string "metadata"
     t.string "filename"
     t.string "url"
-    t.string "mime_type"
+    t.string "mime_type", null: false
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "ext_message_id"
+    t.index ["uuid"], name: "index_documents_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
