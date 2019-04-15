@@ -48,6 +48,7 @@ describe Hackney::Cloud::Storage, type: :model do
 
     describe '#read_document' do
       let(:document) { create(:document) }
+
       context 'when the file exists' do
         it 'retrieves the content' do
           uuid = document.uuid

@@ -1,5 +1,4 @@
 class DocumentsController < ApplicationController
-
   def download
     doc_download = letter_use_case_factory.download.execute(id: params.fetch(:id))
     doc = doc_download[:document]

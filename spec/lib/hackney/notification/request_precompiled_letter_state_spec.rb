@@ -15,10 +15,9 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
 
   let(:document) do
     create(:document,
-      filename: 'test_file.txt',
-      ext_message_id: message_id,
-      status: 'uploaded'
-    )
+           filename: 'test_file.txt',
+           ext_message_id: message_id,
+           status: 'uploaded')
   end
 
   let(:response) { notification_response.execute(message_id: document.uuid) }

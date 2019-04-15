@@ -9,7 +9,7 @@ describe Hackney::Income::Jobs::SaveAndSendLetterJob do
   let(:bucket_name) { 'my-bucket' }
   let(:letter_html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
   let(:uuid) { SecureRandom.uuid }
-  let(:doc) { create(:document, filename: 'my-doc.pdf' )}
+  let(:doc) { create(:document, filename: 'my-doc.pdf') }
 
   let(:enqueue_save_send) {
     described_class.perform_now(bucket_name: bucket_name,
