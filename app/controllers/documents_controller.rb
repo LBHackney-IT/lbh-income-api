@@ -14,6 +14,6 @@ class DocumentsController < ApplicationController
     meta = JSON.parse(doc.metadata).symbolize_keys
     pay_ref = meta.dig(:payment_ref)
     letter_template = meta.dig(:template_id)
-    pay_ref.to_s + letter_template.to_s + doc.extension
+    pay_ref.to_s + '_' + letter_template.to_s + doc.extension
   end
 end

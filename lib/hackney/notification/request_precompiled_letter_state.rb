@@ -12,7 +12,6 @@ module Hackney
       end
 
       def update_document(message_id:, status:)
-        binding.pry
         store = Hackney::Cloud::Document
         doc = store.find_by!(uuid: message_id)
         doc.status = status

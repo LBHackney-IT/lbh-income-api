@@ -14,7 +14,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   end
 
   let(:document) do
-    document_store.create(
+    create(:document,
       filename: 'test_file.txt',
       ext_message_id: message_id,
       status: 'uploaded'

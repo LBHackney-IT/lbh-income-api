@@ -7,7 +7,7 @@ describe DocumentsController do
 
     let(:metadata) { { template_id: template_id, payment_ref: payment_ref}.to_json }
     let(:document) { create(:document, metadata: metadata) }
-    let(:filename) { payment_ref + template_id + '_' + document.extension }
+    let(:filename) { payment_ref + '_' + template_id + document.extension }
 
     context 'when the document is present' do
       before do
