@@ -11,7 +11,9 @@ describe DocumentsController do
 
     context 'when the document is present' do
       before do
-        expect_any_instance_of(Hackney::Letter::DownloadUseCase).to receive(:execute).with(id: document.id.to_s).and_return(filepath: Tempfile.new.path, document: document)
+        expect_any_instance_of(Hackney::Letter::DownloadUseCase).to
+        receive(:execute).with(id: document.id.to_s)
+                         .and_return(filepath: Tempfile.new.path, document: document)
         get :download, params: { id: document.id }
       end
 
