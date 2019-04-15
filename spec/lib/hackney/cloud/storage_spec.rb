@@ -13,10 +13,6 @@ describe Hackney::Cloud::Storage, type: :model do
   end
 
   it 'retrieves all documents' do
-    stub_const('Hackney::Cloud::Document', CloudDocumentFake)
-
-    expect(CloudDocumentFake).to receive(:all)
-
     storage.all_documents
   end
 
