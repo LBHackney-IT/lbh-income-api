@@ -20,4 +20,13 @@ describe DocumentsController do
       it { expect(response.content_type).to eq document.mime_type }
     end
   end
+
+  describe '#index' do
+    it 'returns all documents' do
+      expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
+        .to receive(:execute)
+
+      get :index
+    end
+  end
 end

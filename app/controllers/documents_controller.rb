@@ -15,4 +15,8 @@ class DocumentsController < ApplicationController
     letter_template = meta.dig(:template_id)
     pay_ref.to_s + '_' + letter_template.to_s + doc.extension
   end
+
+  def index
+    render json: letter_use_case_factory.get_all_documents.execute
+  end
 end

@@ -12,6 +12,14 @@ describe Hackney::Cloud::Storage, type: :model do
     end
   end
 
+  it 'retrieves all documents' do
+    stub_const('Hackney::Cloud::Document', CloudDocumentFake)
+
+    expect(CloudDocumentFake).to receive(:all)
+
+    storage.all_documents
+  end
+
   describe '#save' do
     context 'when the file exists' do
       let(:file) { File.open('spec/test_files/test_pdf.pdf', 'rb') }

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get '/messages/get_templates', to: 'messages#get_templates'
 
     get '/documents/:id/download/', to: 'documents#download'
+    get '/documents/', to: 'documents#index'
 
     post '/messages/letters/send', to: 'letters#send_letter'
     post '/messages/letters', to: 'letters#create'
