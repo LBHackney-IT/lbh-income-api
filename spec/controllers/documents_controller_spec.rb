@@ -1,25 +1,23 @@
 require 'rails_helper'
 
 describe DocumentsController do
-  describe '#down' do
-    let(:download_use_case) { instance_double(Hackney::Letter::DownloadUseCase, execute: { filepath: 'example.pdf' }) }
-    let(:letter_instance) { double(download: download_use_case) }
+  describe '#download' do
+    let(:template_id) { Faker::Demographic.demonym }
+    let(:payment_ref) { Faker::Number.number(10)}
+
+    let(:metadata) { { template_id: template_id, payment_ref: payment_ref}.to_json }
+    let(:document) { create(:document, metadata: metadata) }
+    let(:filename) { payment_ref + template_id + '_' + document.extension }
 
     context 'when the document is present' do
       before do
-        allow(Hackney::Letter::UseCaseFactory)
-          .to receive(:new)
-          .and_return(letter_instance)
+        expect_any_instance_of(Hackney::Letter::DownloadUseCase).to receive(:execute).with(id: document.id.to_s).and_return({ filepath: Tempfile.new.path, document: document })
+        get :download, params: { id: document.id }
       end
 
-      let(:id) { Random.rand(100).to_s }
-
-      it 'download the document' do
-        expect(download_use_case).to receive(:execute).with(id: id)
-        expect_any_instance_of(described_class).to receive(:send_file).with('example.pdf', type: 'application/pdf', filename: 'letter.pdf')
-
-        get :download, params: { id: id }
-      end
+      it{expect(response).to be_successful}
+      it{expect(response.header["Content-Disposition"]).to eq("attachment; filename=\"#{filename}\"")}
+      it{expect(response.content_type).to eq document.mime_type }
     end
   end
 end

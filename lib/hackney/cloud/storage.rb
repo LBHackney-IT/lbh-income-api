@@ -34,10 +34,10 @@ module Hackney
       end
 
       def read_document(id)
-        doc = document_model.find(id)
-        response = @storage_adapter.download(bucket_name: HACKNEY_BUCKET_DOCS, filename: doc.uuid + doc.extension)
+        document = document_model.find_by!(id: id)
+        response = @storage_adapter.download(bucket_name: HACKNEY_BUCKET_DOCS, filename: document.uuid + document.extension)
 
-        { filepath: response.path }
+        { filepath: response.path, document: document }
       end
 
       def upload(bucket_name, content, filename)

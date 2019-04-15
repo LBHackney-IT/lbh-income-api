@@ -1,9 +1,19 @@
 class DocumentsController < ApplicationController
-  LETTER_FILE_NAME = 'letter.pdf'.freeze
 
   def download
-    response = letter_use_case_factory.download.execute(id: params.fetch(:id))
+    doc_download = letter_use_case_factory.download.execute(id: params.fetch(:id))
+    doc = doc_download[:document]
 
-    send_file response[:filepath], type: 'application/pdf', filename: LETTER_FILE_NAME
+    send_file doc_download[:filepath], type: doc.mime_type, filename: letter_file_name(doc)
+  end
+
+  private
+
+  def letter_file_name(doc)
+    return 'letter.pdf' unless doc.metadata
+    meta = JSON.parse(doc.metadata).symbolize_keys
+    pay_ref = meta.dig(:payment_ref)
+    letter_template = meta.dig(:template_id)
+    pay_ref.to_s + letter_template.to_s + doc.extension
   end
 end
