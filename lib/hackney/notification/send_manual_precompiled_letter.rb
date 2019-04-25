@@ -19,6 +19,10 @@ module Hackney
         # Letter 1 in arrears SO (code LS1)
         # Letter 2 in arrears SO (code LS2)
         # const = 'Letter 1 in arrears FH'.split(' ').join('_').upcase
+
+        # TODO: this really must be in a background job => UH is unreliable
+        # TODO: create job to accept exact same args as add_action_diary_usecase
+
         const = template_id.split(' ').join('_').upcase
         action_code = "Hackney::Tenancy::ActionCodes::#{const}".constantize
         # TODO: add action diary event if payment_ref
