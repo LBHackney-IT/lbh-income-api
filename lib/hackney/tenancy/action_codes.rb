@@ -14,7 +14,6 @@ module Hackney
       LETTER_2_IN_ARREARS_LH = 'LL2'.freeze
       LETTER_1_IN_ARREARS_SO = 'LS1'.freeze
       LETTER_2_IN_ARREARS_SO = 'LS2'.freeze
-
     end
   end
 end

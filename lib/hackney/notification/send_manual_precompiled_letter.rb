@@ -8,8 +8,7 @@ module Hackney
             letter_pdf: letter_pdf
           )
 
-        # FIXME:
-        # TODO: this really must be in a background job => UH is unreliable
+        # FIXME: this must be in a background job => UH is unreliable
         # TODO: create job to accept exact same args as add_action_diary_usecase
 
         const = template_id.split(' ').join('_').upcase

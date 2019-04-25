@@ -41,12 +41,14 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
      'Letter 1 in arrears LH', 'Letter 2 in arrears LH',
      'Letter 1 in arrears SO', 'Letter 2 in arrears SO'].each do |template|
       it {
-        expect{send_precompiled_letter.execute(
-                 unique_reference: unique_reference,
-                 letter_pdf: test_file,
-                 payment_ref: payment_ref,
-                 template_id: template
-               )}.not_to raise_error
+        expect {
+          send_precompiled_letter.execute(
+            unique_reference: unique_reference,
+            letter_pdf: test_file,
+            payment_ref: payment_ref,
+            template_id: template
+          )
+        } .not_to raise_error
       }
     end
   end
