@@ -3,11 +3,12 @@ require 'rails_helper'
 describe Hackney::Notification::SendManualPrecompiledLetter do
   let(:notification_gateway) { Hackney::Income::StubNotificationsGateway.new }
   let(:add_action_diary_usecase) { instance_double(Hackney::Tenancy::AddActionDiaryEntry) }
-  let(:gateway) { Hackney::Income::UniversalHousingLeaseholdGateway }
+  let(:leasehold_gateway) { Hackney::Income::UniversalHousingLeaseholdGateway }
   let(:send_precompiled_letter) do
     described_class.new(
       notification_gateway: notification_gateway,
-      add_action_diary_usecase: add_action_diary_usecase
+      add_action_diary_usecase: add_action_diary_usecase,
+      leasehold_gateway: leasehold_gateway
     )
   end
 
@@ -22,7 +23,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
 
   context 'when sending an letters manually' do
     before {
-      expect_any_instance_of(gateway).to receive(:map_tenancy_ref_to_payment_ref).and_return(tenancy_ref: 12_321)
+      expect_any_instance_of(leasehold_gateway).to receive(:map_tenancy_ref_to_payment_ref).and_return(tenancy_ref: 12_321)
     }
 
     let(:subject) do

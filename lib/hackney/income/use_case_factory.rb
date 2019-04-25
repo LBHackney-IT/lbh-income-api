@@ -56,7 +56,8 @@ module Hackney
       def send_precompiled_letter
         Hackney::Notification::SendManualPrecompiledLetter.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_usecase: add_action_diary
+          add_action_diary_usecase: add_action_diary,
+          leasehold_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new
         )
       end
 
