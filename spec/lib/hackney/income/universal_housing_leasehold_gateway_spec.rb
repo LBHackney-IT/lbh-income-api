@@ -34,6 +34,13 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
   let(:commencement_of_tenancy) { Faker::Date.backward(10) }
 
   after { truncate_uh_tables }
+  describe 'map_tenancy_ref_to_payment_ref returns a tenancy_ref in exchange for a payment_ref' do
+    context 'when payment_ref does not exist' do
+      it 'raises an exception' do
+        expect { gateway.map_tenancy_ref_to_payment_ref(payment_ref: 123) }.to raise_exception(Hackney::Income::TenancyNotFoundError)
+      end
+    end
+  end
 
   describe 'get_leasehold_info collects all the info to populate the letter' do
     context 'when payment_ref does not exist' do

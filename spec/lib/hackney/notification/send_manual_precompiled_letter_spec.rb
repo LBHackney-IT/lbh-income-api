@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe Hackney::Notification::SendManualPrecompiledLetter do
   let(:notification_gateway) { Hackney::Income::StubNotificationsGateway.new }
-  let(:add_action_diary_usecase) { double(Hackney::Tenancy::AddActionDiaryEntry) }
+  let(:add_action_diary_usecase) { instance_double(Hackney::Tenancy::AddActionDiaryEntry) }
+  let(:gateway) { Hackney::Income::UniversalHousingLeaseholdGateway }
   let(:send_precompiled_letter) do
     described_class.new(
       notification_gateway: notification_gateway,
@@ -13,11 +14,19 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
   let(:test_file) { File.open('spec/test_files/test_pdf.pdf', 'rb') }
   let(:unique_reference) { SecureRandom.uuid }
 
+  before do
+    allow(add_action_diary_usecase).to receive(:execute)
+  end
+
   context 'when sending an letters manually' do
+    before {
+      expect_any_instance_of(gateway).to receive(:map_tenancy_ref_to_payment_ref).and_return({ tenancy_ref: 12321 })
+    }
     subject do
       send_precompiled_letter.execute(
         unique_reference: unique_reference,
-        letter_pdf: test_file
+        letter_pdf: test_file,
+        payment_ref: 'asdf'
       )
     end
 

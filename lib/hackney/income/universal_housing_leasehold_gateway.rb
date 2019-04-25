@@ -1,6 +1,15 @@
 module Hackney
   module Income
     class UniversalHousingLeaseholdGateway
+      def map_tenancy_ref_to_payment_ref(payment_ref:)
+        res = tenancy_agreement
+              .where(u_saff_rentacc: payment_ref)
+              .first
+
+        raise TenancyNotFoundError unless res.present?
+        { tenancy_ref: res[:tag_ref] }
+      end
+
       def get_leasehold_info(payment_ref:)
         res = tenancy_agreement
               .where(u_saff_rentacc: payment_ref)

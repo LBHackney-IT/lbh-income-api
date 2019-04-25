@@ -6,6 +6,12 @@ module Hackney
           service_charge_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new
         )
       end
+
+      def map_tenancy_information
+        Hackney::ServiceCharge::MapTenancy.new(
+          service_charge_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new
+        )
+      end
     end
   end
 end
