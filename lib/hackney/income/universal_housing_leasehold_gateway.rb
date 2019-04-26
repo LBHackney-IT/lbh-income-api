@@ -1,7 +1,7 @@
 module Hackney
   module Income
     class UniversalHousingLeaseholdGateway
-      def map_tenancy_ref_to_payment_ref(payment_ref:)
+      def get_tenancy_ref(payment_ref:)
         res = tenancy_agreement
               .where(u_saff_rentacc: payment_ref)
               .first

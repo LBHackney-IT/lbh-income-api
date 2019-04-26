@@ -6,7 +6,7 @@ module Hackney
       end
 
       def execute(payment_ref:)
-        @service_charge_gateway.map_tenancy_ref_to_payment_ref(payment_ref)
+        @service_charge_gateway.get_tenancy_ref(payment_ref)
       end
     end
   end

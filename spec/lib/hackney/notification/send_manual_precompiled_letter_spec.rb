@@ -23,7 +23,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
 
   context 'when sending an letters manually' do
     before {
-      expect_any_instance_of(leasehold_gateway).to receive(:map_tenancy_ref_to_payment_ref).and_return(tenancy_ref: 12_321)
+      expect_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).and_return(tenancy_ref: 12_321)
     }
 
     let(:subject) do
