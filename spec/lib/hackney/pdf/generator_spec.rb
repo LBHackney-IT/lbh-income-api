@@ -25,7 +25,7 @@ describe Hackney::PDF::Generator do
         '--page-size' => 'A4',
         '--margin-top' => '0.19685in',
         '--margin-right' => '0.590551in',
-        '--margin-bottom' => '0.19685in',
+        '--margin-bottom' => '0.23000in',
         '--margin-left' => '0.590551in',
         '--encoding' => 'UTF-8'
       )
