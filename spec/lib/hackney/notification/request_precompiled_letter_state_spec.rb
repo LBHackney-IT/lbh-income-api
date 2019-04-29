@@ -20,7 +20,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
            status: 'uploaded')
   end
 
-  let(:response) { notification_response.execute(message_id: document.uuid) }
+  let(:response) { notification_response.execute(message_id: document.ext_message_id) }
 
   describe '#execute' do
     it 'gets request' do
@@ -37,10 +37,10 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   context 'when failure' do
     let(:doc) { Hackney::Cloud::Document.find(document.id) }
 
-    before { expect(notification_gateway).to receive(:precompiled_letter_state).and_return(status: 'failed') }
+    before { expect(notification_gateway).to receive(:precompiled_letter_state).and_return(status: 'validation-failed') }
 
     it 'change to failure raises Sentry notification' do
-      expect { response }.to change { doc.reload.status }.from('uploaded').to('failed')
+      expect { response }.to change { doc.reload.status }.from('uploaded').to('validation-failed')
     end
 
     it 'raises Sentry notification' do

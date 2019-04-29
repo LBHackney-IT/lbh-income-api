@@ -48,7 +48,7 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
       let!(:uploaded) { create(:document, status: :uploaded) }
       let!(:received) { create(:document, status: :received) }
       let!(:accepted) { create(:document, status: :accepted) }
-      let!(:failed) { create(:document, status: :failed) }
+      let!(:failed) { create(:document, status: 'validation-failed') }
 
       it { expect(subject.documents).to include(uploading) }
       it { expect(subject.documents).to include(uploaded) }

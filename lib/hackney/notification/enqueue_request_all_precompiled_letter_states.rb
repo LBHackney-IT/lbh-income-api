@@ -12,7 +12,7 @@ module Hackney
         self.document_store = document_store
         self.documents =
           document_store.where('updated_at >= ?', Time.now - 7.days)
-                        .where.not(status: %i[nil failed accepted])
+                        .where.not(status: %i[nil validation-failed accepted])
       end
 
       def execute
