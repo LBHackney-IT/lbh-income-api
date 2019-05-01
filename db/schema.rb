@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_15_000000) do
+ActiveRecord::Schema.define(version: 2019_05_01_123250) do
 
   create_table "case_priorities", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2019_04_15_000000) do
     t.decimal "broken_court_order_contribution"
     t.decimal "nosp_served_contribution"
     t.decimal "active_nosp_contribution"
-    t.decimal "balance"
+    t.decimal "balance", precision: 10, scale: 2
     t.integer "days_in_arrears"
     t.integer "days_since_last_payment"
     t.decimal "payment_amount_delta"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2019_04_15_000000) do
     t.text "pause_comment"
     t.integer "case_id"
     t.index ["assigned_user_id"], name: "index_case_priorities_on_assigned_user_id"
-    t.index ["case_id"], name: "index_case_priorities_on_case_id", unique: true
+    t.index ["case_id"], name: "index_case_priorities_on_case_id"
     t.index ["tenancy_ref"], name: "index_case_priorities_on_tenancy_ref", unique: true
   end
 
