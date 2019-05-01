@@ -1,4 +1,3 @@
-
 module Hackney
   module Notification
     class ManualActionCode
@@ -23,4 +22,3 @@ module Hackney
     end
   end
 end
-
