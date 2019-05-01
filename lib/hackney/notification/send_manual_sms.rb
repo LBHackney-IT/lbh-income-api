@@ -18,7 +18,7 @@ module Hackney
           @add_action_diary_usecase.execute(
             user_id: user_id,
             tenancy_ref: tenancy_ref,
-            action_code: Hackney::Tenancy::ActionCodes::MANUAL_SMS_ACTION_CODE,
+            action_code: Hackney::Notification::ManualActionCode.get_by_sms_template_name(template_name: template_name),
             comment: "#{template_name}' SMS sent to '#{phone.full_e164}' with content '#{notification_receipt.body_without_newlines}'"
           )
         else
