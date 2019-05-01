@@ -1,7 +1,6 @@
 require 'json'
 
 namespace :bau do
-
   desc 'generate case totals for each user'
   task :case_totals do
     user_cases = []

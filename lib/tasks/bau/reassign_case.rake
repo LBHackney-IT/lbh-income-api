@@ -1,5 +1,4 @@
 namespace :bau do
-
   desc 'reassign case to user'
   task :reassign_case, [:tenancy_ref, :user_id] do
     user_assignment_gateway = Hackney::Income::SqlTenancyCaseGateway.new
