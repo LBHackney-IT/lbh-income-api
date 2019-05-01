@@ -3,7 +3,7 @@ require 'json'
 namespace :bau do
 
   desc 'generate case totals for each user'
-  task :case_totals, [:tenancy_ref, :user_id] do
+  task :case_totals do
     user_cases = []
     users = Hackney::Income::Models::User.all
     users.each do |user|
