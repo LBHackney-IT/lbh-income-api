@@ -150,6 +150,12 @@ module Hackney
         )
       end
 
+      def get_failed_sms_messages
+        Hackney::Notification::GetFailedSMSMessages.new(
+          notification_gateway: notifications_gateway
+        )
+      end
+
       private
 
       def cloud_storage

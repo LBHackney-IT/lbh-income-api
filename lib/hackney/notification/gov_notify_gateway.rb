@@ -60,6 +60,18 @@ module Hackney
         end
       end
 
+      def get_messages(type: nil, status: nil)
+        Enumerator.new do |enum|
+          last_id = nil
+          while collection = fetch_messages(type: type, status: status, older_than: last_id).collection.presence
+            for response in collection
+              last_id = response.id
+              enum.yield response
+            end
+          end
+        end
+      end
+
       private
 
       def client
@@ -85,6 +97,14 @@ module Hackney
       def pre_release_email(email)
         return email if @send_live_communications
         @test_email_address
+      end
+
+      def fetch_messages(type: nil, status: nil, older_than: nil)
+        client.get_notifications({
+          template_type: type,
+          status: status,
+          older_than: older_than
+        }.compact)
       end
     end
   end
