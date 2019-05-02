@@ -15,7 +15,7 @@ namespace :bau do
         total: cases.size,
         green: green.size,
         amber: amber.size,
-        red: red.size,
+        red: red.size
       }
     end
     puts JSON.pretty_generate(user_cases)
