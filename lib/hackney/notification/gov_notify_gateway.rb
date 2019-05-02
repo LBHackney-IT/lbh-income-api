@@ -61,15 +61,13 @@ module Hackney
       end
 
       def get_messages(type: nil, status: nil)
-        Enumerator.new do |enum|
-          last_id = nil
-          while (collection = fetch_messages(type: type, status: status, older_than: last_id).collection.presence)
-            collection.each do |response|
-              last_id = response.id
-              enum.yield response
-            end
-          end
+        messages = []
+        last_id = nil
+        while (collection = fetch_messages(type: type, status: status, older_than: last_id).collection.presence)
+          last_id = collection.last.id
+          messages += collection
         end
+        messages
       end
 
       private
