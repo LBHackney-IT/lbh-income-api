@@ -2,10 +2,10 @@ require 'cgi'
 
 namespace :bau do
   desc 'generate report of tenancy references that did not receive an SMS'
-  task :failed_messages_report, [:tenancies_uri] do |t, args|
+  task :failed_messages_report, [:tenancies_uri] do |_t, args|
     tenancies_uri = args.tenancies_uri || '/tenancies'
-    tenancy_ref_regex = "\\d+/\\d+"
-    uuid_regex = "[\\da-f\\-]{32,36}"
+    tenancy_ref_regex = '\\d+/\\d+'
+    uuid_regex = '[\\da-f\\-]{32,36}'
     matches = [
       # SendGreenInArrearsMsgJob-#{case_priority.tenancy_ref}-#{SecureRandom.uuid}
       Regexp.new("^\\S+-(#{tenancy_ref_regex})-#{uuid_regex}$"),

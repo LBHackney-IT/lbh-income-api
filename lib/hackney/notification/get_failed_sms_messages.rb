@@ -5,7 +5,7 @@ module Hackney
         @notification_gateway = notification_gateway
       end
 
-      def execute()
+      def execute
         notification_gateway.get_messages(type: 'sms', status: 'failed').map do |message|
           {
             id: message.id,
