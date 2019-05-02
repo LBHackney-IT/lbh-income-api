@@ -6,7 +6,9 @@ module Hackney
 
       def initialize(sms_sender_id:, api_key:, send_live_communications:, test_phone_number:, test_email_address:, test_physical_address: nil); end
 
-      def get_template_name(id); end
+      def get_template_name(template_id)
+        get_templates&.find { |template_item| template_item[:id] == template_id }&.fetch(:name) || template_id
+      end
 
       def send_text_message(phone_number:, template_id:, reference:, variables:)
         Hackney::Notification::Domain::NotificationReceipt.new(body: 'DummyGovNotifyGateway body')
@@ -20,7 +22,7 @@ module Hackney
         Hackney::Notification::Domain::NotificationReceipt.new(body: 'DummyGovNotifyGateway body')
       end
 
-      def get_templates(type:)
+      def get_templates(type: nil)
         EXAMPLE_TEMPLATES
       end
     end

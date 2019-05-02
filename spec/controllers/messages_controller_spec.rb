@@ -7,7 +7,7 @@ describe MessagesController, type: :controller do
     {
       user_id: Faker::Number.number(2),
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
-      template_id: Faker::HitchhikersGuideToTheGalaxy.planet,
+      template_id: Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id],
       phone_number: Faker::PhoneNumber.phone_number,
       reference: Faker::HitchhikersGuideToTheGalaxy.starship,
       variables: {
