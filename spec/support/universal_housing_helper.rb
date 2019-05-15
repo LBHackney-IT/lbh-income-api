@@ -93,7 +93,7 @@ module UniversalHousingHelper
     )
   end
 
-  def create_uh_property(property_ref:, patch_code: '', post_preamble: '', address1: '', post_code: '')
+  def create_uh_property(property_ref:, patch_code: '', post_preamble: '', address1: '', post_code: '', post_desig: '')
     Hackney::UniversalHousing::Client.connection[:property].insert(
       prop_ref: property_ref,
       arr_patch: patch_code,
@@ -117,7 +117,8 @@ module UniversalHousingHelper
       dtstamp: DateTime.now,
       post_preamble: post_preamble,
       address1: address1,
-      post_code: post_code
+      post_code: post_code,
+      post_desig: post_desig
     )
   end
 
