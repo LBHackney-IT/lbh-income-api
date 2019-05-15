@@ -22,8 +22,13 @@ module Hackney
 
         prop_ref = res[:prop_ref]
 
-        corr_address = get_correspondence_address(corr_postcode: res[:corr_postcode], prop_postcode: res[:post_code])
         property_res = property.first(prop_ref: prop_ref) || {}
+        corr_address = get_correspondence_address(
+          corr_postcode: res[:corr_postcode],
+          prop_postcode: res[:post_code],
+          household_res: res,
+          property_res: property_res
+        )
 
         {
           payment_ref: payment_ref,
@@ -33,8 +38,8 @@ module Hackney
           lessee_full_name: res[:house_desc]&.strip,
           lessee_short_name: res[:house_desc]&.strip,
           date_of_current_purchase_assignment: res[:cot],
-          correspondence_address1: res[:corr_preamble]&.strip,
-          correspondence_address2: "#{res[:corr_desig]&.strip} #{corr_address[:aline1]&.strip}",
+          correspondence_address1: corr_address[:preamble]&.strip,
+          correspondence_address2: "#{corr_address[:desig]&.strip} #{corr_address[:aline1]&.strip}",
           correspondence_address3: corr_address[:aline2]&.strip || '',
           correspondence_address4: corr_address[:aline3]&.strip || '',
           correspondence_address5: corr_address[:aline4]&.strip || '',
@@ -66,13 +71,23 @@ module Hackney
         @household ||= database[:househ]
       end
 
-      def get_correspondence_address(corr_postcode:, prop_postcode:)
-        address = if corr_postcode.present? # we use the correspondence address
-                    postcode.first(post_code: corr_postcode)
-                  elsif prop_postcode.present? # we use the property address
-                    postcode.first(post_code: prop_postcode)
-                  end
-        address || {}
+      def get_correspondence_address(corr_postcode:, prop_postcode:, household_res:, property_res:)
+        if corr_postcode.present?
+          postcode.first(post_code: corr_postcode).presence&.merge(
+            desig: household_res[:corr_desig],
+            preamble: household_res[:corr_preamble]
+          )
+        elsif prop_postcode.present?
+          postcode.first(post_code: prop_postcode).presence&.merge(
+            desig: property_res[:post_desig],
+            preamble: property_res[:post_preamble]
+          )
+        else
+          {
+            desig: household_res[:corr_desig],
+            preamble: household_res[:corr_preamble]
+          }
+        end
       end
 
       def international?(postcode)

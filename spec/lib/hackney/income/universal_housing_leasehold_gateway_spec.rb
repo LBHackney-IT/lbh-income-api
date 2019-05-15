@@ -163,8 +163,8 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
 
   def expected_correspondence_address_when_property
     {
-      correspondence_address1: corr_preamble,
-      correspondence_address2: corr_desig + ' ' + property_address[:aline1],
+      correspondence_address1: prop_preamble,
+      correspondence_address2: prop_desig + ' ' + property_address[:aline1],
       correspondence_address3: property_address[:aline2],
       correspondence_address4: property_address[:aline3],
       correspondence_address5: property_address[:aline4],
