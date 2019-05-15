@@ -52,8 +52,8 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
 
       it { expect(subject.documents).to include(uploading) }
       it { expect(subject.documents).to include(uploaded) }
-      it { expect(subject.documents).to include(received) }
-      it { expect(subject.documents).not_to include(accepted) }
+      it { expect(subject.documents).to include(accepted) }
+      it { expect(subject.documents).not_to include(received) }
       it { expect(subject.documents).not_to include(failed) }
 
       it 'all statuses should be checked' do
