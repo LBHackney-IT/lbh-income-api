@@ -15,7 +15,7 @@ module Hackney
               .where(u_saff_rentacc: payment_ref)
               .exclude(Sequel.trim(Sequel.qualify(:tenagree, :prop_ref)) => '')
               .join(rent, prop_ref: :prop_ref)
-              .join(household, house_ref: Sequel.qualify(:tenagree, :house_ref))
+              .join(household, prop_ref: :prop_ref)
               .first
 
         raise TenancyNotFoundError unless res.present?
@@ -25,7 +25,7 @@ module Hackney
         property_res = property.first(prop_ref: prop_ref) || {}
         corr_address = get_correspondence_address(
           corr_postcode: res[:corr_postcode],
-          prop_postcode: property_res[:post_code],
+          prop_postcode: res[:post_code],
           household_res: res,
           property_res: property_res
         )

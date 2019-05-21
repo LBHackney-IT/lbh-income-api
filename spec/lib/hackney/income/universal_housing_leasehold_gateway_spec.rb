@@ -66,6 +66,7 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
 
     context 'when payment_ref exists' do
       let(:set_household_postcode) { household_postcode }
+      let(:set_property_postcode) { property_postcode }
       let(:create_property) { true }
 
       before do
@@ -74,13 +75,15 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
         create_uh_rent(sc_leasedate: sc_leasedate, prop_ref: prop_ref)
         create_uh_househ(house_ref: house_ref, prop_ref: prop_ref, house_desc: lessee_full_name,
                          corr_preamble: corr_preamble, corr_desig: corr_desig,
-                         corr_postcode: set_household_postcode)
+                         corr_postcode: set_household_postcode, post_code: set_property_postcode)
         create_uh_property(prop_address.merge(property_ref: prop_ref)) if create_property
         create_uh_postcode(household_address)
         create_uh_postcode(property_address)
       end
 
       context 'when corr_postcode' do
+        let(:set_property_postcode) { ' ' }
+
         it 'get the prop_ref' do
           result = gateway.get_leasehold_info(payment_ref: payment_ref)
 
@@ -99,6 +102,7 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
 
       context 'when both correspondence postcode and property address do NOT exist' do
         let(:set_household_postcode) { ' ' }
+        let(:set_property_postcode) { ' ' }
         let(:create_property) { false }
 
         it 'get the prop_ref' do
