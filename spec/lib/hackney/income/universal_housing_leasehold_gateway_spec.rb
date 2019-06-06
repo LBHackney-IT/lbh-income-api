@@ -72,7 +72,7 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
         create_uh_tenancy_agreement(tenancy_ref: tenancy_ref, current_balance: cur_bal, u_saff_rentacc: payment_ref,
                                     house_ref: house_ref, prop_ref: prop_ref, cot: commencement_of_tenancy)
         create_uh_rent(sc_leasedate: sc_leasedate, prop_ref: prop_ref)
-        create_uh_househ(house_ref: house_ref, prop_ref: prop_ref, house_desc: lessee_full_name,
+        create_uh_househ(house_ref: house_ref, prop_ref: '', house_desc: lessee_full_name,
                          corr_preamble: corr_preamble, corr_desig: corr_desig,
                          corr_postcode: set_household_postcode)
         create_uh_property(prop_address.merge(property_ref: prop_ref)) if create_property

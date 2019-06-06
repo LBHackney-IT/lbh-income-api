@@ -12,15 +12,16 @@ module Hackney
 
       def get_leasehold_info(payment_ref:)
         res = tenancy_agreement
+              .select_append(Sequel.qualify(:tenagree, :prop_ref).as(:tenancy_prop_ref))
               .where(u_saff_rentacc: payment_ref)
               .exclude(Sequel.trim(Sequel.qualify(:tenagree, :prop_ref)) => '')
-              .join(rent, prop_ref: :prop_ref)
+              .join(rent, prop_ref: Sequel.qualify(:tenagree, :prop_ref))
               .join(household, house_ref: Sequel.qualify(:tenagree, :house_ref))
               .first
 
         raise TenancyNotFoundError unless res.present?
 
-        prop_ref = res[:prop_ref]
+        prop_ref = res[:tenancy_prop_ref]
 
         property_res = property.first(prop_ref: prop_ref) || {}
         corr_address = get_correspondence_address(
