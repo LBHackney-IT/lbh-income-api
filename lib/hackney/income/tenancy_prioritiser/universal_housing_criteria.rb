@@ -21,6 +21,13 @@ module Hackney
               ) t
               WHERE row = 1
             )
+            DECLARE @NospServedDate SMALLDATETIME = (
+              SELECT u_notice_served FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
+            DECLARE @NospExpiryDate SMALLDATETIME = (
+              SELECT u_notice_expiry FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
+
 
             DECLARE @RemainingTransactions INT = (SELECT COUNT(tag_ref) FROM [dbo].[rtrans] WITH (NOLOCK) WHERE tag_ref = @TenancyRef)
             DECLARE @ActiveAgreementsCount INT = (SELECT COUNT(tag_ref) FROM [dbo].[arag] WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND arag_status = @ActiveArrearsAgreementStatus)
@@ -60,6 +67,8 @@ module Hackney
               @BreachedAgreementsCount as breached_agreements_count,
               @NospsInLastYear as nosps_in_last_year,
               @NospsInLastMonth as nosps_in_last_month,
+              @NospServedDate as nosp_served_date,
+              @NospExpiryDate as nosp_expiry_date,
               @Payment1Value as payment_1_value,
               @Payment1Date as payment_1_date,
               @Payment2Value as payment_2_value,
@@ -86,6 +95,14 @@ module Hackney
 
         def balance
           attributes.fetch(:current_balance).to_f
+        end
+
+        def nosp_served_date
+          attributes.fetch(:nosp_served_date).to_date
+        end
+
+        def nosp_expiry_date
+          attributes.fetch(:nosp_expiry_date).to_date
         end
 
         def days_in_arrears
