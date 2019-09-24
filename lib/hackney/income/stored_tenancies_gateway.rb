@@ -34,6 +34,9 @@ module Hackney
               active_agreement: criteria.active_agreement?,
               broken_court_order: criteria.broken_court_order?,
               nosp_served: criteria.nosp_served?,
+              nosp_served_date: criteria.nosp_served_date,
+              nosp_expiry_date: criteria.nosp_expiry_date,
+
               active_nosp: criteria.active_nosp?
             )
           end
