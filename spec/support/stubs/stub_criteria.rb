@@ -5,7 +5,16 @@ module Stubs
                 :payment_date_delta, :payment_amount_delta,
                 :active_agreement, :active_nosp
 
+
     attr_accessor :days_since_last_payment
+
+    def nosp_served_date
+      @nosp_served_date
+    end
+
+    def nosp_expiry_date
+      @nosp_expiry_date
+    end
 
     def balance
       @balance || 100.00
