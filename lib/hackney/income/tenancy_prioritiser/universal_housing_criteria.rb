@@ -98,11 +98,19 @@ module Hackney
         end
 
         def nosp_served_date
-          attributes.fetch(:nosp_served_date).to_date
+          thing = attributes.fetch(:nosp_served_date)
+          if thing
+            return thing.to_date
+          end
+          return nil
         end
 
         def nosp_expiry_date
-          attributes.fetch(:nosp_expiry_date).to_date
+          thing = attributes.fetch(:nosp_expiry_date)
+          if thing
+            return thing.to_date
+          end
+          return nil
         end
 
         def days_in_arrears
