@@ -31,7 +31,7 @@ module UniversalHousingHelper
       u_payment_expected: '?',
       dtstamp: DateTime.now,
       u_notice_served: '2005-12-13 12:43:10',
-      u_notice_expiry: '2015-12-13 12:43:10',
+      u_notice_expiry: '2019-10-20 14:31:12',
       intro_date: DateTime.now,
       intro_ext_date: DateTime.now,
       u_saff_rentacc: u_saff_rentacc,
