@@ -98,7 +98,7 @@ module Hackney
         end
 
         def nosp_served_date
-          return nil if attributes.dig(:nosp_served_date).nil?
+          return if attributes[:nosp_served_date].nil?
 
           attributes.fetch(:nosp_served_date).to_date
         end
