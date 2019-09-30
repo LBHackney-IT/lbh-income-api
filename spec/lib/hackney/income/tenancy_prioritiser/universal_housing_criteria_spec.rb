@@ -9,7 +9,7 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
   let(:nosp_notice_served_date) { '2005-12-13 12:43:10' }
 
-  let(:nosp_notice_expiry_date) { '2015-12-13 12:43:10' }
+  let(:nosp_notice_expiry_date) { '2019-10-20 14:31:12' }
 
   let(:current_balance) { Faker::Number.decimal.to_f }
 
