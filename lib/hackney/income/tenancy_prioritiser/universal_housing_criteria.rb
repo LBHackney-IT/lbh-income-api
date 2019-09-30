@@ -106,7 +106,7 @@ module Hackney
         def nosp_expiry_date
           return nil if attributes.dig(:nosp_served_date).nil?
 
-          attributes.fetch(:nosp_expiry_date).to_date
+          attributes[:nosp_expiry_date].to_date
         end
 
         def days_in_arrears
