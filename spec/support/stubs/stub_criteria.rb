@@ -3,7 +3,8 @@ module Stubs
     attr_writer :balance, :broken_court_order, :days_in_arrears,
                 :number_of_broken_agreements, :nosp_served,
                 :payment_date_delta, :payment_amount_delta,
-                :active_agreement, :active_nosp
+                :active_agreement, :active_nosp, :nosp_served_date,
+                :nosp_expiry_date
 
 
     attr_accessor :days_since_last_payment
@@ -18,6 +19,15 @@ module Stubs
 
     def balance
       @balance || 100.00
+    end
+
+
+    def nosp_served_date
+      '2019-12-13 12:43:10'.to_date
+    end
+
+    def nosp_expiry_date
+      '2019-12-30 16:43:10'.to_date
     end
 
     def broken_court_order?
