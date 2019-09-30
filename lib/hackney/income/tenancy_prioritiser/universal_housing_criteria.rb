@@ -104,7 +104,7 @@ module Hackney
         end
 
         def nosp_expiry_date
-          return nil if attributes.dig(:nosp_served_date).nil?
+          return nil if attributes[:nosp_served_date].nil?
 
           attributes[:nosp_expiry_date].to_date
         end
