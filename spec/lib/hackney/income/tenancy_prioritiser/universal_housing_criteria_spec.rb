@@ -38,7 +38,7 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
   describe '#nosp_expiry_date' do
     subject { criteria.nosp_expiry_date }
 
-    it 'returns the  nosp expiry date' do
+    it 'returns the nosp expiry date' do
       expect(subject).to eq(nosp_notice_expiry_date.to_date)
     end
   end
