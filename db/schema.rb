@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_09_27_102411) do
 
+
   create_table "case_priorities", force: :cascade do |t|
     t.string "tenancy_ref"
     t.string "priority_band"

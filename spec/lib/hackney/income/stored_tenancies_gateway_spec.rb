@@ -74,7 +74,9 @@ describe Hackney::Income::StoredTenanciesGateway do
           active_agreement: attributes.fetch(:criteria).active_agreement?,
           broken_court_order: attributes.fetch(:criteria).broken_court_order?,
           nosp_served: attributes.fetch(:criteria).nosp_served?,
-          active_nosp: attributes.fetch(:criteria).active_nosp?
+          active_nosp: attributes.fetch(:criteria).active_nosp?,
+          nosp_expiry_date: attributes.fetch(:criteria).nosp_expiry_date,
+          nosp_served_date: attributes.fetch(:criteria).nosp_served_date
         )
       end
 
@@ -128,6 +130,9 @@ describe Hackney::Income::StoredTenanciesGateway do
       end
 
       before do
+
+# Hackney::Income::Models::CasePriority
+        byebug
         tenancy_model.create!(
           assigned_user_id: user.id,
           tenancy_ref: attributes.fetch(:tenancy_ref),
@@ -153,8 +158,11 @@ describe Hackney::Income::StoredTenanciesGateway do
           active_agreement: attributes.fetch(:criteria).active_agreement?,
           broken_court_order: attributes.fetch(:criteria).broken_court_order?,
           nosp_served: attributes.fetch(:criteria).nosp_served?,
-          active_nosp: attributes.fetch(:criteria).active_nosp?
+          active_nosp: attributes.fetch(:criteria).active_nosp?,
+          nosp_expiry_date: attributes.fetch(:criteria).nosp_expiry_date,
+          nosp_served_date: attributes.fetch(:criteria).nosp_served_date
         )
+        byebug
       end
 
       it 'includes the tenancy\'s ref, band and score' do
@@ -442,7 +450,10 @@ describe Hackney::Income::StoredTenanciesGateway do
       active_agreement: attributes.fetch(:criteria).active_agreement?,
       broken_court_order: attributes.fetch(:criteria).broken_court_order?,
       nosp_served: attributes.fetch(:criteria).nosp_served?,
-      active_nosp: attributes.fetch(:criteria).active_nosp?
+      active_nosp: attributes.fetch(:criteria).active_nosp?,
+      nosp_served_date: attributes.fetch(:criteria).nosp_served_date,
+      nosp_expiry_date: attributes.fetch(:criteria).nosp_expiry_date
+
     }
   end
 end
