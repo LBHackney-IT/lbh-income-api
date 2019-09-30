@@ -100,7 +100,7 @@ module Hackney
         def nosp_served_date
           return if attributes[:nosp_served_date].nil?
 
-          attributes.fetch(:nosp_served_date).to_date
+          attributes[:nosp_served_date].to_date
         end
 
         def nosp_expiry_date
