@@ -12,7 +12,6 @@ module Stubs
       @balance || 100.00
     end
 
-
     def nosp_served_date
       '2019-12-13 12:43:10'.to_date
     end
