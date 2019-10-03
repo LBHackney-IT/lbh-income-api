@@ -147,12 +147,10 @@ module Hackney
         end
 
         def last_communication_action
-          return nil if attributes[:last_communication_action].nil?
           attributes[:last_communication_action]
         end
 
         def last_communication_date
-          return nil if attributes[:last_communication_date].nil?
           attributes[:last_communication_date]
         end
 
