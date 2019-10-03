@@ -13,7 +13,14 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
   let(:current_balance) { Faker::Number.decimal.to_f }
 
-  before { create_uh_tenancy_agreement(tenancy_ref: tenancy_ref, current_balance: current_balance) }
+  before {
+    create_uh_tenancy_agreement(
+      tenancy_ref: tenancy_ref,
+      current_balance: current_balance,
+      nosp_notice_served_date: nosp_notice_served_date,
+      nosp_notice_expiry_date: nosp_notice_expiry_date
+    )
+  }
 
   after { truncate_uh_tables }
 
@@ -41,6 +48,24 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
     it 'returns the nosp served date' do
       expect(subject).to eq(nosp_notice_served_date.to_date)
     end
+
+    context 'when UH returns no nosp expiry date (1900-01-01 00:00:00 +0000)' do
+      let(:nosp_notice_expiry_date) { '1900-01-01 00:00:00 +0000' }
+
+      before do
+        truncate_uh_tables
+        create_uh_tenancy_agreement(
+          tenancy_ref: tenancy_ref,
+          current_balance: current_balance,
+          nosp_notice_served_date: nosp_notice_served_date,
+          nosp_notice_expiry_date: nosp_notice_expiry_date
+        )
+      end
+
+      it 'returns nil' do
+        expect(subject).to eq(nil)
+      end
+    end
   end
 
   describe '#nosp_expiry_date' do
@@ -48,6 +73,24 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
     it 'returns the nosp expiry date' do
       expect(subject).to eq(nosp_notice_expiry_date.to_date)
+    end
+
+    context 'when UH returns no nosp expiry date (1900-01-01 00:00:00 +0000)' do
+      let(:nosp_notice_expiry_date) { '1900-01-01 00:00:00 +0000' }
+
+      before do
+        truncate_uh_tables
+        create_uh_tenancy_agreement(
+          tenancy_ref: tenancy_ref,
+          current_balance: current_balance,
+          nosp_notice_served_date: nosp_notice_served_date,
+          nosp_notice_expiry_date: nosp_notice_expiry_date
+        )
+      end
+
+      it 'returns nil' do
+        expect(subject).to eq(nil)
+      end
     end
   end
 

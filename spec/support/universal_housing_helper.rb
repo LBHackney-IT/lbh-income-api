@@ -1,7 +1,8 @@
 module UniversalHousingHelper
   # rubocop:disable Metrics/ParameterLists
   def create_uh_tenancy_agreement(tenancy_ref:, current_balance: 0.0, rent: 5.0, prop_ref: '', terminated: false, cot: '',
-                                  tenure_type: 'SEC', high_action: '111', u_saff_rentacc: '', house_ref: '')
+                                  tenure_type: 'SEC', high_action: '111', u_saff_rentacc: '', house_ref: '',
+                                  nosp_notice_served_date: '1900-01-01 00:00:00 +0000', nosp_notice_expiry_date: '1900-01-01 00:00:00 +0000')
     Hackney::UniversalHousing::Client.connection[:tenagree].insert(
       tag_ref: tenancy_ref,
       cur_bal: current_balance,
@@ -31,8 +32,8 @@ module UniversalHousingHelper
       potentialenddate: DateTime.now,
       u_payment_expected: '?',
       dtstamp: DateTime.now,
-      u_notice_served: '2005-12-13 12:43:10',
-      u_notice_expiry: '2019-10-20 14:31:12',
+      u_notice_served: nosp_notice_served_date.to_date,
+      u_notice_expiry: nosp_notice_expiry_date.to_date,
       intro_date: DateTime.now,
       intro_ext_date: DateTime.now,
       u_saff_rentacc: u_saff_rentacc,

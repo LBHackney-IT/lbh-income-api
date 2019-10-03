@@ -125,13 +125,13 @@ module Hackney
         end
 
         def nosp_served_date
-          return if attributes[:nosp_served_date].nil?
+          return nil if date_not_valid?(attributes[:nosp_served_date])
 
           attributes[:nosp_served_date].to_date
         end
 
         def nosp_expiry_date
-          return nil if attributes[:nosp_served_date].nil?
+          return nil if date_not_valid?(attributes[:nosp_expiry_date])
 
           attributes[:nosp_expiry_date].to_date
         end
@@ -207,6 +207,10 @@ module Hackney
 
         def day_difference(date_a, date_b)
           (date_a.to_date - date_b.to_date).to_i
+        end
+
+        def date_not_valid?(date)
+          date == '1900-01-01 00:00:00 +0000'.to_time || date.nil?
         end
       end
     end
