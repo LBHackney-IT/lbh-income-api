@@ -173,7 +173,8 @@ describe Hackney::Income::StoredTenanciesGateway do
           multiple_attributes.append(
             tenancy_ref: Faker::Internet.slug,
             priority_band: Faker::Internet.slug,
-            priority_score: Faker::Number.number(5).to_i
+            priority_score: Faker::Number.number(5).to_i,
+            balance: Faker::Number.number(3).to_i
           )
         end
         multiple_attributes
@@ -187,7 +188,7 @@ describe Hackney::Income::StoredTenanciesGateway do
               tenancy_ref: attributes.fetch(:tenancy_ref),
               priority_band: attributes.fetch(:priority_band),
               priority_score: attributes.fetch(:priority_score),
-              balance: 1
+              balance: attributes.fetch(:balance)
             )
           end
         end
@@ -204,32 +205,32 @@ describe Hackney::Income::StoredTenanciesGateway do
           end
         end
 
-        context 'when cases are assigned different bands and scores' do
+        context 'when cases are assigned different bands, scores and balances' do
           let(:multiple_attributes) do
             [
               { tenancy_ref: Faker::Internet.slug, priority_band: 'red', priority_score: 1, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 50, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 100, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 100, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'red', priority_score: 101, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 200, balance: 1 }
+              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 50, balance: 3 },
+              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 100, balance: 2 },
+              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 100, balance: 4 },
+              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 10, balance: 11 },
+              { tenancy_ref: Faker::Internet.slug, priority_band: 'red', priority_score: 101, balance: 10 }
             ]
           end
 
           let(:cases) do
             subject.map do |c|
-              { band: c.fetch(:priority_band), score: c.fetch(:priority_score).to_i }
+              { balance: c.fetch(:balance).to_i, priority_band: c.fetch(:priority_band), priority_score: c.fetch(:priority_score).to_i }
             end
           end
 
-          it 'sorts by band, then score' do
+          it 'sorts by balance' do
             expect(cases).to eq([
-              { band: 'red', score: 101 },
-              { band: 'red', score: 1 },
-              { band: 'amber', score: 200 },
-              { band: 'amber', score: 100 },
-              { band: 'green', score: 100 },
-              { band: 'green', score: 50 }
+              { priority_band: 'amber', priority_score: 10, balance: 11 },
+              { priority_band: 'red', priority_score: 101, balance: 10 },
+              { priority_band: 'amber', priority_score: 100, balance: 4 },
+              { priority_band: 'green', priority_score: 50, balance: 3 },
+              { priority_band: 'green', priority_score: 100, balance: 2 },
+              { priority_band: 'red', priority_score: 1, balance: 1 }
             ])
           end
 
@@ -238,8 +239,8 @@ describe Hackney::Income::StoredTenanciesGateway do
 
             it 'only return the first two' do
               expect(cases).to eq([
-                { band: 'red', score: 101 },
-                { band: 'red', score: 1 }
+                { priority_band: 'amber', priority_score: 10, balance: 11 },
+                { priority_band: 'red', priority_score: 101, balance: 10 }
               ])
             end
           end
@@ -249,9 +250,9 @@ describe Hackney::Income::StoredTenanciesGateway do
 
             it 'only return the last three' do
               expect(cases).to eq([
-                { band: 'amber', score: 100 },
-                { band: 'green', score: 100 },
-                { band: 'green', score: 50 }
+                { priority_band: 'green', priority_score: 50, balance: 3 },
+                { priority_band: 'green', priority_score: 100, balance: 2 },
+                { priority_band: 'red', priority_score: 1, balance: 1 }
               ])
             end
           end
