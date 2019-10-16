@@ -21,7 +21,7 @@ describe MyCasesController do
       it 'min of 1 should be used' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: 1, number_per_page: 1, is_paused: nil)
+          .with(user_id: user_id, page_number: 1, number_per_page: 1, is_paused: nil, classification: nil)
 
         get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
       end
@@ -43,7 +43,7 @@ describe MyCasesController do
       it 'calls the view my cases use case with the given user_id, page_number and number_per_page' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: nil)
+          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: nil, classification: nil)
           .and_return(cases: [], number_per_page: 1)
 
         get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page }
@@ -72,7 +72,7 @@ describe MyCasesController do
 
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false)
+          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false, classification: nil)
           .and_return(expected_result)
 
         get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false }

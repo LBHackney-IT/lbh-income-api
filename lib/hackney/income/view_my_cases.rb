@@ -8,11 +8,12 @@ module Hackney
         @stored_tenancies_gateway = stored_tenancies_gateway
       end
 
-      def execute(user_id:, page_number:, number_per_page:, is_paused: nil)
+      def execute(user_id:, page_number:, number_per_page:, is_paused: nil, classification: nil)
         number_of_pages_for_user = @stored_tenancies_gateway.number_of_pages_for_user(
           user_id: user_id,
           number_per_page: number_per_page,
-          is_paused: is_paused
+          is_paused: is_paused,
+          classification: classification
         )
         return Response.new([], 0) if number_of_pages_for_user.zero?
 
@@ -20,7 +21,8 @@ module Hackney
           user_id: user_id,
           page_number: page_number,
           number_per_page: number_per_page,
-          is_paused: is_paused
+          is_paused: is_paused,
+          classification: classification
         )
 
         assigned_tenancy_refs = assigned_tenancies.map { |t| t.fetch(:tenancy_ref) }

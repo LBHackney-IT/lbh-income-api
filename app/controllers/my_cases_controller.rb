@@ -6,7 +6,8 @@ class MyCasesController < ApplicationController
       user_id: my_cases_params[:user_id],
       page_number: my_cases_params[:page_number],
       number_per_page: my_cases_params[:number_per_page],
-      is_paused: my_cases_params[:is_paused]
+      is_paused: my_cases_params[:is_paused],
+      classification: my_cases_params[:classification]
     )
 
     render json: response

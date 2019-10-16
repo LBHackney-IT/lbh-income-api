@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::ViewMyCases do
-  subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page) }
+  subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page, classification: nil) }
 
   let(:user_id) { Faker::Number.number(2).to_i }
   let(:page_number) { Faker::Number.number(2).to_i }
@@ -158,7 +158,8 @@ describe Hackney::Income::ViewMyCases do
       expect(stored_tenancies_gateway).to receive(:number_of_pages_for_user).with(
         user_id: user_id,
         number_per_page: number_per_page,
-        is_paused: nil
+        is_paused: nil,
+        classification: nil
       ).and_call_original
       subject
     end
