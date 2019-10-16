@@ -21,7 +21,7 @@ describe MyCasesController do
       it 'min of 1 should be used' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: 1, number_per_page: 1, is_paused: nil)
+          .with(user_id: user_id, page_number: 1, number_per_page: 1, is_paused: nil, patch: nil)
 
         get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
       end
@@ -31,6 +31,7 @@ describe MyCasesController do
       let(:user_id) { Faker::Number.number(2).to_i }
       let(:page_number) { Faker::Number.number(2).to_i }
       let(:number_per_page) { Faker::Number.number(2).to_i }
+      let(:patch) { Faker::Lorem.characters(3) }
 
       it 'creates the view my cases use case' do
         allow(view_my_cases_instance)
@@ -43,7 +44,7 @@ describe MyCasesController do
       it 'calls the view my cases use case with the given user_id, page_number and number_per_page' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: nil)
+          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: nil, patch: nil)
           .and_return(cases: [], number_per_page: 1)
 
         get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page }
@@ -72,10 +73,26 @@ describe MyCasesController do
 
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false)
+          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false, patch: nil)
           .and_return(expected_result)
 
         get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false }
+
+        expect(response.body).to eq(expected_result.to_json)
+      end
+
+      it 'responds with results filtered by patch when requested' do
+        expected_result = {
+          cases: [Faker::GreekPhilosophers.quote],
+          number_per_page: number_per_page
+        }
+
+        allow(view_my_cases_instance)
+          .to receive(:execute)
+          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: nil, patch: patch)
+          .and_return(expected_result)
+
+        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page, patch: patch }
 
         expect(response.body).to eq(expected_result.to_json)
       end

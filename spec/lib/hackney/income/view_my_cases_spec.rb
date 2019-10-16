@@ -148,6 +148,40 @@ describe Hackney::Income::ViewMyCases do
           expect(subject.cases.count).to eq(1)
         end
       end
+
+      context 'when filtering cases by patch' do
+        subject {
+          view_my_cases.execute(
+            user_id: user_id,
+            page_number: page_number,
+            number_per_page: number_per_page,
+            patch: patch
+          )
+        }
+
+        let(:patch) { Faker::Lorem.characters(3) }
+
+        it 'returns only cases in specified patch' do
+          expect(stored_tenancies_gateway)
+            .to receive(:get_tenancies_for_user)
+            .with(a_hash_including(
+                    user_id: user_id,
+                    page_number: page_number,
+                    number_per_page: number_per_page,
+                    patch: patch
+                  )).and_call_original
+
+          expect(stored_tenancies_gateway)
+            .to receive(:number_of_pages_for_user)
+            .with(a_hash_including(
+                    user_id: user_id,
+                    number_per_page: number_per_page,
+                    patch: patch
+                  )).and_call_original
+
+          expect(subject.cases.count).to eq(1)
+        end
+      end
     end
   end
 
@@ -158,7 +192,8 @@ describe Hackney::Income::ViewMyCases do
       expect(stored_tenancies_gateway).to receive(:number_of_pages_for_user).with(
         user_id: user_id,
         number_per_page: number_per_page,
-        is_paused: nil
+        is_paused: nil,
+        patch: nil
       ).and_call_original
       subject
     end

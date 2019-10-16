@@ -6,7 +6,8 @@ class MyCasesController < ApplicationController
       user_id: my_cases_params[:user_id],
       page_number: my_cases_params[:page_number],
       number_per_page: my_cases_params[:number_per_page],
-      is_paused: my_cases_params[:is_paused]
+      is_paused: my_cases_params[:is_paused],
+      patch: my_cases_params[:patch]
     )
 
     render json: response
@@ -14,7 +15,7 @@ class MyCasesController < ApplicationController
 
   def my_cases_params
     params.require(REQUIRED_INDEX_PARAMS)
-    allowed_params = params.permit(REQUIRED_INDEX_PARAMS + [:is_paused])
+    allowed_params = params.permit(REQUIRED_INDEX_PARAMS + %i[is_paused patch])
 
     allowed_params[:user_id] = allowed_params[:user_id].to_i
 

@@ -52,24 +52,26 @@ module Hackney
         end
       end
 
-      def get_tenancies_for_user(user_id:, page_number: nil, number_per_page: nil, is_paused: nil)
-        query = tenancy_filtered_by_paused_state_for(user_id, is_paused)
+      def get_tenancies_for_user(user_id:, page_number: nil, number_per_page: nil, is_paused: nil, patch: nil)
+        query = tenancy_filtered_by_paused_state_and_patch_for(user_id, is_paused, patch)
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
 
         query.order(by_balance).map(&method(:build_tenancy_list_item))
       end
 
-      def number_of_pages_for_user(user_id:, number_per_page:, is_paused: nil)
-        (tenancy_filtered_by_paused_state_for(user_id, is_paused).count.to_f / number_per_page).ceil
+      def number_of_pages_for_user(user_id:, number_per_page:, is_paused: nil, patch: nil)
+        (tenancy_filtered_by_paused_state_and_patch_for(user_id, is_paused, patch).count.to_f / number_per_page).ceil
       end
 
       private
 
-      def tenancy_filtered_by_paused_state_for(user_id, is_paused)
+      def tenancy_filtered_by_paused_state_and_patch_for(user_id, is_paused, patch)
         query = GatewayModel.where('
           assigned_user_id = ? AND
           balance > ?', user_id, 0)
+
+        query = query.where('patch_code = ?', patch) if patch
 
         return query if is_paused.nil?
 

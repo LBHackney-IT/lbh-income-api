@@ -328,7 +328,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     end
   end
 
-  context 'when there are paused and paused tenancies' do
+  context 'when there are paused and not paused tenancies' do
     let(:is_paused) { nil }
     let(:user) { create(:user) }
 
@@ -411,6 +411,94 @@ describe Hackney::Income::StoredTenanciesGateway do
 
         it 'shows the number pages of of paused cases' do
           expect(subject).to eq(expected_num_pages((num_paused_cases + num_active_cases), num_pages))
+        end
+      end
+    end
+  end
+
+  context 'when there are tenancies with different patches' do
+    let(:patch_1) { Faker::Lorem.characters(3) }
+    let(:patch_2) { Faker::Lorem.characters(3) }
+
+    let(:user) { create(:user) }
+
+    let(:num_cases_in_patch_1) { Faker::Number.between(2, 10) }
+    let(:num_cases_in_patch_2) { Faker::Number.between(2, 20) }
+    let(:num_pages) { Faker::Number.between(1, 5) }
+
+    before do
+      num_cases_in_patch_1.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, patch_code: patch_1)
+      end
+
+      num_cases_in_patch_2.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, patch_code: patch_2)
+      end
+    end
+
+    context 'when we call get_tenancies_for_user' do
+      subject do
+        gateway.get_tenancies_for_user(
+          user_id: user.id,
+          page_number: 1,
+          number_per_page: 50,
+          patch: patch
+        )
+      end
+
+      let(:patch) { nil }
+
+      it 'returns all tenancies' do
+        expect(subject.count).to eq(num_cases_in_patch_1 + num_cases_in_patch_2)
+      end
+
+      context 'when and filtering by patch 1' do
+        let(:patch) { patch_1 }
+
+        it 'onlies return only paused tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_1)
+        end
+      end
+
+      context 'when and filtering by patch 2' do
+        let(:patch) { patch_2 }
+
+        it 'onlies return unpaused tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_2)
+        end
+      end
+    end
+
+    context 'when we call number_of_pages_for_user' do
+      subject do
+        gateway.number_of_pages_for_user(
+          user_id: user.id,
+          number_per_page: num_pages,
+          patch: patch
+        )
+      end
+
+      context 'when and filtering by patch 1' do
+        let(:patch) { patch_1 }
+
+        it 'shows the number pages of of paused cases' do
+          expect(subject).to eq(expected_num_pages(num_cases_in_patch_1, num_pages))
+        end
+      end
+
+      context 'when and filtering by patch 2' do
+        let(:patch) { patch_2 }
+
+        it 'shows the number pages of of paused cases' do
+          expect(subject).to eq(expected_num_pages(num_cases_in_patch_2, num_pages))
+        end
+      end
+
+      context 'when patch is nil' do
+        let(:patch) { nil }
+
+        it 'shows the number pages of of paused cases' do
+          expect(subject).to eq(expected_num_pages((num_cases_in_patch_1 + num_cases_in_patch_2), num_pages))
         end
       end
     end
