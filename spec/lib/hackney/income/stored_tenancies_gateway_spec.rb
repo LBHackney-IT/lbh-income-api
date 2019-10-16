@@ -419,8 +419,8 @@ describe Hackney::Income::StoredTenanciesGateway do
   context 'when there are tenancies with different immediate actions' do
     let(:user) { create(:user) }
 
-    let(:no_action) { 'no_action'}
-    let(:send_letter_one) { 'send_letter_one'}
+    let(:no_action) { 'no_action' }
+    let(:send_letter_one) { 'send_letter_one' }
 
     let(:cases_with_no_action) { 5 }
     let(:cases_with_warning_letter_action) { 5 }
@@ -451,6 +451,14 @@ describe Hackney::Income::StoredTenanciesGateway do
 
       it 'returns all tenancies' do
         expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+      end
+
+      context 'when filtering by no_action' do
+        let(:classification) { no_action }
+
+        it 'only returns tennancies with then next immediate action of no_action' do
+          expect(subject.count).to eq(cases_with_no_action)
+        end
       end
 
       context 'when filtering by send_letter_one' do
