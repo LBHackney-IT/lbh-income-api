@@ -52,7 +52,7 @@ module Hackney
         end
       end
 
-      def get_tenancies_for_user(user_id:, page_number: nil, number_per_page: nil, is_paused: nil)
+      def get_tenancies_for_user(user_id:, page_number: nil, number_per_page: nil, is_paused: nil, classification: nil)
         query = tenancy_filtered_by_paused_state_for(user_id, is_paused)
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?

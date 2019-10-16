@@ -416,6 +416,53 @@ describe Hackney::Income::StoredTenanciesGateway do
     end
   end
 
+  context 'when there are tenancies with different immediate actions' do
+    let(:user) { create(:user) }
+
+    let(:no_action) { 'no_action'}
+    let(:send_letter_one) { 'send_letter_one'}
+
+    let(:cases_with_no_action) { 5 }
+    let(:cases_with_warning_letter_action) { 5 }
+
+    let(:num_pages) { Faker::Number.between(1, 5) }
+
+    before do
+      cases_with_no_action.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, classification: no_action)
+      end
+
+      cases_with_warning_letter_action.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, classification: send_letter_one)
+      end
+    end
+
+    context 'when we call get_tenancies_for_user' do
+      subject do
+        gateway.get_tenancies_for_user(
+          user_id: user.id,
+          page_number: 1,
+          number_per_page: 50,
+          classification: classification
+        )
+      end
+
+      let(:classification) { nil }
+
+      it 'returns all tenancies' do
+        expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+      end
+
+      context 'when filtering by send_letter_one' do
+        let(:classification) { send_letter_one }
+
+        it 'only returns tennancies with then next immediate action of send_letter_one' do
+          expect(subject.count).to eq(cases_with_warning_letter_action)
+        end
+      end
+    end
+  end
+
   def expected_num_pages(items, number_per_page)
     (items.to_f / number_per_page).ceil
   end
