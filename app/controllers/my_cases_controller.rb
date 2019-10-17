@@ -15,7 +15,7 @@ class MyCasesController < ApplicationController
 
   def my_cases_params
     params.require(REQUIRED_INDEX_PARAMS)
-    allowed_params = params.permit(REQUIRED_INDEX_PARAMS + [:is_paused, :recommended_actions])
+    allowed_params = params.permit(REQUIRED_INDEX_PARAMS + %i[is_paused recommended_actions])
 
     allowed_params[:user_id] = allowed_params[:user_id].to_i
 
