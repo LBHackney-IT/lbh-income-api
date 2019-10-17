@@ -446,10 +446,12 @@ describe Hackney::Income::StoredTenanciesGateway do
         )
       end
 
-      let(:patch) { nil }
+      context 'with no filtering by patch' do
+        let(:patch) { nil }
 
-      it 'returns all tenancies' do
-        expect(subject.count).to eq(num_cases_in_patch_1 + num_cases_in_patch_2)
+        it 'returns all tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_1 + num_cases_in_patch_2)
+        end
       end
 
       context 'when and filtering by patch 1' do
@@ -494,7 +496,7 @@ describe Hackney::Income::StoredTenanciesGateway do
         end
       end
 
-      context 'when patch is nil' do
+      context 'when no filtering by patch' do
         let(:patch) { nil }
 
         it 'shows the number pages of of paused cases' do
