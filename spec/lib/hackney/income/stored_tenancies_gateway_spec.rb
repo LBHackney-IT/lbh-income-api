@@ -454,16 +454,27 @@ describe Hackney::Income::StoredTenanciesGateway do
           page_number: 1,
           number_per_page: 50,
           filters: {
-            classification: classification
+            classification: classification,
+            full_patch: full_patch
           }
         )
       end
+
+      let(:full_patch) { false }
 
       context 'with no filter by classification' do
         let(:classification) { nil }
 
         it 'does not return :no_action tenancies' do
           expect(subject.count).to eq(cases_with_warning_letter_action)
+        end
+
+        context 'when the full_patch filter is set' do
+          let(:full_patch) { true }
+
+          it 'contains all cases' do
+            expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+          end
         end
       end
 

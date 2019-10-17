@@ -24,7 +24,8 @@ describe MyCasesController do
           .with(user_id: user_id, page_number: 1, number_per_page: 1, filters: {
             is_paused: nil,
             classification: nil,
-            patch: nil
+            patch: nil,
+            full_patch: nil
           })
 
         get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
@@ -51,7 +52,8 @@ describe MyCasesController do
           .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: nil,
             classification: nil,
-            patch: nil
+            patch: nil,
+            full_patch: nil
           })
           .and_return(cases: [], number_per_page: 1)
 
@@ -84,7 +86,8 @@ describe MyCasesController do
           .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: false,
             classification: nil,
-            patch: nil
+            patch: nil,
+            full_patch: nil
           })
           .and_return(expected_result)
 
@@ -104,7 +107,8 @@ describe MyCasesController do
           .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: nil,
             classification: nil,
-            patch: patch
+            patch: patch,
+            full_patch: nil
           })
           .and_return(expected_result)
 

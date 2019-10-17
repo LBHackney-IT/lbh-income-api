@@ -66,11 +66,6 @@ module Hackney
 
       private
 
-      # filters: {
-      #   is_paused: nil,
-      #   classification: nil,
-      #   patch: nil
-      # }
       def tenancies_filtered_for(user_id, filters)
         query = GatewayModel.where('
           assigned_user_id = ? AND
@@ -78,9 +73,9 @@ module Hackney
 
         query = query.where('patch_code = ?', filters[:patch]) if filters[:patch]
 
-        if filters[:classification]
+        if filters[:classification].present?
           query = query.where(classification: filters[:classification])
-        elsif !filters[:is_paused]
+        elsif only_show_immediate_actions?(filters)
           query = query.where.not(classification: :no_action).or(query.where(classification: nil))
         end
 
@@ -92,6 +87,12 @@ module Hackney
           query = query.not_paused
         end
         query
+      end
+
+      def only_show_immediate_actions?(filters)
+        tabs_that_display_all_actions = [filters[:is_paused], filters[:full_patch]]
+
+        tabs_that_display_all_actions.all? { |filter| filter == false || filter.nil? }
       end
 
       def by_balance
