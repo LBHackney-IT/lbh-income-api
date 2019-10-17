@@ -66,11 +66,11 @@ module Hackney
 
       private
 
-# filters: {
-#   is_paused: nil,
-#   classification: nil,
-#   patch: nil
-# }
+      # filters: {
+      #   is_paused: nil,
+      #   classification: nil,
+      #   patch: nil
+      # }
       def tenancies_filtered_for(user_id, filters)
         query = GatewayModel.where('
           assigned_user_id = ? AND

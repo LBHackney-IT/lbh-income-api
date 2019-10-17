@@ -132,14 +132,16 @@ describe Hackney::Income::ViewMyCases do
       end
 
       context 'when filtering out paused cases' do
-        subject { view_my_cases.execute(
-          user_id: user_id,
-          page_number: page_number,
-          number_per_page: number_per_page,
-          filters: {
-            is_paused: true
-          }
-        ) }
+        subject {
+          view_my_cases.execute(
+            user_id: user_id,
+            page_number: page_number,
+            number_per_page: number_per_page,
+            filters: {
+              is_paused: true
+            }
+          )
+        }
 
         it 'returns only paused cases' do
           expect(stored_tenancies_gateway)
