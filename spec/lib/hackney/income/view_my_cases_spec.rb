@@ -161,7 +161,7 @@ describe Hackney::Income::ViewMyCases do
 
         let(:patch) { Faker::Lorem.characters(3) }
 
-        it 'returns only cases in specified patch' do
+        it 'asks the gateway for cases filtered by patch' do
           expect(stored_tenancies_gateway)
             .to receive(:get_tenancies_for_user)
             .with(a_hash_including(

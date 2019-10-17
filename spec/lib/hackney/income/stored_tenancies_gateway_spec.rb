@@ -367,7 +367,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'when and is_paused is set true' do
         let(:is_paused) { true }
 
-        it 'onlies return only paused tenancies' do
+        it 'only return only paused tenancies' do
           expect(subject.count).to eq(num_paused_cases)
         end
       end
@@ -375,7 +375,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with is_paused set false' do
         let(:is_paused) { false }
 
-        it 'onlies return unpaused tenancies' do
+        it 'only return unpaused tenancies' do
           expect(subject.count).to eq(num_active_cases)
         end
       end
@@ -454,24 +454,24 @@ describe Hackney::Income::StoredTenanciesGateway do
         end
       end
 
-      context 'when and filtering by patch 1' do
+      context 'when filtering by patch 1' do
         let(:patch) { patch_1 }
 
-        it 'onlies return only paused tenancies' do
+        it 'only return only paused tenancies' do
           expect(subject.count).to eq(num_cases_in_patch_1)
         end
       end
 
-      context 'when and filtering by patch 2' do
+      context 'when filtering by patch 2' do
         let(:patch) { patch_2 }
 
-        it 'onlies return unpaused tenancies' do
+        it 'only return unpaused tenancies' do
           expect(subject.count).to eq(num_cases_in_patch_2)
         end
       end
     end
 
-    context 'when we call number_of_pages_for_user' do
+    context 'when calling #number_of_pages_for_user' do
       subject do
         gateway.number_of_pages_for_user(
           user_id: user.id,
@@ -480,18 +480,18 @@ describe Hackney::Income::StoredTenanciesGateway do
         )
       end
 
-      context 'when and filtering by patch 1' do
+      context 'when filtering by patch 1' do
         let(:patch) { patch_1 }
 
-        it 'shows the number pages of of paused cases' do
+        it 'returns the number of pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_cases_in_patch_1, num_pages))
         end
       end
 
-      context 'when and filtering by patch 2' do
+      context 'when filtering by patch 2' do
         let(:patch) { patch_2 }
 
-        it 'shows the number pages of of paused cases' do
+        it 'returns the number of pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_cases_in_patch_2, num_pages))
         end
       end
@@ -499,7 +499,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'when no filtering by patch' do
         let(:patch) { nil }
 
-        it 'shows the number pages of of paused cases' do
+        it 'returns the number of pages of paused cases' do
           expect(subject).to eq(expected_num_pages((num_cases_in_patch_1 + num_cases_in_patch_2), num_pages))
         end
       end
