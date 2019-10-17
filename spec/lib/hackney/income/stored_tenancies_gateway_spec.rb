@@ -409,10 +409,14 @@ describe Hackney::Income::StoredTenanciesGateway do
           expect(subject).to eq(expected_num_pages(num_paused_cases, num_pages))
         end
 
-        it 'shows the number pages of paused cases with one no_action classification' do
-          create(:case_priority, assigned_user_id: user.id, balance: 40, is_paused_until: Faker::Date.forward(1), classification: :no_action)
+        context 'with one no_action classification case' do
+          before do
+            create(:case_priority, assigned_user_id: user.id, balance: 40, is_paused_until: Faker::Date.forward(1), classification: :no_action)
+          end
 
-          expect(subject).to eq(expected_num_pages(num_paused_cases + 1, num_pages))
+          it 'shows the number pages of paused cases with one no_action classification' do
+            expect(subject).to eq(expected_num_pages(num_paused_cases + 1, num_pages))
+          end
         end
       end
 
@@ -465,7 +469,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with no filter by classification' do
         let(:classification) { nil }
 
-        it 'does not return :no_action tenancies' do
+        it 'only returns tenancies with warning letters as next action' do
           expect(subject.count).to eq(cases_with_warning_letter_action)
         end
 
