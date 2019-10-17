@@ -469,7 +469,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       end
     end
 
-    context 'when we call number_of_pages_for_user' do
+    context '#number_of_pages_for_user' do
       subject do
         gateway.number_of_pages_for_user(
           user_id: user.id,
