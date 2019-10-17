@@ -90,9 +90,9 @@ module Hackney
       end
 
       def only_show_immediate_actions?(filters)
-        tabs_that_display_all_actions = [filters[:is_paused], filters[:full_patch]]
+        filters_that_return_all_actions = [filters[:is_paused], filters[:full_patch]]
 
-        tabs_that_display_all_actions.all? { |filter| filter == false || filter.nil? }
+        filters_that_return_all_actions.all? { |filter| filter == false || filter.nil? }
       end
 
       def by_balance
