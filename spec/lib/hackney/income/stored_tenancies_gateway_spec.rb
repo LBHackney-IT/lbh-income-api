@@ -481,7 +481,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'when filtering by patch 1' do
         let(:patch) { patch_1 }
 
-        it 'shows the number pages of of paused cases' do
+        it 'returns the number of pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_cases_in_patch_1, num_pages))
         end
       end
