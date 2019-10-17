@@ -478,7 +478,7 @@ describe Hackney::Income::StoredTenanciesGateway do
         )
       end
 
-      context 'when and filtering by patch 1' do
+      context 'when filtering by patch 1' do
         let(:patch) { patch_1 }
 
         it 'shows the number pages of of paused cases' do
