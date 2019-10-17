@@ -279,7 +279,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     let(:user) { create(:user) }
     let(:other_user) { create(:user) }
 
-    context 'with thr user having ten tenancies in arrears and ten not in arrears' do
+    context 'with the user having ten tenancies in arrears and ten not in arrears' do
       before do
         create_list(:case_priority, 10, assigned_user_id: user.id, balance: 1)
         create_list(:case_priority, 10, assigned_user_id: user.id, balance: -1)
@@ -456,8 +456,8 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with no filter by classification' do
         let(:classification) { nil }
 
-        it 'returns all tenancies' do
-          expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+        it 'does not return :no_action tenancies' do
+          expect(subject.count).to eq(cases_with_warning_letter_action)
         end
       end
 

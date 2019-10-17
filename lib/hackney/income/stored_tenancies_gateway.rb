@@ -77,7 +77,12 @@ module Hackney
           balance > ?', user_id, 0)
 
         query = query.where('patch_code = ?', filters[:patch]) if filters[:patch]
-        query = query.where(classification: filters[:classification]) if filters[:classification]
+
+        if filters[:classification]
+          query = query.where(classification: filters[:classification])
+        elsif !filters[:is_paused]
+          query = query.where.not(classification: :no_action).or(query.where(classification: nil))
+        end
 
         return query if filters[:is_paused].nil?
 
