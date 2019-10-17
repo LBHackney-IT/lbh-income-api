@@ -452,7 +452,7 @@ describe Hackney::Income::StoredTenanciesGateway do
         expect(subject.count).to eq(num_cases_in_patch_1 + num_cases_in_patch_2)
       end
 
-      context 'when and filtering by patch 1' do
+      context 'when filtering by patch 1' do
         let(:patch) { patch_1 }
 
         it 'onlies return only paused tenancies' do
