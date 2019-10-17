@@ -328,7 +328,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     end
   end
 
-  context 'when there are paused and paused tenancies' do
+  context 'when there are paused and not paused tenancies' do
     let(:is_paused) { nil }
     let(:user) { create(:user) }
 
@@ -354,7 +354,9 @@ describe Hackney::Income::StoredTenanciesGateway do
           user_id: user.id,
           page_number: 1,
           number_per_page: 50,
-          is_paused: is_paused
+          filters: {
+            is_paused: is_paused
+          }
         )
       end
 
@@ -367,7 +369,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'when and is_paused is set true' do
         let(:is_paused) { true }
 
-        it 'onlies return only paused tenancies' do
+        it 'only return only paused tenancies' do
           expect(subject.count).to eq(num_paused_cases)
         end
       end
@@ -375,7 +377,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with is_paused set false' do
         let(:is_paused) { false }
 
-        it 'onlies return unpaused tenancies' do
+        it 'only return unpaused tenancies' do
           expect(subject.count).to eq(num_active_cases)
         end
       end
@@ -386,7 +388,9 @@ describe Hackney::Income::StoredTenanciesGateway do
         gateway.number_of_pages_for_user(
           user_id: user.id,
           number_per_page: num_pages,
-          is_paused: is_paused
+          filters: {
+            is_paused: is_paused
+          }
         )
       end
 
@@ -443,14 +447,18 @@ describe Hackney::Income::StoredTenanciesGateway do
           user_id: user.id,
           page_number: 1,
           number_per_page: 50,
-          classification: classification
+          filters: {
+            classification: classification
+          }
         )
       end
 
-      let(:classification) { nil }
+      context 'with no filter by classification' do
+        let(:classification) { nil }
 
-      it 'returns all tenancies' do
-        expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+        it 'returns all tenancies' do
+          expect(subject.count).to eq(cases_with_no_action + cases_with_warning_letter_action)
+        end
       end
 
       context 'when filtering by no_action' do
@@ -466,6 +474,100 @@ describe Hackney::Income::StoredTenanciesGateway do
 
         it 'only returns tennancies with then next immediate action of send_letter_one' do
           expect(subject.count).to eq(cases_with_warning_letter_action)
+        end
+      end
+    end
+  end
+
+  context 'when there are tenancies with different patches' do
+    let(:patch_1) { Faker::Lorem.characters(3) }
+    let(:patch_2) { Faker::Lorem.characters(3) }
+
+    let(:user) { create(:user) }
+
+    let(:num_cases_in_patch_1) { Faker::Number.between(2, 10) }
+    let(:num_cases_in_patch_2) { Faker::Number.between(2, 20) }
+    let(:num_pages) { Faker::Number.between(1, 5) }
+
+    before do
+      num_cases_in_patch_1.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, patch_code: patch_1)
+      end
+
+      num_cases_in_patch_2.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, patch_code: patch_2)
+      end
+    end
+
+    context 'when we call get_tenancies_for_user' do
+      subject do
+        gateway.get_tenancies_for_user(
+          user_id: user.id,
+          page_number: 1,
+          number_per_page: 50,
+          filters: {
+            patch: patch
+          }
+        )
+      end
+
+      context 'with no filtering by patch' do
+        let(:patch) { nil }
+
+        it 'returns all tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_1 + num_cases_in_patch_2)
+        end
+      end
+
+      context 'when filtering by patch 1' do
+        let(:patch) { patch_1 }
+
+        it 'only return only paused tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_1)
+        end
+      end
+
+      context 'when filtering by patch 2' do
+        let(:patch) { patch_2 }
+
+        it 'only return unpaused tenancies' do
+          expect(subject.count).to eq(num_cases_in_patch_2)
+        end
+      end
+    end
+
+    context 'when calling #number_of_pages_for_user' do
+      subject do
+        gateway.number_of_pages_for_user(
+          user_id: user.id,
+          number_per_page: num_pages,
+          filters: {
+            patch: patch
+          }
+        )
+      end
+
+      context 'when filtering by patch 1' do
+        let(:patch) { patch_1 }
+
+        it 'returns the number of pages of paused cases' do
+          expect(subject).to eq(expected_num_pages(num_cases_in_patch_1, num_pages))
+        end
+      end
+
+      context 'when filtering by patch 2' do
+        let(:patch) { patch_2 }
+
+        it 'returns the number of pages of paused cases' do
+          expect(subject).to eq(expected_num_pages(num_cases_in_patch_2, num_pages))
+        end
+      end
+
+      context 'when no filtering by patch' do
+        let(:patch) { nil }
+
+        it 'returns the number of pages of paused cases' do
+          expect(subject).to eq(expected_num_pages((num_cases_in_patch_1 + num_cases_in_patch_2), num_pages))
         end
       end
     end

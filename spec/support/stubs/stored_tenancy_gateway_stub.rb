@@ -5,11 +5,11 @@ module Hackney
         @stored_tenancies_attributes = stored_tenancies_attributes
       end
 
-      def get_tenancies_for_user(user_id:, page_number:, number_per_page:, is_paused: nil, classification: nil)
+      def get_tenancies_for_user(user_id:, page_number:, number_per_page:, filters: {})
         @stored_tenancies_attributes.values
       end
 
-      def number_of_pages_for_user(user_id:, number_per_page:, is_paused: nil, classification: nil)
+      def number_of_pages_for_user(user_id:, number_per_page:, is_paused: nil, filters: {})
         @stored_tenancies_attributes.keys.count
       end
     end

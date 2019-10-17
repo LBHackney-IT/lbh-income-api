@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::ViewMyCases do
-  subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page, classification: nil) }
+  subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page) }
 
   let(:user_id) { Faker::Number.number(2).to_i }
   let(:page_number) { Faker::Number.number(2).to_i }
@@ -132,18 +132,78 @@ describe Hackney::Income::ViewMyCases do
       end
 
       context 'when filtering out paused cases' do
-        subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false) }
+        subject { view_my_cases.execute(
+          user_id: user_id,
+          page_number: page_number,
+          number_per_page: number_per_page,
+          filters: {
+            is_paused: true
+          }
+        ) }
 
         it 'returns only paused cases' do
           expect(stored_tenancies_gateway)
             .to receive(:get_tenancies_for_user)
-            .with(a_hash_including(user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false))
+            .with(a_hash_including(
+                    user_id: user_id,
+                    page_number: page_number,
+                    number_per_page: number_per_page,
+                    filters: {
+                      is_paused: true
+                    }
+                  ))
             .and_call_original
 
           expect(stored_tenancies_gateway)
             .to receive(:number_of_pages_for_user)
-            .with(a_hash_including(user_id: user_id, number_per_page: number_per_page, is_paused: false))
+            .with(a_hash_including(
+                    user_id: user_id,
+                    number_per_page: number_per_page,
+                    filters: {
+                      is_paused: true
+                    }
+                  ))
             .and_call_original
+
+          expect(subject.cases.count).to eq(1)
+        end
+      end
+
+      context 'when filtering cases by patch' do
+        subject {
+          view_my_cases.execute(
+            user_id: user_id,
+            page_number: page_number,
+            number_per_page: number_per_page,
+            filters: {
+              patch: patch
+            }
+          )
+        }
+
+        let(:patch) { Faker::Lorem.characters(3) }
+
+        it 'asks the gateway for cases filtered by patch' do
+          expect(stored_tenancies_gateway)
+            .to receive(:get_tenancies_for_user)
+            .with(a_hash_including(
+                    user_id: user_id,
+                    page_number: page_number,
+                    number_per_page: number_per_page,
+                    filters: {
+                      patch: patch
+                    }
+                  )).and_call_original
+
+          expect(stored_tenancies_gateway)
+            .to receive(:number_of_pages_for_user)
+            .with(a_hash_including(
+                    user_id: user_id,
+                    number_per_page: number_per_page,
+                    filters: {
+                      patch: patch
+                    }
+                  )).and_call_original
 
           expect(subject.cases.count).to eq(1)
         end
@@ -158,8 +218,7 @@ describe Hackney::Income::ViewMyCases do
       expect(stored_tenancies_gateway).to receive(:number_of_pages_for_user).with(
         user_id: user_id,
         number_per_page: number_per_page,
-        is_paused: nil,
-        classification: nil
+        filters: {}
       ).and_call_original
       subject
     end
