@@ -397,7 +397,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with is_paused set false' do
         let(:is_paused) { false }
 
-        it 'shows the number pages of of paused cases' do
+        it 'shows the number pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_active_cases, num_pages))
         end
       end
@@ -405,15 +405,21 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with is_paused set true' do
         let(:is_paused) { true }
 
-        it 'shows the number pages of of paused cases' do
+        it 'shows the number pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_paused_cases, num_pages))
+        end
+
+        it 'shows the number pages of paused cases with one no_action classification' do
+          create(:case_priority, assigned_user_id: user.id, balance: 40, is_paused_until: Faker::Date.forward(1), classification: :no_action)
+
+          expect(subject).to eq(expected_num_pages(num_paused_cases + 1, num_pages))
         end
       end
 
       context 'with is_paused not set' do
         let(:is_paused) { nil }
 
-        it 'shows the number pages of of paused cases' do
+        it 'shows the number pages of paused cases' do
           expect(subject).to eq(expected_num_pages((num_paused_cases + num_active_cases), num_pages))
         end
       end
