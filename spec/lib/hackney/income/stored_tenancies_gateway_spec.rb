@@ -414,7 +414,7 @@ describe Hackney::Income::StoredTenanciesGateway do
             create(:case_priority, assigned_user_id: user.id, balance: 40, is_paused_until: Faker::Date.forward(1), classification: :no_action)
           end
 
-          it 'shows the number pages of paused cases with one no_action classification' do
+          it 'shows the number of pages of paused cases with one no_action classification' do
             expect(subject).to eq(expected_num_pages(num_paused_cases + 1, num_pages))
           end
         end
