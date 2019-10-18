@@ -405,7 +405,7 @@ describe Hackney::Income::StoredTenanciesGateway do
       context 'with is_paused set true' do
         let(:is_paused) { true }
 
-        it 'shows the number pages of paused cases' do
+        it 'shows the number of pages of paused cases' do
           expect(subject).to eq(expected_num_pages(num_paused_cases, num_pages))
         end
 
