@@ -4,7 +4,7 @@ module Stubs
                 :number_of_broken_agreements,
                 :payment_date_delta, :payment_amount_delta,
                 :active_agreement, :active_nosp, :nosp_served_date,
-                :nosp_expiry_date, :patch_code
+                :nosp_expiry_date, :patch_code, :courtdate
 
     attr_accessor :days_since_last_payment, :last_communication_date, :paused, :nosp_served,
                   :last_communication_action
@@ -23,6 +23,10 @@ module Stubs
 
     def nosp_expiry_date
       '2019-12-30 16:43:10'.to_date
+    end
+
+    def courtdate
+      '2005-12-13 12:43:10'.to_date
     end
 
     def patch_code

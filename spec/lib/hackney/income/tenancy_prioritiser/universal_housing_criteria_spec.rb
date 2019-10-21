@@ -11,6 +11,8 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
   let(:nosp_notice_expiry_date) { '2019-10-20 14:31:12' }
 
+  let(:courtdate) { '2019-10-20 14:31:12' }
+
   let(:current_balance) { Faker::Number.decimal.to_f }
 
   before {
@@ -18,7 +20,8 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
       tenancy_ref: tenancy_ref,
       current_balance: current_balance,
       nosp_notice_served_date: nosp_notice_served_date,
-      nosp_notice_expiry_date: nosp_notice_expiry_date
+      nosp_notice_expiry_date: nosp_notice_expiry_date,
+      courtdate: courtdate
     )
   }
 
@@ -39,6 +42,14 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
     it 'returns the weekly rent of a tenancy' do
       expect(subject).to eq(5)
+    end
+  end
+
+  describe '#courtdate' do
+    subject { criteria.courtdate }
+
+    it 'returns the courtdate' do
+      expect(subject).to eq(courtdate.to_date)
     end
   end
 

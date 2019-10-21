@@ -127,6 +127,8 @@ describe Hackney::Income::ViewMyCases do
                                            nosp_served: tenancy_priority_factors.fetch(:nosp_served),
                                            active_nosp: tenancy_priority_factors.fetch(:active_nosp),
 
+                                           courtdate: tenancy_priority_factors.fetch(:courtdate),
+
                                            classification: tenancy_priority_factors.fetch(:classification)
                                          ))
       end
@@ -261,6 +263,8 @@ describe Hackney::Income::ViewMyCases do
       broken_court_order: Faker::Number.between(0, 1),
       nosp_served: Faker::Number.between(0, 1),
       active_nosp: Faker::Number.between(0, 1),
+
+      courtdate: Date.today - 5,
 
       classification: 'no_action'
     }

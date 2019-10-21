@@ -29,6 +29,9 @@ module Hackney
             DECLARE @NospExpiryDate SMALLDATETIME = (
               SELECT u_notice_expiry FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
+            DECLARE @Courtdate SMALLDATETIME = (
+              SELECT courtdate FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
 
             DECLARE @WeeklyRent NUMERIC(9, 2) = (
               SELECT rent FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
@@ -98,6 +101,7 @@ module Hackney
               @NospsInLastMonth as nosps_in_last_month,
               @NospServedDate as nosp_served_date,
               @NospExpiryDate as nosp_expiry_date,
+              @Courtdate as courtdate,
               @Payment1Value as payment_1_value,
               @Payment1Date as payment_1_date,
               @Payment2Value as payment_2_value,
@@ -142,6 +146,12 @@ module Hackney
           return nil if date_not_valid?(attributes[:nosp_expiry_date])
 
           attributes[:nosp_expiry_date].to_date
+        end
+
+        def courtdate
+          return nil if date_not_valid?(attributes[:courtdate])
+
+          attributes[:courtdate].to_date
         end
 
         def days_in_arrears
