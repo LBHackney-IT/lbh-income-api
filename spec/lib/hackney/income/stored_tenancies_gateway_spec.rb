@@ -488,10 +488,8 @@ describe Hackney::Income::StoredTenanciesGateway do
         )
       end
 
-      context 'with showing tenancies within a week' do
-        it 'only returns tenancies within a week' do
-          expect(subject.count).to eq(cases_with_courtdate_within_a_week)
-        end
+      it 'returns all tenancies' do
+        expect(subject.count).to eq(cases_with_courtdate_within_a_week + cases_with_courtdate_outside_a_week)
       end
     end
   end
