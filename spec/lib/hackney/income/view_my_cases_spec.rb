@@ -128,6 +128,7 @@ describe Hackney::Income::ViewMyCases do
                                            active_nosp: tenancy_priority_factors.fetch(:active_nosp),
 
                                            courtdate: tenancy_priority_factors.fetch(:courtdate),
+                                           court_outcome: tenancy_priority_factors.fetch(:court_outcome),
 
                                            classification: tenancy_priority_factors.fetch(:classification)
                                          ))
@@ -265,6 +266,7 @@ describe Hackney::Income::ViewMyCases do
       active_nosp: Faker::Number.between(0, 1),
 
       courtdate: Date.today - 5,
+      court_outcome: Faker::Lorem.word,
 
       classification: 'no_action'
     }

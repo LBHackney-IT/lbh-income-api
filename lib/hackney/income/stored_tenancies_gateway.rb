@@ -44,7 +44,8 @@ module Hackney
               active_nosp: criteria.active_nosp?,
               classification: classification_usecase.execute,
               patch_code: criteria.patch_code,
-              courtdate: criteria.courtdate
+              courtdate: criteria.courtdate,
+              court_outcome: criteria.court_outcome
             )
           end
         rescue ActiveRecord::RecordNotUnique
@@ -135,7 +136,8 @@ module Hackney
           active_nosp: model.active_nosp,
           patch_code: model.patch_code,
           classification: model.classification,
-          courtdate: model.courtdate
+          courtdate: model.courtdate,
+          court_outcome: model.court_outcome
         }
       end
     end

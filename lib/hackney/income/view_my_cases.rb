@@ -78,6 +78,7 @@ module Hackney
           active_nosp: assigned_tenancy.fetch(:active_nosp),
 
           courtdate: assigned_tenancy.fetch(:courtdate),
+          court_outcome: assigned_tenancy.fetch(:court_outcome),
 
           classification: assigned_tenancy.fetch(:classification)
         }

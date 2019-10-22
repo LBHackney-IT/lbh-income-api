@@ -7,7 +7,7 @@ module Stubs
                 :nosp_expiry_date, :patch_code, :courtdate
 
     attr_accessor :days_since_last_payment, :last_communication_date, :paused, :nosp_served,
-                  :last_communication_action
+                  :last_communication_action, :court_outcome
 
     def balance
       @balance || 100.00
