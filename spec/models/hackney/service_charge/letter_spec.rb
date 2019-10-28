@@ -14,10 +14,12 @@ describe Hackney::ServiceCharge::Letter do
       money_judgement: Faker::Number.number(2),
       charging_order: Faker::Number.number(2),
       bal_dispute: Faker::Number.number(2),
-      tenure_type: tenure_type
+      tenure_type: tenure_type,
+      original_lease_date: original_lease_date
     }
   }
   let(:tenure_type) { nil }
+  let(:original_lease_date) { nil }
 
   context 'when no errors are present' do
     let(:letter) { described_class.new(letter_params.merge(correspondence_address3: '')) }
@@ -69,6 +71,24 @@ describe Hackney::ServiceCharge::Letter do
       money_judgement = letter_params[:money_judgement].to_i
       expected_total_collectable_arrears_balance = format('%.2f', balance - money_judgement)
       expect(letter.lba_balance).to eq(expected_total_collectable_arrears_balance)
+    end
+  end
+
+  describe 'original lease date' do
+    let(:letter) { described_class.new(letter_params) }
+
+    context 'when original lease date is nil' do
+      it 'is nil' do
+        expect(letter.original_lease_date).to be_nil
+      end
+    end
+
+    context 'when original lease date is valid date' do
+      let(:original_lease_date) { Time.zone.now }
+
+      it 'is formatted into a string' do
+        expect(letter.original_lease_date).to eq(original_lease_date.strftime('%d %B %Y'))
+      end
     end
   end
 

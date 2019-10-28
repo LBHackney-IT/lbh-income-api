@@ -29,7 +29,7 @@ module Hackney
         @balance = format('%.2f', (validated_params[:balance] || 0))
         @total_collectable_arrears_balance = format('%.2f', (validated_params[:total_collectable_arrears_balance] || 0))
         @lba_expiry_date = validated_params[:lba_expiry_date]
-        @original_lease_date = validated_params[:original_lease_date]
+        @original_lease_date = format_date(validated_params[:original_lease_date])
         @date_of_current_purchase_assignment = validated_params[:date_of_current_purchase_assignment]
         @original_leaseholders = 'the original leaseholder' # Placeholder - field does not exist within UH yet
         @previous_letter_sent = validated_params[:previous_letter_sent]
@@ -110,6 +110,12 @@ module Hackney
         return 0 if arrears_balance.nil? || money_judgement.nil?
 
         BigDecimal(arrears_balance.to_s) - BigDecimal(money_judgement.to_s)
+      end
+
+      def format_date(date)
+        return nil if date.nil?
+
+        date.strftime('%d %B %Y')
       end
     end
   end
