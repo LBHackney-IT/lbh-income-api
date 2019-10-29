@@ -1,7 +1,7 @@
 module Hackney
   module ServiceCharge
     class Letter
-      MANDATORY_LETTER_FIELDS = %i[payment_ref lessee_full_name
+      DEFAULT_MANDATORY_LETTER_FIELDS = %i[payment_ref lessee_full_name
                                    correspondence_address1 correspondence_address2
                                    correspondence_postcode property_address
                                    total_collectable_arrears_balance].freeze
@@ -14,8 +14,21 @@ module Hackney
                   :original_leaseholders, :previous_letter_sent, :arrears_letter_1_date,
                   :international, :lessee_full_name, :lessee_short_name, :errors, :lba_balance, :tenure_type
 
+      # Letter.build_letter(params, template_id)
+      def self.build_letter(letter_params:, template_id:)
+        case template_id
+        when Hackney::ServiceCharge::BeforeAction::LBA_TEMPLATE_ID
+          return Letter::BeforeAction.new(letter_params)
+        else
+          return new(letter_params)
+        end
+      end
+
       def initialize(params)
-        validated_params = validate_mandatory_fields(reorganise_address(params))
+        validated_params = validate_mandatory_fields(
+          DEFAULT_MANDATORY_LETTER_FIELDS,
+          reorganise_address(params)
+        )
 
         @tenancy_ref = validated_params[:tenancy_ref]
         @correspondence_address1 = validated_params[:correspondence_address1]
@@ -28,27 +41,12 @@ module Hackney
         @payment_ref = validated_params[:payment_ref]
         @balance = format('%.2f', (validated_params[:balance] || 0))
         @total_collectable_arrears_balance = format('%.2f', (validated_params[:total_collectable_arrears_balance] || 0))
-        @lba_expiry_date = validated_params[:lba_expiry_date]
-        @original_lease_date = format_date(validated_params[:original_lease_date])
-        @date_of_current_purchase_assignment = validated_params[:date_of_current_purchase_assignment]
-        @original_leaseholders = 'the original leaseholder' # Placeholder - field does not exist within UH yet
         @previous_letter_sent = validated_params[:previous_letter_sent]
         @arrears_letter_1_date = fetch_previous_letter_date(validated_params[:payment_ref])
         @international = validated_params[:international]
         @lessee_full_name = validated_params[:lessee_full_name]
         @lessee_short_name = validated_params[:lessee_short_name]
-        @lba_balance = format('%.2f', calculate_lba_balance(
-                                        validated_params[:total_collectable_arrears_balance],
-                                        validated_params[:money_judgement]
-                                      ))
-        @tenure_type = validated_params[:tenure_type]
       end
-
-      def freehold?
-        @tenure_type == Hackney::Income::Domain::TenancyAgreement::TENURE_TYPE_FREEHOLD
-      end
-
-      private
 
       def reorganise_address(letter_params)
         address1 = letter_params[:correspondence_address1] # corr_preamble ( the flat number/house Name)
@@ -87,10 +85,13 @@ module Hackney
         letter_params
       end
 
-      def validate_mandatory_fields(letter_params)
-        @errors = MANDATORY_LETTER_FIELDS
+      def validate_mandatory_fields(mandatory_fields, letter_params)
+        @errors = [] if @errors.nil?
+        @errors.concat(
+          mandatory_fields
                   .reject { |field| letter_params[field].present? }
                   .map { |mandatory_field| { name: mandatory_field.to_s, message: 'missing mandatory field' } }
+        )
 
         @errors << { name: 'address', message: 'international address' } if letter_params[:international] == true
 
@@ -104,18 +105,6 @@ module Hackney
                        .where("JSON_EXTRACT(metadata, '$.payment_ref') = ?", payment_ref)
 
         sent_letter1.any? ? sent_letter1.last.updated_at.strftime('%d %B %Y') : ''
-      end
-
-      def calculate_lba_balance(arrears_balance, money_judgement)
-        return 0 if arrears_balance.nil? || money_judgement.nil?
-
-        BigDecimal(arrears_balance.to_s) - BigDecimal(money_judgement.to_s)
-      end
-
-      def format_date(date)
-        return nil if date.nil?
-
-        date.strftime('%d %B %Y')
       end
     end
   end

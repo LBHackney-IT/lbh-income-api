@@ -104,7 +104,7 @@ describe LettersController, type: :controller do
 
       context 'when the missing data mandatory' do
         let(:payment_ref) { Faker::Number.number(4) }
-        let(:mandatory_fields) { Hackney::ServiceCharge::Letter::MANDATORY_LETTER_FIELDS }
+        let(:mandatory_fields) { Hackney::ServiceCharge::Letter::DEFAULT_MANDATORY_LETTER_FIELDS }
 
         it 'returns errors' do
           expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
