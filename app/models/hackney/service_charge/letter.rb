@@ -18,6 +18,8 @@ module Hackney
         case template_path
         when Hackney::ServiceCharge::Letter::BeforeAction::LBA_TEMPLATE_PATH
           Letter::BeforeAction.new(letter_params)
+        when *Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
+          Letter::LetterTwo.new(letter_params)
         else
           new(letter_params)
         end
@@ -41,7 +43,6 @@ module Hackney
         @balance = format('%.2f', (validated_params[:balance] || 0))
         @total_collectable_arrears_balance = format('%.2f', (validated_params[:total_collectable_arrears_balance] || 0))
         @previous_letter_sent = validated_params[:previous_letter_sent]
-        @arrears_letter_1_date = fetch_previous_letter_date(validated_params[:payment_ref])
         @international = validated_params[:international]
         @lessee_full_name = validated_params[:lessee_full_name]
         @lessee_short_name = validated_params[:lessee_short_name]
@@ -96,14 +97,6 @@ module Hackney
 
         letter_params[:lessee_short_name] = letter_params[:lessee_full_name] unless letter_params[:lessee_short_name].present?
         letter_params
-      end
-
-      def fetch_previous_letter_date(payment_ref)
-        sent_letter1 = Hackney::Cloud::Document
-                       .where("JSON_EXTRACT(metadata, '$.template.name') Like  ?", '%Letter 1%')
-                       .where("JSON_EXTRACT(metadata, '$.payment_ref') = ?", payment_ref)
-
-        sent_letter1.any? ? sent_letter1.last.updated_at.strftime('%d %B %Y') : ''
       end
     end
   end

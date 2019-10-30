@@ -24,6 +24,8 @@ module Hackney
           @tenure_type == Hackney::Income::Domain::TenancyAgreement::TENURE_TYPE_FREEHOLD
         end
 
+        private
+
         def calculate_lba_balance(arrears_balance, money_judgement)
           return 0 if arrears_balance.nil? || money_judgement.nil?
 

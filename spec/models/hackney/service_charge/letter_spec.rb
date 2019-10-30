@@ -76,7 +76,7 @@ describe Hackney::ServiceCharge::Letter do
   end
 
   context 'when generating LBA letter' do
-    it 'generates and LBA letter' do
+    it 'generates an LBA letter' do
       expect(Hackney::ServiceCharge::Letter::BeforeAction).to receive(:new).with(letter_params).and_call_original
 
       letter = described_class.build_letter(
@@ -88,6 +88,21 @@ describe Hackney::ServiceCharge::Letter do
         { message: 'missing mandatory field', name: 'lba_expiry_date' },
         { message: 'missing mandatory field', name: 'original_lease_date' },
         { message: 'missing mandatory field', name: 'date_of_current_purchase_assignment' }
+      ]
+    end
+  end
+
+  context 'when generating letter two' do
+    it 'generates letter 2 letter' do
+      expect(Hackney::ServiceCharge::Letter::LetterTwo).to receive(:new).with(letter_params).and_call_original
+
+      letter = described_class.build_letter(
+        letter_params: letter_params,
+        template_path: Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS.sample
+      )
+
+      expect(letter.errors).to eq [
+        { message: 'missing mandatory field', name: 'arrears_letter_1_date' }
       ]
     end
   end
