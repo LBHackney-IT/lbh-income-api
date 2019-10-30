@@ -8,14 +8,14 @@ module Hackney
           'lib/hackney/pdf/templates/letter_2_in_arrears_SO.erb'
         ].freeze
 
-        LETTER_TWO_MANDATROY_FIELDS = %i[arrears_letter_1_date].freeze
+        MANDATORY_FIELDS = %i[arrears_letter_1_date].freeze
 
         def initialize(params)
           super(params)
 
           @arrears_letter_1_date = fetch_previous_letter_date(params[:payment_ref])
 
-          validate_mandatory_fields(LETTER_TWO_MANDATROY_FIELDS, params.merge(arrears_letter_1_date: @arrears_letter_1_date))
+          validate_mandatory_fields(MANDATORY_FIELDS, params.merge(arrears_letter_1_date: @arrears_letter_1_date))
         end
 
         private

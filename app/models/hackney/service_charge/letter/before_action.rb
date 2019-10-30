@@ -2,12 +2,12 @@ module Hackney
   module ServiceCharge
     class Letter
       class BeforeAction < Hackney::ServiceCharge::Letter
-        LBA_TEMPLATE_PATH = 'lib/hackney/pdf/templates/letter_before_action.erb'.freeze
-        LBA_MANDATROY_FIELDS = %i[lba_expiry_date original_lease_date date_of_current_purchase_assignment].freeze
+        TEMPLATE_PATH = 'lib/hackney/pdf/templates/letter_before_action.erb'.freeze
+        MANDATORY_FIELDS = %i[lba_expiry_date original_lease_date date_of_current_purchase_assignment].freeze
 
         def initialize(params)
           super(params)
-          validated_params = validate_mandatory_fields(LBA_MANDATROY_FIELDS, params)
+          validated_params = validate_mandatory_fields(MANDATORY_FIELDS, params)
 
           @lba_expiry_date = validated_params[:lba_expiry_date]
           @original_lease_date = format_date(validated_params[:original_lease_date])
