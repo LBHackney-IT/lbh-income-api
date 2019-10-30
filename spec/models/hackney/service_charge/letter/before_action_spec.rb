@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::ServiceCharge::BeforeAction do
+describe Hackney::ServiceCharge::Letter::BeforeAction do
   let(:letter_params) {
     {
       payment_ref: Faker::Number.number(4),
@@ -20,7 +20,6 @@ describe Hackney::ServiceCharge::BeforeAction do
   }
   let(:tenure_type) { nil }
   let(:original_lease_date) { nil }
-
 
   context 'when a money judgement and charging order exists' do
     let(:letter) { described_class.new(letter_params) }
@@ -85,5 +84,3 @@ describe Hackney::ServiceCharge::BeforeAction do
     end
   end
 end
-
-

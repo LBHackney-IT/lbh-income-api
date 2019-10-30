@@ -12,7 +12,7 @@ module Hackney
 
         preview_with_errors = Hackney::PDF::PreviewGenerator.new(
           template_path: template[:path]
-        ).execute(letter_params: leasehold_info, template_id: template_id)
+        ).execute(letter_params: leasehold_info)
 
         uuid = SecureRandom.uuid
 

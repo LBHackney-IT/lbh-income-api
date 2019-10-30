@@ -2,9 +2,9 @@ module Hackney
   module ServiceCharge
     class Letter
       DEFAULT_MANDATORY_LETTER_FIELDS = %i[payment_ref lessee_full_name
-                                   correspondence_address1 correspondence_address2
-                                   correspondence_postcode property_address
-                                   total_collectable_arrears_balance].freeze
+                                           correspondence_address1 correspondence_address2
+                                           correspondence_postcode property_address
+                                           total_collectable_arrears_balance].freeze
 
       attr_reader :tenancy_ref, :correspondence_address1, :correspondence_address2,
                   :correspondence_address3, :correspondence_address4, :correspondence_address5,
@@ -14,13 +14,12 @@ module Hackney
                   :original_leaseholders, :previous_letter_sent, :arrears_letter_1_date,
                   :international, :lessee_full_name, :lessee_short_name, :errors, :lba_balance, :tenure_type
 
-      # Letter.build_letter(params, template_id)
-      def self.build_letter(letter_params:, template_id:)
-        case template_id
-        when Hackney::ServiceCharge::BeforeAction::LBA_TEMPLATE_ID
-          return Letter::BeforeAction.new(letter_params)
+      def self.build_letter(letter_params:, template_path:)
+        case template_path
+        when Hackney::ServiceCharge::Letter::BeforeAction::LBA_TEMPLATE_PATH
+          Letter::BeforeAction.new(letter_params)
         else
-          return new(letter_params)
+          new(letter_params)
         end
       end
 

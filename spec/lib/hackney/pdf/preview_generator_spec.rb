@@ -25,7 +25,7 @@ describe Hackney::PDF::PreviewGenerator do
   let(:translated_html) { File.open('spec/lib/hackney/pdf/translated_test_template.html').read }
 
   it 'translates erb templates to html and shows no errors' do
-    preview_with_errors = subject.execute(letter_params: test_letter_params, template_id: 'test')
+    preview_with_errors = subject.execute(letter_params: test_letter_params)
 
     expect(preview_with_errors[:html]).to eq(translated_html)
     expect(preview_with_errors[:errors]).to eq([])
@@ -50,7 +50,7 @@ describe Hackney::PDF::PreviewGenerator do
     end
 
     it 'translates erb templates to html and shows errors' do
-      preview_with_errors = subject.execute(letter_params: test_letter_params, template_id: 'test')
+      preview_with_errors = subject.execute(letter_params: test_letter_params)
 
       expect(preview_with_errors[:html]).to eq(translated_html)
       expect(preview_with_errors[:errors]).to eq([

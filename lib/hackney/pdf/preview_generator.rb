@@ -19,8 +19,8 @@ module Hackney
         @logo = File.open(LOGO_PATH).read
       end
 
-      def execute(letter_params:, template_id:)
-        @letter = Hackney::ServiceCharge::Letter.build_letter(letter_params: letter_params, template_id: template_id)
+      def execute(letter_params:)
+        @letter = Hackney::ServiceCharge::Letter.build_letter(letter_params: letter_params, template_path: @template_path)
 
         @sender_address = ERB.new(File.open(SENDER_ADDRESS_PATH).read).result(binding)
 

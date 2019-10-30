@@ -22,24 +22,31 @@ describe Hackney::ServiceCharge::Letter do
   let(:original_lease_date) { nil }
 
   context 'when no errors are present' do
-    let(:letter) { described_class.new(letter_params.merge(correspondence_address3: '')) }
+    let(:letter) {
+      described_class.build_letter(
+        letter_params: letter_params,
+        template_path: 'foo'
+      )
+    }
 
     it { expect(letter.errors).to eq [] }
   end
 
   context 'when errors are present' do
     let(:letter) {
-      described_class.new(letter_params.merge(
-                            payment_ref: '',
-                            lessee_full_name: '',
-                            correspondence_address1: '',
-                            correspondence_address2: '',
-                            correspondence_address3: '',
-                            correspondence_postcode: '',
-                            property_address: '',
-                            total_collectable_arrears_balance: 0,
-                            international: true
-                          ))
+      described_class.build_letter(
+        letter_params: letter_params.merge(
+          payment_ref: '',
+          lessee_full_name: '',
+          correspondence_address1: '',
+          correspondence_address2: '',
+          correspondence_address3: '',
+          correspondence_postcode: '',
+          property_address: '',
+          total_collectable_arrears_balance: 0,
+          international: true
+        ), template_path: 'foo'
+      )
     }
 
     it {
@@ -56,14 +63,32 @@ describe Hackney::ServiceCharge::Letter do
   end
 
   context 'when reorganisation of the address is needed' do
-    let(:letter) { described_class.new(letter_params.merge(correspondence_address1: '')) }
+    let(:letter) {
+      described_class.build_letter(
+        letter_params: letter_params.merge(correspondence_address1: ''),
+        template_path: 'foo'
+      )
+    }
 
     it { expect(letter.correspondence_address1).to eq(letter_params[:correspondence_address2]) }
 
     it { expect(letter.correspondence_address2).to eq(letter_params[:correspondence_address3]) }
   end
 
+  context 'when generating LBA letter' do
+    it 'generates and LBA letter' do
+      expect(Hackney::ServiceCharge::Letter::BeforeAction).to receive(:new).with(letter_params).and_call_original
 
+      letter = described_class.build_letter(
+        letter_params: letter_params,
+        template_path: Hackney::ServiceCharge::Letter::BeforeAction::LBA_TEMPLATE_PATH
+      )
 
-
+      expect(letter.errors).to eq [
+        { message: 'missing mandatory field', name: 'lba_expiry_date' },
+        { message: 'missing mandatory field', name: 'original_lease_date' },
+        { message: 'missing mandatory field', name: 'date_of_current_purchase_assignment' }
+      ]
+    end
+  end
 end
