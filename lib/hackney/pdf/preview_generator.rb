@@ -15,6 +15,7 @@ module Hackney
         @template_path = template_path
         @errors = []
         @sending_date = get_date
+        @sending_date_lba = get_lba_date
         @return_date_lba = get_return_date
         @logo = File.open(LOGO_PATH).read
       end
@@ -54,7 +55,11 @@ module Hackney
       end
 
       def get_return_date
-        (Time.now + 31.days).strftime('%d %B %Y')
+        (Time.now + 30.days).strftime('%d %B %Y')
+      end
+
+      def get_lba_date
+        Time.now.strftime('%d %B %Y')
       end
     end
   end

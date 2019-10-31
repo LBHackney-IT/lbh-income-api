@@ -7,11 +7,11 @@
   London E8 1DY
 
 <p>
-  020 8356 2299 <br>
-  service.charges@hackney.gov.uk <br>
+  Tel: 020 8356 2299 <br>
+  Email: service.charges@hackney.gov.uk <br><br>
   <strong>Service Charge Account Number: <%= @letter.payment_ref %> <br></strong>
-  Our Ref: LBA/ST
-  <%= @sending_date %>
+  Our Ref: LBA/ID
+  <%= @sending_date_lba %>
 </p>
 </div>
 
@@ -29,113 +29,80 @@
 Dear <%= @letter.lessee_short_name %>
 
 <p>
-<strong>RE: <%= @letter.property_address%> </strong>
+<strong>Property address: <%= @letter.property_address%> </strong>
 </p>
 
 <div class="green_box">
   <p class="centre">
-  <strong>FINAL LETTER BEFORE LEGAL ACTION</strong><br>
-  Our records show that you still have an outstanding balance on your service charge account of
+  <strong>FINAL LETTER BEFORE LEGAL ACTION FOR UNPAID SERVICE CHARGES</strong><br>
   </p>
   <h1 class="centre">
-  £<%= @letter.lba_balance %>
+  SUM OWED: £<%= @letter.lba_balance %>
   </h1>
 </div>
 
-<p>If you have made arrangements to pay your debt or have cleared your arrears in the last 7
-days, please ignore this letter.
-</p>
-
-<p>If you have not made any arragement to pay your debt despite reminders to you, payment
-of the full amount is due.
-</p>
-
-<h2>What if I am currently experiencing financial difficulties?</h2>
 <p>
-We are currently unaware of a valid reason for your non-payment. If you are facing financial
-difficulties, please complete the enclosed forms to allow us to assess your current
-circumstances and the options available to us
+Our records show you have not paid your service charges and ground rent amounting to £<%= @letter.lba_balance %> which is a breach of your lease. We have sent you at least two reminder letters asking for payment but we have still not received what is owed from you.
+</p>
+
+<h2>We ask that you settle the outstanding debt within 30 days of this letter to avoid the matter being referred to our solicitors for debt recovery action to be taken.</h2>
 <p>
-
-
-<h2>If you are intending to return these forms, please ensure they are received by the
-Council no later than <%= @return_date_lba %> </h2>
-
-<p>An Information Sheet is also enclosed detailing independent organisations who offer free,
-impartial and non-judgemental advice to you should you prefer this option.
-</p>
-
-<h2>What if I cannot pay off all my debt at the moment?</h2>
-<p> If  you  are  unable  to  settle  your  account  in  full  and  would  like  to  discuss  your  arrears  or  to arrange an instalment plan, please contact our Leasehold Services team on 020 8356
-2299. Government  assistance  maybe  available  towards  payment  of  your  service  charges  if
-you qualify.
-</p>
-
-<h2>What is the breach of lease?</h2>
-<p>By a lease/transfer dated <%= @letter.original_lease_date%> made between <%= @letter.original_leaseholders%> and the
-Mayor and Burgesses of the London Borough of Hackney for the premises known as <%= @letter.property_address%>.
-This lease was assigned/transferred to <%= @letter.original_leaseholders%> on the <%= @letter.original_lease_date%>.
-<% unless @letter.freehold?%>
-Under the terms of this lease/transfer, you
-covenanted to pay ground rent and service charge by way of additional rent.
-<% end %>
+If you are unable to settle your account in full and would like to discuss your arrears or to arrange an <strong>instalment plan</strong>, please contact our Leasehold Services team on 020 8356 2299.
 </p>
 
 <p>
-In breach of said covenants, you have failed to pay service charge and there is a total sum
-of £<%= @letter.total_collectable_arrears_balance %> outstanding in respect of these invoices
-</p>
-
-<h2>What are the Council's intentions?</h2>
-<p>
-Failure to make payment or contact us by <%= @return_date_lba %> will result in the issue of
-proceedings in the County Court without further notice. Should this be necessary, in addition
-to Court costs, the Claim will be increased by up to 8% interest.
-</p>
-
-
-
-
-<p>
-If you wish to pay by debit or credit card over the phone then kindly call 020 8356 2299
-between 9:00am to 5:00pm.  If you would like to pay by cheque, cheques should be made
-payable to ‘London Borough of Hackney’. Details of these payment options are enclosed.
+If you have made arrangements to pay or cleared the arrears in the last 7 days, please ignore this letter.
 </p>
 
 <p>
-Should you make payment after the 30 days has elapsed but before a Claim is sent for
-issuing, you should contact the Council immediately or you may still be at risk for court costs.
-Similarly, paying after a Claim has been sent for issuing will result in you being liable for
-interest and costs.
-</p>
-
-<% if @letter.freehold? %>
-<p>
-If a County Court Judgement is obtained and you still have not paid the arrears, we will have no option but to take further action against you. This would include placing a charge on your property, summonsing you to attend court where you will need to provide details of account, which will incur an additional cost of £120.00 and where applicable, we will contact your mortgage lender to advise them of our intentions to pursue recovery of this debt.
-</p>
-<% else %>
-<p>
-If a County Court Judgement is obtained and you still have not paid the arrears, we will have
-no option but to take further action against you. This would include issuing a forfeiture notice
-which will incur an additional cost of £120.00 and where applicable, we will contact your
-mortgage lender to advise them of our intentions to pursue recovery of this debt.
-</p>
-<% end %>
-
-<p>
-We ask that you make arrangements for the payment within 30 days of this letter to avoid
-this matter being referred to our legal advisors for the recovery of this debt.
+If you are facing financial difficulties, please complete and return the enclosed forms <strong>no later than <%= @return_date_lba %></strong> to allow us to assess your circumstances and the options available to you.
 </p>
 
 <p>
-Should you have any queries in respect of this matter please contact <strong>Leasehold Services on 020 8356 2299.</strong>
+Government assistance may be available towards making payment of your service charges if you qualify. The enclosed information sheet provides details of independent organisations that offer free, impartial and non-judgemental advice to you should you need this.
+</p>
+
+<h2>Why am I being pursued for unpaid service charges?</h2>
+
+<p>
+Under the terms of your lease/transfer agreement, you are required to pay ground rent and service charges.
+</p>
+
+<p>
+We are writing to you as your non-payment of service charges and ground rent totalling £<%= @letter.lba_balance %> is a breach of these terms.
+</p>
+
+<h2>What will happen if I don’t pay the outstanding service charges?</h2>
+<p>
+Failure to make payment or contact us by <%= @return_date_lba %> will result in legal action being taken in the County Court without further notice.
+</p>
+
+<p>
+Should legal action be necessary, any increase to the arrears stated above will be added. All court costs, including the Council’s, and legal fees will also be added, which could increase the sum owed by up to 8%.
+</p>
+
+<p>
+If you choose to ignore any court order judgement and you still have not paid the arrears, we will have no option but to take further action against you. This would include issuing further and stronger legal proceedings that may result in you losing your home. Where applicable, we will contact your mortgage lender to advise them of our intentions to pursue recovery of this debt.
+</p>
+
+<h2>How can I make payment?</h2>
+<p>
+To pay by debit or credit card over the phone please call 020 8356 2299 between 9am and  5pm Monday to Friday. Alternatively, cheques should be made payable to ‘London Borough of Hackney’. Further details of these payment options are enclosed.
+</p>
+
+<h2>What will happen if I pay late?</h2>
+<p>
+Should you make payment after the 30 days have elapsed but before a claim is sent for issuing to court, you should contact the Council immediately or you may still be at risk for court costs. Similarly, paying after a claim has been submitted for issuing to court will result in you being liable for interest and costs.
+</p>
+
+<p>
+If you have any queries regarding this matter please contact <strong>Ian Davies on 020 8356 2299.</strong>
 </p>
 
 <p>
 Yours sincerely,<br>
-Easton Davis<br>
-Income and Disputes Resolution Team Leader<br>
-<strong>Leasehold & Right to Buy Services</strong>
+
+<strong>On Behalf of Leasehold & Right to Buy Services</strong>
 </p>
 </div>
 
