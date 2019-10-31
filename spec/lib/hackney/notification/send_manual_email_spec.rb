@@ -9,7 +9,7 @@ describe Hackney::Notification::SendManualEmail do
   context 'when sending an email manually' do
     subject do
       send_email.execute(
-        user_id: user_id,
+        username: username,
         tenancy_ref: tenancy_1.tenancy_ref,
         recipient: recipient,
         template_id: template_id,
@@ -23,7 +23,7 @@ describe Hackney::Notification::SendManualEmail do
     let(:recipient) { Faker::Internet.safe_email }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }
-    let(:user_id) { Faker::Number.number(2) }
+    let(:username) { Faker::Name.name }
 
     before do
       allow(add_action_diary_usecase).to receive(:execute)
@@ -58,7 +58,7 @@ describe Hackney::Notification::SendManualEmail do
     it 'calls action_diary_usecase' do
       expect(add_action_diary_usecase).to receive(:execute)
         .with(
-          user_id: user_id,
+          username: username,
           tenancy_ref: tenancy_1.tenancy_ref,
           action_code: 'GME',
           comment: "'Quick Template' Email sent to '#{recipient}'"

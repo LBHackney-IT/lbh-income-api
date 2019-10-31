@@ -5,7 +5,7 @@ describe MessagesController, type: :controller do
 
   let(:sms_params) do
     {
-      user_id: Faker::Number.number(2),
+      username: Faker::Name.name,
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
       template_id: Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id],
       phone_number: Faker::PhoneNumber.phone_number,
@@ -17,7 +17,7 @@ describe MessagesController, type: :controller do
   end
   let(:email_params) do
     {
-      user_id: Faker::Number.number(2),
+      username: Faker::Name.name,
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
       template_id: Faker::HitchhikersGuideToTheGalaxy.planet,
       email_address: Faker::Internet.email,
@@ -45,7 +45,7 @@ describe MessagesController, type: :controller do
 
   it 'sends an sms' do
     expect_any_instance_of(Hackney::Notification::SendManualSms).to receive(:execute).with(
-      user_id: sms_params.fetch(:user_id),
+      username: sms_params.fetch(:username),
       tenancy_ref: sms_params.fetch(:tenancy_ref),
       template_id: sms_params.fetch(:template_id),
       phone_number: sms_params.fetch(:phone_number),
@@ -59,7 +59,7 @@ describe MessagesController, type: :controller do
 
   it 'sends an email' do
     expect_any_instance_of(Hackney::Notification::SendManualEmail).to receive(:execute).with(
-      user_id: email_params.fetch(:user_id),
+      username: email_params.fetch(:username),
       tenancy_ref: email_params.fetch(:tenancy_ref),
       template_id: email_params.fetch(:template_id),
       recipient: email_params.fetch(:email_address),

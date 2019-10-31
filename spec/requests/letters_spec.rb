@@ -79,8 +79,7 @@ RSpec.describe 'Letters', type: :request do
 
   describe 'POST /api/v1/messages/letters/send' do
     let(:uuid) { existing_letter[:uuid] }
-    let(:user) { create(:user) }
-    let(:user_id) { user.id }
+    let(:user_id) { Faker::Number.number(3) }
     let(:existing_letter) { create_and_store_letter_in_cache(payment_ref: payment_ref, template_id: template) }
 
     context 'when there is an existing letter' do
@@ -111,7 +110,7 @@ RSpec.describe 'Letters', type: :request do
         post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
 
         document = Hackney::Cloud::Document.last
-        expect(JSON.parse(document.metadata)['user_id'].to_i).to eq(user_id)
+        expect(JSON.parse(document.metadata)['user_id']).to eq(user_id)
       end
 
       context 'with a bogus UUID' do

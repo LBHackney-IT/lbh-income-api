@@ -25,15 +25,6 @@ describe Hackney::Income::Jobs::SyncCasePriorityJob do
         .and_return(true)
     end
 
-    it 'constructs the AssignTenancyToUser use case correctly' do
-      expect(Hackney::Income::AssignTenancyToUser)
-        .to receive(:new)
-        .with(user_assignment_gateway: an_object_responding_to(:assign_to_next_available_user).with_keywords(:tenancy))
-        .and_call_original
-
-      subject.perform_now(tenancy_ref: tenancy_ref)
-    end
-
     it 'runs the SyncCasePriority use case' do
       expect_any_instance_of(Hackney::Income::SyncCasePriority)
         .to receive(:execute)

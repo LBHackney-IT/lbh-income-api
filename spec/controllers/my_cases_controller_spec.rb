@@ -16,24 +16,21 @@ describe MyCasesController do
     end
 
     context 'when a page number or number of results per page requested is less than 1' do
-      let(:user_id) { Faker::Number.number(2).to_i }
-
       it 'min of 1 should be used' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: 1, number_per_page: 1, filters: {
+          .with(page_number: 1, number_per_page: 1, filters: {
             is_paused: nil,
             classification: nil,
             patch: nil,
             full_patch: nil
           })
 
-        get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
+        get :index, params: { page_number: 0, number_per_page: 0 }
       end
     end
 
     context 'when retrieving cases' do
-      let(:user_id) { Faker::Number.number(2).to_i }
       let(:page_number) { Faker::Number.number(2).to_i }
       let(:number_per_page) { Faker::Number.number(2).to_i }
       let(:patch) { Faker::Lorem.characters(3) }
@@ -43,13 +40,13 @@ describe MyCasesController do
           .to receive(:execute)
           .and_return(cases: [], number_per_page: 1)
 
-        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page }
+        get :index, params: { page_number: page_number, number_per_page: number_per_page }
       end
 
-      it 'calls the view my cases use case with the given user_id, page_number and number_per_page' do
+      it 'calls the view my cases use case with the given page_number and number_per_page' do
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
+          .with(page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: nil,
             classification: nil,
             patch: nil,
@@ -57,7 +54,7 @@ describe MyCasesController do
           })
           .and_return(cases: [], number_per_page: 1)
 
-        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page }
+        get :index, params: { page_number: page_number, number_per_page: number_per_page }
       end
 
       it 'responds with the results of the view my cases use case' do
@@ -70,7 +67,7 @@ describe MyCasesController do
           .to receive(:execute)
           .and_return(expected_result)
 
-        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page }
+        get :index, params: { page_number: page_number, number_per_page: number_per_page }
 
         expect(response.body).to eq(expected_result.to_json)
       end
@@ -83,7 +80,7 @@ describe MyCasesController do
 
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
+          .with(page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: false,
             classification: nil,
             patch: nil,
@@ -91,7 +88,7 @@ describe MyCasesController do
           })
           .and_return(expected_result)
 
-        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page, is_paused: false }
+        get :index, params: { page_number: page_number, number_per_page: number_per_page, is_paused: false }
 
         expect(response.body).to eq(expected_result.to_json)
       end
@@ -104,7 +101,7 @@ describe MyCasesController do
 
         allow(view_my_cases_instance)
           .to receive(:execute)
-          .with(user_id: user_id, page_number: page_number, number_per_page: number_per_page, filters: {
+          .with(page_number: page_number, number_per_page: number_per_page, filters: {
             is_paused: nil,
             classification: nil,
             patch: patch,
@@ -112,7 +109,7 @@ describe MyCasesController do
           })
           .and_return(expected_result)
 
-        get :index, params: { user_id: user_id, page_number: page_number, number_per_page: number_per_page, patch: patch }
+        get :index, params: { page_number: page_number, number_per_page: number_per_page, patch: patch }
 
         expect(response.body).to eq(expected_result.to_json)
       end

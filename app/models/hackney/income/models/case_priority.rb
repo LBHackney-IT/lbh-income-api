@@ -8,8 +8,6 @@ module Hackney
 
         before_validation :create_case_with_tenancy_ref
 
-        belongs_to :assigned_user, class_name: 'Hackney::Income::Models::User', optional: true
-
         belongs_to :case, class_name: 'Hackney::Income::Models::Case', optional: true
 
         def tenancy_ref

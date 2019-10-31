@@ -3,7 +3,7 @@ require 'rails_helper'
 describe ActionDiaryController, type: :controller do
   let(:action_diary_params) do
     {
-      user_id: Faker::Number.number(2).to_i,
+      username: Faker::Name.name,
       tenancy_ref: Faker::Lorem.characters(8),
       action_code: Faker::Internet.slug,
       comment: Faker::Lorem.paragraph
@@ -38,17 +38,17 @@ describe ActionDiaryController, type: :controller do
     end
   end
 
-  context 'when receiving a user id that does not exist' do
+  context 'when receiving a username that does not exist' do
     it 'returns a 422 error' do
       expect(use_case_double).to receive(:execute)
-        .and_raise(ArgumentError.new('user_id supplied does not exist'))
+        .and_raise(ArgumentError.new('username supplied does not exist'))
         .once
 
       patch :create, params: action_diary_params
 
       expect(response.status).to eq(422)
       json = JSON.parse(response.body, symbolize_names: true)
-      expect(json).to eq(code: 422, message: 'user_id supplied does not exist', status: 'error')
+      expect(json).to eq(code: 422, message: 'username supplied does not exist', status: 'error')
     end
   end
 end

@@ -5,7 +5,6 @@ describe Hackney::Income::SyncCasePriority do
 
   let(:stub_tenancy_object) { double }
   let(:stored_tenancies_gateway) { double(store_tenancy: stub_tenancy_object) }
-  let(:assign_tenancy_to_user) { double(assign_tenancy_to_user: nil) }
   let(:criteria) { Stubs::StubCriteria.new }
   let(:weightings) { Hackney::Income::TenancyPrioritiser::PriorityWeightings.new }
 
@@ -23,8 +22,7 @@ describe Hackney::Income::SyncCasePriority do
   let(:sync_case) do
     described_class.new(
       prioritisation_gateway: prioritisation_gateway,
-      stored_tenancies_gateway: stored_tenancies_gateway,
-      assign_tenancy_to_user: assign_tenancy_to_user
+      stored_tenancies_gateway: stored_tenancies_gateway
     )
   end
 
@@ -41,8 +39,6 @@ describe Hackney::Income::SyncCasePriority do
         criteria: criteria,
         weightings: weightings
       )
-
-      expect(assign_tenancy_to_user).to receive(:assign).with(tenancy: stub_tenancy_object)
 
       subject
     end
@@ -61,8 +57,6 @@ describe Hackney::Income::SyncCasePriority do
         criteria: criteria,
         weightings: weightings
       )
-
-      expect(assign_tenancy_to_user).to receive(:assign).with(tenancy: stub_tenancy_object)
 
       subject
     end

@@ -20,7 +20,7 @@ describe Hackney::Income::Jobs::AddActionDiaryEntryJob do
         tenancy_ref: tenancy_ref,
         action_code: action_code,
         comment: comment,
-        user_id: nil
+        username: nil
       )
     ).once
     action_diary_job.perform_now(tenancy_ref: tenancy_ref, action_code: action_code, comment: comment)

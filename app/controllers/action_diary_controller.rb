@@ -1,5 +1,5 @@
 class ActionDiaryController < ApplicationController
-  REQUIRED_PARAMS = %i[tenancy_ref action_code comment user_id].freeze
+  REQUIRED_PARAMS = %i[tenancy_ref action_code comment username].freeze
 
   def create
     begin
@@ -7,7 +7,7 @@ class ActionDiaryController < ApplicationController
         tenancy_ref: action_diary_params.fetch(:tenancy_ref),
         action_code: action_diary_params.fetch(:action_code),
         comment: action_diary_params.fetch(:comment),
-        user_id: action_diary_params.fetch(:user_id)
+        username: action_diary_params.fetch(:username)
       )
     rescue ArgumentError => e
       render(json: { status: 'error', code: 422, message: e.message }, status: :unprocessable_entity)
@@ -20,7 +20,7 @@ class ActionDiaryController < ApplicationController
     params.require(REQUIRED_PARAMS)
     allowed_params = params.permit(REQUIRED_PARAMS)
 
-    allowed_params[:user_id] = allowed_params[:user_id].to_i
+    allowed_params[:username] = allowed_params[:username]
 
     allowed_params
   end

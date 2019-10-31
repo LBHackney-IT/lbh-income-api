@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   def send_sms
     income_use_case_factory.send_manual_sms.execute(
-      user_id: params.fetch(:user_id),
+      username: params.fetch(:username),
       tenancy_ref: params.fetch(:tenancy_ref),
       template_id: params.fetch(:template_id),
       phone_number: params.fetch(:phone_number),
@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
 
   def send_email
     income_use_case_factory.send_manual_email.execute(
-      user_id: params.fetch(:user_id),
+      username: params.fetch(:username),
       tenancy_ref: params.fetch(:tenancy_ref),
       template_id: params.fetch(:template_id),
       recipient: params.fetch(:email_address),

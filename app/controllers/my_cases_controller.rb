@@ -1,9 +1,8 @@
 class MyCasesController < ApplicationController
-  REQUIRED_INDEX_PARAMS = %i[user_id page_number number_per_page].freeze
+  REQUIRED_INDEX_PARAMS = %i[page_number number_per_page].freeze
 
   def index
     response = income_use_case_factory.view_my_cases.execute(
-      user_id: my_cases_params[:user_id],
       page_number: my_cases_params[:page_number],
       number_per_page: my_cases_params[:number_per_page],
       filters: {
@@ -20,8 +19,6 @@ class MyCasesController < ApplicationController
   def my_cases_params
     params.require(REQUIRED_INDEX_PARAMS)
     allowed_params = params.permit(REQUIRED_INDEX_PARAMS + %i[is_paused patch recommended_actions full_patch])
-
-    allowed_params[:user_id] = allowed_params[:user_id].to_i
 
     allowed_params[:is_paused] = ActiveModel::Type::Boolean.new.cast(allowed_params[:is_paused])
     allowed_params[:full_patch] = ActiveModel::Type::Boolean.new.cast(allowed_params[:full_patch])

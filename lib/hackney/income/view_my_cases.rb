@@ -8,32 +8,30 @@ module Hackney
         @stored_tenancies_gateway = stored_tenancies_gateway
       end
 
-      def execute(user_id:, page_number:, number_per_page:, filters: {})
-        number_of_pages_for_user = @stored_tenancies_gateway.number_of_pages_for_user(
-          user_id: user_id,
+      def execute(page_number:, number_per_page:, filters: {})
+        number_of_pages = @stored_tenancies_gateway.number_of_pages(
           number_per_page: number_per_page,
           filters: filters
         )
-        return Response.new([], 0) if number_of_pages_for_user.zero?
+        return Response.new([], 0) if number_of_pages.zero?
 
-        assigned_tenancies = @stored_tenancies_gateway.get_tenancies_for_user(
-          user_id: user_id,
+        tenancies = @stored_tenancies_gateway.get_tenancies(
           page_number: page_number,
           number_per_page: number_per_page,
           filters: filters
         )
 
-        assigned_tenancy_refs = assigned_tenancies.map { |t| t.fetch(:tenancy_ref) }
+        assigned_tenancy_refs = tenancies.map { |t| t.fetch(:tenancy_ref) }
         full_tenancies = @tenancy_api_gateway.get_tenancies_by_refs(assigned_tenancy_refs)
 
-        cases = assigned_tenancies.map do |assigned_tenancy|
+        cases = tenancies.map do |assigned_tenancy|
           tenancy = full_tenancies.find { |t| t.fetch(:ref) == assigned_tenancy.fetch(:tenancy_ref) }
           next if tenancy.nil?
 
           build_tenancy_list_item(tenancy, assigned_tenancy)
         end.compact
 
-        Response.new(cases, number_of_pages_for_user)
+        Response.new(cases, number_of_pages)
       end
 
       private

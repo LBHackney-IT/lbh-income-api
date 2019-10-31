@@ -4,7 +4,6 @@ FactoryBot.define do
   end
 
   factory :case_priority, class: Hackney::Income::Models::CasePriority do
-    assigned_user
     # association :case
 
     tenancy_ref

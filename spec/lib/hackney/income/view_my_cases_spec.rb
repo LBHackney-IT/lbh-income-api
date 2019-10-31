@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 describe Hackney::Income::ViewMyCases do
-  subject { view_my_cases.execute(user_id: user_id, page_number: page_number, number_per_page: number_per_page) }
+  subject { view_my_cases.execute(page_number: page_number, number_per_page: number_per_page) }
 
-  let(:user_id) { Faker::Number.number(2).to_i }
   let(:page_number) { Faker::Number.number(2).to_i }
   let(:number_per_page) { Faker::Number.number(2).to_i }
   let(:tenancy_api_gateway) { Hackney::Income::TenancyApiGatewayStub.new({}) }
@@ -24,11 +23,10 @@ describe Hackney::Income::ViewMyCases do
 
   it 'does not do further queries if the page number returned is 0' do
     expect(stored_tenancies_gateway)
-      .to receive(:number_of_pages_for_user)
-      .with(a_hash_including(user_id: user_id))
+      .to receive(:number_of_pages)
       .and_call_original
 
-    expect(stored_tenancies_gateway).not_to receive(:get_tenancies_for_user)
+    expect(stored_tenancies_gateway).not_to receive(:get_tenancies)
 
     expect(subject.cases).to eq([])
     expect(subject.number_of_pages).to eq(0)
@@ -53,18 +51,9 @@ describe Hackney::Income::ViewMyCases do
 
     let(:stored_tenancies_gateway) { Hackney::Income::StoredTenancyGatewayStub.new(tenancy_list) }
 
-    it 'passes the correct user id into the stored tenancy gateway' do
-      expect(stored_tenancies_gateway)
-        .to receive(:get_tenancies_for_user)
-        .with(a_hash_including(user_id: user_id))
-        .and_call_original
-
-      subject
-    end
-
     it 'passes the correct page number and number per page into the stored tenancy gateway' do
       expect(stored_tenancies_gateway)
-        .to receive(:get_tenancies_for_user)
+        .to receive(:get_tenancies)
         .with(a_hash_including(page_number: page_number, number_per_page: number_per_page))
         .and_call_original
 
@@ -137,7 +126,6 @@ describe Hackney::Income::ViewMyCases do
       context 'when filtering out paused cases' do
         subject {
           view_my_cases.execute(
-            user_id: user_id,
             page_number: page_number,
             number_per_page: number_per_page,
             filters: {
@@ -148,9 +136,8 @@ describe Hackney::Income::ViewMyCases do
 
         it 'returns only paused cases' do
           expect(stored_tenancies_gateway)
-            .to receive(:get_tenancies_for_user)
+            .to receive(:get_tenancies)
             .with(a_hash_including(
-                    user_id: user_id,
                     page_number: page_number,
                     number_per_page: number_per_page,
                     filters: {
@@ -160,9 +147,8 @@ describe Hackney::Income::ViewMyCases do
             .and_call_original
 
           expect(stored_tenancies_gateway)
-            .to receive(:number_of_pages_for_user)
+            .to receive(:number_of_pages)
             .with(a_hash_including(
-                    user_id: user_id,
                     number_per_page: number_per_page,
                     filters: {
                       is_paused: true
@@ -177,7 +163,6 @@ describe Hackney::Income::ViewMyCases do
       context 'when filtering cases by patch' do
         subject {
           view_my_cases.execute(
-            user_id: user_id,
             page_number: page_number,
             number_per_page: number_per_page,
             filters: {
@@ -190,9 +175,8 @@ describe Hackney::Income::ViewMyCases do
 
         it 'asks the gateway for cases filtered by patch' do
           expect(stored_tenancies_gateway)
-            .to receive(:get_tenancies_for_user)
+            .to receive(:get_tenancies)
             .with(a_hash_including(
-                    user_id: user_id,
                     page_number: page_number,
                     number_per_page: number_per_page,
                     filters: {
@@ -201,9 +185,8 @@ describe Hackney::Income::ViewMyCases do
                   )).and_call_original
 
           expect(stored_tenancies_gateway)
-            .to receive(:number_of_pages_for_user)
+            .to receive(:number_of_pages)
             .with(a_hash_including(
-                    user_id: user_id,
                     number_per_page: number_per_page,
                     filters: {
                       patch: patch
@@ -216,12 +199,11 @@ describe Hackney::Income::ViewMyCases do
     end
   end
 
-  context 'when counting the number of pages of tenancies for a user' do
+  context 'when counting the number of pages of tenancies' do
     let(:number_of_pages) { Faker::Number.number(3).to_i }
 
     it 'consults the stored tenancies gateway' do
-      expect(stored_tenancies_gateway).to receive(:number_of_pages_for_user).with(
-        user_id: user_id,
+      expect(stored_tenancies_gateway).to receive(:number_of_pages).with(
         number_per_page: number_per_page,
         filters: {}
       ).and_call_original
@@ -229,7 +211,7 @@ describe Hackney::Income::ViewMyCases do
     end
 
     it 'returns what the stored tenancies gateway does' do
-      allow(stored_tenancies_gateway).to receive(:number_of_pages_for_user).and_return(number_of_pages)
+      allow(stored_tenancies_gateway).to receive(:number_of_pages).and_return(number_of_pages)
       expect(subject.number_of_pages).to eq(number_of_pages)
     end
   end

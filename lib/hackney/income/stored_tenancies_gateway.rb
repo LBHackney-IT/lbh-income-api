@@ -54,24 +54,22 @@ module Hackney
         end
       end
 
-      def get_tenancies_for_user(user_id:, page_number: nil, number_per_page: nil, filters: {})
-        query = tenancies_filtered_for(user_id, filters)
+      def get_tenancies(page_number: nil, number_per_page: nil, filters: {})
+        query = tenancies_filtered_for(filters)
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
 
         query.order(by_balance).map(&method(:build_tenancy_list_item))
       end
 
-      def number_of_pages_for_user(user_id:, number_per_page:, filters: {})
-        (tenancies_filtered_for(user_id, filters).count.to_f / number_per_page).ceil
+      def number_of_pages(number_per_page:, filters: {})
+        (tenancies_filtered_for(filters).count.to_f / number_per_page).ceil
       end
 
       private
 
-      def tenancies_filtered_for(user_id, filters)
-        query = GatewayModel.where('
-          assigned_user_id = ? AND
-          balance > ?', user_id, 0)
+      def tenancies_filtered_for(filters)
+        query = GatewayModel.where('balance > ?', 0)
 
         if filters[:patch].present?
           if filters[:patch] == 'unassigned'

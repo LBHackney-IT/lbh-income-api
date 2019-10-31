@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TenanciesController, type: :controller do
   let(:paused_parms) do
     {
-      user_id: Faker::Number.number(2),
+      username: Faker::Name.name,
       tenancy_ref: Faker::Lorem.characters(8),
       is_paused_until: Faker::Date.forward(23).to_s,
       pause_reason: Faker::Lorem.sentence,
@@ -13,7 +13,7 @@ describe TenanciesController, type: :controller do
   end
   let(:params2) do
     {
-      user_id: Faker::Number.number(2),
+      username: Faker::Name.name,
       tenancy_ref: Faker::Lorem.characters(8),
       is_paused_until: Faker::Date.backward(23).to_s,
       pause_reason: Faker::Lorem.sentence,
@@ -68,7 +68,7 @@ describe TenanciesController, type: :controller do
   context 'when receiving valid params' do
     it 'passes the correct params to the use case' do
       expect_any_instance_of(Hackney::Income::SetTenancyPausedStatus).to receive(:execute).with(
-        user_id: paused_parms.fetch(:user_id),
+        username: paused_parms.fetch(:username),
         tenancy_ref: paused_parms.fetch(:tenancy_ref),
         until_date: paused_parms.fetch(:is_paused_until),
         pause_reason: paused_parms.fetch(:pause_reason),
@@ -83,7 +83,7 @@ describe TenanciesController, type: :controller do
 
     it 'returns a 200 response' do
       expect_any_instance_of(Hackney::Income::SetTenancyPausedStatus).to receive(:execute).with(
-        user_id: params2.fetch(:user_id),
+        username: params2.fetch(:username),
         tenancy_ref: params2.fetch(:tenancy_ref),
         until_date: params2.fetch(:is_paused_until).to_s,
         pause_reason: params2.fetch(:pause_reason),
@@ -157,10 +157,6 @@ class StubSqlPauseTenancyGateway
       'broken_court_order' => false,
       'nosp_served' => false,
       'active_nosp' => false,
-      'assigned_user' => {
-        user_id: 128,
-        name: 'George'
-      },
       'is_paused_until' => nil,
       'pause_reason' => nil,
       'pause_comment' => nil,

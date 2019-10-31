@@ -1,7 +1,7 @@
 module Hackney
   module Notification
     class SendManualPrecompiledLetter < BaseManualGateway
-      def execute(user_id: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:)
+      def execute(username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:)
         send_letter_response =
           notification_gateway.send_precompiled_letter(
             unique_reference: unique_reference,
@@ -17,7 +17,7 @@ module Hackney
         Rails.logger.info "writing action diary code #{ad_code} from template_id: #{template_id} for Letter '#{unique_reference}'"
 
         add_action_diary_usecase.execute(
-          user_id: user_id,
+          username: username,
           tenancy_ref: tenancy_ref,
           action_code: ad_code,
           comment: "Letter '#{unique_reference}' from '#{template_id}' letter was sent

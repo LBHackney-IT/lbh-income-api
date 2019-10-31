@@ -4,13 +4,13 @@ class TenanciesController < ApplicationController
       tenancy_ref: params.fetch(:tenancy_ref)
     )
 
-    render json: @tenancy.as_json(include: :assigned_user),
+    render json: @tenancy.as_json,
            status: @tenancy.nil? ? :not_found : :ok
   end
 
   def update
     income_use_case_factory.set_tenancy_paused_status.execute(
-      user_id: params.fetch(:user_id),
+      username: params.fetch(:username),
       tenancy_ref: params.fetch(:tenancy_ref),
       until_date: params.fetch(:is_paused_until),
       pause_reason: params.fetch(:pause_reason),

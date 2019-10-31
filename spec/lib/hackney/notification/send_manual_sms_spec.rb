@@ -18,7 +18,7 @@ describe Hackney::Notification::SendManualSms do
   context 'when sending an SMS manually' do
     subject do
       send_sms.execute(
-        user_id: user_id,
+        username: username,
         tenancy_ref: tenancy.tenancy_ref,
         template_id: template_id,
         phone_number: phone_number,
@@ -33,7 +33,7 @@ describe Hackney::Notification::SendManualSms do
     let(:e164_phone_number) { '+442083563000' }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }
-    let(:user_id) { Faker::Number.number(2) }
+    let(:username) { Faker::Name.name }
 
     before do
       allow(add_action_diary_usecase).to receive(:execute)
@@ -68,7 +68,7 @@ describe Hackney::Notification::SendManualSms do
     it 'writes a entry to the action diary using the template friendly name' do
       expect(add_action_diary_usecase).to receive(:execute)
         .with(
-          user_id: user_id,
+          username: username,
           tenancy_ref: tenancy.tenancy_ref,
           action_code: 'GMS',
           comment: "A Quicker Template' SMS sent to '+442083563000' with content 'a body should be here?'"
@@ -81,7 +81,7 @@ describe Hackney::Notification::SendManualSms do
     context 'when sending an invalid number' do
       subject do
         send_sms.execute(
-          user_id: user_id,
+          username: username,
           tenancy_ref: tenancy.tenancy_ref,
           template_id: template_id,
           phone_number: phone_number,

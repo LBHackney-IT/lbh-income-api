@@ -9,7 +9,7 @@ describe Hackney::Income::SetTenancyPausedStatus do
   let(:future_date) { Faker::Date.forward(23).to_s }
   let(:pause_reason) { Faker::Lorem.sentence }
   let(:pause_comment) { Faker::Lorem.paragraph }
-  let(:user_id) { Faker::Number.number(2) }
+  let(:username) { Faker::Name.name }
   let(:action_code) { Faker::Internet.slug }
 
   before do
@@ -28,7 +28,7 @@ describe Hackney::Income::SetTenancyPausedStatus do
           )
 
         subject.execute(
-          user_id: user_id,
+          username: username,
           action_code: action_code,
           tenancy_ref: tenancy_ref,
           until_date: future_date,
@@ -44,7 +44,7 @@ describe Hackney::Income::SetTenancyPausedStatus do
       it 'catches the exception raised when the tenancy ref is not found' do
         expect do
           subject.execute(
-            user_id: user_id,
+            username: username,
             action_code: action_code,
             tenancy_ref: tenancy_ref,
             until_date: future_date,
@@ -57,7 +57,7 @@ describe Hackney::Income::SetTenancyPausedStatus do
       it 'catches the exception raised when the date is not valid' do
         expect do
           subject.execute(
-            user_id: user_id,
+            username: username,
             action_code: action_code,
             tenancy_ref: tenancy_ref,
             until_date: 'future_date',
