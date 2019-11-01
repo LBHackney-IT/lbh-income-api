@@ -37,7 +37,7 @@ describe Hackney::Tenancy::AddActionDiaryEntry do
   context 'when a user wants to add an action diary message' do
     subject { usecase.execute(username: username, tenancy_ref: tenancy_ref, action_code: action_code, comment: comment) }
 
-    let(:user) { OpenStruct.new(name: Faker::Name.name, id: Faker::Number.number(3).to_i) }
+    let(:username) { Faker::Name.name }
 
     it 'calls the action_diary_gateway' do
       allow(DateTime).to receive(:now).and_return(date)
