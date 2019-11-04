@@ -53,6 +53,7 @@ describe LettersController, type: :controller do
   describe '#create' do
     context 'when all data is is found' do
       let(:found_payment_ref) { Faker::Number.number(4) }
+      let(:user_id) { Faker::Number.number }
       let(:preview_uuid) { SecureRandom.uuid }
 
       it 'generates pdf(html) preview with template details, case and empty errors' do
@@ -60,10 +61,11 @@ describe LettersController, type: :controller do
         expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
           .to receive(:get_leasehold_info).with(payment_ref: found_payment_ref).and_return(payment_ref: found_payment_ref)
 
-        post :create, params: { payment_ref: found_payment_ref, template_id: template_id }
+        post :create, params: { payment_ref: found_payment_ref, template_id: template_id, user_id: user_id }
 
         expect(response.status).to eq(200)
 
+        pp response_json
         expect(response_json['case']['payment_ref']).to eq(found_payment_ref)
         expect(response_json['template']['id']).to eq(template_id)
         expect(response_json['preview']).to eq(preview_html)

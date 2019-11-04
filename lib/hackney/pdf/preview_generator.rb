@@ -22,7 +22,7 @@ module Hackney
         @signature = File.open(SIGNATURE_PATH).read
       end
 
-      def execute(letter_params:)
+      def execute(letter_params:, user_id:)
         @letter = Hackney::ServiceCharge::Letter.build_letter(letter_params: letter_params, template_path: @template_path)
 
         @sender_address = ERB.new(File.open(SENDER_ADDRESS_PATH).read).result(binding)
@@ -41,6 +41,7 @@ module Hackney
 
         @payment_tables_lba = ERB.new(File.open(PAYMENT_TABLES_LBA_PATH).read).result(binding)
 
+        @user_id = user_id
         template = File.open(@template_path).read
         html = ERB.new(template).result(binding)
 
