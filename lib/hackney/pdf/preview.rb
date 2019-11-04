@@ -1,18 +1,20 @@
 module Hackney
   module PDF
     class Preview
-      def initialize(get_templates_gateway:, leasehold_information_gateway:)
+      def initialize(get_templates_gateway:, leasehold_information_gateway:, users_gateway:)
         @get_templates_gateway = get_templates_gateway
         @leasehold_information_gateway = leasehold_information_gateway
+        @users_gateway = users_gateway
       end
 
       def execute(payment_ref:, template_id:, user_id:)
         template = get_template_by_id(template_id)
         leasehold_info = get_leasehold_info(payment_ref)
+        user = @users_gateway.find_user(id: user_id)
 
         preview_with_errors = Hackney::PDF::PreviewGenerator.new(
           template_path: template[:path]
-        ).execute(letter_params: leasehold_info, user_id: user_id)
+        ).execute(letter_params: leasehold_info, user_name: user.name)
 
         uuid = SecureRandom.uuid
 

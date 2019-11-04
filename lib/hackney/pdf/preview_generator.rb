@@ -2,7 +2,6 @@ module Hackney
   module PDF
     class PreviewGenerator
       LOGO_PATH = 'lib/hackney/pdf/templates/layouts/logo.svg'.freeze
-      SIGNATURE_PATH = 'lib/hackney/pdf/templates/layouts/signature.png'.freeze
       SENDER_ADDRESS_PATH = 'lib/hackney/pdf/templates/layouts/sender_address.erb'.freeze
       SENDING_DATE_PATH = 'lib/hackney/pdf/templates/layouts/sending_date.erb'.freeze
       PAYMENT_OPTIONS_PATH = 'lib/hackney/pdf/templates/layouts/payment_options.erb'.freeze
@@ -19,10 +18,9 @@ module Hackney
         @sending_date_lba = get_lba_date
         @return_date_lba = get_return_date
         @logo = File.open(LOGO_PATH).read
-        @signature = File.open(SIGNATURE_PATH).read
       end
 
-      def execute(letter_params:, user_id:)
+      def execute(letter_params:, user_name:)
         @letter = Hackney::ServiceCharge::Letter.build_letter(letter_params: letter_params, template_path: @template_path)
 
         @sender_address = ERB.new(File.open(SENDER_ADDRESS_PATH).read).result(binding)
@@ -41,7 +39,7 @@ module Hackney
 
         @payment_tables_lba = ERB.new(File.open(PAYMENT_TABLES_LBA_PATH).read).result(binding)
 
-        @user_id = user_id
+        @user_name = user_name
         template = File.open(@template_path).read
         html = ERB.new(template).result(binding)
 
