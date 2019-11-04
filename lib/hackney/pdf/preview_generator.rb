@@ -2,6 +2,7 @@ module Hackney
   module PDF
     class PreviewGenerator
       LOGO_PATH = 'lib/hackney/pdf/templates/layouts/logo.svg'.freeze
+      SIGNATURE_PATH = 'lib/hackney/pdf/templates/layouts/signature.png'.freeze
       SENDER_ADDRESS_PATH = 'lib/hackney/pdf/templates/layouts/sender_address.erb'.freeze
       SENDING_DATE_PATH = 'lib/hackney/pdf/templates/layouts/sending_date.erb'.freeze
       PAYMENT_OPTIONS_PATH = 'lib/hackney/pdf/templates/layouts/payment_options.erb'.freeze
@@ -18,6 +19,7 @@ module Hackney
         @sending_date_lba = get_lba_date
         @return_date_lba = get_return_date
         @logo = File.open(LOGO_PATH).read
+        @signature = File.open(SIGNATURE_PATH).read
       end
 
       def execute(letter_params:)
