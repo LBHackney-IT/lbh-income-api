@@ -4,9 +4,9 @@ class AddColumnsToDocuments < ActiveRecord::Migration[5.2]
     add_column :documents, :email, :string
 
     Hackney::Cloud::Document.find_each do |document|
-      next if document.metedata.blank?
+      next if document.metadata.blank?
 
-      metadata = JSON.parse(document.metedata)
+      metadata = JSON.parse(document.metadata)
 
       user = Hackney::Income::Models::User.find_by(id: metadata['user_id'])
 
