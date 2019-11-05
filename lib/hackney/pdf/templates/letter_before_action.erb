@@ -101,7 +101,7 @@ If you have any queries regarding this matter please contact <strong><%= @user_n
 
 <p>
 Yours sincerely,<br>
-<%= image_tag("/layouts/signature.png") %>
+<img src="data:image/png;base64, <%= @signature_base64 %>" %>
 <strong>On Behalf of Leasehold & Right to Buy Services</strong>
 </p>
 </div>
@@ -230,4 +230,3 @@ https://www.justice.gov.uk/courts/procedure-rules/civil/protocol.
 <%= @financial_statement_lba %>
 
 <%= @payment_tables_lba %>
-

@@ -10,6 +10,7 @@ module Hackney
       REPLY_FORM_LBA_PATH = 'lib/hackney/pdf/templates/layouts/reply_form_lba.erb'.freeze
       FINANCIAL_STATEMENT_LBA_PATH = 'lib/hackney/pdf/templates/layouts/financial_statement_lba.erb'.freeze
       PAYMENT_TABLES_LBA_PATH = 'lib/hackney/pdf/templates/layouts/payment_tables_lba.erb'.freeze
+      SIGNATURE_IMAGE = 'lib/hackney/pdf/templates/layouts/signature.png'.freeze
 
       def initialize(template_path:)
         @template_path = template_path
@@ -38,6 +39,8 @@ module Hackney
         @financial_statement_lba = ERB.new(File.open(FINANCIAL_STATEMENT_LBA_PATH).read).result(binding)
 
         @payment_tables_lba = ERB.new(File.open(PAYMENT_TABLES_LBA_PATH).read).result(binding)
+
+        @signature_base64 = Base64.encode64(File.open(SIGNATURE_IMAGE).read)
 
         @user_name = user_name
         template = File.open(@template_path).read
