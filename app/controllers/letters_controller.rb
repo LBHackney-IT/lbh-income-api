@@ -10,7 +10,6 @@ class LettersController < ApplicationController
       payment_ref: params.fetch(:payment_ref),
       template_id: params.fetch(:template_id),
       user_id: params.fetch(:user_id)
-      # user_name: Hackney::Income::Models::User.find_by(params.fetch(:user_id))&.name
     )
   rescue Hackney::Income::TenancyNotFoundError
     head(404)

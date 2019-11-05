@@ -8,11 +8,28 @@ RSpec.describe 'Letters', type: :request do
   let(:postcode) { Faker::Address.postcode }
   let(:leasedate) { Time.zone.now.beginning_of_hour }
   let(:template) { 'letter_1_in_arrears_FH' }
+  let(:user_id) { '1' }
+  let(:user) do
+    Hackney::Income::Models::User.new(
+      provider_uid: 'close-to-me',
+      provider: 'universal',
+      name: 'Robert Smith',
+      email: 'old-email@the-cure.com',
+      first_name: 'Robert',
+      last_name: 'Smith',
+      provider_permissions: '12345.98765'
+    )
+  end
+  let(:test_user) { users_gateway.find_or_create_user(user) }
+
+  before do
+    user.save!
+  end
 
   describe 'POST /api/v1/messages/letters' do
     it 'returns 404 with bogus payment ref' do
       post messages_letters_path, params: {
-        payment_ref: 'abc', template_id: 'letter_1_in_arrears_FH'
+        payment_ref: 'abc', template_id: 'letter_1_in_arrears_FH', user_id: user_id
       }
 
       expect(response).to have_http_status(404)
@@ -21,7 +38,7 @@ RSpec.describe 'Letters', type: :request do
     it 'raises an error with bogus template_id' do
       expect {
         post messages_letters_path, params: {
-          payment_ref: 'abc', template_id: 'does not exist'
+          payment_ref: 'abc', template_id: 'does not exist', user_id: user_id
         }
       }.to raise_error(TypeError)
     end
@@ -53,6 +70,7 @@ RSpec.describe 'Letters', type: :request do
             'name' => 'Letter 1 in arrears fh',
             'id' => 'letter_1_in_arrears_FH'
           },
+          'user_name' => user.name,
           'errors' => []
         }
       }
@@ -63,7 +81,7 @@ RSpec.describe 'Letters', type: :request do
 
       it 'responds with a JSON object' do
         post messages_letters_path, params: {
-          payment_ref: payment_ref, template_id: template
+          payment_ref: payment_ref, template_id: template, user_id: user_id
         }
 
         # UUID: is always different can ignore this.
@@ -81,7 +99,7 @@ RSpec.describe 'Letters', type: :request do
     let(:uuid) { existing_letter[:uuid] }
     let(:user) { create(:user) }
     let(:user_id) { user.id }
-    let(:existing_letter) { create_and_store_letter_in_cache(payment_ref: payment_ref, template_id: template) }
+    let(:existing_letter) { create_and_store_letter_in_cache(payment_ref: payment_ref, template_id: template, user_id: user_id) }
 
     context 'when there is an existing letter' do
       before do
@@ -168,10 +186,11 @@ RSpec.describe 'Letters', type: :request do
     create_uh_rent(prop_ref: property_ref, sc_leasedate: leasedate)
   end
 
-  def create_and_store_letter_in_cache(payment_ref:, template_id:)
+  def create_and_store_letter_in_cache(payment_ref:, template_id:, user_id:)
     Hackney::PDF::UseCaseFactory.new.get_preview.execute(
       payment_ref: payment_ref,
-      template_id: template_id
+      template_id: template_id,
+      user_id: user_id
     )
   end
 end

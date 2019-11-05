@@ -5,6 +5,23 @@ describe LettersController, type: :controller do
   let(:template_id) { 'letter_1_in_arrears_FH' }
   let(:template_name) { 'Letter 1 In Arrears FH' }
   let(:preview_html) { "<p>#{Faker::HitchhikersGuideToTheGalaxy.quote}</p>" }
+  let(:users_gateway) { Hackney::Income::SqlUsersGateway.new }
+  let(:user) do
+    Hackney::Income::Models::User.new(
+      provider_uid: 'close-to-me',
+      provider: 'universal',
+      name: 'Robert Smith',
+      email: 'old-email@the-cure.com',
+      first_name: 'Robert',
+      last_name: 'Smith',
+      provider_permissions: '12345.98765'
+    )
+  end
+  let(:test_user) { users_gateway.find_or_create_user(user) }
+
+  before do
+    user.save!
+  end
 
   describe '#get_templates' do
     it 'gets letter templates' do
@@ -28,7 +45,6 @@ describe LettersController, type: :controller do
 
   describe '#send_letter' do
     context 'when user "accepts" the preview' do
-      let(:user_id) { Faker::Number.number }
       let(:uuid) { SecureRandom.uuid }
 
       before do
@@ -36,16 +52,16 @@ describe LettersController, type: :controller do
       end
 
       it 'calls succefully' do
-        post :send_letter, params: { uuid: uuid, user_id: user_id }
+        post :send_letter, params: { uuid: uuid, user_id: user.id }
 
         expect(response).to be_successful
       end
 
       it 'calls the usecase' do
         expect_any_instance_of(Hackney::Income::ProcessLetter)
-          .to receive(:execute).with(uuid: uuid, user_id: user_id)
+          .to receive(:execute).with(uuid: uuid, user_id: user.id.to_s)
 
-        post :send_letter, params: { uuid: uuid, user_id: user_id }
+        post :send_letter, params: { uuid: uuid, user_id: user.id }
       end
     end
   end
@@ -53,7 +69,6 @@ describe LettersController, type: :controller do
   describe '#create' do
     context 'when all data is is found' do
       let(:found_payment_ref) { Faker::Number.number(4) }
-      let(:user_id) { Faker::Number.number }
       let(:preview_uuid) { SecureRandom.uuid }
 
       it 'generates pdf(html) preview with template details, case and empty errors' do
@@ -61,15 +76,15 @@ describe LettersController, type: :controller do
         expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
           .to receive(:get_leasehold_info).with(payment_ref: found_payment_ref).and_return(payment_ref: found_payment_ref)
 
-        post :create, params: { payment_ref: found_payment_ref, template_id: template_id, user_id: user_id }
+        post :create, params: { payment_ref: found_payment_ref, template_id: template_id, user_id: user.id }
 
         expect(response.status).to eq(200)
 
-        pp response_json
         expect(response_json['case']['payment_ref']).to eq(found_payment_ref)
         expect(response_json['template']['id']).to eq(template_id)
         expect(response_json['preview']).to eq(preview_html)
         expect(response_json['uuid']).not_to be_nil
+        expect(response_json['user_name']).to eq(user.name)
         expect(response_json['errors']).to eq([])
       end
     end
@@ -98,7 +113,7 @@ describe LettersController, type: :controller do
             .to receive(:get_leasehold_info).with(payment_ref: payment_ref)
                                             .and_return(letter_fields.except(*optional_fields))
 
-          post :create, params: { payment_ref: payment_ref, template_id: template_id }
+          post :create, params: { payment_ref: payment_ref, template_id: template_id, user_id: user.id }
 
           expect(response_json['errors']).to eq([])
         end
@@ -114,7 +129,7 @@ describe LettersController, type: :controller do
               letter_fields.except(*mandatory_fields)
             )
 
-          post :create, params: { payment_ref: payment_ref, template_id: template_id }
+          post :create, params: { payment_ref: payment_ref, template_id: template_id, user_id: user.id }
 
           expect(response_json['errors']).to eq(
             [{ 'message' => 'missing mandatory field', 'name' => 'payment_ref' },
@@ -132,7 +147,7 @@ describe LettersController, type: :controller do
       let(:not_found_payment_ref) { 123 }
 
       it 'returns 404' do
-        post :create, params: { payment_ref: not_found_payment_ref, template_id: template_id }
+        post :create, params: { payment_ref: not_found_payment_ref, template_id: template_id, user_id: user.id }
 
         expect(response.status).to eq(404)
       end

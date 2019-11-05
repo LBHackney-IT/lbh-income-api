@@ -22,6 +22,7 @@ module Hackney
           case: leasehold_info,
           template: template,
           uuid: uuid,
+          user_name: user.name,
           preview: preview_with_errors[:html],
           errors: preview_with_errors[:errors]
         }

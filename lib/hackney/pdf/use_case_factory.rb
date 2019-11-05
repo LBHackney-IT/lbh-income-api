@@ -12,7 +12,7 @@ module Hackney
       def get_preview
         Hackney::PDF::Preview.new(
           get_templates_gateway: get_templates,
-          leasehold_information_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new
+          leasehold_information_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new,
           users_gateway: Hackney::Income::SqlUsersGateway.new
         )
       end
