@@ -3,7 +3,7 @@ module Hackney
     class Letter
       class BeforeAction < Hackney::ServiceCharge::Letter
         TEMPLATE_PATHS = 'lib/hackney/pdf/templates/letter_before_action.erb'.freeze
-        MANDATORY_FIELDS = %i[lba_expiry_date original_lease_date date_of_current_purchase_assignment].freeze
+        MANDATORY_FIELDS = %i[original_lease_date date_of_current_purchase_assignment].freeze
 
         def initialize(params)
           super(params)
