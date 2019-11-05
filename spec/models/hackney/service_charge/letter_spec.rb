@@ -82,7 +82,7 @@ describe Hackney::ServiceCharge::Letter do
 
       letter = described_class.build(
         letter_params: letter_params,
-        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
+        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS.sample
       )
 
       expect(letter.errors).to eq [

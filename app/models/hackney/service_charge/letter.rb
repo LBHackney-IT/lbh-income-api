@@ -16,7 +16,7 @@ module Hackney
 
       def self.build(letter_params:, template_path:)
         case template_path
-        when Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
+        when *Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
           Letter::BeforeAction.new(letter_params)
         when *Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
           Letter::LetterTwo.new(letter_params)
