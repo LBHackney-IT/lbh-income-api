@@ -14,9 +14,9 @@ module Hackney
                   :original_leaseholders, :previous_letter_sent, :arrears_letter_1_date,
                   :international, :lessee_full_name, :lessee_short_name, :errors, :lba_balance, :tenure_type
 
-      def self.build_letter(letter_params:, template_path:)
+      def self.build(letter_params:, template_path:)
         case template_path
-        when Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATH
+        when Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
           Letter::BeforeAction.new(letter_params)
         when *Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
           Letter::LetterTwo.new(letter_params)

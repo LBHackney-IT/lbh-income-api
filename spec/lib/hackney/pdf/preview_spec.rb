@@ -9,15 +9,11 @@ describe Hackney::PDF::Preview do
     )
   end
 
-  before do
-    user.save!
-  end
-
   let(:get_templates_gateway) { instance_double(Hackney::PDF::GetTemplates) }
   let(:leasehold_information_gateway) { instance_double(Hackney::Income::UniversalHousingLeaseholdGateway) }
   let(:users_gateway) { Hackney::Income::SqlUsersGateway.new }
-  let(:user) do
-    Hackney::Income::Models::User.new(
+  let(:test_user) do
+    Hackney::Income::Models::User.create(
       provider_uid: 'close-to-me',
       provider: 'universal',
       name: 'Robert Smith',
@@ -27,7 +23,6 @@ describe Hackney::PDF::Preview do
       provider_permissions: '12345.98765'
     )
   end
-  let(:test_user) { users_gateway.find_or_create_user(user) }
   let(:test_template_id) { 123_123 }
   let(:test_template) do
     {
@@ -59,7 +54,7 @@ describe Hackney::PDF::Preview do
     expect(leasehold_information_gateway).to receive(:get_leasehold_info).with(payment_ref: test_pay_ref).and_return(test_letter_params)
     expect(get_templates_gateway).to receive(:execute).and_return([test_template])
 
-    preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: user.id)
+    preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: test_user.id)
 
     expect(preview).to include(
       case: test_letter_params,
@@ -73,7 +68,7 @@ describe Hackney::PDF::Preview do
     expect(leasehold_information_gateway).to receive(:get_leasehold_info).with(payment_ref: test_pay_ref).and_return(test_letter_params)
     expect(get_templates_gateway).to receive(:execute).and_return([test_template])
 
-    preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: user.id)
+    preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: test_user.id)
 
     expect(Rails.cache.read(preview[:uuid])).to include(
       case: test_letter_params,
@@ -105,7 +100,7 @@ describe Hackney::PDF::Preview do
       expect(leasehold_information_gateway).to receive(:get_leasehold_info).with(payment_ref: test_pay_ref).and_return(test_letter_params)
       expect(get_templates_gateway).to receive(:execute).and_return([test_template])
 
-      preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: user.id)
+      preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id, user_id: test_user.id)
 
       expect(preview).to include(
         case: test_letter_params,

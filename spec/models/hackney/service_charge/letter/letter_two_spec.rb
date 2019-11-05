@@ -27,7 +27,7 @@ describe Hackney::ServiceCharge::Letter::LetterTwo do
 
     context 'when letter 1 has been sent' do
       before do
-        Hackney::Cloud::Document.new(
+        Hackney::Cloud::Document.create(
           metadata: {
             payment_ref: letter_params[:payment_ref],
             template: { name: 'Letter 1' }
@@ -35,7 +35,7 @@ describe Hackney::ServiceCharge::Letter::LetterTwo do
           uuid: SecureRandom.uuid,
           extension: :foo,
           mime_type: :bar
-        ).save
+        )
       end
 
       it 'no errors are returned' do

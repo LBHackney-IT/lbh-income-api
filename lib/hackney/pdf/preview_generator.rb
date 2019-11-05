@@ -21,7 +21,7 @@ module Hackney
       end
 
       def execute(letter_params:, user_name:)
-        @letter = Hackney::ServiceCharge::Letter.build_letter(letter_params: letter_params, template_path: @template_path)
+        @letter = Hackney::ServiceCharge::Letter.build(letter_params: letter_params, template_path: @template_path)
 
         @sender_address = ERB.new(File.open(SENDER_ADDRESS_PATH).read).result(binding)
 

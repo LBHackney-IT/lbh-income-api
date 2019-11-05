@@ -23,7 +23,7 @@ describe Hackney::ServiceCharge::Letter do
 
   context 'when no errors are present' do
     let(:letter) {
-      described_class.build_letter(
+      described_class.build(
         letter_params: letter_params,
         template_path: 'foo'
       )
@@ -34,7 +34,7 @@ describe Hackney::ServiceCharge::Letter do
 
   context 'when errors are present' do
     let(:letter) {
-      described_class.build_letter(
+      described_class.build(
         letter_params: letter_params.merge(
           payment_ref: '',
           lessee_full_name: '',
@@ -45,7 +45,8 @@ describe Hackney::ServiceCharge::Letter do
           property_address: '',
           total_collectable_arrears_balance: 0,
           international: true
-        ), template_path: 'foo'
+        ),
+        template_path: 'foo'
       )
     }
 
@@ -64,7 +65,7 @@ describe Hackney::ServiceCharge::Letter do
 
   context 'when reorganisation of the address is needed' do
     let(:letter) {
-      described_class.build_letter(
+      described_class.build(
         letter_params: letter_params.merge(correspondence_address1: ''),
         template_path: 'foo'
       )
@@ -79,9 +80,9 @@ describe Hackney::ServiceCharge::Letter do
     it 'generates an LBA letter' do
       expect(Hackney::ServiceCharge::Letter::BeforeAction).to receive(:new).with(letter_params).and_call_original
 
-      letter = described_class.build_letter(
+      letter = described_class.build(
         letter_params: letter_params,
-        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATH
+        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
       )
 
       expect(letter.errors).to eq [
@@ -96,7 +97,7 @@ describe Hackney::ServiceCharge::Letter do
     it 'generates letter 2 letter' do
       expect(Hackney::ServiceCharge::Letter::LetterTwo).to receive(:new).with(letter_params).and_call_original
 
-      letter = described_class.build_letter(
+      letter = described_class.build(
         letter_params: letter_params,
         template_path: Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS.sample
       )
