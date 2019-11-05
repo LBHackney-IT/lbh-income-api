@@ -23,7 +23,6 @@ module Hackney
           preview: preview_with_errors[:html],
           errors: preview_with_errors[:errors]
         }
-
       end
 
       private
