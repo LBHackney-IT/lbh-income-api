@@ -16,14 +16,14 @@ module Hackney
 
         uuid = SecureRandom.uuid
 
-        cache_value = {
+        {
           case: leasehold_info,
           template: template,
           uuid: uuid,
           preview: preview_with_errors[:html],
           errors: preview_with_errors[:errors]
         }
-        cache_value
+
       end
 
       private
