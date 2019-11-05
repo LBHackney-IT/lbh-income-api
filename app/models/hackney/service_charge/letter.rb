@@ -86,7 +86,7 @@ module Hackney
       end
 
       def validate_mandatory_fields(mandatory_fields, letter_params)
-        @errors = [] if @errors.nil?
+        @errors ||= []
         @errors.concat(
           mandatory_fields
                   .reject { |field| letter_params[field].present? }
