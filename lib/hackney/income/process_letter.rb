@@ -5,7 +5,7 @@ module Hackney
         @cloud_storage = cloud_storage
       end
 
-      def execute(uuid:, user_id:)
+      def execute(uuid:, username:, email:)
         cached_letter_object = pop_from_cache(uuid)
 
         letter_html = cached_letter_object[:preview]
@@ -15,7 +15,8 @@ module Hackney
           filename: "#{uuid}.pdf",
           uuid: uuid,
           metadata: {
-            user_id: user_id,
+            username: username,
+            email: email,
             payment_ref: cached_letter_object[:case][:payment_ref],
             template: cached_letter_object[:template]
           }

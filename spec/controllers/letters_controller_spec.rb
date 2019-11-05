@@ -28,7 +28,8 @@ describe LettersController, type: :controller do
 
   describe '#send_letter' do
     context 'when user "accepts" the preview' do
-      let(:user_id) { Faker::Number.number }
+      let(:username) { Faker::Name.name }
+      let(:email) { Faker::Internet.email }
       let(:uuid) { SecureRandom.uuid }
 
       before do
@@ -36,16 +37,16 @@ describe LettersController, type: :controller do
       end
 
       it 'calls succefully' do
-        post :send_letter, params: { uuid: uuid, user_id: user_id }
+        post :send_letter, params: { uuid: uuid, username: username, email: email }
 
         expect(response).to be_successful
       end
 
       it 'calls the usecase' do
         expect_any_instance_of(Hackney::Income::ProcessLetter)
-          .to receive(:execute).with(uuid: uuid, user_id: user_id)
+          .to receive(:execute).with(uuid: uuid, username: username, email: email)
 
-        post :send_letter, params: { uuid: uuid, user_id: user_id }
+        post :send_letter, params: { uuid: uuid, username: username, email: email }
       end
     end
   end

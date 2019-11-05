@@ -79,7 +79,8 @@ RSpec.describe 'Letters', type: :request do
 
   describe 'POST /api/v1/messages/letters/send' do
     let(:uuid) { existing_letter[:uuid] }
-    let(:user_id) { Faker::Number.number(3) }
+    let(:username) { Faker::Name.name }
+    let(:email) { Faker::Internet.email }
     let(:existing_letter) { create_and_store_letter_in_cache(payment_ref: payment_ref, template_id: template) }
 
     context 'when there is an existing letter' do
@@ -89,43 +90,35 @@ RSpec.describe 'Letters', type: :request do
       end
 
       it 'is a No Content (204) status' do
-        post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
+        post messages_letters_send_path, params: { uuid: uuid, username: username, email: email }
 
         expect(response).to be_no_content
       end
 
       it 'adds a `Hackney::Income::Jobs::SaveAndSendLetterJob` to ActiveJob' do
         expect {
-          post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
+          post messages_letters_send_path, params: { uuid: uuid, username: username, email: email }
         }.to have_enqueued_job(Hackney::Income::Jobs::SaveAndSendLetterJob)
       end
 
       it 'creates a `Hackney::Cloud::Document`' do
         expect {
-          post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
+          post messages_letters_send_path, params: { uuid: uuid, username: username, email: email }
         }.to change { Hackney::Cloud::Document.count }.from(0).to(1)
       end
 
       it 'stores the User ID on metadata of the Document' do
-        post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
+        post messages_letters_send_path, params: { uuid: uuid, username: username, email: email }
 
         document = Hackney::Cloud::Document.last
-        expect(JSON.parse(document.metadata)['user_id']).to eq(user_id)
+        expect(JSON.parse(document.metadata)['username']).to eq(username)
       end
 
       context 'with a bogus UUID' do
         it 'throws a `NoMethodError`' do
           expect {
-            post messages_letters_send_path, params: { uuid: SecureRandom.uuid, user_id: user_id }
+            post messages_letters_send_path, params: { uuid: SecureRandom.uuid, username: username, email: email }
           }.to raise_error(NoMethodError)
-        end
-      end
-
-      context 'with a bogus User ID' do
-        it 'adds a `Hackney::Income::Jobs::SaveAndSendLetterJob` to ActiveJob' do
-          expect {
-            post messages_letters_send_path, params: { uuid: uuid, user_id: Faker::Number.number(4) }
-          }.to have_enqueued_job(Hackney::Income::Jobs::SaveAndSendLetterJob)
         end
       end
     end
@@ -134,7 +127,7 @@ RSpec.describe 'Letters', type: :request do
       context 'with a random UUID' do
         it 'throws a `NoMethodError`' do
           expect {
-            post messages_letters_send_path, params: { uuid: SecureRandom.uuid, user_id: user_id }
+            post messages_letters_send_path, params: { uuid: SecureRandom.uuid, username: username, email: email }
           }.to raise_error(NoMethodError)
         end
       end
