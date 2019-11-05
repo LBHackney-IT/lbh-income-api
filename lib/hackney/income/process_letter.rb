@@ -5,29 +5,17 @@ module Hackney
         @cloud_storage = cloud_storage
       end
 
-      def execute(uuid:, user_id:)
-        cached_letter_object = pop_from_cache(uuid)
-
-        letter_html = cached_letter_object[:preview]
-
+      def execute(uuid:, user_id:, payment_ref:, template_name:, letter_content:)
         @cloud_storage.save(
-          letter_html: letter_html,
+          letter_html: letter_content,
           filename: "#{uuid}.pdf",
           uuid: uuid,
           metadata: {
             user_id: user_id,
-            payment_ref: cached_letter_object[:case][:payment_ref],
-            template: cached_letter_object[:template]
+            payment_ref: payment_ref,
+            template: template_name
           }
         )
-      end
-
-      private
-
-      def pop_from_cache(uuid)
-        result = Rails.cache.read(uuid)
-        Rails.cache.delete(uuid)
-        result
       end
     end
   end

@@ -444,14 +444,6 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         expect(subject.broken_court_order?).to be(false)
       end
     end
-
-    xcontext 'when the tenant has an breached court-ordered agreement' do
-      before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '300') }
-
-      it 'is true' do
-        expect(subject.broken_court_order?).to be(true)
-      end
-    end
   end
 
   describe '#patch_code' do

@@ -4,19 +4,6 @@ describe LettersController, type: :controller do
   let(:template_path) { 'path/to/temp' }
   let(:template_id) { 'letter_1_in_arrears_FH' }
   let(:template_name) { 'Letter 1 In Arrears FH' }
-  let(:preview_html) { "<p>#{Faker::HitchhikersGuideToTheGalaxy.quote}</p>" }
-  let(:users_gateway) { Hackney::Income::SqlUsersGateway.new }
-  let(:test_user) do
-    Hackney::Income::Models::User.create(
-      provider_uid: 'close-to-me',
-      provider: 'universal',
-      name: 'Robert Smith',
-      email: 'old-email@the-cure.com',
-      first_name: 'Robert',
-      last_name: 'Smith',
-      provider_permissions: '12345.98765'
-    )
-  end
 
   describe '#get_templates' do
     it 'gets letter templates' do
@@ -38,103 +25,29 @@ describe LettersController, type: :controller do
     end
   end
 
-  describe '#send_letter' do
-    context 'when user "accepts" the preview' do
-      let(:uuid) { SecureRandom.uuid }
-
-      before do
-        Rails.cache.write(uuid, preview: preview_html, case: { payment_ref: 123 })
-      end
-
-      it 'calls succefully' do
-        post :send_letter, params: { uuid: uuid, user_id: test_user.id }
-
-        expect(response).to be_successful
-      end
-
-      it 'calls the usecase' do
-        expect_any_instance_of(Hackney::Income::ProcessLetter)
-          .to receive(:execute).with(uuid: uuid, user_id: test_user.id.to_s)
-
-        post :send_letter, params: { uuid: uuid, user_id: test_user.id }
-      end
-    end
-  end
-
   describe '#create' do
+    let(:generate_and_store_use_case_spy) { spy }
+    let(:payment_ref) { Faker::Number.number(6) }
+    let(:user_id) { Faker::Number.number(6) }
+    let(:dummy_json_hash) { { uuid: SecureRandom.uuid } }
+
+    before do
+      allow(controller).to receive(:generate_and_store_use_case).and_return(
+        generate_and_store_use_case_spy
+      )
+    end
+
     context 'when all data is is found' do
-      let(:found_payment_ref) { Faker::Number.number(4) }
-      let(:preview_uuid) { SecureRandom.uuid }
-
       it 'generates pdf(html) preview with template details, case and empty errors' do
-        expect_any_instance_of(Hackney::PDF::PreviewGenerator).to receive(:execute).and_return(html: preview_html, errors: [])
-        expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
-          .to receive(:get_leasehold_info).with(payment_ref: found_payment_ref).and_return(payment_ref: found_payment_ref)
+        expect(generate_and_store_use_case_spy).to receive(:execute).with(
+          payment_ref: payment_ref, template_id: template_id, user_id: user_id
+        ).and_return(dummy_json_hash)
 
-        post :create, params: { payment_ref: found_payment_ref, template_id: template_id, user_id: test_user.id }
+        post :create, params: {
+          payment_ref: payment_ref, template_id: template_id, user_id: user_id
+        }
 
         expect(response.status).to eq(200)
-
-        expect(response_json['case']['payment_ref']).to eq(found_payment_ref)
-        expect(response_json['template']['id']).to eq(template_id)
-        expect(response_json['preview']).to eq(preview_html)
-        expect(response_json['uuid']).not_to be_nil
-        expect(response_json['user_name']).to eq(test_user.name)
-        expect(response_json['errors']).to eq([])
-      end
-    end
-
-    context 'when some data is missing' do
-      let(:letter_fields) {
-        {
-          payment_ref: Faker::Number.number(4),
-          lessee_full_name: Faker::Name.name,
-          correspondence_address1: Faker::Address.street_address,
-          correspondence_address2: Faker::Address.secondary_address,
-          correspondence_address3: Faker::Address.city,
-          correspondence_postcode: Faker::Address.zip_code,
-          property_address: Faker::Address.street_address,
-          total_collectable_arrears_balance: Faker::Number.number(3)
-        }
-      }
-
-      context 'when the missing data is optional' do
-        let(:payment_ref) { Faker::Number.number(4) }
-
-        let(:optional_fields) { %i[correspondence_address3] }
-
-        it 'returns no errors' do
-          expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
-            .to receive(:get_leasehold_info).with(payment_ref: payment_ref)
-                                            .and_return(letter_fields.except(*optional_fields))
-
-          post :create, params: { payment_ref: payment_ref, template_id: template_id, user_id: test_user.id }
-
-          expect(response_json['errors']).to eq([])
-        end
-      end
-
-      context 'when the missing data mandatory' do
-        let(:payment_ref) { Faker::Number.number(4) }
-        let(:mandatory_fields) { Hackney::ServiceCharge::Letter::DEFAULT_MANDATORY_LETTER_FIELDS }
-
-        it 'returns errors' do
-          expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)
-            .to receive(:get_leasehold_info).with(payment_ref: payment_ref).and_return(
-              letter_fields.except(*mandatory_fields)
-            )
-
-          post :create, params: { payment_ref: payment_ref, template_id: template_id, user_id: test_user.id }
-
-          expect(response_json['errors']).to eq(
-            [{ 'message' => 'missing mandatory field', 'name' => 'payment_ref' },
-             { 'message' => 'missing mandatory field', 'name' => 'lessee_full_name' },
-             { 'message' => 'missing mandatory field', 'name' => 'correspondence_address1' },
-             { 'message' => 'missing mandatory field', 'name' => 'correspondence_postcode' },
-             { 'message' => 'missing mandatory field', 'name' => 'property_address' },
-             { 'message' => 'missing mandatory field', 'name' => 'total_collectable_arrears_balance' }]
-          )
-        end
       end
     end
 
@@ -142,16 +55,14 @@ describe LettersController, type: :controller do
       let(:not_found_payment_ref) { 123 }
 
       it 'returns 404' do
-        post :create, params: { payment_ref: not_found_payment_ref, template_id: template_id, user_id: test_user.id }
+        expect(generate_and_store_use_case_spy).to receive(:execute).and_raise(Hackney::Income::TenancyNotFoundError)
+
+        post :create, params: {
+          payment_ref: not_found_payment_ref, template_id: template_id, user_id: user_id
+        }
 
         expect(response.status).to eq(404)
       end
     end
-  end
-
-  private
-
-  def response_json
-    JSON.parse(response.body)
   end
 end

@@ -50,15 +50,6 @@ describe Hackney::Income::Jobs::SaveAndSendLetterJob do
     # expect(Hackney::PDF::Generator.new).to receive(:execute).with(letter_html) # .and_return(FakePDFKit.new(pdf_file))
     enqueue_save_send
   end
-
-  xit 'enqueues sending to gov notify for delivery' do
-    # TODO: problem with perform_later from within SaveAndSendLetterJob
-    expect {
-      enqueue_save_send
-    }.to(have_enqueued_job(Hackney::Income::Jobs::SendLetterToGovNotifyJob).with { |params|
-      expect(params[:document_id]).to be_present
-    })
-  end
 end
 
 class FakePDFKit

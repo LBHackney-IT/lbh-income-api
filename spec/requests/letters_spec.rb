@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Letters', type: :request do
+  include MockAwsHelper
+
   let(:property_ref) { Faker::Number.number(4) }
   let(:tenancy_ref) { "#{Faker::Number.number(6)}/#{Faker::Number.number(2)}" }
   let(:payment_ref) { Faker::Number.number(4) }
@@ -8,22 +10,18 @@ RSpec.describe 'Letters', type: :request do
   let(:postcode) { Faker::Address.postcode }
   let(:leasedate) { Time.zone.now.beginning_of_hour }
   let(:template) { 'letter_1_in_arrears_FH' }
-  let(:test_user) do
-    Hackney::Income::Models::User.create(
-      provider_uid: 'close-to-me',
-      provider: 'universal',
-      name: 'Robert Smith',
-      email: 'old-email@the-cure.com',
-      first_name: 'Robert',
-      last_name: 'Smith',
-      provider_permissions: '12345.98765'
-    )
+  let(:user) { create(:user) }
+  let(:user_id) { user.id }
+
+  before do
+    mock_aws_client
+    create_valid_uh_records_for_a_letter
   end
 
   describe 'POST /api/v1/messages/letters' do
     it 'returns 404 with bogus payment ref' do
       post messages_letters_path, params: {
-        payment_ref: 'abc', template_id: 'letter_1_in_arrears_FH', user_id: test_user.id
+        payment_ref: 'abc', template_id: 'letter_1_in_arrears_FH', user_id: user_id
       }
 
       expect(response).to have_http_status(404)
@@ -32,7 +30,7 @@ RSpec.describe 'Letters', type: :request do
     it 'raises an error with bogus template_id' do
       expect {
         post messages_letters_path, params: {
-          payment_ref: 'abc', template_id: 'does not exist', user_id: test_user.id
+          payment_ref: 'abc', template_id: 'does not exist', user_id: user_id
         }
       }.to raise_error(TypeError)
     end
@@ -64,18 +62,15 @@ RSpec.describe 'Letters', type: :request do
             'name' => 'Letter 1 in arrears fh',
             'id' => 'letter_1_in_arrears_FH'
           },
-          'user_name' => test_user.name,
+          'user_name' => user.name,
+          'document_id' => 1,
           'errors' => []
         }
       }
 
-      before do
-        create_valid_uh_records_for_a_letter
-      end
-
       it 'responds with a JSON object' do
         post messages_letters_path, params: {
-          payment_ref: payment_ref, template_id: template, user_id: test_user.id
+          payment_ref: payment_ref, template_id: template, user_id: user_id
         }
 
         # UUID: is always different can ignore this.
@@ -86,18 +81,36 @@ RSpec.describe 'Letters', type: :request do
 
         expect(json_response).to eq(expected_json_response_as_hash)
       end
+
+      it 'creates a `Hackney::Cloud::Document`' do
+        expect {
+          post messages_letters_path, params: {
+            payment_ref: payment_ref, template_id: template, user_id: user_id
+          }
+        }.to change { Hackney::Cloud::Document.count }.from(0).to(1)
+      end
+
+      it 'stores the User ID on metadata of the Document' do
+        post messages_letters_path, params: {
+          payment_ref: payment_ref, template_id: template, user_id: user_id
+        }
+
+        document = Hackney::Cloud::Document.last
+        expect(JSON.parse(document.metadata)['user_id'].to_i).to eq(user_id)
+        expect(JSON.parse(document.metadata)['template']['id']).to eq(template)
+        expect(JSON.parse(document.metadata)['payment_ref']).to eq(payment_ref)
+      end
     end
   end
 
   describe 'POST /api/v1/messages/letters/send' do
     let(:uuid) { existing_letter[:uuid] }
-    let(:user) { create(:user) }
-    let(:user_id) { user.id }
-    let(:existing_letter) { create_and_store_letter_in_cache(payment_ref: payment_ref, template_id: template, user_id: user_id) }
+    let(:existing_letter) do
+      generate_and_store_letter(payment_ref: payment_ref, template_id: template, user_id: user_id)
+    end
 
     context 'when there is an existing letter' do
       before do
-        create_valid_uh_records_for_a_letter
         existing_letter
       end
 
@@ -107,48 +120,35 @@ RSpec.describe 'Letters', type: :request do
         expect(response).to be_no_content
       end
 
-      it 'adds a `Hackney::Income::Jobs::SaveAndSendLetterJob` to ActiveJob' do
+      it 'adds a `Hackney::Income::Jobs::SendLetterToGovNotifyJob` to ActiveJob' do
         expect {
           post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
-        }.to have_enqueued_job(Hackney::Income::Jobs::SaveAndSendLetterJob)
-      end
-
-      it 'creates a `Hackney::Cloud::Document`' do
-        expect {
-          post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
-        }.to change { Hackney::Cloud::Document.count }.from(0).to(1)
-      end
-
-      it 'stores the User ID on metadata of the Document' do
-        post messages_letters_send_path, params: { uuid: uuid, user_id: user_id }
-
-        document = Hackney::Cloud::Document.last
-        expect(JSON.parse(document.metadata)['user_id'].to_i).to eq(user_id)
+        }.to have_enqueued_job(Hackney::Income::Jobs::SendLetterToGovNotifyJob)
       end
 
       context 'with a bogus UUID' do
-        it 'throws a `NoMethodError`' do
+        it 'throws a `ActiveRecord::RecordNotFound`' do
           expect {
             post messages_letters_send_path, params: { uuid: SecureRandom.uuid, user_id: user_id }
-          }.to raise_error(NoMethodError)
+          }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
 
       context 'with a bogus User ID' do
-        it 'adds a `Hackney::Income::Jobs::SaveAndSendLetterJob` to ActiveJob' do
+        it 'adds a `Hackney::Income::Jobs::SendLetterToGovNotifyJob` to ActiveJob' do
           expect {
             post messages_letters_send_path, params: { uuid: uuid, user_id: Faker::Number.number(4) }
-          }.to have_enqueued_job(Hackney::Income::Jobs::SaveAndSendLetterJob)
+          }.to have_enqueued_job(Hackney::Income::Jobs::SendLetterToGovNotifyJob)
         end
       end
     end
 
     context 'when there is no existing letter' do
       context 'with a random UUID' do
-        it 'throws a `NoMethodError`' do
+        it 'throws a `ActiveRecord::RecordNotFound`' do
           expect {
             post messages_letters_send_path, params: { uuid: SecureRandom.uuid, user_id: user_id }
-          }.to raise_error(NoMethodError)
+          }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end
@@ -180,8 +180,8 @@ RSpec.describe 'Letters', type: :request do
     create_uh_rent(prop_ref: property_ref, sc_leasedate: leasedate)
   end
 
-  def create_and_store_letter_in_cache(payment_ref:, template_id:, user_id:)
-    Hackney::PDF::UseCaseFactory.new.get_preview.execute(
+  def generate_and_store_letter(payment_ref:, template_id:, user_id:)
+    UseCases::GenerateAndStoreLetter.new.execute(
       payment_ref: payment_ref,
       template_id: template_id,
       user_id: user_id

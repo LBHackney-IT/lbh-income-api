@@ -45,6 +45,7 @@ gem 'sidekiq'
 gem 'sidekiq-scheduler'
 
 group :test do
+  gem 'pdf-reader'
   gem 'rspec-sidekiq'
 end
 
