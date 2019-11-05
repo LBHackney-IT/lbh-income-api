@@ -56,7 +56,7 @@ module Hackney
       end
 
       def get_return_date
-        (Time.now + 30.days).strftime('%d %B %Y')
+        30.days.from_now.strftime('%d %B %Y')
       end
 
       def get_lba_date
