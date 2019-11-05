@@ -51,20 +51,6 @@ describe Hackney::PDF::Preview do
     )
   end
 
-  it 'generated preview is saved in cache' do
-    expect(leasehold_information_gateway).to receive(:get_leasehold_info).with(payment_ref: test_pay_ref).and_return(test_letter_params)
-    expect(get_templates_gateway).to receive(:execute).and_return([test_template])
-
-    preview = subject.execute(payment_ref: test_pay_ref, template_id: test_template_id)
-
-    expect(Rails.cache.read(preview[:uuid])).to include(
-      case: test_letter_params,
-      template: test_template,
-      preview: translated_html,
-      errors: []
-    )
-  end
-
   context 'when there\'s missing data' do
     let(:test_letter_params) do
       {
