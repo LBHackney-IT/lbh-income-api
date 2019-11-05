@@ -4,7 +4,8 @@ describe Hackney::Income::ProcessLetter do
   let(:cloud_storage) { instance_double(Hackney::Cloud::Storage) }
 
   let(:subject) { described_class.new(cloud_storage: cloud_storage) }
-  let(:user_id) { Faker::Number.number }
+  let(:username) { Faker::Name.name }
+  let(:email) { Faker::Internet.email }
   let(:html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
   let(:uuid) { SecureRandom.uuid }
 
@@ -41,12 +42,13 @@ describe Hackney::Income::ProcessLetter do
       letter_html: html,
       filename: "#{uuid}.pdf",
       metadata: {
-        user_id: user_id,
+        username: username,
+        email: email,
         payment_ref: cache_obj[:case][:payment_ref],
         template: cache_obj[:template]
       }
     )
 
-    subject.execute(uuid: uuid, user_id: user_id)
+    subject.execute(uuid: uuid, username: username, email: email)
   end
 end

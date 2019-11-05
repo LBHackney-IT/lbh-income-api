@@ -17,7 +17,8 @@ class LettersController < ApplicationController
   def send_letter
     income_use_case_factory.send_letter.execute(
       uuid: params.fetch(:uuid),
-      user_id: params.fetch(:user_id)
+      username: params.fetch(:username),
+      email: params.fetch(:email)
     )
   end
 end
