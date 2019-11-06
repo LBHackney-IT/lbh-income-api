@@ -25,7 +25,8 @@ describe MyCasesController do
             is_paused: nil,
             classification: nil,
             patch: nil,
-            full_patch: nil
+            full_patch: nil,
+            upcoming_court_dates: nil
           })
 
         get :index, params: { user_id: user_id, page_number: 0, number_per_page: 0 }
@@ -53,7 +54,8 @@ describe MyCasesController do
             is_paused: nil,
             classification: nil,
             patch: nil,
-            full_patch: nil
+            full_patch: nil,
+            upcoming_court_dates: nil
           })
           .and_return(cases: [], number_per_page: 1)
 
@@ -87,7 +89,8 @@ describe MyCasesController do
             is_paused: false,
             classification: nil,
             patch: nil,
-            full_patch: nil
+            full_patch: nil,
+            upcoming_court_dates: nil
           })
           .and_return(expected_result)
 
@@ -108,7 +111,8 @@ describe MyCasesController do
             is_paused: nil,
             classification: nil,
             patch: patch,
-            full_patch: nil
+            full_patch: nil,
+            upcoming_court_dates: nil
           })
           .and_return(expected_result)
 

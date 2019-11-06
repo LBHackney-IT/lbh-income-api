@@ -437,9 +437,8 @@ describe Hackney::Income::StoredTenanciesGateway do
   context 'when there are tenancies with an upcoming courtdate' do
     let(:user) { create(:user) }
 
-    let!(:case_1) {create(:case_priority, assigned_user_id: user.id, balance: 40, courtdate: Date.today + 20) }
-    let!(:case_2) { create(:case_priority, assigned_user_id: user.id, balance: 40, courtdate: Date.today + 1) }
-    let!(:case_3) {create(:case_priority, assigned_user_id: user.id, balance: 40, courtdate: Date.today + 16) }
+    let!(:case_1) { create(:case_priority, assigned_user_id: user.id, balance: 60, courtdate: Date.today + 20) }
+    let!(:case_2) { create(:case_priority, assigned_user_id: user.id, balance: 50, courtdate: Date.today + 1) }
 
     context 'when we call get_tenancies_for_user' do
       subject do
@@ -448,13 +447,14 @@ describe Hackney::Income::StoredTenanciesGateway do
           page_number: 1,
           number_per_page: 50,
           filters: {
-            upcoming_court_dates: true,
+            upcoming_court_dates: true
           }
         )
       end
 
       it 'returns all tenancies ordered by court date' do
         expect(subject.first).to eq(case_2)
+        expect(subject.last).to eq(case_1)
       end
     end
   end

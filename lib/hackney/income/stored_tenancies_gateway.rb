@@ -59,7 +59,11 @@ module Hackney
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
 
-        query.order(by_balance).map(&method(:build_tenancy_list_item))
+        if filters[:upcoming_court_dates].present?
+          query.order([:courtdate])
+        else
+          query.order(by_balance).map(&method(:build_tenancy_list_item))
+        end
       end
 
       def number_of_pages_for_user(user_id:, number_per_page:, filters: {})
