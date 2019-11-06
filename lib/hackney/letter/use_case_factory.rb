@@ -13,6 +13,18 @@ module Hackney
         )
       end
 
+      def create_document_model
+        UseCases::CreateDocumentModel.new(
+          Hackney::Cloud::Document
+        )
+      end
+
+      def save_letter_to_cloud
+        UseCases::SaveLetterToCloud.new(
+          Rails.configuration.cloud_adapter
+        )
+      end
+
       private
 
       def cloud_storage

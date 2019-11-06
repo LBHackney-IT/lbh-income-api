@@ -18,7 +18,7 @@ module Hackney
 
         uuid = SecureRandom.uuid
 
-        cache_value = {
+        {
           case: leasehold_info,
           template: template,
           uuid: uuid,
@@ -26,20 +26,9 @@ module Hackney
           preview: preview_with_errors[:html],
           errors: preview_with_errors[:errors]
         }
-
-        save_to_cache(
-          cache_key: uuid,
-          cache_value: cache_value
-        )
-
-        cache_value
       end
 
       private
-
-      def save_to_cache(cache_key:, cache_value:)
-        Rails.cache.write(cache_key, cache_value, expires_in: 12.hours)
-      end
 
       def get_leasehold_info(payment_ref)
         @leasehold_information_gateway.get_leasehold_info(payment_ref: payment_ref)
