@@ -45,7 +45,7 @@ Dear <%= @letter.lessee_short_name %>
 Our records show you have not paid your service charges and ground rent amounting to £<%= @letter.lba_balance %> which is a breach of your lease. We have sent you at least two reminder letters asking for payment but we have still not received what is owed from you.
 </p>
 
-<h2>We ask that you settle the outstanding debt within 30 days of this letter to avoid the matter being referred to our solicitors for debt recovery action to be taken.</h2>
+<p><strong>We ask that you settle the outstanding debt within 30 days of this letter to avoid the matter being referred to our solicitors for debt recovery action to be taken.</strong></p>
 <p>
 If you are unable to settle your account in full and would like to discuss your arrears or to arrange an <strong>instalment plan</strong>, please contact our Leasehold Services team on 020 8356 2299.
 </p>
@@ -101,7 +101,7 @@ If you have any queries regarding this matter please contact <strong><%= @user_n
 
 <p>
 Yours sincerely,<br>
-<img src="data:image/png;base64, <%= @signature_base64 %>" %>
+<img src="data:image/png;base64, <%= @signature_base64 %>" %><br>
 <strong>On Behalf of Leasehold & Right to Buy Services</strong>
 </p>
 </div>
