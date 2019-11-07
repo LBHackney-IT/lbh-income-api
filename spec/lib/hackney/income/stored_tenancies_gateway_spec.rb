@@ -437,8 +437,18 @@ describe Hackney::Income::StoredTenanciesGateway do
   context 'when there are tenancies with an upcoming courtdate' do
     let(:user) { create(:user) }
 
-    let!(:case_1) { create(:case_priority, assigned_user_id: user.id, balance: 60, courtdate: Date.today + 20) }
-    let!(:case_2) { create(:case_priority, assigned_user_id: user.id, balance: 50, courtdate: Date.today + 1) }
+    let(:cases_with_courtdate_in_future) { 5 }
+    let(:cases_with_courtdate_in_past) { 5 }
+
+    before do
+      cases_with_courtdate_in_future.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, classification: nil, courtdate: Date.today + 20)
+      end
+
+      cases_with_courtdate_in_past.times do
+        create(:case_priority, assigned_user_id: user.id, balance: 40, classification: nil, courtdate: Date.today - 20)
+      end
+    end
 
     context 'when we call get_tenancies_for_user' do
       subject do
@@ -452,9 +462,8 @@ describe Hackney::Income::StoredTenanciesGateway do
         )
       end
 
-      it 'returns all tenancies ordered by court date' do
-        expect(subject.first).to eq(case_2)
-        expect(subject.last).to eq(case_1)
+      it 'returns only tenancies with an upcoming courtdate' do
+        expect(subject.count).to eq(cases_with_courtdate_in_future)
       end
     end
   end
