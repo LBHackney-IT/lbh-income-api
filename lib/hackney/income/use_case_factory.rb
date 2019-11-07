@@ -152,6 +152,13 @@ module Hackney
         )
       end
 
+      def uh_tenancies_gateway
+        Hackney::Income::UniversalHousingTenanciesGateway.new(
+          restrict_patches: ENV.fetch('RESTRICT_PATCHES', false),
+          patches: ENV.fetch('PERMITTED_PATCHES', '').split(',')
+        )
+      end
+
       private
 
       def cloud_storage
@@ -185,13 +192,6 @@ module Hackney
 
       def stored_tenancies_gateway
         Hackney::Income::StoredTenanciesGateway.new
-      end
-
-      def uh_tenancies_gateway
-        Hackney::Income::UniversalHousingTenanciesGateway.new(
-          restrict_patches: ENV.fetch('RESTRICT_PATCHES', false),
-          patches: ENV.fetch('PERMITTED_PATCHES', '').split(',')
-        )
       end
 
       def tenancy_api_gateway
