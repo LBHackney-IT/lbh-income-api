@@ -98,6 +98,7 @@ td, th {
 }
 
 .financial_statement {
+  width: 100%;
   border: none;
   border-collapse: collapse;
 }
