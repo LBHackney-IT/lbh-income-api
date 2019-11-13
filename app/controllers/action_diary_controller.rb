@@ -13,6 +13,11 @@ class ActionDiaryController < ApplicationController
       render(json: { status: 'error', code: 422, message: e.message }, status: :unprocessable_entity)
       return
     end
+
+    income_use_case_factory.sync_case_priority.execute(
+      tenancy_ref: action_diary_params.fetch(:tenancy_ref)
+    )
+
     head(:no_content)
   end
 
