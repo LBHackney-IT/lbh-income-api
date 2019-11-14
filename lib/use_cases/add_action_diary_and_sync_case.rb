@@ -1,4 +1,3 @@
-require 'active_support'
 module UseCases
   class AddActionDiaryAndSyncCase
     def initialize(prioritisation_gateway:, sync_case_priority:, action_diary_gateway:)
