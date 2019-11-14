@@ -138,13 +138,8 @@ vertical-align:top;
   border-collapse: collapse;
 }
 
-.payment_table_orange {
-  background:#f27f1b;
-  color: white;
-}
-
 .payment_table_grey {
-  background: #a9c0c7;
+  background: #e0e0e0;
 }
 
 .payment_table_right {

@@ -11,12 +11,13 @@
   Tel: 020 8356 2299 <br>
   Email: service.charges@hackney.gov.uk <br><br>
   <strong>Service Charge Account Number: <%= @letter.payment_ref %> <br></strong>
-  Our Ref: LBA/ID
+  Our Ref: LBA/ID <br>
   <%= @sending_date_lba %>
 </p>
 </div>
 
 <div class="lessee_address">
+  <br>
   <strong><%= @letter.lessee_full_name %></strong> <br>
   <%= @letter.correspondence_address1 %> <br>
   <%= @letter.correspondence_address2 %> <br>
