@@ -93,4 +93,3 @@ module Hackney
     end
   end
 end
-# docker exec -ti c180331b6de6 mysql --user=incomeapi --password incomeapi
