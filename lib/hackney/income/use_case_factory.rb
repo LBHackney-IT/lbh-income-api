@@ -124,7 +124,6 @@ module Hackney
 
       def add_action_diary_and_sync_case
         UseCases::AddActionDiaryAndSyncCase.new(
-          prioritisation_gateway: prioritisation_gateway,
           sync_case_priority: sync_case_priority,
           action_diary_gateway: action_diary_gateway
         )

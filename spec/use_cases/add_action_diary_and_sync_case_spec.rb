@@ -2,12 +2,10 @@ require 'rails_helper'
 
 describe UseCases::AddActionDiaryAndSyncCase do
   let(:add_action_diary_and_sync_case) {
-    described_class.new(prioritisation_gateway: prioritisation_gateway,
-                        sync_case_priority: sync_case_priority,
+    described_class.new(sync_case_priority: sync_case_priority,
                         action_diary_gateway: action_diary_gateway)
   }
 
-  let(:prioritisation_gateway) { spy }
   let(:sync_case_priority) { spy }
   let(:action_diary_gateway) { spy }
 
