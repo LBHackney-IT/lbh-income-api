@@ -3,11 +3,11 @@ require 'rails_helper'
 describe UseCases::AddActionDiaryAndSyncCase do
   let(:add_action_diary_and_sync_case) {
     described_class.new(sync_case_priority: sync_case_priority,
-                        action_diary_gateway: action_diary_gateway)
+                        add_action_diary: add_action_diary)
   }
 
   let(:sync_case_priority) { spy }
-  let(:action_diary_gateway) { spy }
+  let(:add_action_diary) { spy }
 
   let(:username) { Faker::Name.name }
   let(:tenancy_ref) { Faker::Lorem.characters(8) }
@@ -24,7 +24,7 @@ describe UseCases::AddActionDiaryAndSyncCase do
       )
       allow(add_action_diary_and_sync_case).to receive(:execute)
       expect(sync_case_priority).to have_received(:execute)
-      expect(action_diary_gateway).to have_received(:create_entry)
+      expect(add_action_diary).to have_received(:execute)
     end
   end
 end
