@@ -153,10 +153,7 @@ module Hackney
       end
 
       def uh_tenancies_gateway
-        Hackney::Income::UniversalHousingTenanciesGateway.new(
-          restrict_patches: ENV.fetch('RESTRICT_PATCHES', false),
-          patches: ENV.fetch('PERMITTED_PATCHES', '').split(',')
-        )
+        Hackney::Income::UniversalHousingTenanciesGateway.new
       end
 
       private

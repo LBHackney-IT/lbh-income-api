@@ -66,46 +66,5 @@ describe Hackney::Income::UniversalHousingTenanciesGateway, universal: true do
         expect(subject).to eq([])
       end
     end
-
-    context 'when patches are restricted' do
-      context 'when a list of acceptable patches is given' do
-        let(:gateway) { described_class.new(restrict_patches: true, patches: %w[X01 Y01 Z01]) }
-
-        context 'when a tenancy is not in an accepted patch' do
-          before do
-            create_uh_tenancy_agreement(tenancy_ref: '00001/01', current_balance: 10.0, prop_ref: 'PROP1')
-            create_uh_property(property_ref: 'PROP1', patch_code: 'B01')
-          end
-
-          it 'does not return the tenancy' do
-            expect(subject).to be_empty
-          end
-        end
-
-        context 'when a tenancy is in one of the accepted patches' do
-          before do
-            create_uh_tenancy_agreement(tenancy_ref: '00001/01', current_balance: 10.0, prop_ref: 'PROP1')
-            create_uh_property(property_ref: 'PROP1', patch_code: 'Z01')
-          end
-
-          it 'includes the tenancy' do
-            expect(subject).to eq(%w[00001/01])
-          end
-        end
-      end
-
-      context 'without a list of acceptable patches given' do
-        let(:gateway) { described_class.new(restrict_patches: true) }
-
-        before do
-          create_uh_tenancy_agreement(tenancy_ref: '00001/01', current_balance: 10.0, prop_ref: 'PROP1')
-          create_uh_property(property_ref: 'PROP1', patch_code: 'B01')
-        end
-
-        it 'returns no tenancies' do
-          expect(subject).to eq([])
-        end
-      end
-    end
   end
 end
