@@ -31,4 +31,10 @@ describe UseCases::FetchCasesByPatch do
       expect(subject.execute.count).to eq(5)
     end
   end
+
+  context 'when no patch is given' do
+    it 'will raise an error' do
+
+    end
+  end
 end
