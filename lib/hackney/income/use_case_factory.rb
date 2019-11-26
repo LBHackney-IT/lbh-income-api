@@ -135,9 +135,8 @@ module Hackney
         )
       end
 
-      def sync_and_send_letter_one
-        UseCases::SyncAndSendLetterOne.new(
-          sync_case_priority: sync_case_priority,
+      def fetch_cases_and_dend_letter_one
+        UseCases::FetchCasesAndSendLetterOne.new(
           fetch_cases_by_patch: fetch_cases_by_patch,
           send_precompiled_letter: send_precompiled_letter
         )
