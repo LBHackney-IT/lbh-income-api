@@ -31,7 +31,7 @@ describe UseCases::SyncAndSendLetterOne do
       allow(sync_and_send_letter_one).to receive(:execute)
 
       expect(sync_case_priority).to have_received(:execute).with(tenancy_ref: tenancy_ref)
-      expect(fetch_cases_by_patch).to have_received(:execute).with(tenancy_ref: tenancy_ref)
+      expect(fetch_cases_by_patch).to have_received(:execute)
       expect(send_manual_precompiled_letter).to have_received(:execute)
         .with(
           username: nil,
