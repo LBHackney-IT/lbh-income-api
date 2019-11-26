@@ -135,7 +135,7 @@ module Hackney
         )
       end
 
-      def fetch_cases_and_dend_letter_one
+      def fetch_cases_and_send_letter_one
         UseCases::FetchCasesAndSendLetterOne.new(
           fetch_cases_by_patch: fetch_cases_by_patch,
           send_precompiled_letter: send_precompiled_letter
