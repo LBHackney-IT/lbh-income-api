@@ -141,8 +141,7 @@ module Hackney
           check_case_classification_and_letter: check_case_classification_and_letter,
           generate_and_store_letter: generate_and_store_letter,
           send_income_collection_letter: send_income_collection_letter_to_gov_notify_job
-        )
-      end
+        end
 
       def send_income_collection_letter_to_gov_notify_job
         Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob
