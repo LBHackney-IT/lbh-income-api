@@ -135,6 +135,18 @@ module Hackney
         )
       end
 
+      def sync_and_send_letter_one
+        UseCases::SyncAndSendLetterOne.new(
+          sync_case_priority: sync_case_priority,
+          fetch_cases_by_patch: fetch_cases_by_patch,
+          send_precompiled_letter: send_precompiled_letter
+        )
+      end
+
+      def fetch_cases_by_patch
+        UseCases::FetchCasesByPatch.new
+      end
+
       def sync_case_priority
         ActiveSupport::Deprecation.warn(
           "SyncCasePriorityJob is deprecated - use external scheduler via 'rake income:sync:enqueue'"
