@@ -1,5 +1,9 @@
 module UseCases
   class FetchCasesByPatch
-    def execute; end
+    PATCH_CODE = ENV.fetch('PATCH_CODE').freeze
+
+    def execute
+      Hackney::Income::Models::CasePriority.where(patch_code: PATCH_CODE)
+    end
   end
 end

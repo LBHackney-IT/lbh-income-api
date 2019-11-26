@@ -8,7 +8,7 @@ module UseCases
 
     def execute(tenancy_ref:, username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:)
       @sync_case_priority.execute(tenancy_ref: tenancy_ref)
-      @fetch_cases_by_patch.execute(tenancy_ref: tenancy_ref)
+      @fetch_cases_by_patch.execute
       @send_manual_precompiled_letter.execute(
         username: username,
         payment_ref: payment_ref,
