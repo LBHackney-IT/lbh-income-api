@@ -1,19 +1,12 @@
 module UseCases
   class FetchCasesAndSendLetterOne
-    def initialize(fetch_cases_by_patch:, send_manual_precompiled_letter:)
-      @fetch_cases_by_patch = fetch_cases_by_patch
+    def initialize(case_ready_for_automation:, send_manual_precompiled_letter:)
+      @case_ready_for_automation = case_ready_for_automation
       @send_manual_precompiled_letter = send_manual_precompiled_letter
     end
 
-    def execute(tenancy_ref:, username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:, patch_code:)
-      @fetch_cases_by_patch.execute(patch_code: patch_code)
-      @send_manual_precompiled_letter.execute(
-        username: username,
-        payment_ref: payment_ref,
-        template_id: template_id,
-        unique_reference: unique_reference,
-        letter_pdf: letter_pdf
-      )
+    def execute(patch_code:, case_priority:)
+      @case_ready_for_automation.execute(patch_code: patch_code, case_priority: case_priority)
     end
   end
 end

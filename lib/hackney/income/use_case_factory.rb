@@ -141,7 +141,8 @@ module Hackney
           check_case_classification_and_letter: check_case_classification_and_letter,
           generate_and_store_letter: generate_and_store_letter,
           send_income_collection_letter: send_income_collection_letter_to_gov_notify_job
-        end
+        )
+      end
 
       def send_income_collection_letter_to_gov_notify_job
         Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob
@@ -159,8 +160,8 @@ module Hackney
         UseCases::CaseReadyForAutomation.new
       end
 
-      def fetch_cases_by_patch
-        UseCases::FetchCasesByPatch.new
+      def case_ready_for_automation
+        UseCases::CaseReadyForAutomation.new
       end
 
       def sync_case_priority
