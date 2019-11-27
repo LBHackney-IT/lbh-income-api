@@ -24,6 +24,19 @@ describe Hackney::PDF::GetTemplatesForUser do
     end
   }
 
+  context 'when getting the template directory paths for the user' do
+    let(:leasehold_path) { Hackney::PDF::GetTemplatesForUser::LEASEHOLD_SERVICES_TEMPLATE_DIRECTORY_PATH }
+    let(:income_path) { Hackney::PDF::GetTemplatesForUser::INCOME_COLLECTION_TEMPLATE_DIRECTORY_PATH }
+
+    it 'checks the leasehold template path exists' do
+     expect(Pathname.new(leasehold_path)).to exist
+  end
+
+    it 'checks the income template path exists' do
+      expect(Pathname.new(income_path)).to exist
+    end
+  end
+
   context 'when user is in the leasehold services group' do
     let(:user_groups) { ['leasehold-group'] }
 

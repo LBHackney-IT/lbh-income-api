@@ -21,6 +21,16 @@ describe Hackney::ServiceCharge::Letter::BeforeAction do
   let(:tenure_type) { nil }
   let(:original_lease_date) { nil }
 
+  context 'when the letter is being generated' do
+    it 'checks that the template file exists' do
+      files = Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
+
+      files.each do |file|
+        expect(Pathname.new(file)).to exist
+      end
+    end
+  end
+
   context 'when a money judgement and charging order exists' do
     let(:letter) { described_class.new(letter_params) }
 

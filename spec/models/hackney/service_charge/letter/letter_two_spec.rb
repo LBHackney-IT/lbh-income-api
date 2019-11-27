@@ -14,6 +14,16 @@ describe Hackney::ServiceCharge::Letter::LetterTwo do
     }
   }
 
+  context 'when the letter is being generated' do
+    it 'checks that the template file exists' do
+      files = Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
+
+      files.each do |file|
+        expect(Pathname.new(file)).to exist
+      end
+    end
+  end
+
   describe 'fetch letter 1 date' do
     let(:letter) { described_class.new(letter_params) }
 
