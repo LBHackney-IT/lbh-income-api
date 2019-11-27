@@ -4,11 +4,11 @@ describe UseCases::FetchCasesByPatch do
   subject { described_class.new }
 
   let(:tenancy_model) { Hackney::Income::Models::CasePriority }
+  let(:patch_code_1) { 'ABC' }
+  let(:patch_code_2) { 'XYZ' }
+  let(:patch_code_not_in_patch_list) { 'BAA' }
 
   context 'when fetching cases by patch' do
-    let(:patch_code_1) { ENV.fetch('PATCH_CODE') }
-    let(:patch_code_2) { 'E02' }
-
     before do
       5.times do
         tenancy_model.create!(
@@ -28,13 +28,13 @@ describe UseCases::FetchCasesByPatch do
     end
 
     it 'will return only the cases within a given patch' do
-      expect(subject.execute.count).to eq(5)
+      expect(subject.execute(patch_code: patch_code_1).count).to eq(5)
     end
   end
 
   context 'when no patch is given' do
     it 'will raise an error' do
-
+      expect { subject.execute(patch_code: patch_code_not_in_patch_list) }.to raise_error(ArgumentError)
     end
   end
 end

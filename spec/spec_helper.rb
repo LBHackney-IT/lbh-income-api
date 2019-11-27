@@ -2,7 +2,7 @@ ENV['RAILS_ENV'] = 'test'
 
 ENV['TENANCY_API_HOST'] = 'example.com'
 ENV['TENANCY_API_KEY'] = '1234'
-ENV['PATCH_CODE'] = 'ABC'
+ENV['PATCH_CODE'] = "['ABC', 'DEF', XYZ]"
 
 require 'support/faker'
 require 'support/tenancy_helper'

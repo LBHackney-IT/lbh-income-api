@@ -5,8 +5,8 @@ module UseCases
       @send_manual_precompiled_letter = send_manual_precompiled_letter
     end
 
-    def execute(tenancy_ref:, username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:)
-      @fetch_cases_by_patch.execute
+    def execute(tenancy_ref:, username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:, patch_code:)
+      @fetch_cases_by_patch.execute(patch_code: patch_code)
       @send_manual_precompiled_letter.execute(
         username: username,
         payment_ref: payment_ref,
