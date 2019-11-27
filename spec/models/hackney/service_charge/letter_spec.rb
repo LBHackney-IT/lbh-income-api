@@ -96,7 +96,7 @@ describe Hackney::ServiceCharge::Letter do
         letter_params: letter_params,
         template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS.sample
       )
-      expected_balance =  format('%.2f',letter_params[:total_collectable_arrears_balance].to_f-letter_params[:money_judgement].to_f)
+      expected_balance = format('%.2f', letter_params[:total_collectable_arrears_balance].to_f - letter_params[:money_judgement].to_f)
       expect(letter.lba_balance).to eq(expected_balance.to_s)
     end
   end

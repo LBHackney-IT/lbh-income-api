@@ -29,8 +29,8 @@ describe Hackney::PDF::GetTemplatesForUser do
     let(:income_path) { Hackney::PDF::GetTemplatesForUser::INCOME_COLLECTION_TEMPLATE_DIRECTORY_PATH }
 
     it 'checks the leasehold template path exists' do
-     expect(Pathname.new(leasehold_path)).to exist
-  end
+      expect(Pathname.new(leasehold_path)).to exist
+    end
 
     it 'checks the income template path exists' do
       expect(Pathname.new(income_path)).to exist
