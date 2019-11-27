@@ -15,11 +15,13 @@ describe UseCases::FetchCasesAndSendLetterOne do
   let(:template_id) { Faker::Lorem.characters(8) }
   let(:unique_reference) { Faker::Lorem.characters(8) }
   let(:letter_pdf) { '' }
+  let(:patch_code) { 'ABC' }
 
   context 'when sending letter 1' do
     it 'will call the sync_case_priority, fetch_cases_by_patch and send_manual_precompiled_letter with the correct data' do
       fetch_cases_and_send_letter_one.execute(
         tenancy_ref: tenancy_ref,
+        patch_code: patch_code,
         username: nil,
         payment_ref: nil,
         template_id: template_id,
@@ -28,7 +30,7 @@ describe UseCases::FetchCasesAndSendLetterOne do
       )
       allow(fetch_cases_and_send_letter_one).to receive(:execute)
 
-      expect(fetch_cases_by_patch).to have_received(:execute)
+      expect(fetch_cases_by_patch).to have_received(:execute).with(patch_code: patch_code)
       expect(send_manual_precompiled_letter).to have_received(:execute)
         .with(
           username: nil,
