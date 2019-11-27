@@ -87,8 +87,7 @@ describe Hackney::ServiceCharge::Letter do
 
       expect(letter.errors).to eq [
         { message: 'missing mandatory field', name: 'original_lease_date' },
-        { message: 'missing mandatory field', name: 'date_of_current_purchase_assignment' },
-        { message: 'missing mandatory field', name: 'lba_balance' }
+        { message: 'missing mandatory field', name: 'date_of_current_purchase_assignment' }
       ]
     end
 
