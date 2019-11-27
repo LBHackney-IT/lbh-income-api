@@ -137,13 +137,13 @@ module Hackney
 
       def fetch_cases_and_send_letter_one
         UseCases::FetchCasesAndSendLetterOne.new(
-          fetch_cases_by_patch: fetch_cases_by_patch,
+          case_ready_for_automation: case_ready_for_automation,
           send_precompiled_letter: send_precompiled_letter
         )
       end
 
-      def fetch_cases_by_patch
-        UseCases::FetchCasesByPatch.new
+      def case_ready_for_automation
+        UseCases::CaseReadyForAutomation.new
       end
 
       def sync_case_priority
