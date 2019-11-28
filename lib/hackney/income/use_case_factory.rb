@@ -160,10 +160,6 @@ module Hackney
         UseCases::CaseReadyForAutomation.new
       end
 
-      def case_ready_for_automation
-        UseCases::CaseReadyForAutomation.new
-      end
-
       def sync_case_priority
         ActiveSupport::Deprecation.warn(
           "SyncCasePriorityJob is deprecated - use external scheduler via 'rake income:sync:enqueue'"
