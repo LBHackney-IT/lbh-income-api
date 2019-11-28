@@ -15,16 +15,6 @@ module Hackney
           criteria: priorities.fetch(:criteria),
           weightings: priorities.fetch(:weightings)
         )
-
-        check_automation_of_case = UseCases::CaseReadyForAutomation.execute(patch_code: case_priority.patch_code)
-
-        if check_automation_of_case == true
-          if case_priority.classification[:send_letter_one]
-            UsesCases::GenerateAndStoreLetter(payment_ref:, template_id:, user:)         # generate letter_1
-            Hackney::Notification::SendManualPrecompiledLetter()                        # send letter_1
-          end
-        end
-
         nil
       end
     end
