@@ -135,11 +135,25 @@ module Hackney
         )
       end
 
-      def fetch_cases_and_send_letter_one
-        UseCases::FetchCasesAndSendLetterOne.new(
+      def automate_sending_letters
+        UseCases::AutomateSendingLetters.new(
           case_ready_for_automation: case_ready_for_automation,
-          send_precompiled_letter: send_precompiled_letter
+          check_case_classification_and_letter: check_case_classification_and_letter,
+          generate_and_store_letter: generate_and_store_letter,
+          send_income_collection_letter: send_income_collection_letter_to_gov_notify_job
         )
+      end
+
+      def send_income_collection_letter_to_gov_notify_job
+        Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob
+      end
+
+      def generate_and_store_letter
+        UsesCases::GenerateAndStoreLetter.new
+      end
+
+      def check_case_classification_and_letter
+        UseCases::CheckCaseClassificationAndLetter.new
       end
 
       def case_ready_for_automation
