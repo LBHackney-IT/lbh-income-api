@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe UseCases::AutomateSendingLetters do
+  include MockAwsHelper
+
   let(:automate_sending_letters) {
     described_class.new(case_ready_for_automation: case_ready_for_automation,
                         check_case_classification_and_letter: check_case_classification_and_letter,
@@ -22,7 +24,6 @@ describe UseCases::AutomateSendingLetters do
   }
 
   let(:letter) { 'income_collection_letter_1' }
-  let(:automted_user) { Hackney::Domain::User.new }
 
   context 'when the environment does not allow automation' do
     before do
@@ -46,6 +47,18 @@ describe UseCases::AutomateSendingLetters do
     before do
       expect(automate_sending_letters).to receive(:enviornment_allow_to_send_automated_letters?).and_return(true)
       expect(check_case_classification_and_letter).to receive(:execute).with(case_priority: case_priority).and_return(letter)
+    end
+
+    context 'when allowing a specific user to send letter 1 and 2' do
+      before do
+        mock_aws_client
+      end
+
+      let(:generate_and_store_letter) { UseCases::GenerateAndStoreLetter.new }
+
+      it 'will allow an income collection user to generate and store letter 1 and 2' do
+        automate_sending_letters.execute(case_priority: case_priority)
+      end
     end
 
     it 'does call `#automate_letters`' do
