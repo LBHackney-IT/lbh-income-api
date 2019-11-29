@@ -14,6 +14,8 @@ module UseCases
     private
 
     def automate_letters(case_priority:)
+      automted_user = Hackney::Domain::User.new
+
       # automted_user = Hackney::Domain::User.new.tap do |u|
       #   u.groups = ['income-collection']
       #   u.name = "SYSTEM - RENTS"
