@@ -14,21 +14,25 @@ module UseCases
     private
 
     def automate_letters(case_priority:)
+      validate_income_collection_letter_can_be_sent?(case_priority) if @case_ready_for_automation.execute(patch_code: case_priority.patch_code)
+    end
+
+    def validate_income_collection_letter_can_be_sent?(case_priority)
       income_collection_letters = %w[income_collection_letter_1 income_collection_letter_2]
 
-      if @case_ready_for_automation.execute(patch_code: case_priority[:patch_code])
-        letter_name = @case_classification_to_letter_type_map.execute(case_priority: case_priority)
-        if income_collection_letters.include?(letter_name)
-          generate_letter = @generate_and_store_letter.execute(
-            payment_ref: nil,
-            tenancy_ref: case_priority[:tenancy_ref],
-            template_id: letter_name,
-            user: generate_income_collection_user
-          )
-          @send_income_collection_letter.perform_later(document_id: generate_letter[:document_id])
-          true
-        end
-      end
+      letter_name = @case_classification_to_letter_type_map.execute(case_priority: case_priority)
+
+      return nil unless income_collection_letters.include?(letter_name)
+
+      generate_letter = @generate_and_store_letter.execute(
+        payment_ref: nil,
+        tenancy_ref: case_priority.tenancy_ref,
+        template_id: letter_name,
+        user: generate_income_collection_user
+      )
+      @send_income_collection_letter.perform_later(document_id: generate_letter[:document_id])
+
+      true
     end
 
     def enviornment_allow_to_send_automated_letters?
