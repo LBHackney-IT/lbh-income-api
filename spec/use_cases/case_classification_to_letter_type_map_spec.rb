@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UseCases::CheckCaseClassificationAndLetter do
+describe UseCases::CaseClassificationToLetterTypeMap do
   subject { described_class.new }
 
   context 'when checking a cases classification and letter for letter 1' do

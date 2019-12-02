@@ -1,7 +1,8 @@
 module Hackney
   module Income
     class SyncCasePriority
-      def initialize(prioritisation_gateway:, stored_tenancies_gateway:)
+      def initialize(prioritisation_gateway:, stored_tenancies_gateway:, automate_sending_letters:)
+        @automate_sending_letters = automate_sending_letters
         @prioritisation_gateway = prioritisation_gateway
         @stored_tenancies_gateway = stored_tenancies_gateway
       end
@@ -15,6 +16,9 @@ module Hackney
           criteria: priorities.fetch(:criteria),
           weightings: priorities.fetch(:weightings)
         )
+
+        @automate_sending_letters.execute(case_priority: case_priority)
+
         nil
       end
     end

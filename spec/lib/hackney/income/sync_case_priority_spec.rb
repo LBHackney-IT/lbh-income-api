@@ -19,8 +19,11 @@ describe Hackney::Income::SyncCasePriority do
     )
   end
 
+  let(:automate_sending_letters) { spy }
+
   let(:sync_case) do
     described_class.new(
+      automate_sending_letters: automate_sending_letters,
       prioritisation_gateway: prioritisation_gateway,
       stored_tenancies_gateway: stored_tenancies_gateway
     )
@@ -40,6 +43,26 @@ describe Hackney::Income::SyncCasePriority do
         weightings: weightings
       )
 
+      subject
+    end
+  end
+
+  context 'when given a case priority' do
+    let(:tenancy_ref) { '000009/01' }
+    let(:priority_band) { :green }
+    let(:priority_score) { 1000 }
+
+    let(:case_priority) {
+      build(:case_priority,
+            tenancy_ref: tenancy_ref,
+            classification: :send_letter_one,
+            patch_code: Faker::Number.number(4))
+    }
+
+    it 'calls the automate_sending_letters usecase' do
+      expect(stored_tenancies_gateway).to receive(:store_tenancy).and_return(case_priority)
+
+      expect(automate_sending_letters).to receive(:execute).with(case_priority: case_priority)
       subject
     end
   end
