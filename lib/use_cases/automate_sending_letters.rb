@@ -14,10 +14,8 @@ module UseCases
     private
 
     def automate_letters(case_priority:)
-      validate_income_collection_letter_can_be_sent?(case_priority) if @case_ready_for_automation.execute(patch_code: case_priority.patch_code)
-    end
+      return false unless @case_ready_for_automation.execute(patch_code: case_priority.patch_code)
 
-    def validate_income_collection_letter_can_be_sent?(case_priority)
       income_collection_letters = %w[income_collection_letter_1 income_collection_letter_2]
 
       letter_name = @case_classification_to_letter_type_map.execute(case_priority: case_priority)
