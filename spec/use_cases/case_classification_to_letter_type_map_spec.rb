@@ -8,10 +8,9 @@ describe UseCases::CaseClassificationToLetterTypeMap do
     let(:letter_1) { 'income_collection_letter_1' }
 
     let(:case_priority_letter_1) {
-      {
-        tenancy_ref: Faker::Number.number(4),
-        classification: send_letter_one
-      }
+      build(:case_priority,
+            tenancy_ref: Faker::Number.number(4),
+            classification: :send_letter_one)
     }
 
     it 'successfully checks the classification for letter 1' do
@@ -24,10 +23,9 @@ describe UseCases::CaseClassificationToLetterTypeMap do
     let(:letter_2) { 'income_collection_letter_2' }
 
     let(:case_priority_letter_2) {
-      {
-        tenancy_ref: Faker::Number.number(4),
-        classification: send_letter_two
-      }
+      build(:case_priority,
+            tenancy_ref: Faker::Number.number(4),
+            classification: :send_letter_two)
     }
 
     it 'successfully checks the classification for letter 2' do
