@@ -167,6 +167,8 @@ module Hackney
         end
 
         def eviction_date
+          return nil if date_not_valid?(attributes[:eviction_date])
+
           attributes[:eviction_date]
         end
 
