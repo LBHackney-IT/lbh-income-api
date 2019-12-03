@@ -7,13 +7,13 @@ describe UseCases::AutomateSendingLetters do
     described_class.new(case_ready_for_automation: case_ready_for_automation,
                         case_classification_to_letter_type_map: case_classification_to_letter_type_map,
                         generate_and_store_letter: generate_and_store_letter,
-                        send_income_collection_letter: send_income_collection_letter)
+                        send_letter_to_gov_notify: send_letter_to_gov_notify)
   }
 
   let(:case_ready_for_automation) { spy }
   let(:case_classification_to_letter_type_map) { spy }
   let(:generate_and_store_letter) { spy }
-  let(:send_income_collection_letter) { spy }
+  let(:send_letter_to_gov_notify) { spy }
 
   let(:case_priority) {
     build(:case_priority,
@@ -35,8 +35,8 @@ describe UseCases::AutomateSendingLetters do
       automate_sending_letters.execute(case_priority: case_priority)
     end
 
-    it 'does not interact with the send_income_collection_letter job' do
-      expect(send_income_collection_letter).not_to receive(:perform_later)
+    it 'does not interact with the send_letter_to_gov_notify job' do
+      expect(send_letter_to_gov_notify).not_to receive(:perform_later)
 
       automate_sending_letters.execute(case_priority: case_priority)
     end
@@ -96,8 +96,8 @@ describe UseCases::AutomateSendingLetters do
       automate_sending_letters.execute(case_priority: case_priority)
     end
 
-    it 'does interact with the #send_income_collection_letter job' do
-      expect(send_income_collection_letter).to receive(:perform_later)
+    it 'does interact with the #send_letter_to_gov_notify job' do
+      expect(send_letter_to_gov_notify).to receive(:perform_later)
 
       automate_sending_letters.execute(case_priority: case_priority)
     end
@@ -115,9 +115,9 @@ describe UseCases::AutomateSendingLetters do
     context 'when sending a bogus letter' do
       let(:letter) { 'bogus_letter' }
 
-      it 'does not call #generate_and_store_letter or #send_income_collection_letter' do
+      it 'does not call #generate_and_store_letter or #send_letter_to_gov_notify' do
         expect(generate_and_store_letter).not_to receive(:execute)
-        expect(send_income_collection_letter).not_to receive(:perform_later)
+        expect(send_letter_to_gov_notify).not_to receive(:perform_later)
 
         automate_sending_letters.execute(case_priority: case_priority)
       end
@@ -144,7 +144,7 @@ describe UseCases::AutomateSendingLetters do
 
       it 'will return nil' do
         expect(generate_and_store_letter).to receive(:execute).with(hash_including(template_id: 'income_collection_letter_1'))
-        expect(send_income_collection_letter).to receive(:perform_later)
+        expect(send_letter_to_gov_notify).to receive(:perform_later)
 
         expect(automate_sending_letters.execute(case_priority: case_priority)).to eq(true)
       end
@@ -155,9 +155,9 @@ describe UseCases::AutomateSendingLetters do
 
       it 'will return nil' do
         expect(generate_and_store_letter).not_to receive(:execute)
-        expect(send_income_collection_letter).not_to receive(:perform_later)
+        expect(send_letter_to_gov_notify).not_to receive(:perform_later)
 
-        expect(automate_sending_letters.execute(case_priority: case_priority)).to be_nil
+        expect(automate_sending_letters.execute(case_priority: case_priority)).to eq(false)
       end
     end
   end

@@ -140,12 +140,12 @@ module Hackney
           case_ready_for_automation: case_ready_for_automation,
           case_classification_to_letter_type_map: case_classification_to_letter_type_map,
           generate_and_store_letter: generate_and_store_letter,
-          send_income_collection_letter: send_income_collection_letter_to_gov_notify_job
+          send_letter_to_gov_notify: send_letter_to_gov_notify
         )
       end
 
-      def send_income_collection_letter_to_gov_notify_job
-        Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob
+      def send_letter_to_gov_notify
+        Hackney::Income::Jobs::SendLetterToGovNotifyJob
       end
 
       def generate_and_store_letter

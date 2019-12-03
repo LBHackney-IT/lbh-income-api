@@ -1,10 +1,10 @@
 module UseCases
   class AutomateSendingLetters
-    def initialize(case_ready_for_automation:, case_classification_to_letter_type_map:, generate_and_store_letter:, send_income_collection_letter:)
+    def initialize(case_ready_for_automation:, case_classification_to_letter_type_map:, generate_and_store_letter:, send_letter_to_gov_notify:)
       @case_ready_for_automation = case_ready_for_automation
       @case_classification_to_letter_type_map = case_classification_to_letter_type_map
       @generate_and_store_letter = generate_and_store_letter
-      @send_income_collection_letter = send_income_collection_letter
+      @send_letter_to_gov_notify = send_letter_to_gov_notify
     end
 
     def execute(case_priority:)
@@ -20,7 +20,7 @@ module UseCases
 
       letter_name = @case_classification_to_letter_type_map.execute(case_priority: case_priority)
 
-      return nil unless income_collection_letters.include?(letter_name)
+      return false unless income_collection_letters.include?(letter_name)
 
       generate_letter = @generate_and_store_letter.execute(
         payment_ref: nil,
@@ -28,7 +28,7 @@ module UseCases
         template_id: letter_name,
         user: generate_income_collection_user
       )
-      @send_income_collection_letter.perform_later(document_id: generate_letter[:document_id])
+      @send_letter_to_gov_notify.perform_later(document_id: generate_letter[:document_id])
 
       true
     end
