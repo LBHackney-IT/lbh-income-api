@@ -18,9 +18,9 @@ module Hackney
       LETTER_1_IN_ARREARS_SO = 'LS1'.freeze
       LETTER_2_IN_ARREARS_SO = 'LS2'.freeze
 
-      LETTER_1_IN_ARREARS_SENT = 'ZR1'.freeze
+      INCOME_COLLECTION_LETTER_1 = 'IC1'.freeze
 
-      LETTER_2_IN_ARREARS_SENT = 'ZR2'.freeze
+      INCOME_COLLECTION_LETTER_2 = 'IC2'.freeze
 
       PRE_NOSP_WARNING_LETTER_SENT = 'not yet defined in UH'.freeze
     end

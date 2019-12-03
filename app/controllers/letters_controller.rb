@@ -21,13 +21,9 @@ class LettersController < ApplicationController
   end
 
   def send_letter
-    document_model = Hackney::Cloud::Document.find_by!(uuid: params[:uuid])
+    document = Hackney::Cloud::Document.find_by!(uuid: params[:uuid])
 
-    if income_collection_document?(document_model)
-      Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob.perform_later(document_id: document_model.id)
-    else
-      Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_later(document_id: document_model.id)
-    end
+    Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_later(document_id: document.id)
   end
 
   private

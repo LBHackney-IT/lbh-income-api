@@ -226,7 +226,7 @@ RSpec.describe 'Letters', type: :request do
       it 'adds a `Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob` to ActiveJob' do
         expect {
           post messages_letters_send_path, params: { uuid: uuid, username: username, email: email }
-        }.to have_enqueued_job(Hackney::Income::Jobs::SendIncomeCollectionLetterToGovNotifyJob)
+        }.to have_enqueued_job(Hackney::Income::Jobs::SendLetterToGovNotifyJob)
       end
 
       context 'with a bogus UUID' do

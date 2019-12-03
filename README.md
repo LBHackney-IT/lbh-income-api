@@ -8,7 +8,7 @@ It is used to store users, prioritise cases, assign cases evenly to users, and r
 
 - Rails as a web framework.
 - Puma as a web server.
-- Delayed Job for running background and scheduled tasks.
+- Sidekiq for running background and scheduled tasks.
 
 ## Development practices
 
@@ -124,7 +124,16 @@ In addition, 2 different users(or roles) are needed to manage the Customer Manag
 - A user with permissions to manage the keys
 - A user with permissions to use the keys (to encrypt/decrypt document)
 
-For more: [AWS Client Side encryption] https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingClientSideEncryption.html
+For more: [AWS Client Side encryption](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingClientSideEncryption.html)
+
+## Background Workers
+
+We use Sidekiq to perform background jobs and act as a scheduler (`cron`).
+
+See `schedule.yml` for the definitions of what `cron` jobs we run. Read the [Sideqik Scheduler Docs](https://github.com/moove-it/sidekiq-scheduler) for how to setup a scheduled job.
+
+If you need to add environment variables, you need to update the ECS Task Definition.
+
 
 ## Contacts
 

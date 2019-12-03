@@ -42,7 +42,7 @@ module Hackney
 
         def send_letter_two?
           valid_actions = [
-            Hackney::Tenancy::ActionCodes::LETTER_1_IN_ARREARS_SENT
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1
           ]
 
           @criteria.last_communication_action.in?(valid_actions) &&
@@ -55,7 +55,7 @@ module Hackney
 
         def send_warning_letter?
           valid_actions = [
-            Hackney::Tenancy::ActionCodes::LETTER_2_IN_ARREARS_SENT
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2
           ]
 
           @criteria.last_communication_action.in?(valid_actions) &&

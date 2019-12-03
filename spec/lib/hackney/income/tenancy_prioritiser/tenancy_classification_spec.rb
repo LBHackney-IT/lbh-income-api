@@ -139,7 +139,7 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
         let(:balance) { weekly_rent }
 
         last_communication_actions = {
-          letter_one_in_arrears_auto: 'ZR1'
+          letter_one_in_arrears_auto: 'IC1'
         }
 
         last_communication_actions.each do |key, last_communication_action|
@@ -172,7 +172,7 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
 
     context 'when the arrears are greater than or equal to three weeks rent and less than 4 week rent' do
       last_communication_actions = {
-        letter_two_in_arrears: 'ZR2'
+        letter_two_in_arrears: 'IC2'
       }
 
       last_communication_actions.each do |key, last_communication_action|

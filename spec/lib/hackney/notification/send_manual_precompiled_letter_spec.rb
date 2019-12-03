@@ -37,19 +37,25 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
 
     it { expect(subject).to be_a Hackney::Notification::Domain::NotificationReceipt }
     it { expect(subject.body).to include(unique_reference) }
-    ['Letter 1 in arrears FH', 'Letter 2 in arrears FH',
-     'Letter 1 in arrears LH', 'Letter 2 in arrears LH',
-     'Letter 1 in arrears SO', 'Letter 2 in arrears SO'].each do |template|
-      it {
-        expect {
-          send_precompiled_letter.execute(
-            unique_reference: unique_reference,
-            letter_pdf: test_file,
-            payment_ref: payment_ref,
-            template_id: template
-          )
-        } .not_to raise_error
-      }
+
+    context 'when templates write into action diary they should have action codes associated with them' do
+      [
+        'letter 1 in arrears FH', 'letter 1 in arrears LH',
+        'letter 1 in arrears SO', 'letter 2 in arrears FH',
+        'letter 2 in arrears LH', 'letter 2 in arrears SO',
+        'income collection letter 1', 'income collection letter 2'
+      ].each do |template|
+        it {
+          expect {
+            send_precompiled_letter.execute(
+              unique_reference: unique_reference,
+              letter_pdf: test_file,
+              payment_ref: payment_ref,
+              template_id: template
+            )
+          } .not_to raise_error
+        }
+      end
     end
   end
 end
