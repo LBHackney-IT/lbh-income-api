@@ -48,45 +48,11 @@ describe UseCases::AutomateSendingLetters do
       expect(case_classification_to_letter_type_map).to receive(:execute).with(case_priority: case_priority).and_return(letter)
     end
 
-    context 'when allowing a specific user to send letter 1 and 2' do
-      before do
-        mock_aws_client
-      end
-
+    context 'with a concrete implementation of #GenerateAndStoreLetter' do
       let(:generate_and_store_letter) { UseCases::GenerateAndStoreLetter.new }
 
-      it 'will only allow an income collection user to generate and store letter 1' do
+      it 'with no valid tenancy ref, raises a tenancy not found error' do
         expect { automate_sending_letters.execute(case_priority: case_priority) }.to raise_error(Hackney::Income::TenancyNotFoundError)
-        # This error is expected as we dont want this to
-      end
-
-      context 'when not an income collection user' do
-        let(:user) {
-          Hackney::Domain::User.new.tap do |u|
-            u.groups = groups
-            u.name = 'AUTOMATED SENDING - INCOME COLLECTION LETTER'
-          end
-        }
-
-        before do
-          expect(automate_sending_letters).to receive(:generate_income_collection_user).and_return(user)
-        end
-
-        context 'when a leasehold user' do
-          let(:groups) { ['leasehold-services'] }
-
-          it 'raises' do
-            expect { automate_sending_letters.execute(case_priority: case_priority) }.to raise_error(TypeError)
-          end
-        end
-
-        context 'when a user has no groups' do
-          let(:groups) { [] }
-
-          it 'raises' do
-            expect { automate_sending_letters.execute(case_priority: case_priority) }.to raise_error(TypeError)
-          end
-        end
       end
     end
 

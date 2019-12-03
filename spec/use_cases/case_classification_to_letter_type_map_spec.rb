@@ -4,7 +4,6 @@ describe UseCases::CaseClassificationToLetterTypeMap do
   subject { described_class.new }
 
   context 'when checking a cases classification and letter for letter 1' do
-    let(:send_letter_one) { 'send_letter_one' }
     let(:letter_1) { 'income_collection_letter_1' }
 
     let(:case_priority_letter_1) {
@@ -19,7 +18,6 @@ describe UseCases::CaseClassificationToLetterTypeMap do
   end
 
   context 'when checking a cases classification and letter for letter 2' do
-    let(:send_letter_two) { 'send_letter_two' }
     let(:letter_2) { 'income_collection_letter_2' }
 
     let(:case_priority_letter_2) {
