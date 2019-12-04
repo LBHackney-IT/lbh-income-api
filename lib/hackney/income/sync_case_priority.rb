@@ -17,7 +17,7 @@ module Hackney
           weightings: priorities.fetch(:weightings)
         )
 
-        @automate_sending_letters.execute(case_priority: case_priority)
+        @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
 
         nil
       end
