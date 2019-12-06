@@ -7,7 +7,7 @@ module UseCases
     private
 
     def patch_codes_allowed_for_automation
-      patch_codes_allowed_for_automation_env.to_s.split(',')
+      patch_codes_allowed_for_automation_env.to_s.split(',').map(&:squish)
     end
 
     def patch_codes_allowed_for_automation_env
