@@ -28,7 +28,7 @@ module UseCases
         template_id: letter_name,
         user: generate_income_collection_user
       )
-      @send_letter_to_gov_notify.perform_later(document_id: generate_letter[:document_id])
+      @send_letter_to_gov_notify.perform_later(document_id: generate_letter[:document_id], tenancy_ref: case_priority.tenancy_ref)
 
       true
     end

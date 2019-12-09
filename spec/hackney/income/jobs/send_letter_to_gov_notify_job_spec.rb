@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe Hackney::Income::Jobs::SendLetterToGovNotifyJob do
+  let(:tenancy_ref) { '12345' }
+
   let(:document_id) do
     Hackney::Cloud::Document.create(
       filename: 'test_file.txt',
@@ -24,11 +26,18 @@ describe Hackney::Income::Jobs::SendLetterToGovNotifyJob do
 
   it 'updates with message id' do
     doc = Hackney::Cloud::Document.find(document_id)
-    expect { described_class.perform_now(document_id: document_id) }.to change { doc.reload.ext_message_id }.from(nil).to(message_receipt.message_id)
+    expect {
+      described_class.perform_now(
+        document_id: document_id,
+        tenancy_ref: tenancy_ref
+      )
+    } .to change { doc.reload.ext_message_id }.from(nil).to(
+      message_receipt.message_id
+    )
   end
 
   it 'updates with letter status' do
     doc = Hackney::Cloud::Document.find(document_id)
-    expect { described_class.perform_now(document_id: document_id) }.to change { doc.reload.status }.from('uploaded').to('queued')
+    expect { described_class.perform_now(document_id: document_id, tenancy_ref: tenancy_ref) }.to change { doc.reload.status }.from('uploaded').to('queued')
   end
 end

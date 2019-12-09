@@ -1,7 +1,7 @@
 module Hackney
   module Notification
     class SendManualPrecompiledLetter < BaseManualGateway
-      def execute(username: nil, payment_ref: nil, template_id:, unique_reference:, letter_pdf:)
+      def execute(username: nil, payment_ref: nil, tenancy_ref:, template_id:, unique_reference:, letter_pdf:)
         send_letter_response =
           notification_gateway.send_precompiled_letter(
             unique_reference: unique_reference,
@@ -11,7 +11,11 @@ module Hackney
         # FIXME: this must be in a background job => UH is unreliable
         # TODO: create job to accept exact same args as add_action_diary_usecase
 
-        tenancy_ref = leasehold_gateway.get_tenancy_ref(payment_ref: payment_ref).dig(:tenancy_ref)
+        if template_id.include? 'income'
+          tenancy_ref = tenancy_ref
+        else
+          tenancy_ref = leasehold_gateway.get_tenancy_ref(payment_ref: payment_ref).dig(:tenancy_ref)
+        end
 
         ad_code = action_code(template_id: template_id)
         Rails.logger.info "writing action diary code #{ad_code} from template_id: #{template_id} for Letter '#{unique_reference}'"

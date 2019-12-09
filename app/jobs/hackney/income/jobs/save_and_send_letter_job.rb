@@ -7,7 +7,7 @@ module Hackney
 
         after_perform do
           Rails.logger.info 'after_perform enqueuing send letter to gov notify'
-          Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_now(document_id: @document_id)
+          Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_now(document_id: @document_id, tenancy_ref: nil)
         end
 
         def perform(letter_html:, bucket_name:, filename:, document_id:)
