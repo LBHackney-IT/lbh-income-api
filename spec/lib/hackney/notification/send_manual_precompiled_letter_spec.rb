@@ -25,7 +25,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
   context 'when sending an automated income collection letter' do
     let(:subject) do
       send_precompiled_letter.execute(
-        payment_ref: nil,
+        payment_ref: payment_ref,
         tenancy_ref: tenancy_ref,
         template_id: 'income collection letter',
         unique_reference: unique_reference,
@@ -46,7 +46,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
         unique_reference: unique_reference,
         letter_pdf: test_file,
         payment_ref: payment_ref,
-        tenancy_ref: tenancy_ref,
+        tenancy_ref: nil,
         template_id: template_id
       )
     end
@@ -62,7 +62,8 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
       [
         'letter 1 in arrears FH', 'letter 1 in arrears LH',
         'letter 1 in arrears SO', 'letter 2 in arrears FH',
-        'letter 2 in arrears LH', 'letter 2 in arrears SO'
+        'letter 2 in arrears LH', 'letter 2 in arrears SO',
+        'income collection letter 1', 'income collection letter 2'
       ].each do |template|
         it {
           expect {
@@ -70,7 +71,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
               unique_reference: unique_reference,
               letter_pdf: test_file,
               payment_ref: payment_ref,
-              tenancy_ref: tenancy_ref,
+              tenancy_ref: nil,
               template_id: template
             )
           } .not_to raise_error
