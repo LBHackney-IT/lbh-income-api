@@ -4,6 +4,9 @@ describe LettersController, type: :controller do
   let(:template_path) { 'path/to/temp' }
   let(:template_id) { 'letter_1_in_arrears_FH' }
   let(:template_name) { 'Letter 1 In Arrears FH' }
+  let(:tenancy_ref) { '12345' }
+  let(:uuid) { 'uuid' }
+
   let(:user) {
     {
       name: Faker::Name.name,
@@ -32,6 +35,10 @@ describe LettersController, type: :controller do
         }.to_json
       )
     end
+  end
+
+  describe '#send_letter' do
+
   end
 
   describe '#create' do
