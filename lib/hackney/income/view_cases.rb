@@ -77,7 +77,8 @@ module Hackney
           courtdate: assigned_tenancy.fetch(:courtdate),
           court_outcome: assigned_tenancy.fetch(:court_outcome),
           eviction_date: assigned_tenancy.fetch(:eviction_date),
-          classification: assigned_tenancy.fetch(:classification)
+          classification: assigned_tenancy.fetch(:classification),
+          patch_code: assigned_tenancy.fetch(:patch_code)
         }
       end
     end
