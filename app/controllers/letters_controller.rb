@@ -22,8 +22,9 @@ class LettersController < ApplicationController
 
   def send_letter
     document = Hackney::Cloud::Document.find_by!(uuid: params[:uuid])
+    tenancy_ref = params[:tenancy_ref]
 
-    Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_later(document_id: document.id)
+    Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_later(document_id: document.id, tenancy_ref: tenancy_ref)
   end
 
   private
