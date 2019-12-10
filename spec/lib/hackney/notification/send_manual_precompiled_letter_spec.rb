@@ -26,7 +26,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
       send_precompiled_letter.execute(
         payment_ref: nil,
         tenancy_ref: tenancy_ref,
-        template_id: 'income collection letter',
+        template_id: 'income_collection_letter_1',
         unique_reference: unique_reference,
         letter_pdf: test_file
       )
@@ -43,7 +43,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
       send_precompiled_letter.execute(
         payment_ref: payment_ref,
         tenancy_ref: nil,
-        template_id: 'Letter 1 in arrears FH',
+        template_id: 'letter_1_in_arrears_FH',
         unique_reference: unique_reference,
         letter_pdf: test_file
       )
