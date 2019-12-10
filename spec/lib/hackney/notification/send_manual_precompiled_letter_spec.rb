@@ -15,17 +15,16 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
 
   let(:test_file) { File.open('spec/test_files/test_pdf.pdf', 'rb') }
   let(:unique_reference) { SecureRandom.uuid }
-  let(:payment_ref) { 'payment_ref' }
-  let(:tenancy_ref) { '12234' }
 
   before do
     allow(add_action_diary_usecase).to receive(:execute)
   end
 
-  context 'when sending an automated income collection letter' do
+  context 'when sending an income collection letter' do
+    let(:tenancy_ref) { Faker::Number.number(6) }
     let(:subject) do
       send_precompiled_letter.execute(
-        payment_ref: payment_ref,
+        payment_ref: nil,
         tenancy_ref: tenancy_ref,
         template_id: 'income collection letter',
         unique_reference: unique_reference,
@@ -33,50 +32,31 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
       )
     end
 
-    it 'will not call the leasehold_gatway' do
+    it 'will send the letter by without calling the leasehold gateway using a tenancy_ref' do
       expect_any_instance_of(leasehold_gateway).not_to receive(:get_tenancy_ref)
     end
   end
 
-  context 'when sending an letters manually' do
-    let(:template_id) { 'Letter 1 in arrears FH' }
-
+  context 'when sending a leasehold letter' do
+    let(:payment_ref) { Faker::Number.number(6) }
     let(:subject) do
       send_precompiled_letter.execute(
-        unique_reference: unique_reference,
-        letter_pdf: test_file,
         payment_ref: payment_ref,
         tenancy_ref: nil,
-        template_id: template_id
+        template_id: 'Letter 1 in arrears FH',
+        unique_reference: unique_reference,
+        letter_pdf: test_file
       )
     end
 
     before {
-      expect_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).and_return(tenancy_ref: 12_321)
+      allow_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).and_return(tenancy_ref: Faker::Number.number(6))
     }
 
-    it { expect(subject).to be_a Hackney::Notification::Domain::NotificationReceipt }
-    it { expect(subject.body).to include(unique_reference) }
-
-    context 'when templates write into action diary they should have action codes associated with them' do
-      [
-        'letter 1 in arrears FH', 'letter 1 in arrears LH',
-        'letter 1 in arrears SO', 'letter 2 in arrears FH',
-        'letter 2 in arrears LH', 'letter 2 in arrears SO',
-        'income collection letter 1', 'income collection letter 2'
-      ].each do |template|
-        it {
-          expect {
-            send_precompiled_letter.execute(
-              unique_reference: unique_reference,
-              letter_pdf: test_file,
-              payment_ref: payment_ref,
-              tenancy_ref: nil,
-              template_id: template
-            )
-          } .not_to raise_error
-        }
-      end
+    it 'will send the letter by calling the leasehold gateway using a payment_ref' do
+      expect_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).with(payment_ref: payment_ref)
+      expect(subject).to be_a Hackney::Notification::Domain::NotificationReceipt
+      expect(subject.body).to include(unique_reference)
     end
   end
 end
