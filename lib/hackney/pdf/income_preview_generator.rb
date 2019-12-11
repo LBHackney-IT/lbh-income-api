@@ -4,6 +4,7 @@ module Hackney
       LOGO_PATH = 'lib/hackney/pdf/templates/layouts/logo.svg'.freeze
       HACKNEY_ADDRESS_PARTIAL = 'lib/hackney/pdf/templates/income/partials/hackney_address.html.erb'.freeze
       TENANT_ADDRESS_PARTIAL = 'lib/hackney/pdf/templates/income/partials/tenant_address.html.erb'.freeze
+      PAYMENT_OPTIONS_PARTIAL = 'lib/hackney/pdf/templates/income/partials/payment_options.html.erb'.freeze
 
       def initialize(template_path:)
         @template_path = template_path
@@ -17,6 +18,7 @@ module Hackney
 
         @hackney_address = load_erb_file(HACKNEY_ADDRESS_PARTIAL)
         @tenant_address = load_erb_file(TENANT_ADDRESS_PARTIAL)
+        @payment_options = load_erb_file(PAYMENT_OPTIONS_PARTIAL)
 
         template = File.open(@template_path).read
         html = ERB.new(template).result(binding)
