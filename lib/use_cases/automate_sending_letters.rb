@@ -40,7 +40,7 @@ module UseCases
     def generate_income_collection_user
       Hackney::Domain::User.new.tap do |u|
         u.groups = ['income-collection']
-        u.name = 'AUTOMATED SENDING - INCOME COLLECTION LETTER'
+        u.name = 'MANAGE ARREARS SYSTEM'
       end
     end
   end

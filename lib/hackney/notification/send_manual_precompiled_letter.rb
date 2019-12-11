@@ -20,8 +20,8 @@ module Hackney
           username: username,
           tenancy_ref: tenancy_ref,
           action_code: ad_code,
-          comment: "Letter '#{unique_reference}' from '#{template_id}' letter was sent
-          access it by visiting documents?payment_ref=#{payment_ref}"
+          comment: "Letter '#{unique_reference}' from '#{template_id}' letter " \
+            "was sent access it by visiting documents?payment_ref=#{payment_ref}"
         )
 
         send_letter_response
