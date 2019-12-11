@@ -4,7 +4,6 @@ describe LettersController, type: :controller do
   let(:template_path) { 'path/to/temp' }
   let(:template_id) { 'letter_1_in_arrears_FH' }
   let(:template_name) { 'Letter 1 In Arrears FH' }
-  let(:tenancy_ref) { '12345' }
   let(:uuid) { '12345' }
 
   let(:user) {
@@ -38,12 +37,16 @@ describe LettersController, type: :controller do
   end
 
   describe '#send_letter' do
-    let(:send_letter_to_gov_notify) { spy }
-    let(:find_document) { spy }
+    let(:send_letter_to_gov_notify) { double }
+    let(:find_document) { double }
+
+    let(:tenancy_ref) { Faker::Number.number(4) }
+    let(:document) { Hackney::Cloud::Document.new }
 
     before do
+      allow(controller).to receive(:find_document).and_return(document)
       allow(controller).to receive(:send_letter_to_gov_notify).and_return(send_letter_to_gov_notify)
-      allow(controller).to receive(:find_document).and_return(find_document)
+      allow(send_letter_to_gov_notify).to receive(:perform_later)
     end
 
     it 'calls the send_letter_to_gov_notify job' do
@@ -52,7 +55,11 @@ describe LettersController, type: :controller do
         user: user,
         tenancy_ref: tenancy_ref
       }
-      expect(controller).to have_received(:send_letter_to_gov_notify)
+
+      expect(send_letter_to_gov_notify).to have_received(:perform_later).with(
+        document_id: document.id,
+        tenancy_ref: tenancy_ref
+      )
     end
   end
 
