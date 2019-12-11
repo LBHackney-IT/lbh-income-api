@@ -95,18 +95,21 @@ module Hackney
         end
 
         def send_letter_two?
+          return false if @case_priority.paused?
           return false if @criteria.active_agreement?
+          return false if @criteria.nosp_served?
 
           valid_actions = [
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1,
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH
           ]
 
-          @criteria.last_communication_action.in?(valid_actions) &&
-            @criteria.balance >= arrear_accumulation_by_number_weeks(3) &&
-            @criteria.nosp_served? == false &&
-            last_communication_between_three_months_one_week? &&
-            @case_priority.paused? == false
+          return false unless @criteria.last_communication_action.in?(valid_actions)
+
+          return false if last_communication_newer_than?(1.week.ago)
+          return false if last_communication_older_than?(3.months.ago)
+
+          @criteria.balance >= @criteria.weekly_rent * 3
         end
 
         def send_nosp?
