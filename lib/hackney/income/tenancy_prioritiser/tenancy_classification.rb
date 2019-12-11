@@ -93,7 +93,8 @@ module Hackney
 
         def send_letter_two?
           valid_actions = [
-            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1,
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH
           ]
 
           @criteria.last_communication_action.in?(valid_actions) &&

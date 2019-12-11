@@ -99,6 +99,19 @@ describe 'Send Letter Two Rule', type: :feature do
       eviction_date: '',
       courtdate: ''
     },
+    {
+      outcome: :send_letter_two,
+      nosps_in_last_year: 0,
+      nosp_expiry_date: '',
+      weekly_rent: 5,
+      balance: 15.0,
+      is_paused_until: '',
+      active_agreement: false,
+      last_communication_date: 2.weeks.ago.to_date,
+      last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH,
+      eviction_date: '',
+      courtdate: ''
+    },
     # eviction date test
     {
       outcome: :no_action,
