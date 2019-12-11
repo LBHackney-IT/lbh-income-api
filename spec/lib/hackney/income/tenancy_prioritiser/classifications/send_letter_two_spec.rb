@@ -112,6 +112,15 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: 5.days.from_now.to_date,
       courtdate: ''
+    },
+    # active agreement
+    {
+      outcome: :no_action,
+      weekly_rent: 5,
+      balance: 15.0,
+      active_agreement: true,
+      last_communication_date: 2.weeks.ago.to_date,
+      last_communication_action: letter_1_in_arrears_sent_code
     }
   ]
 

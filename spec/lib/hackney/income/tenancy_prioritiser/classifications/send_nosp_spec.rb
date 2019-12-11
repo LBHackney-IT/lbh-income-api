@@ -29,17 +29,6 @@ describe 'Send NOSP Rule', type: :feature do
       eviction_date: nil,
       courtdate: ''
     },
-    # nosp has been served, other data isn't right, no other detail
-    # not clear why this test is passing when `@criteria.nosp_served? == false &&` is removed
-    {
-      outcome: :no_action,
-      nosps_in_last_year: 0,
-      nosp_served: true,
-      weekly_rent: 5,
-      balance: 50.0,
-      last_communication_date: 2.months.ago.to_date,
-      last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2
-    },
     # out of date nosp, heavily in arrears, recent letter 2
     {
       outcome: :send_NOSP,

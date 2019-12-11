@@ -64,12 +64,13 @@ module Hackney
         end
 
         def send_sms?
-          @criteria.last_communication_action.nil? &&
-            @criteria.balance >= 5 &&
-            @criteria.nosp_served? == false &&
-            last_communication_between_three_months_one_week? &&
-            @case_priority.paused? == false &&
-            @criteria.active_agreement? == false
+          return false if @criteria.last_communication_action.present?
+          return false if @criteria.nosp_served?
+          return false unless last_communication_between_three_months_one_week?
+          return false if @case_priority.paused?
+          return false if @criteria.active_agreement?
+
+          @criteria.balance >= 5
         end
 
         def send_letter_one?
@@ -92,6 +93,8 @@ module Hackney
         end
 
         def send_letter_two?
+          return false if @criteria.active_agreement?
+
           valid_actions = [
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1
           ]
@@ -104,8 +107,9 @@ module Hackney
         end
 
         def send_nosp?
-          return false if @criteria.active_agreement?
           return false if @case_priority.paused?
+          return false if @criteria.active_agreement?
+          return false if @criteria.nosp_served?
 
           valid_actions = [
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
@@ -113,15 +117,14 @@ module Hackney
           ]
 
           if @criteria.nosp_expiry_date.present?
-            can_send_nosp = @criteria.nosp_expiry_date < Time.zone.now
+            return false if @criteria.nosp_expiry_date >= Time.zone.now
           else
-            can_send_nosp = @criteria.last_communication_action.in?(valid_actions) &&
-                            last_communication_between_three_months_one_week?
+            return false unless @criteria.last_communication_action.in?(valid_actions)
+            return false if last_communication_older_than?(3.months.ago)
+            return false if last_communication_newer_than?(1.week.ago)
           end
 
-          can_send_nosp &&
-            @criteria.nosp_served? == false &&
-            @criteria.balance >= arrear_accumulation_by_number_weeks(4)
+          @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end
 
         def last_communication_between_three_months_one_week?
