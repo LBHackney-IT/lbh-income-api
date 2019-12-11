@@ -5,7 +5,7 @@ describe LettersController, type: :controller do
   let(:template_id) { 'letter_1_in_arrears_FH' }
   let(:template_name) { 'Letter 1 In Arrears FH' }
   let(:tenancy_ref) { '12345' }
-  let(:uuid) { 'uuid' }
+  let(:uuid) { '12345' }
 
   let(:user) {
     {
@@ -38,7 +38,22 @@ describe LettersController, type: :controller do
   end
 
   describe '#send_letter' do
+    let(:send_letter_to_gov_notify) { spy }
+    let(:find_document) { spy }
 
+    before do
+      allow(controller).to receive(:send_letter_to_gov_notify).and_return(send_letter_to_gov_notify)
+      allow(controller).to receive(:find_document).and_return(find_document)
+    end
+
+    it 'calls the send_letter_to_gov_notify job' do
+      post :send_letter, params: {
+        uuid: uuid,
+        user: user,
+        tenancy_ref: tenancy_ref
+      }
+      expect(controller).to have_received(:send_letter_to_gov_notify)
+    end
   end
 
   describe '#create' do

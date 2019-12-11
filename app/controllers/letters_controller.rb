@@ -21,10 +21,10 @@ class LettersController < ApplicationController
   end
 
   def send_letter
-    document = Hackney::Cloud::Document.find_by!(uuid: params[:uuid])
+    document = find_document(params[:uuid])
     tenancy_ref = params[:tenancy_ref]
 
-    Hackney::Income::Jobs::SendLetterToGovNotifyJob.perform_later(document_id: document.id, tenancy_ref: tenancy_ref)
+    send_letter_to_gov_notify.perform_later(document_id: document.id, tenancy_ref: tenancy_ref)
   end
 
   private
@@ -47,6 +47,14 @@ class LettersController < ApplicationController
       u.email = user_params['email']
       u.groups = user_params['groups']
     end
+  end
+
+  def find_document(uuid)
+    Hackney::Cloud::Document.find_by!(uuid: uuid)
+  end
+
+  def send_letter_to_gov_notify
+    Hackney::Income::Jobs::SendLetterToGovNotifyJob
   end
 
   def generate_and_store_use_case
