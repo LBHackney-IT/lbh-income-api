@@ -35,14 +35,16 @@ module Hackney
         end
 
         def send_court_warning_letter?
-          return false if @criteria.nosp_served_date.blank?
+          return false if @case_priority.paused?
+          return false if @criteria.active_agreement?
 
-          @criteria.last_communication_action != Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT &&
-            @criteria.nosp_served? &&
-            @criteria.nosp_served_date <= 28.days.ago.to_date &&
-            @criteria.balance >= arrear_accumulation_by_number_weeks(4) &&
-            @case_priority.paused? == false &&
-            @criteria.active_agreement? == false
+          return false if @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
+
+          return false unless @criteria.nosp_served?
+          return false if @criteria.nosp_served_date.blank?
+          return false if @criteria.nosp_served_date > 28.days.ago.to_date
+
+          @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end
 
         def apply_for_court_date?

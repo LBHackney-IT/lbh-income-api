@@ -136,6 +136,13 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       last_communication_action: nil,
       eviction_date: nil,
       courtdate: 10.months.ago
+    },
+    # missing served date
+    {
+      outcome: :no_action,
+      nosps_in_last_year: 1,
+      weekly_rent: 5,
+      balance: 25.0 # 5 * weekly_rent
     }
   ]
 

@@ -45,7 +45,7 @@ module Stubs
     end
 
     def nosp_served_date
-      attributes[:nosp_served_date] || '2019-12-13 12:43:10'.to_date
+      attributes[:nosp_served_date]
     end
 
     def nosp_expiry_date
