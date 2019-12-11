@@ -5,6 +5,7 @@ module Hackney
       SENDER_ADDRESS_PATH = 'lib/hackney/pdf/templates/layouts/sender_address.erb'.freeze
       SENDING_DATE_PATH = 'lib/hackney/pdf/templates/layouts/sending_date.erb'.freeze
       PAYMENT_OPTIONS_PATH = 'lib/hackney/pdf/templates/layouts/payment_options.erb'.freeze
+      INCOME_COLLECTION_PAYMENT_OPTIONS_PATH = 'lib/hackney/pdf/templates/income/partials/payment_options.html.erb'.freeze
       REPLY_FORM_PATH = 'lib/hackney/pdf/templates/layouts/reply_form.erb'.freeze
       REPLY_FORM_LBA_PATH = 'lib/hackney/pdf/templates/layouts/reply_form_lba.erb'.freeze
       FINANCIAL_STATEMENT_LBA_PATH = 'lib/hackney/pdf/templates/layouts/financial_statement_lba.erb'.freeze
@@ -28,6 +29,8 @@ module Hackney
         @sending_date = ERB.new(File.open(SENDING_DATE_PATH).read).result(binding)
 
         @payment_options = ERB.new(File.open(PAYMENT_OPTIONS_PATH).read).result(binding)
+
+        @income_collection_payment_options = ERB.new(File.open(INCOME_COLLECTION_PAYMENT_OPTIONS_PATH).read).result(binding)
 
         @reply_form = ERB.new(File.open(REPLY_FORM_PATH).read).result(binding)
 
