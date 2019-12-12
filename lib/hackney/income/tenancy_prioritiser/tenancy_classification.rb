@@ -48,21 +48,16 @@ module Hackney
         end
 
         def apply_for_court_date?
-          valid_actions = [
-            Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
-          ]
+          return false if @case_priority.paused?
+          return false unless @criteria.nosp_served?
 
-          can_apply_for_court_date =
-            @criteria.last_communication_action.in?(valid_actions) &&
-            last_communication_older_than?(2.weeks.ago) &&
-            @criteria.balance >= arrear_accumulation_by_number_weeks(4) &&
-            @criteria.nosp_served? == true &&
-            @criteria.nosp_served_date <= 28.days.ago.to_date &&
-            @case_priority.paused? == false
+          return false unless @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
+          return false if last_communication_newer_than?(2.weeks.ago)
 
-          can_apply_for_court_date &&= @criteria.courtdate <= Time.zone.now if @criteria.courtdate.present?
+          return false if @criteria.nosp_served_date > 28.days.ago.to_date
+          return false if @criteria.courtdate.present? && @criteria.courtdate > Time.zone.now
 
-          can_apply_for_court_date
+          @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end
 
         def send_sms?
