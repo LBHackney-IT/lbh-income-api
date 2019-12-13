@@ -115,14 +115,12 @@ module Hackney
         end
 
         def apply_for_court_date?
-          return false if @case_priority.paused?
           return false unless @criteria.nosp_served?
 
           return false unless @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
           return false if last_communication_newer_than?(2.weeks.ago)
 
           return false if @criteria.nosp_served_date > 28.days.ago.to_date
-          return false if @criteria.courtdate.present? && @criteria.courtdate > Time.zone.now
 
           @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end
