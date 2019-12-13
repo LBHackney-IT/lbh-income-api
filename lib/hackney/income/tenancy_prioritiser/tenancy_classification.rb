@@ -86,7 +86,7 @@ module Hackney
           return false if @criteria.last_communication_action.in?(after_letter_one_actions) &&
                           last_communication_newer_than?(3.months.ago)
 
-          @criteria.balance >= @criteria.weekly_rent
+          @criteria.balance >= arrear_accumulation_by_number_weeks(1)
         end
 
         def send_letter_two?
@@ -104,7 +104,7 @@ module Hackney
           return false if last_communication_newer_than?(1.week.ago)
           return false if last_communication_older_than?(3.months.ago)
 
-          @criteria.balance >= @criteria.weekly_rent * 3
+          @criteria.balance >= arrear_accumulation_by_number_weeks(3)
         end
 
         def send_nosp?
