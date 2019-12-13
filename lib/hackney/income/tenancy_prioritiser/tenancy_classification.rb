@@ -60,10 +60,10 @@ module Hackney
           @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end
 
+
         def send_sms?
           return false if @criteria.last_communication_action.present?
           return false if @criteria.nosp_served?
-          return false unless last_communication_between_three_months_one_week?
           return false if @case_priority.paused?
           return false if @criteria.active_agreement?
 
@@ -126,12 +126,6 @@ module Hackney
           end
 
           @criteria.balance >= arrear_accumulation_by_number_weeks(4)
-        end
-
-        def last_communication_between_three_months_one_week?
-          return false if @criteria.last_communication_date.nil?
-
-          last_communication_older_than?(1.week.ago) && last_communication_newer_than?(3.months.ago)
         end
 
         def last_communication_older_than?(date)
