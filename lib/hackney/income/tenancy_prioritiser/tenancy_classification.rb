@@ -12,6 +12,7 @@ module Hackney
 
           wanted_action ||= :no_action if @criteria.eviction_date.present?
           wanted_action ||= :no_action if @criteria.courtdate.present? && @criteria.courtdate >= Time.zone.now
+          wanted_action ||= :no_action if @case_priority.paused?
 
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
@@ -37,14 +38,12 @@ module Hackney
         def send_sms?
           return false if @criteria.last_communication_action.present?
           return false if @criteria.nosp_served?
-          return false if @case_priority.paused?
           return false if @criteria.active_agreement?
 
           @criteria.balance >= 5
         end
 
         def send_letter_one?
-          return false if @case_priority.paused?
           return false if @criteria.nosp_served?
           return false if @criteria.active_agreement?
 
@@ -63,7 +62,6 @@ module Hackney
         end
 
         def send_letter_two?
-          return false if @case_priority.paused?
           return false if @criteria.active_agreement?
           return false if @criteria.nosp_served?
 
@@ -81,7 +79,6 @@ module Hackney
         end
 
         def send_nosp?
-          return false if @case_priority.paused?
           return false if @criteria.active_agreement?
           return false if @criteria.nosp_served?
 
@@ -102,7 +99,6 @@ module Hackney
         end
 
         def send_court_warning_letter?
-          return false if @case_priority.paused?
           return false if @criteria.active_agreement?
 
           return false if @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
