@@ -53,19 +53,19 @@ module Stubs
     end
 
     def courtdate
-      attributes[:courtdate] || '2005-12-13 12:43:10'.to_date
+      attributes[:courtdate]
     end
 
     def eviction_date
-      attributes[:eviction_date] || '2007-09-20 10:30:00'.to_date
+      attributes[:eviction_date]
     end
 
     def patch_code
-      attributes[:patch_code] || 'E01'
+      attributes[:patch_code]
     end
 
     def broken_court_order?
-      attributes[:broken_court_order] || false
+      attributes[:broken_court_order]
     end
 
     def days_in_arrears
@@ -73,7 +73,7 @@ module Stubs
     end
 
     def active_agreement?
-      attributes[:active_agreement] || false
+      attributes[:active_agreement]
     end
 
     def nosp_served?
@@ -82,7 +82,7 @@ module Stubs
     end
 
     def active_nosp?
-      attributes[:active_nosp] || false
+      attributes[:active_nosp]
     end
 
     def number_of_broken_agreements
@@ -90,11 +90,11 @@ module Stubs
     end
 
     def payment_amount_delta
-      attributes[:payment_amount_delta] || 0
+      attributes[:payment_amount_delta]
     end
 
     def payment_date_delta
-      attributes[:payment_date_delta] || 0
+      attributes[:payment_date_delta]
     end
 
     private

@@ -59,7 +59,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       let(:nosp_served_date) { options[:nosp_served_date] }
       let(:nosp_expiry_date) { options[:nosp_expiry_date] }
       let(:courtdate) { options[:courtdate] }
-      let(:eviction_date) { options[:eviction_date] || '' }
+      let(:eviction_date) { options[:eviction_date] }
 
       it "returns `#{options[:outcome]}`" do
         expect(subject).to eq(options[:outcome])
