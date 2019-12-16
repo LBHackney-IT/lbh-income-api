@@ -30,7 +30,6 @@ shared_examples 'TenancyClassification' do |condition_matrix|
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
   let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
 
-  let(:is_paused_until) { nil }
   let(:attributes) do
     {
       balance: balance,
@@ -46,23 +45,11 @@ shared_examples 'TenancyClassification' do |condition_matrix|
     }
   end
 
-  let(:balance) { 5.00 }
-  let(:weekly_rent) { 5.0 }
-  let(:last_communication_date) { '' }
-  let(:last_communication_action) { nil }
-  let(:active_agreement) { nil }
-  let(:nosps_in_last_year) { nil }
-  let(:nosp_served_date) { '' }
-  let(:nosp_expiry_date) { '' }
-  let(:courtdate) { '' }
-  let(:eviction_date) { '' }
-
   condition_matrix.each do |options|
     message = build_context_message(options)
 
     context "when #{message}" do
       let(:is_paused_until) { options[:is_paused_until] }
-
       let(:balance) { options[:balance] }
       let(:weekly_rent) { options[:weekly_rent] }
       let(:last_communication_date) { options[:last_communication_date] }
