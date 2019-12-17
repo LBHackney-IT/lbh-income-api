@@ -9,7 +9,7 @@
 #  "returns `send_NOSP`"
 #
 def build_context_message(options)
-  options.each_with_object([]) do |(attribute, value), msg|
+  'when ' + options.each_with_object([]) do |(attribute, value), msg|
     next msg if attribute == :outcome
     msg << "'#{attribute}' is '#{value}'"
     msg
@@ -48,7 +48,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
   condition_matrix.each do |options|
     message = build_context_message(options)
 
-    context "when #{message}" do
+    context(options[:description] || message) do
       let(:is_paused_until) { options[:is_paused_until] }
       let(:balance) { options[:balance] }
       let(:weekly_rent) { options[:weekly_rent] }
