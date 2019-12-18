@@ -41,6 +41,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       nosp_served_date: nosp_served_date,
       nosp_expiry_date: nosp_expiry_date,
       courtdate: courtdate,
+      court_outcome: court_outcome,
       eviction_date: eviction_date
     }
   end
@@ -58,6 +59,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       let(:nosps_in_last_year) { options[:nosps_in_last_year] }
       let(:nosp_served_date) { options[:nosp_served_date] }
       let(:nosp_expiry_date) { options[:nosp_expiry_date] }
+      let(:court_outcome) { options[:court_outcome] }
       let(:courtdate) { options[:courtdate] }
       let(:eviction_date) { options[:eviction_date] }
 

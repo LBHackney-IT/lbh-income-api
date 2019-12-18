@@ -11,9 +11,9 @@ module Hackney
           wanted_action = nil
 
           wanted_action ||= :no_action if @criteria.eviction_date.present?
-          wanted_action ||= :no_action if @criteria.courtdate.present? && @criteria.courtdate >= Time.zone.now
           wanted_action ||= :no_action if @case_priority.paused?
 
+          wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
           wanted_action ||= :send_NOSP if send_nosp?
@@ -33,6 +33,14 @@ module Hackney
         def validate_wanted_action(wanted_action)
           return false if Hackney::Income::Models::CasePriority.classifications.key?(wanted_action)
           raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
+        end
+
+        def update_court_outcome_action?
+          return false if @criteria.court_outcome.present?
+          return false if @criteria.courtdate.blank?
+          return false if @criteria.courtdate.future?
+
+          true
         end
 
         def send_sms?
@@ -148,6 +156,12 @@ module Hackney
         def valid_actions_for_apply_for_court_date_to_progress
           [
             Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
+          ]
+        end
+
+        def update_court_outcome_action
+          [
+            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME
           ]
         end
       end

@@ -122,5 +122,13 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
         expect(result - action_codes).to be_empty
       end
     end
+
+    describe '#update_court_outcome_action' do
+      let(:result) { assign_classification.send(:update_court_outcome_action) }
+
+      it 'contains action codes within the UH Criteria Codes' do
+        expect(result - action_codes).to be_empty
+      end
+    end
   end
 end
