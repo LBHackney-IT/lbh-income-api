@@ -6,18 +6,18 @@ module Hackney
           database.extension :identifier_mangling
           database.identifier_input_method = database.identifier_output_method = nil
 
-          query = database[:tenagree]
-
-          query
-            .where { Sequel[:tenagree][:cur_bal] > 0 }
-            .where(Sequel[:tenagree][:tenure] => SECURE_TENURE_TYPE)
-            .where(Sequel[:tenagree][:terminated].cast(:integer) => 0)
-            .select { Sequel[:tenagree][:tag_ref].as(:tag_ref) }
-            .map { |record| record[:tag_ref].strip }
+          database[:tenagree]
+            .select(:tag_ref)
+            .where { cur_bal > 0 }
+            .where(tenure: SECURE_TENURE_TYPE)
+            .where(terminated: 0)
+            .where(agr_type: MASTER_ACCOUNT_TYPE)
+            .map { |item| item[:tag_ref].strip }
         end
       end
 
       SECURE_TENURE_TYPE = 'SEC'.freeze
+      MASTER_ACCOUNT_TYPE = 'M'.freeze
     end
   end
 end
