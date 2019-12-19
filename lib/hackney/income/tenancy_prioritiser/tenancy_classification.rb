@@ -158,13 +158,6 @@ module Hackney
             Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
           ]
         end
-
-        def update_court_outcome_action
-          [
-            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME,
-            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME_UH
-          ]
-        end
       end
     end
   end
