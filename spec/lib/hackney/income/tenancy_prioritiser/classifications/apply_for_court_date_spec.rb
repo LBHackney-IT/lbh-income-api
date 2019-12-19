@@ -109,7 +109,7 @@ describe 'Apply for Court Date Rule', type: :feature do
       eviction_date: nil
     },
     {
-      outcome: :apply_for_court_date,
+      outcome: :update_court_outcome_action,
       nosps_in_last_year: 1,
       nosp_served_date: 29.days.ago.to_date,
       weekly_rent: 5,
@@ -148,7 +148,7 @@ describe 'Apply for Court Date Rule', type: :feature do
       eviction_date: 1.month.ago
     },
     {
-      outcome: :no_action,
+      outcome: :update_court_outcome_action,
       nosps_in_last_year: 1,
       nosp_served_date: 29.days.ago.to_date,
       weekly_rent: 5,
@@ -161,7 +161,7 @@ describe 'Apply for Court Date Rule', type: :feature do
       eviction_date: nil
     },
     {
-      outcome: :no_action,
+      outcome: :apply_for_court_date,
       nosps_in_last_year: 1,
       nosp_served_date: 29.days.ago.to_date,
       weekly_rent: 5,

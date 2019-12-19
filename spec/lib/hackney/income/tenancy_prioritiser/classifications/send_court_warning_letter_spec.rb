@@ -110,7 +110,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil,
+      eviction_date: 10.days.from_now,
       courtdate: 10.days.from_now
     },
     {
@@ -135,7 +135,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       active_agreement: false,
       last_communication_action: nil,
       eviction_date: nil,
-      courtdate: 10.months.ago
+      court_outcome: nil,
+      courtdate: 10.days.from_now
     },
     # missing served date
     {
