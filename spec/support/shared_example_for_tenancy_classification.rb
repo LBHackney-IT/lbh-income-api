@@ -46,9 +46,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
   end
 
   condition_matrix.each do |options|
-    message = build_context_message(options)
-
-    context(options[:description] || message) do
+    context(options[:description] || build_context_message(options)) do
       let(:is_paused_until) { options[:is_paused_until] }
       let(:balance) { options[:balance] }
       let(:weekly_rent) { options[:weekly_rent] }
