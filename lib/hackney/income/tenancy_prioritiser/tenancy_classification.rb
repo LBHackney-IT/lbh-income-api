@@ -161,7 +161,8 @@ module Hackney
 
         def update_court_outcome_action
           [
-            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME
+            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME,
+            Hackney::Tenancy::ActionCodes::UPDATE_COURT_OUTCOME_UH
           ]
         end
       end
