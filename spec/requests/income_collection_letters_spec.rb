@@ -116,7 +116,9 @@ RSpec.describe 'Income Collection Letters', type: :request do
   def create_valid_uh_records_for_an_income_letter
     create_uh_property(
       property_ref: property_ref,
-      post_code: postcode
+      post_code: postcode,
+      post_preamble: 'post_preamble',
+      post_desig: '47',
     )
     create_uh_tenancy_agreement(
       tenancy_ref: tenancy_ref,
