@@ -49,13 +49,11 @@ RSpec.describe 'Income Collection Letters', type: :request do
           'case' => {
             'tenancy_ref' => tenancy_ref,
             'payment_ref' => payment_ref,
-            'address_line1' => 'Test Line 1',
-            'address_line2' => 'Test Line 2',
-            'address_line3' => '',
+            'address_line1' => '12 Acacia House',
+            'address_line2' => 'Lordship Road',
+            'address_line3' => 'London',
             'address_line4' => '',
-            'address_name_number' => '',
             'address_post_code' => postcode,
-            'address_preamble' => '',
             'property_ref' => property_ref,
             'forename' => 'Test Forename',
             'surname' => 'Test Surname',
@@ -117,8 +115,8 @@ RSpec.describe 'Income Collection Letters', type: :request do
     create_uh_property(
       property_ref: property_ref,
       post_code: postcode,
-      post_preamble: 'post_preamble',
-      post_desig: '47',
+      post_preamble: '12 Acacia House',
+      post_desig: '',
     )
     create_uh_tenancy_agreement(
       tenancy_ref: tenancy_ref,
@@ -137,8 +135,8 @@ RSpec.describe 'Income Collection Letters', type: :request do
     )
     create_uh_postcode(
       post_code: postcode,
-      aline1: 'Test Line 1',
-      aline2: 'Test Line 2'
+      aline1: 'Lordship Road',
+      aline2: 'London'
     )
     create_uh_member(
       house_ref: house_ref,
