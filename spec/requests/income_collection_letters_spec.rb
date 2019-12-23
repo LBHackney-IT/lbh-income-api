@@ -116,7 +116,7 @@ RSpec.describe 'Income Collection Letters', type: :request do
       property_ref: property_ref,
       post_code: postcode,
       post_preamble: '12 Acacia House',
-      post_desig: '',
+      post_desig: ''
     )
     create_uh_tenancy_agreement(
       tenancy_ref: tenancy_ref,

@@ -35,25 +35,25 @@ module Hackney
                 .first
 
           raise TenancyNotFoundError unless res.present?
-          # correspondence_address1: corr_address[:preamble]&.strip,
-          # correspondence_address2: "#{corr_address[:desig]&.strip} #{corr_address[:aline1]&.strip}",
-          # correspondence_address3: corr_address[:aline2]&.strip || '',
-          # correspondence_address4: corr_address[:aline3]&.strip || '',
-          # correspondence_address5: corr_address[:aline4]&.strip || '',
-          # correspondence_postcode: corr_address[:post_code]&.strip || '',
-          # property_address: "#{property_res[:address1]&.strip}, #{property_res[:post_code]&.strip}",
+
+          # if the property is part of a council estate the flat number and building name will be in the post_preamble
+          if res[:post_preamble]&.strip.present?
+            address_line1 = res[:post_preamble]&.strip
+            address_line2 = "#{res[:post_desig]&.strip} #{res[:aline1]&.strip}".strip
+            address_line3 = res[:aline2]&.strip || ''
+            address_line4 = res[:aline3]&.strip || ''
+          else # if it's a "regular" house, the post_design will be the door number and aline1 is the street
+            address_line1 = "#{res[:post_desig]&.strip} #{res[:aline1]&.strip}"
+          end
+
           {
             title: res[:title]&.strip,
             forename: res[:forename]&.strip,
             surname: res[:surname]&.strip,
-            address_preamble: res[:post_preamble]&.strip, # door number or address line 1
-             #  true first line of address is post_desig + aline1
-            address_name_number: res[:post_desig]&.strip, # to be added to a line1
-            # address_line1: res[:aline1]&.strip,
-            address_line1: res[:post_desig]&.strip + res[:aline1]&.strip,
-            address_line2: res[:aline2]&.strip || '',
-            address_line3: res[:aline3]&.strip || '',
-            address_line4: res[:aline4]&.strip || '',
+            address_line1: address_line1,
+            address_line2: address_line2 || res[:aline2]&.strip || '',
+            address_line3: address_line3 || res[:aline3]&.strip || '',
+            address_line4: address_line4 || res[:aline4]&.strip || '',
             address_post_code: res[:post_code]&.strip || '',
             property_ref: res[:prop_ref]&.strip,
             total_collectable_arrears_balance: res[:cur_bal],
