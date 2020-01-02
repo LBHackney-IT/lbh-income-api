@@ -18,7 +18,37 @@ describe Hackney::Income::UniversalHousingTenanciesGateway, universal: true do
       before { create_uh_tenancy_agreement(tenancy_ref: '000001/01', current_balance: 50.00) }
 
       it 'returns that tenancy' do
-        expect(subject).to eq(%w[000001/01])
+        expect(subject).to eq(['000001/01'])
+      end
+    end
+
+    context 'with a tenancy ref that includes whitespace' do
+      before { create_uh_tenancy_agreement(tenancy_ref: ' 000001/01 ', current_balance: 50.00) }
+
+      it 'strips the whitespace' do
+        expect(subject).to eq(['000001/01'])
+      end
+    end
+
+    context 'when there are three tenancies in arrears, but only one is a master account' do
+      before do
+        create_uh_tenancy_agreement(tenancy_ref: '000001/01', current_balance: 50.00, agreement_type: 'M')
+        create_uh_tenancy_agreement(tenancy_ref: '000002/01', current_balance: 50.00, agreement_type: 'R')
+        create_uh_tenancy_agreement(tenancy_ref: '000003/01', current_balance: 50.00, agreement_type: 'X')
+      end
+
+      it 'returns only the master account tenancy' do
+        expect(subject).to eq(['000001/01'])
+      end
+    end
+
+    context 'when there is one tenancy in arrears' do
+      before do
+        create_uh_tenancy_agreement(tenancy_ref: '000001/01', current_balance: 50.00)
+      end
+
+      it 'returns that tenancy' do
+        expect(subject).to eq(['000001/01'])
       end
     end
 
@@ -55,7 +85,7 @@ describe Hackney::Income::UniversalHousingTenanciesGateway, universal: true do
       before { create_uh_tenancy_agreement(tenancy_ref: '000001/01', current_balance: 100.00, tenure_type: 'SEC') }
 
       it 'returns the tenancy' do
-        expect(subject).to eq(%w[000001/01])
+        expect(subject).to eq(['000001/01'])
       end
     end
 

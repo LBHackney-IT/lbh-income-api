@@ -36,8 +36,20 @@ module Stubs
       attributes[:court_outcome]
     end
 
+    def latest_active_agreement_date
+      attributes[:latest_active_agreement_date] || 20.years.from_now.to_date
+    end
+
+    def breach_agreement_date
+      attributes[:breach_agreement_date] || 10.years.from_now.to_date
+    end
+
     def balance
       attributes[:balance] || 100.00
+    end
+
+    def expected_balance
+      attributes[:expected_balance] || 100.00
     end
 
     def weekly_rent
@@ -53,7 +65,7 @@ module Stubs
     end
 
     def courtdate
-      attributes[:courtdate]
+      attributes[:courtdate] || 10.years.ago.to_date
     end
 
     def eviction_date

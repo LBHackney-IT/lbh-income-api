@@ -4,7 +4,7 @@ module Hackney
       class CasePriority < ApplicationRecord
         enum classification: {
           no_action: 0, send_letter_two: 1, send_letter_one: 2, send_first_SMS: 3, send_NOSP: 4,
-          apply_for_court_date: 6, send_court_warning_letter: 7
+          apply_for_court_date: 6, send_court_warning_letter: 7, send_court_agreement_breach_letter: 8
         }
 
         validates :case_id, presence: true, uniqueness: true

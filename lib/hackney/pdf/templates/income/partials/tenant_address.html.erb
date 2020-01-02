@@ -1,11 +1,5 @@
 <div class="tenant-address">
   <strong><%= @letter.forename %> <%= @letter.surname %></strong>
   <br>
-  <%= [
-    @letter.address_line1,
-    @letter.address_line2,
-    @letter.address_line3,
-    @letter.address_line4,
-    @letter.address_post_code
-  ].select(&:present?).join('<br>').html_safe %>
+  <%= @letter.tenant_address.html_safe %>
 </div>
