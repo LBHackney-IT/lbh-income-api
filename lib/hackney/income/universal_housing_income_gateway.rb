@@ -37,7 +37,7 @@ module Hackney
           raise TenancyNotFoundError unless res.present?
 
           # if the property is part of a council estate the flat number and building name will be in the post_preamble
-          if res[:post_preamble]&.strip.present?
+          if council_estate_property?(res)
             address_line1 = res[:post_preamble]&.strip
             address_line2 = "#{res[:post_desig]&.strip} #{res[:aline1]&.strip}".strip
             address_line3 = res[:aline2]&.strip || ''
@@ -63,6 +63,10 @@ module Hackney
         end
 
         private
+
+        def council_estate_property?(res)
+          res[:post_preamble]&.strip.present?
+        end
 
         def tenancy_agreement
           @tenancy_agreement ||= database[:tenagree]
