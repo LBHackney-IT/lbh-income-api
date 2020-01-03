@@ -171,13 +171,6 @@ module Hackney
         )
       end
 
-      # intended to only be used for rake task please delete when no longer required
-      def show_green_in_arrears
-        Hackney::Income::ShowTenanciesForCriteriaGreenInArrears.new(
-          sql_tenancies_for_messages_gateway: sql_tenancies_matching_criteria_gateway
-        )
-      end
-
       def get_failed_sms_messages
         Hackney::Notification::GetFailedSMSMessages.new(
           notification_gateway: notifications_gateway
