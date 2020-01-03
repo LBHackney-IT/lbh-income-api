@@ -6,15 +6,11 @@ describe Hackney::Income::SyncCasePriority do
   let(:stub_tenancy_object) { double }
   let(:stored_tenancies_gateway) { double(store_tenancy: stub_tenancy_object) }
   let(:criteria) { Stubs::StubCriteria.new }
-  let(:weightings) { Hackney::Income::TenancyPrioritiser::PriorityWeightings.new }
 
   let(:prioritisation_gateway) do
     PrioritisationGatewayDouble.new(
       tenancy_ref => {
-        priority_band: priority_band,
-        priority_score: priority_score,
-        criteria: criteria,
-        weightings: weightings
+        criteria: criteria
       }
     )
   end
@@ -29,34 +25,8 @@ describe Hackney::Income::SyncCasePriority do
     )
   end
 
-  context 'when given a tenancy ref' do
-    let(:tenancy_ref) { '000009/01' }
-    let(:priority_band) { :green }
-    let(:priority_score) { 1000 }
-
-    it 'syncs the case\'s priority score' do
-      expect(stored_tenancies_gateway).to receive(:store_tenancy).with(
-        tenancy_ref: '000009/01',
-        priority_band: :green,
-        priority_score: 1000,
-        criteria: criteria,
-        weightings: weightings
-      ).and_return(
-        Hackney::Income::Models::CasePriority.new(
-          tenancy_ref: '000009/01',
-          priority_band: :green,
-          priority_score: 1000
-        )
-      )
-
-      subject
-    end
-  end
-
   context 'when given a case priority' do
     let(:tenancy_ref) { '000009/01' }
-    let(:priority_band) { :green }
-    let(:priority_score) { 1000 }
 
     let(:case_priority) {
       build(:case_priority,
@@ -75,8 +45,6 @@ describe Hackney::Income::SyncCasePriority do
 
   context 'when given a paused case priority' do
     let(:tenancy_ref) { '000009/01' }
-    let(:priority_band) { :green }
-    let(:priority_score) { 1000 }
 
     let(:case_priority) {
       build(:case_priority,
@@ -93,30 +61,6 @@ describe Hackney::Income::SyncCasePriority do
       subject
     end
   end
-
-  context 'when given a different tenancy ref with different priorities' do
-    let(:tenancy_ref) { '000010/01' }
-    let(:priority_band) { :red }
-    let(:priority_score) { 5000 }
-
-    it 'syncs the tenancy\'s priority score' do
-      expect(stored_tenancies_gateway).to receive(:store_tenancy).with(
-        tenancy_ref: '000010/01',
-        priority_band: priority_band,
-        priority_score: 5000,
-        criteria: criteria,
-        weightings: weightings
-      ).and_return(
-        Hackney::Income::Models::CasePriority.new(
-          tenancy_ref: tenancy_ref,
-          priority_band: priority_band,
-          priority_score: priority_score
-        )
-      )
-
-      subject
-    end
-  end
 end
 
 class PrioritisationGatewayDouble
@@ -126,10 +70,7 @@ class PrioritisationGatewayDouble
 
   def priorities_for_tenancy(tenancy_ref)
     {
-      priority_score: @tenancy_refs_to_priorities.dig(tenancy_ref, :priority_score),
-      priority_band: @tenancy_refs_to_priorities.dig(tenancy_ref, :priority_band),
-      criteria: @tenancy_refs_to_priorities.dig(tenancy_ref, :criteria),
-      weightings: @tenancy_refs_to_priorities.dig(tenancy_ref, :weightings)
+      criteria: @tenancy_refs_to_priorities.dig(tenancy_ref, :criteria)
     }
   end
 end

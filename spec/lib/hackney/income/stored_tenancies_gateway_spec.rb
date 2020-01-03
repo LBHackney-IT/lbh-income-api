@@ -9,33 +9,20 @@ describe Hackney::Income::StoredTenanciesGateway do
     subject(:store_tenancy) do
       gateway.store_tenancy(
         tenancy_ref: attributes.fetch(:tenancy_ref),
-        priority_band: attributes.fetch(:priority_band),
-        priority_score: attributes.fetch(:priority_score),
-        criteria: attributes.fetch(:criteria),
-        weightings: attributes.fetch(:weightings)
+        criteria: attributes.fetch(:criteria)
       )
     end
 
     let(:attributes) do
       {
         tenancy_ref: Faker::Internet.slug,
-        priority_band: Faker::Internet.slug,
-        priority_score: Faker::Number.number(5).to_i,
-        criteria: stubbed_criteria,
-        weightings: Hackney::Income::TenancyPrioritiser::PriorityWeightings.new
+        criteria: stubbed_criteria
       }
     end
 
     let(:stubbed_criteria) { Stubs::StubCriteria.new }
     let(:tenancy_classification_stub) { double('TenancyClassification') }
     let(:classification) { 'no_action' }
-
-    let(:score_calculator) do
-      Hackney::Income::TenancyPrioritiser::Score.new(
-        attributes.fetch(:criteria),
-        attributes.fetch(:weightings)
-      )
-    end
 
     before do
       expect(tenancy_classification_stub).to receive(:execute).and_return(classification)
@@ -62,19 +49,6 @@ describe Hackney::Income::StoredTenanciesGateway do
       let!(:pre_existing_tenancy) do
         tenancy_model.create!(
           tenancy_ref: attributes.fetch(:tenancy_ref),
-          priority_band: attributes.fetch(:priority_band),
-          priority_score: attributes.fetch(:priority_score),
-
-          balance_contribution: score_calculator.balance,
-          days_in_arrears_contribution: score_calculator.days_in_arrears,
-          days_since_last_payment_contribution: score_calculator.days_since_last_payment,
-          payment_amount_delta_contribution: score_calculator.payment_amount_delta,
-          payment_date_delta_contribution: score_calculator.payment_date_delta,
-          number_of_broken_agreements_contribution: score_calculator.number_of_broken_agreements,
-          active_agreement_contribution: score_calculator.active_agreement,
-          broken_court_order_contribution: score_calculator.broken_court_order,
-          nosp_served_contribution: score_calculator.nosp_served,
-          active_nosp_contribution: score_calculator.active_nosp,
 
           balance: attributes.fetch(:criteria).balance,
           weekly_rent: attributes.fetch(:criteria).weekly_rent,
@@ -610,19 +584,6 @@ describe Hackney::Income::StoredTenanciesGateway do
   def expected_serialised_tenancy(attributes)
     {
       tenancy_ref: attributes.fetch(:tenancy_ref),
-      priority_band: attributes.fetch(:priority_band),
-      priority_score: attributes.fetch(:priority_score),
-
-      balance_contribution: score_calculator.balance,
-      days_in_arrears_contribution: score_calculator.days_in_arrears,
-      days_since_last_payment_contribution: score_calculator.days_since_last_payment,
-      payment_amount_delta_contribution: score_calculator.payment_amount_delta,
-      payment_date_delta_contribution: score_calculator.payment_date_delta,
-      number_of_broken_agreements_contribution: score_calculator.number_of_broken_agreements,
-      active_agreement_contribution: score_calculator.active_agreement,
-      broken_court_order_contribution: score_calculator.broken_court_order,
-      nosp_served_contribution: score_calculator.nosp_served,
-      active_nosp_contribution: score_calculator.active_nosp,
 
       balance: attributes.fetch(:criteria).balance,
       days_in_arrears: attributes.fetch(:criteria).days_in_arrears,

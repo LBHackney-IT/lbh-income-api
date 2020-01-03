@@ -11,10 +11,7 @@ module Hackney
         priorities = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref)
         case_priority = @stored_tenancies_gateway.store_tenancy(
           tenancy_ref: tenancy_ref,
-          priority_band: priorities.fetch(:priority_band),
-          priority_score: priorities.fetch(:priority_score),
-          criteria: priorities.fetch(:criteria),
-          weightings: priorities.fetch(:weightings)
+          criteria: priorities.fetch(:criteria)
         )
 
         @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
