@@ -68,8 +68,6 @@ module TenancyHelper
   def create_tenancy_model
     Hackney::Income::Models::CasePriority.new.tap do |t|
       t.tenancy_ref = Faker::Lorem.characters(5)
-      t.priority_band = Faker::Lorem.characters(5)
-      t.priority_score = Faker::Lorem.characters(5)
       t.balance = Faker::Commerce.price
     end
   end

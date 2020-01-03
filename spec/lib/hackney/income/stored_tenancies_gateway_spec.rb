@@ -117,8 +117,6 @@ describe Hackney::Income::StoredTenanciesGateway do
           multiple_attributes.map do |attributes|
             tenancy_model.create!(
               tenancy_ref: attributes.fetch(:tenancy_ref),
-              priority_band: attributes.fetch(:priority_band),
-              priority_score: attributes.fetch(:priority_score),
               balance: attributes.fetch(:balance)
             )
           end
@@ -129,9 +127,7 @@ describe Hackney::Income::StoredTenanciesGateway do
 
           multiple_attributes.each do |attributes|
             expect(subject).to include(a_hash_including(
-                                         tenancy_ref: attributes.fetch(:tenancy_ref),
-                                         priority_band: attributes.fetch(:priority_band),
-                                         priority_score: attributes.fetch(:priority_score)
+                                         tenancy_ref: attributes.fetch(:tenancy_ref)
                                        ))
           end
         end
@@ -139,29 +135,29 @@ describe Hackney::Income::StoredTenanciesGateway do
         context 'when cases are assigned different bands, scores and balances' do
           let(:multiple_attributes) do
             [
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'red', priority_score: 1, balance: 1 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 50, balance: 3 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'green', priority_score: 100, balance: 2 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 100, balance: 4 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'amber', priority_score: 10, balance: 11 },
-              { tenancy_ref: Faker::Internet.slug, priority_band: 'red', priority_score: 101, balance: 10 }
+              { tenancy_ref: Faker::Internet.slug, balance: 1 },
+              { tenancy_ref: Faker::Internet.slug, balance: 3 },
+              { tenancy_ref: Faker::Internet.slug, balance: 2 },
+              { tenancy_ref: Faker::Internet.slug, balance: 4 },
+              { tenancy_ref: Faker::Internet.slug, balance: 11 },
+              { tenancy_ref: Faker::Internet.slug, balance: 10 }
             ]
           end
 
           let(:cases) do
             subject.map do |c|
-              { balance: c.fetch(:balance).to_i, priority_band: c.fetch(:priority_band), priority_score: c.fetch(:priority_score).to_i }
+              { balance: c.fetch(:balance).to_i }
             end
           end
 
           it 'sorts by balance' do
             expect(cases).to eq([
-              { priority_band: 'amber', priority_score: 10, balance: 11 },
-              { priority_band: 'red', priority_score: 101, balance: 10 },
-              { priority_band: 'amber', priority_score: 100, balance: 4 },
-              { priority_band: 'green', priority_score: 50, balance: 3 },
-              { priority_band: 'green', priority_score: 100, balance: 2 },
-              { priority_band: 'red', priority_score: 1, balance: 1 }
+              { balance: 11 },
+              { balance: 10 },
+              { balance: 4 },
+              { balance: 3 },
+              { balance: 2 },
+              { balance: 1 }
             ])
           end
 
@@ -170,8 +166,8 @@ describe Hackney::Income::StoredTenanciesGateway do
 
             it 'only return the first two' do
               expect(cases).to eq([
-                { priority_band: 'amber', priority_score: 10, balance: 11 },
-                { priority_band: 'red', priority_score: 101, balance: 10 }
+                { balance: 11 },
+                { balance: 10 }
               ])
             end
           end
@@ -181,9 +177,9 @@ describe Hackney::Income::StoredTenanciesGateway do
 
             it 'only return the last three' do
               expect(cases).to eq([
-                { priority_band: 'green', priority_score: 50, balance: 3 },
-                { priority_band: 'green', priority_score: 100, balance: 2 },
-                { priority_band: 'red', priority_score: 1, balance: 1 }
+                { balance: 3 },
+                { balance: 2 },
+                { balance: 1 }
               ])
             end
           end

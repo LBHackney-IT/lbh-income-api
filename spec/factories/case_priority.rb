@@ -12,8 +12,6 @@ FactoryBot.define do
     active_agreement { false }
     is_paused_until { nil }
 
-    priority_band { 'green' }
-
     trait :red do
       priority_band { 'red' }
     end
