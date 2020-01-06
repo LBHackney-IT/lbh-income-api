@@ -65,7 +65,7 @@ describe '"Apply for Court Date" examples' do
       courtdate: ''
     ),
     base_example.merge(
-      description: 'with an upcoming court date',
+      description: 'with an evicition date',
       outcome: :no_action,
       eviction_date: 1.day.from_now.to_date
     ),
