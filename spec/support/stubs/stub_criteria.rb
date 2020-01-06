@@ -101,6 +101,10 @@ module Stubs
       attributes[:number_of_broken_agreements] || 0
     end
 
+    def payment_ref
+      attributes[:payment_ref]
+    end
+
     private
 
     attr_reader :attributes
