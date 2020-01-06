@@ -78,8 +78,6 @@ describe Hackney::Income::ViewCases do
         expect(subject.cases.count).to eq(1)
         expect(subject.cases).to include(a_hash_including(
                                            ref: tenancy_attributes.fetch(:ref),
-                                           priority_score: tenancy_priority_score,
-                                           priority_band: tenancy_priority_band,
                                            current_balance: tenancy_attributes.fetch(:current_balance),
                                            current_arrears_agreement_status: tenancy_attributes.fetch(:current_arrears_agreement_status),
 
@@ -94,22 +92,9 @@ describe Hackney::Income::ViewCases do
                                              postcode: tenancy_attributes.dig(:primary_contact, :postcode)
                                            },
 
-                                           balance_contribution: tenancy_priority_factors.fetch(:balance_contribution),
-                                           days_in_arrears_contribution: tenancy_priority_factors.fetch(:days_in_arrears_contribution),
-                                           days_since_last_payment_contribution: tenancy_priority_factors.fetch(:days_since_last_payment_contribution),
-                                           payment_amount_delta_contribution: tenancy_priority_factors.fetch(:payment_amount_delta_contribution),
-                                           payment_date_delta_contribution: tenancy_priority_factors.fetch(:payment_date_delta_contribution),
-                                           number_of_broken_agreements_contribution: tenancy_priority_factors.fetch(:number_of_broken_agreements_contribution),
-                                           active_agreement_contribution: tenancy_priority_factors.fetch(:active_agreement_contribution),
-                                           broken_court_order_contribution: tenancy_priority_factors.fetch(:broken_court_order_contribution),
-                                           nosp_served_contribution: tenancy_priority_factors.fetch(:nosp_served_contribution),
-                                           active_nosp_contribution: tenancy_priority_factors.fetch(:active_nosp_contribution),
-
                                            balance: tenancy_priority_factors.fetch(:balance),
                                            days_in_arrears: tenancy_priority_factors.fetch(:days_in_arrears),
                                            days_since_last_payment: tenancy_priority_factors.fetch(:days_since_last_payment),
-                                           payment_amount_delta: tenancy_priority_factors.fetch(:payment_amount_delta),
-                                           payment_date_delta: tenancy_priority_factors.fetch(:payment_date_delta),
                                            number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
                                            active_agreement: tenancy_priority_factors.fetch(:active_agreement),
                                            broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
@@ -231,22 +216,9 @@ describe Hackney::Income::ViewCases do
 
   def random_tenancy_priority_factors
     {
-      balance_contribution: Faker::Number.number(5),
-      days_in_arrears_contribution: Faker::Number.number(5),
-      days_since_last_payment_contribution: Faker::Number.number(5),
-      payment_amount_delta_contribution: Faker::Number.number(5),
-      payment_date_delta_contribution: Faker::Number.number(5),
-      number_of_broken_agreements_contribution: Faker::Number.number(5),
-      active_agreement_contribution: Faker::Number.number(5),
-      broken_court_order_contribution: Faker::Number.number(5),
-      nosp_served_contribution: Faker::Number.number(5),
-      active_nosp_contribution: Faker::Number.number(5),
-
       balance: Faker::Commerce.price,
       days_in_arrears: Faker::Number.number(2),
       days_since_last_payment: Faker::Number.number(2),
-      payment_amount_delta: Faker::Number.number(4),
-      payment_date_delta: Faker::Number.number(1),
       number_of_broken_agreements: Faker::Number.number(1),
       active_agreement: Faker::Number.between(0, 1),
       broken_court_order: Faker::Number.between(0, 1),
