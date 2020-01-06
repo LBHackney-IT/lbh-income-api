@@ -42,7 +42,8 @@ module Hackney
               uc_direct_payment_received: criteria.uc_direct_payment_received,
               latest_active_agreement_date: criteria.latest_active_agreement_date,
               breach_agreement_date: criteria.breach_agreement_date,
-              expected_balance: criteria.expected_balance
+              expected_balance: criteria.expected_balance,
+              payment_ref: criteria.payment_ref
             )
           end
         rescue ActiveRecord::RecordNotUnique

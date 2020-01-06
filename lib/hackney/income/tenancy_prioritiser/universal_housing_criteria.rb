@@ -126,6 +126,10 @@ module Hackney
           attributes[:expected_balance]
         end
 
+        def payment_ref
+          attributes[:payment_ref]
+        end
+
         def self.format_action_codes_for_sql
           Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL.map { |action_code| "('#{action_code}')" }
                                                             .join(', ')
@@ -177,7 +181,9 @@ module Hackney
             DECLARE @WeeklyRent NUMERIC(9, 2) = (
               SELECT rent FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
-
+            DECLARE @PaymentRef VARCHAR(20) = (
+              SELECT u_saff_rentacc FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
             DECLARE @PatchCode VARCHAR(3) = (
               SELECT arr_patch
               FROM [dbo].[property]
@@ -286,7 +292,8 @@ module Hackney
               @UCDirectPaymentRequested as uc_direct_payment_requested,
               @UCDirectPaymentReceived as uc_direct_payment_received,
               @BreachAgreementDate as breach_agreement_date,
-              @ExpectedBalance as expected_balance
+              @ExpectedBalance as expected_balance,
+              @PaymentRef as payment_ref
           SQL
         end
 
