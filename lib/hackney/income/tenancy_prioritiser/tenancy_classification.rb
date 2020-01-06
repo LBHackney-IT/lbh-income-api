@@ -13,8 +13,8 @@ module Hackney
           wanted_action ||= :no_action if @criteria.eviction_date.present?
           wanted_action ||= :no_action if @case_priority.paused?
 
-          wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
           wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
+          wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
           wanted_action ||= :send_NOSP if send_nosp?
@@ -37,9 +37,10 @@ module Hackney
         end
 
         def update_court_outcome_action?
-          return false if @criteria.court_outcome.present?
           return false if @criteria.courtdate.blank?
           return false if @criteria.courtdate.future?
+
+          @criteria.court_outcome.blank?
         end
 
         def send_court_agreement_breach_letter?

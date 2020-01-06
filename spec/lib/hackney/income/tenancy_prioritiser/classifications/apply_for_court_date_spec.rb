@@ -10,7 +10,8 @@ describe '"Apply for Court Date" examples' do
     weekly_rent: 5,
     balance: 25.0,
     last_communication_action: court_warning_letter_code,
-    last_communication_date: 3.weeks.ago.to_date
+    last_communication_date: 3.weeks.ago.to_date,
+    courtdate: ''
   }
 
   examples = [
@@ -61,12 +62,12 @@ describe '"Apply for Court Date" examples' do
     base_example.merge(
       description: 'with a past court date',
       outcome: :apply_for_court_date,
-      courtdate: 5.days.ago.to_date
+      courtdate: ''
     ),
     base_example.merge(
       description: 'with an upcoming court date',
       outcome: :no_action,
-      courtdate: 2.weeks.from_now.to_date
+      eviction_date: 1.day.from_now.to_date
     ),
     base_example.merge(
       description: 'with an eviction date (past or upcoming)',

@@ -64,7 +64,6 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       let(:court_outcome) { options[:court_outcome] }
       let(:courtdate) { options[:courtdate] }
       let(:eviction_date) { options[:eviction_date] || '' }
-      let(:court_outcome) { options[:court_outcome] }
       let(:latest_active_agreement_date) { options[:latest_active_agreement_date] }
       let(:breach_agreement_date) { options[:breach_agreement_date] }
       let(:number_of_broken_agreements) { options[:number_of_broken_agreements] }

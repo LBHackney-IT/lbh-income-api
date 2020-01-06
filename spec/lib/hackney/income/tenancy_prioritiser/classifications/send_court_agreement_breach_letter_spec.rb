@@ -18,7 +18,7 @@ describe 'Send Court Agreement Breach Letter Rule', type: :feature do
     },
     {
       # no court outcome
-      outcome: :no_action,
+      outcome: :update_court_outcome_action,
       active_agreement: false,
       court_outcome: '',
       courtdate: 8.days.ago,
