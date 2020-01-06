@@ -17,8 +17,6 @@ module Hackney
               weekly_rent: criteria.weekly_rent,
               days_in_arrears: criteria.days_in_arrears,
               days_since_last_payment: criteria.days_since_last_payment,
-              payment_amount_delta: criteria.payment_amount_delta,
-              payment_date_delta: criteria.payment_date_delta,
               number_of_broken_agreements: criteria.number_of_broken_agreements,
               active_agreement: criteria.active_agreement?,
               broken_court_order: criteria.broken_court_order?,

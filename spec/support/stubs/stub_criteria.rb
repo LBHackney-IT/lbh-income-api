@@ -101,14 +101,6 @@ module Stubs
       attributes[:number_of_broken_agreements] || 0
     end
 
-    def payment_amount_delta
-      attributes[:payment_amount_delta]
-    end
-
-    def payment_date_delta
-      attributes[:payment_date_delta]
-    end
-
     private
 
     attr_reader :attributes

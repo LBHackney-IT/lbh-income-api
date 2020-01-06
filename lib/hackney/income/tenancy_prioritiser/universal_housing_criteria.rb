@@ -105,30 +105,6 @@ module Hackney
           attributes.fetch(:nosps_in_last_month) > 0
         end
 
-        def payment_amount_delta
-          payment_amounts = [
-            attributes.fetch(:payment_1_value),
-            attributes.fetch(:payment_2_value),
-            attributes.fetch(:payment_3_value)
-          ].compact.map(&:to_f)
-
-          return nil if payment_amounts.count < 3
-
-          (payment_amounts[0] - payment_amounts[1]) - (payment_amounts[1] - payment_amounts[2])
-        end
-
-        def payment_date_delta
-          payment_dates = [
-            attributes.fetch(:payment_1_date),
-            attributes.fetch(:payment_2_date),
-            attributes.fetch(:payment_3_date)
-          ].compact
-
-          return nil if payment_dates.count < 3
-
-          day_difference(payment_dates[0], payment_dates[1]) - day_difference(payment_dates[1], payment_dates[2])
-        end
-
         # FIXME: implementation needs confirming, will return to later
         def broken_court_order?
           false
@@ -287,13 +263,6 @@ module Hackney
               SET @CurrentTransactionRow = @CurrentTransactionRow + 1
             END
 
-            DECLARE @Payment1Value NUMERIC(9, 2) = (SELECT real_value FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, real_value FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 1)
-            DECLARE @Payment1Date SMALLDATETIME = (SELECT post_date FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, post_date FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 1)
-            DECLARE @Payment2Value NUMERIC(9, 2) = (SELECT real_value FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, real_value FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 2)
-            DECLARE @Payment2Date SMALLDATETIME = (SELECT post_date FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, post_date FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 2)
-            DECLARE @Payment3Value NUMERIC(9, 2) = (SELECT real_value FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, real_value FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 3)
-            DECLARE @Payment3Date SMALLDATETIME = (SELECT post_date FROM (SELECT ROW_NUMBER() OVER(ORDER BY post_date DESC) as row, post_date FROM rtrans WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND trans_type IN (SELECT * FROM @PaymentTypes)) t WHERE row = 3)
-
             SELECT
               @CurrentBalance as current_balance,
               @WeeklyRent as weekly_rent,
@@ -310,12 +279,6 @@ module Hackney
               @CourtOutcome as court_outcome,
               @LatestActiveAgreementDate as latest_active_agreement_date,
               @EvictionDate as eviction_date,
-              @Payment1Value as payment_1_value,
-              @Payment1Date as payment_1_date,
-              @Payment2Value as payment_2_value,
-              @Payment2Date as payment_2_date,
-              @Payment3Value as payment_3_value,
-              @Payment3Date as payment_3_date,
               @LastCommunicationAction as last_communication_action,
               @LastCommunicationDate as last_communication_date,
               @UniversalCredit as universal_credit,
