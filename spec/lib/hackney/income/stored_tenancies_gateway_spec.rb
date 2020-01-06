@@ -95,7 +95,10 @@ describe Hackney::Income::StoredTenanciesGateway do
           uc_rent_verification: attributes.fetch(:criteria).uc_rent_verification,
           uc_direct_payment_requested: attributes.fetch(:criteria).uc_direct_payment_requested,
           uc_direct_payment_received: attributes.fetch(:criteria).uc_direct_payment_received,
-          classification: classification
+          classification: classification,
+          latest_active_agreement_date: attributes.fetch(:criteria).latest_active_agreement_date,
+          breach_agreement_date: attributes.fetch(:criteria).latest_active_agreement_date,
+          expected_balance: attributes.fetch(:criteria).expected_balance
         )
       end
 
@@ -639,7 +642,10 @@ describe Hackney::Income::StoredTenanciesGateway do
       uc_rent_verification: attributes.fetch(:criteria).uc_rent_verification,
       uc_direct_payment_requested: attributes.fetch(:criteria).uc_direct_payment_requested,
       uc_direct_payment_received: attributes.fetch(:criteria).uc_direct_payment_received,
-      classification: classification
+      classification: classification,
+      latest_active_agreement_date: attributes.fetch(:criteria).latest_active_agreement_date,
+      breach_agreement_date: attributes.fetch(:criteria).breach_agreement_date,
+      expected_balance: attributes.fetch(:criteria).expected_balance
     }
   end
 end

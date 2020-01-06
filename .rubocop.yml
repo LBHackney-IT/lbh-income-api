@@ -94,3 +94,6 @@ RSpec/ExpectInHook: #  useful for mocking classes outside of the scope of test i
 
 RSpec/NestedGroups:
   Max: 6
+
+RSpec/DescribeClass:
+  Enabled: false

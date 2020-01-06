@@ -9,7 +9,7 @@
 #  "returns `send_NOSP`"
 #
 def build_context_message(options)
-  options.each_with_object([]) do |(attribute, value), msg|
+  'when ' + options.each_with_object([]) do |(attribute, value), msg|
     next msg if attribute == :outcome
     msg << "'#{attribute}' is '#{value}'"
     msg
@@ -41,15 +41,17 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       nosp_served_date: nosp_served_date,
       nosp_expiry_date: nosp_expiry_date,
       courtdate: courtdate,
+      eviction_date: eviction_date,
       court_outcome: court_outcome,
-      eviction_date: eviction_date
+      latest_active_agreement_date: latest_active_agreement_date,
+      breach_agreement_date: breach_agreement_date,
+      number_of_broken_agreements: number_of_broken_agreements,
+      expected_balance: expected_balance
     }
   end
 
   condition_matrix.each do |options|
-    message = build_context_message(options)
-
-    context "when #{message}" do
+    context(options[:description] || build_context_message(options)) do
       let(:is_paused_until) { options[:is_paused_until] }
       let(:balance) { options[:balance] }
       let(:weekly_rent) { options[:weekly_rent] }
@@ -61,7 +63,12 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       let(:nosp_expiry_date) { options[:nosp_expiry_date] }
       let(:court_outcome) { options[:court_outcome] }
       let(:courtdate) { options[:courtdate] }
-      let(:eviction_date) { options[:eviction_date] }
+      let(:eviction_date) { options[:eviction_date] || '' }
+      let(:court_outcome) { options[:court_outcome] }
+      let(:latest_active_agreement_date) { options[:latest_active_agreement_date] }
+      let(:breach_agreement_date) { options[:breach_agreement_date] }
+      let(:number_of_broken_agreements) { options[:number_of_broken_agreements] }
+      let(:expected_balance) { options[:expected_balance] }
 
       it "returns `#{options[:outcome]}`" do
         expect(subject).to eq(options[:outcome])

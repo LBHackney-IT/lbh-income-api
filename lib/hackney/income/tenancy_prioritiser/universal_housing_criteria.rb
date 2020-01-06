@@ -138,6 +138,18 @@ module Hackney
           attributes.fetch(:patch_code)
         end
 
+        def breach_agreement_date
+          attributes.fetch(:breach_agreement_date)
+        end
+
+        def latest_active_agreement_date
+          attributes[:latest_active_agreement_date]
+        end
+
+        def expected_balance
+          attributes[:expected_balance]
+        end
+
         def self.format_action_codes_for_sql
           Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL.map { |action_code| "('#{action_code}')" }
                                                             .join(', ')
@@ -163,6 +175,12 @@ module Hackney
                 AND trans_type IN (SELECT payment_type FROM @PaymentTypes)
               ) t
               WHERE row = 1
+            )
+            DECLARE @ExpectedBalance NUMERIC(9, 2) = (
+              SELECT TOP 1 arag_lastexpectedbal
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              ORDER BY arag_statusdate
             )
             DECLARE @NospServedDate SMALLDATETIME = (
               SELECT u_notice_served FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
@@ -196,7 +214,6 @@ module Hackney
             DECLARE @BreachedAgreementsCount INT = (SELECT COUNT(tag_ref) FROM [dbo].[arag] WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND arag_status = @BreachedArrearsAgreementStatus)
             DECLARE @NospsInLastYear INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(year, -1, GETDATE())))
             DECLARE @NospsInLastMonth INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(month, -1, GETDATE())))
-
             DECLARE @LastCommunicationAction VARCHAR(60) = (
               SELECT TOP 1 action_code
               FROM araction WITH (NOLOCK)
@@ -239,6 +256,20 @@ module Hackney
               AND action_code = 'UC3'
               ORDER BY action_date DESC
             )
+            DECLARE @LatestActiveAgreementDate SMALLDATETIME = (
+              SELECT TOP 1 arag_statusdate
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              AND arag_status = @ActiveArrearsAgreementStatus
+              ORDER BY arag_statusdate DESC
+            )
+            DECLARE @BreachAgreementDate SMALLDATETIME = (
+              SELECT TOP 1 arag_statusdate
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              AND arag_status = @BreachedArrearsAgreementStatus
+              ORDER BY arag_statusdate DESC
+            )
             DECLARE @NextBalance NUMERIC(9, 2) = @CurrentBalance
             DECLARE @CurrentTransactionRow INT = 1
             DECLARE @ArrearsStartDate SMALLDATETIME = GETDATE()
@@ -277,6 +308,7 @@ module Hackney
               @NospExpiryDate as nosp_expiry_date,
               @Courtdate as courtdate,
               @CourtOutcome as court_outcome,
+              @LatestActiveAgreementDate as latest_active_agreement_date,
               @EvictionDate as eviction_date,
               @Payment1Value as payment_1_value,
               @Payment1Date as payment_1_date,
@@ -289,7 +321,9 @@ module Hackney
               @UniversalCredit as universal_credit,
               @UCVerificationComplete as uc_verification_complete,
               @UCDirectPaymentRequested as uc_direct_payment_requested,
-              @UCDirectPaymentReceived as uc_direct_payment_received
+              @UCDirectPaymentReceived as uc_direct_payment_received,
+              @BreachAgreementDate as breach_agreement_date,
+              @ExpectedBalance as expected_balance
           SQL
         end
 

@@ -12,8 +12,7 @@ describe 'Send SMS Rule', type: :feature do
       active_agreement: false,
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: nil,
-      eviction_date: '',
-      courtdate: ''
+      eviction_date: ''
     },
     # active_agreement test
     {
@@ -26,8 +25,7 @@ describe 'Send SMS Rule', type: :feature do
       active_agreement: true,
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: '',
-      eviction_date: '',
-      courtdate: ''
+      eviction_date: ''
     },
     # balance test
     {
@@ -40,8 +38,7 @@ describe 'Send SMS Rule', type: :feature do
       active_agreement: false,
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::MANUAL_SMS_ACTION_CODE,
-      eviction_date: '',
-      courtdate: ''
+      eviction_date: ''
     }
   ]
 
