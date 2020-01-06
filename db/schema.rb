@@ -19,8 +19,6 @@ ActiveRecord::Schema.define(version: 2020_01_03_101403) do
     t.decimal "balance", precision: 10, scale: 2
     t.integer "days_in_arrears"
     t.integer "days_since_last_payment"
-    t.decimal "payment_amount_delta"
-    t.integer "payment_date_delta"
     t.integer "number_of_broken_agreements"
     t.boolean "active_agreement"
     t.boolean "broken_court_order"
