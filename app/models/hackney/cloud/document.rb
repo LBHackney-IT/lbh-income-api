@@ -9,6 +9,20 @@ module Hackney
       def failed?
         status == 'validation-failed'
       end
+
+      def parsed_metadata
+        JSON.parse(metadata).deep_symbolize_keys
+      end
+
+      def income_collection?
+        parsed_metadata
+          .dig(:template, :path)
+          .include?(Hackney::PDF::GetTemplatesForUser::INCOME_COLLECTION_TEMPLATE_DIRECTORY_PATH)
+      end
+
+      def self.find_by_payment_ref(payment_ref)
+        where("JSON_EXTRACT(metadata, '$.payment_ref') = ? AND status != 1", payment_ref).order(updated_at: :DESC)
+      end
     end
   end
 end
