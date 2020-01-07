@@ -137,7 +137,7 @@ module UniversalHousingHelper
     )
   end
 
-  def create_uh_househ(house_ref:, prop_ref: '', corr_preamble:, corr_desig:, post_code: '', corr_postcode: '', house_desc: '')
+  def create_uh_househ(house_ref:, prop_ref: '', corr_preamble: '', corr_desig: '', post_code: '', corr_postcode: '', house_desc: '')
     Hackney::UniversalHousing::Client.connection[:househ].insert(
       house_ref: house_ref,
       prop_ref: prop_ref,

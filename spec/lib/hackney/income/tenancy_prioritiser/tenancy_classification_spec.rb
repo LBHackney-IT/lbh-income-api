@@ -14,8 +14,8 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
       nosp_served: nosp_served,
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
-      eviction_date: '',
-      payment_ref: Faker::Number.number(10)
+      payment_ref: Faker::Number.number(10),
+      eviction_date: eviction_date
     }
   end
 
@@ -26,6 +26,7 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
   let(:nosp_served) { false }
   let(:last_communication_date) { 8.days.ago.to_date }
   let(:last_communication_action) { nil }
+  let(:eviction_date) { 6.days.ago.to_date }
 
   context 'when there are no arrears' do
     context 'with difference balances' do
@@ -48,7 +49,7 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
       let(:last_communication_date) { 3.months.ago.to_date - 1.day }
 
       it 'can classify a no action tenancy' do
-        expect(subject).to eq(:send_letter_one)
+        expect(subject).to eq(:no_action)
       end
     end
 

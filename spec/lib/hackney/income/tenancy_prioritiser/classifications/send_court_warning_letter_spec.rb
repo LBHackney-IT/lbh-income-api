@@ -13,7 +13,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :no_action,
@@ -24,7 +25,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :no_action,
@@ -35,7 +37,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :no_action,
@@ -57,7 +60,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: true,
       last_communication_action: nil,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :apply_for_court_date,
@@ -69,7 +73,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       active_agreement: false,
       last_communication_action: court_warning_letter_code,
       last_communication_date: 3.weeks.ago.to_date,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :no_action,
@@ -102,7 +107,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil,
+      eviction_date: 10.days.from_now,
       courtdate: 10.days.from_now
     },
     {
@@ -114,7 +119,8 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
-      eviction_date: nil
+      eviction_date: nil,
+      courtdate: ''
     },
     {
       outcome: :send_court_warning_letter,
@@ -126,14 +132,16 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       active_agreement: false,
       last_communication_action: nil,
       eviction_date: nil,
-      courtdate: 10.months.ago
+      court_outcome: nil,
+      courtdate: 10.days.from_now
     },
     # missing served date
     {
       outcome: :no_action,
       nosps_in_last_year: 1,
       weekly_rent: 5,
-      balance: 25.0 # 5 * weekly_rent
+      balance: 25.0, # 5 * weekly_rent
+      courtdate: ''
     }
   ]
 

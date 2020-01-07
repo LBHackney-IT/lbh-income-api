@@ -36,18 +36,26 @@ module Hackney
 
           raise TenancyNotFoundError unless res.present?
 
+          # if the property is part of a council estate the flat number and building name will be in the post_preamble
+          if council_estate_property?(res)
+            address_line1 = res[:post_preamble]&.strip
+            address_line2 = "#{res[:post_desig]&.strip} #{res[:aline1]&.strip}".strip
+            address_line3 = res[:aline2]&.strip || ''
+            address_line4 = res[:aline3]&.strip || ''
+          else # if it's a "regular" house, the post_design will be the door number and aline1 is the street
+            address_line1 = "#{res[:post_desig]&.strip} #{res[:aline1]&.strip}"
+          end
+
           {
             title: res[:title]&.strip,
             forename: res[:forename]&.strip,
             surname: res[:surname]&.strip,
-            address_line1: res[:aline1]&.strip,
-            address_line2: res[:aline2]&.strip || '',
-            address_line3: res[:aline3]&.strip || '',
-            address_line4: res[:aline4]&.strip || '',
+            address_line1: address_line1,
+            address_line2: address_line2 || res[:aline2]&.strip || '',
+            address_line3: address_line3 || res[:aline3]&.strip || '',
+            address_line4: address_line4 || res[:aline4]&.strip || '',
             address_post_code: res[:post_code]&.strip || '',
             property_ref: res[:prop_ref]&.strip,
-            address_preamble: res[:post_preamble]&.strip,
-            address_name_number: res[:post_desig]&.strip,
             total_collectable_arrears_balance: res[:cur_bal],
             payment_ref: res[:u_saff_rentacc]&.strip || '',
             tenancy_ref: tenancy_ref
@@ -55,6 +63,10 @@ module Hackney
         end
 
         private
+
+        def council_estate_property?(res)
+          res[:post_preamble]&.strip.present?
+        end
 
         def tenancy_agreement
           @tenancy_agreement ||= database[:tenagree]
