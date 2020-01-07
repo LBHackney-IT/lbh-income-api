@@ -41,7 +41,7 @@ module Hackney
         def court_breach_visit?
           return false if @criteria.breach_agreement_date.blank?
           return false if @criteria.breach_agreement_date + 10.days > Date.today
-          return false unless @criteria.last_communication_action.in?(court_breach_letter)
+          return false unless @criteria.last_communication_action.in?(court_breach_letter_actions)
           true
         end
 
@@ -156,7 +156,7 @@ module Hackney
           @criteria.weekly_rent * weeks
         end
 
-        def court_breach_letter
+        def court_breach_letter_actions
           [
             Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
           ]
