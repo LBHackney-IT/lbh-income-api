@@ -239,11 +239,11 @@ module Hackney
               ORDER BY action_date DESC
             )
             DECLARE @LatestActiveAgreementDate SMALLDATETIME = (
-              SELECT TOP 1 arag_statusdate
+              SELECT TOP 1 arag_startdate
               FROM [dbo].[arag]
               WHERE tag_ref = @TenancyRef
               AND arag_status = @ActiveArrearsAgreementStatus
-              ORDER BY arag_statusdate DESC
+              ORDER BY arag_startdate DESC
             )
             DECLARE @BreachAgreementDate SMALLDATETIME = (
               SELECT TOP 1 arag_statusdate

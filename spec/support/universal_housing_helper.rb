@@ -86,14 +86,15 @@ module UniversalHousingHelper
     )
   end
 
-  def create_uh_arrears_agreement(tenancy_ref:, status:, status_entry_date: Date.today, expected_balance: nil)
+  def create_uh_arrears_agreement(tenancy_ref:, status:, status_entry_date: nil, expected_balance: nil, agreement_start_date: nil)
     Hackney::UniversalHousing::Client.connection[:arag].insert(
       arag_ref: Faker::IDNumber.valid,
       tag_ref: tenancy_ref,
       arag_status: status,
       arag_breached: false,
       arag_statusdate: status_entry_date,
-      arag_lastexpectedbal: expected_balance
+      arag_lastexpectedbal: expected_balance,
+      arag_startdate: agreement_start_date
     )
   end
 

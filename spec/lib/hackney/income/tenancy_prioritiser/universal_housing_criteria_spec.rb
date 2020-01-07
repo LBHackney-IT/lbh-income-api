@@ -486,16 +486,17 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
           create_uh_arrears_agreement(
             tenancy_ref: tenancy_ref,
             status: '200',
-            status_entry_date: 2.days.ago
+            agreement_start_date: 2.days.ago
           )
           create_uh_arrears_agreement(
             tenancy_ref: tenancy_ref,
             status: '200',
-            status_entry_date: yesterday
+            agreement_start_date: yesterday
           )
           create_uh_arrears_agreement(
             tenancy_ref: tenancy_ref,
-            status: '300'
+            status: '300',
+            agreement_start_date: Date.today
           )
         end
 
@@ -527,7 +528,7 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         end
       end
 
-      context 'when there is a breache of agreement' do
+      context 'when there is a breach of agreement' do
         before do
           create_uh_arrears_agreement(
             tenancy_ref: tenancy_ref,
