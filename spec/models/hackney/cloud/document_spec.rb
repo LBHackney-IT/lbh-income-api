@@ -2,18 +2,20 @@ require 'rails_helper'
 
 describe Hackney::Cloud::Document do
   before {
-    Hackney::Cloud::Document.delete_all
+    described_class.delete_all
   }
 
   let(:payment_ref) { Faker::Number.number(10) }
 
   let(:status) { :downloaded }
 
-  let(:template) {{
-    path: "path/to/template.erb",
-    name: "Test template",
-    id: "test_template"
-  }}
+  let(:template) {
+    {
+      path: 'path/to/template.erb',
+      name: 'Test template',
+      id: 'test_template'
+    }
+  }
 
   let(:metadata) {
     {
@@ -41,11 +43,13 @@ describe Hackney::Cloud::Document do
   end
 
   context 'when there is a failed income collection letter saved' do
-    let(:template) {{
-      path: "lib/hackney/pdf/templates/income/income_collection_letter_1.erb",
-      name: "Income collection letter 1",
-      id: "income_collection_letter_1"
-    }}
+    let(:template) {
+      {
+        path: 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
+        name: 'Income collection letter 1',
+        id: 'income_collection_letter_1'
+      }
+    }
 
     let(:status) { :'validation-failed' }
 
@@ -56,6 +60,5 @@ describe Hackney::Cloud::Document do
     it '#income_collection?' do
       expect(document.income_collection?).to eq(true)
     end
-
   end
 end

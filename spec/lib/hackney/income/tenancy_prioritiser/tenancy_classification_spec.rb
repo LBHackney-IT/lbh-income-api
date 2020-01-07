@@ -4,7 +4,8 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
   subject { assign_classification.execute }
 
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
-  let(:assign_classification) { described_class.new(case_priority, criteria) }
+  let(:documents_related_to_case) { [] }
+  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case) }
 
   let(:attributes) do
     {
@@ -13,7 +14,8 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
       nosp_served: nosp_served,
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
-      eviction_date: eviction_date
+      eviction_date: '',
+      payment_ref: Faker::Number.number(10)
     }
   end
 
@@ -57,6 +59,26 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
 
       it 'can classify a no action tenancy ' do
         expect(subject).to eq(:no_action)
+      end
+
+      context 'when the letter sent failed govnotify validation' do
+        let(:documents_related_to_case) {
+          [
+            create(:document, status: 'validation-failed',
+                              metadata: {
+                                payment_ref: attributes[:payment_ref],
+                                template: {
+                                  path: 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
+                                  name: 'Income collection letter 1',
+                                  id: 'income_collection_letter_1'
+                                }
+                              }.to_json)
+          ]
+        }
+
+        it 'can classify a review failed letter tenancy' do
+          expect(subject).to eq(:review_failed_letter)
+        end
       end
     end
 

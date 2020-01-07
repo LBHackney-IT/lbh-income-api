@@ -2,12 +2,17 @@ module Hackney
   module Income
     class StoredTenanciesGateway
       GatewayModel = Hackney::Income::Models::CasePriority
+      DocumentModel = Hackney::Cloud::Document
 
       def store_tenancy(tenancy_ref:, criteria:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
+
+        documents = DocumentModel.find_by_payment_ref(criteria.payment_ref)
+
         classification_usecase = Hackney::Income::TenancyPrioritiser::TenancyClassification.new(
           gateway_model_instance,
-          criteria
+          criteria,
+          documents
         )
 
         begin
