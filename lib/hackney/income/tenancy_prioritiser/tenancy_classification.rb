@@ -42,7 +42,7 @@ module Hackney
 
         def review_failed_letter?
           return false if @documents.empty?
-          @documents.first.failed? && @documents.first.income_collection?
+          @documents.most_recent.failed? && @documents.most_recent.income_collection?
         end
 
         def send_informal_agreement_breach_letter?

@@ -26,20 +26,21 @@ describe Hackney::Cloud::Document do
 
   let(:document) { create(:document, status: status, metadata: metadata.to_json) }
 
-  it '#find_by_payment_ref' do
-    expect(described_class.find_by_payment_ref(payment_ref)).to eq([document])
+  describe '#by_payment_ref' do
+    it { expect(described_class.by_payment_ref(payment_ref)).to eq([document]) }
   end
 
-  it '#parsed_metadata' do
-    expect(document.parsed_metadata).to eq(metadata)
+  describe '#parsed_metadata' do
+    it { expect(document.parsed_metadata).to eq(metadata) }
+    it { expect(document.parsed_metadata).to be_a_kind_of(Hash) }
   end
 
-  it '#income_collection?' do
-    expect(document.income_collection?).to eq(false)
+  describe '#income_collection?' do
+    it { expect(document.income_collection?).to eq(false) }
   end
 
-  it '#failed?' do
-    expect(document.failed?).to eq(false)
+  describe '#failed?' do
+    it { expect(document.failed?).to eq(false) }
   end
 
   context 'when there is a failed income collection letter saved' do
@@ -53,12 +54,12 @@ describe Hackney::Cloud::Document do
 
     let(:status) { :'validation-failed' }
 
-    it '#failed?' do
-      expect(document.failed?).to eq(true)
+    describe '#failed?' do
+      it { expect(document.failed?).to eq(true) }
     end
 
-    it '#income_collection?' do
-      expect(document.income_collection?).to eq(true)
+    describe '#income_collection?' do
+      it { expect(document.income_collection?).to eq(true) }
     end
   end
 end

@@ -28,7 +28,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     before do
       expect(tenancy_classification_stub).to receive(:execute).and_return(classification)
 
-      expect(document_model).to receive(:find_by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
+      expect(document_model).to receive(:by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
 
       expect(Hackney::Income::TenancyPrioritiser::TenancyClassification).to receive(:new)
         .with(instance_of(tenancy_model), stubbed_criteria, [])
