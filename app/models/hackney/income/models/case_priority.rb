@@ -6,7 +6,7 @@ module Hackney
           no_action: 0, send_letter_two: 1, send_letter_one: 2, send_first_SMS: 3, send_NOSP: 4,
           apply_for_court_date: 6, send_court_warning_letter: 7, update_court_outcome_action: 8,
           send_court_agreement_breach_letter: 9, send_informal_agreement_breach_letter: 10,
-          court_breach_visit: 11, review_failed_letter: 13, apply_for_outright_possession_warrant: 14
+          court_breach_visit: 11, court_breach_no_payment: 12, review_failed_letter: 13, apply_for_outright_possession_warrant: 14
         }
 
         validates :case_id, presence: true, uniqueness: true

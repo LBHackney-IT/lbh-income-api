@@ -20,7 +20,7 @@ module Hackney
           wanted_action ||= :apply_for_outright_possession_warrant if apply_for_outright_possession_warrant?
 
           wanted_action ||= :court_breach_visit if court_breach_visit?
-
+          wanted_action ||= :court_breach_no_payment if court_breach_no_payment?
           wanted_action ||= breach_letter_action
 
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
@@ -61,6 +61,13 @@ module Hackney
         def review_failed_letter?
           return false if @documents.empty?
           @documents.most_recent.failed? && @documents.most_recent.income_collection?
+        end
+
+        def court_breach_no_payment?
+          return false if @criteria.last_communication_action.blank?
+          return false if @criteria.last_communication_date.blank?
+
+          @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) && last_communication_older_than?(1.week.ago)
         end
 
         def update_court_outcome_action?
@@ -191,6 +198,12 @@ module Hackney
         def court_breach_letter_actions
           [
             Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
+          ]
+        end
+
+        def valid_actions_for_court_breach_no_payment
+          [
+            Hackney::Tenancy::ActionCodes::VISIT_MADE
           ]
         end
 
