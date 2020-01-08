@@ -11,10 +11,10 @@ module Hackney
         def execute
           wanted_action = nil
 
+          wanted_action ||= :review_failed_letter if review_failed_letter?
+
           wanted_action ||= :no_action if @criteria.eviction_date.present?
           wanted_action ||= :no_action if @case_priority.paused?
-
-          wanted_action ||= :review_failed_letter if review_failed_letter?
 
           wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
           wanted_action ||= :send_informal_agreement_breach_letter if send_informal_agreement_breach_letter?
