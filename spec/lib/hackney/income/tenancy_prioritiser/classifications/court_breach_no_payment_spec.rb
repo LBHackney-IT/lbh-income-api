@@ -10,6 +10,8 @@ describe '"Court Breach - No Payment" examples' do
     is_paused_until: nil,
     balance: 15.0,
     active_agreement: false,
+    courtdate: 7.days.ago.to_date,
+    court_outcome: 'Jail',
     last_communication_action: visit_made_action_code,
     last_communication_date: 8.days.ago.to_date
   }
@@ -26,6 +28,27 @@ describe '"Court Breach - No Payment" examples' do
       description: 'when the last_communication_action NOT a visit_made_action_code',
       outcome: :send_letter_one,
       last_communication_action: adjourned_action_code,
+      last_communication_date: 7.days.ago.to_date
+    ),
+    base_example.merge(
+      description: 'when there is no court outcome',
+      outcome: :update_court_outcome_action,
+      court_outcome: '',
+      last_communication_action: visit_made_action_code,
+      last_communication_date: 7.days.ago.to_date
+    ),
+    base_example.merge(
+      description: 'when there is no courtdate',
+      outcome: :send_letter_one,
+      courtdate: '',
+      last_communication_action: visit_made_action_code,
+      last_communication_date: 7.days.ago.to_date
+    ),
+    base_example.merge(
+      description: 'when the court date is in the future',
+      outcome: :send_letter_one,
+      courtdate: 3.months.from_now.to_date,
+      last_communication_action: visit_made_action_code,
       last_communication_date: 7.days.ago.to_date
     ),
     base_example.merge(

@@ -64,6 +64,9 @@ module Hackney
         end
 
         def court_breach_no_payment?
+          return false if @criteria.courtdate.blank?
+          return false if @criteria.courtdate.future?
+          return false if @criteria.court_outcome.blank?
           return false if @criteria.last_communication_action.blank?
           return false if @criteria.last_communication_date.blank?
 
