@@ -45,6 +45,23 @@ module Hackney
           @documents.first.failed? && @documents.first.income_collection?
         end
 
+        def send_informal_agreement_breach_letter?
+          return false if @criteria.number_of_broken_agreements.zero?
+          return false if @criteria.active_agreement? == true
+          return false if @criteria.balance >= @criteria.expected_balance
+          return false if @criteria.courtdate.present? && @criteria.courtdate < Date.today
+          return false if @criteria.breach_agreement_date + 3.days > Date.today
+          return false unless @criteria.last_communication_action.in?(valid_actions_for_court_agreement_breach_letter_to_progress)
+          true
+        end
+
+        def update_court_outcome_action?
+          return false if @criteria.courtdate.blank?
+          return false if @criteria.courtdate.future?
+
+          @criteria.court_outcome.blank?
+        end
+
         def send_court_agreement_breach_letter?
           return false if @criteria.number_of_broken_agreements < 1
           return false if @criteria.active_agreement? == true

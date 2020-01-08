@@ -14,7 +14,7 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
       nosp_served: nosp_served,
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
-      eviction_date: '',
+      eviction_date: eviction_date,
       payment_ref: Faker::Number.number(10)
     }
   end
