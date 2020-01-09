@@ -18,6 +18,9 @@ module Hackney
           wanted_action ||= :no_action if @case_priority.paused?
 
           wanted_action ||= :court_breach_visit if court_breach_visit?
+
+          wanted_action ||= breach_letter_action
+
           wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
           wanted_action ||= :send_informal_agreement_breach_letter if send_informal_agreement_breach_letter?
 
@@ -70,6 +73,23 @@ module Hackney
           @criteria.court_outcome.blank?
         end
 
+        def breach_letter_action
+          return unless @criteria.most_recent_agreement.present?
+          return unless @criteria.most_recent_agreement[:start_date].present?
+          return unless @criteria.most_recent_agreement[:breached]
+
+          return :send_informal_agreement_breach_letter_new unless @criteria.courtdate.present?
+
+          court_date_after_agreement = @criteria.courtdate > @criteria.most_recent_agreement[:start_date]
+          court_date_long_before_agreement = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
+
+          if court_date_after_agreement || court_date_long_before_agreement
+            :send_informal_agreement_breach_letter_new
+          else
+            :send_court_agreement_breach_letter_new
+          end
+        end
+
         def send_court_agreement_breach_letter?
           return false if @criteria.number_of_broken_agreements < 1
           return false if @criteria.active_agreement? == true
@@ -78,7 +98,6 @@ module Hackney
           return false if @criteria.courtdate.blank?
           return false if @criteria.latest_active_agreement_date <= @criteria.courtdate
           return false if @criteria.breach_agreement_date.present? && @criteria.breach_agreement_date + 3.days > Date.today
-          return false if @criteria.balance >= @criteria.expected_balance
           return false unless @criteria.court_outcome.in?(active_agreement_court_outcomes)
           return false unless @criteria.last_communication_action.in?(valid_actions_for_court_agreement_breach_letter_to_progress)
           true

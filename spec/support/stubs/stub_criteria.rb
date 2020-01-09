@@ -85,7 +85,7 @@ module Stubs
     end
 
     def active_agreement?
-      attributes[:active_agreement]
+      attributes[:most_recent_agreement] || attributes[:active_agreement]
     end
 
     def nosp_served?
@@ -103,6 +103,10 @@ module Stubs
 
     def payment_ref
       attributes[:payment_ref]
+    end
+
+    def most_recent_agreement
+      attributes[:most_recent_agreement]
     end
 
     private

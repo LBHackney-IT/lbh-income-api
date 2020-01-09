@@ -130,6 +130,8 @@ module Hackney
           attributes[:payment_ref]
         end
 
+        def most_recent_agreement; end
+
         def self.format_action_codes_for_sql
           Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL.map { |action_code| "('#{action_code}')" }
                                                             .join(', ')

@@ -50,7 +50,8 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       latest_active_agreement_date: latest_active_agreement_date,
       breach_agreement_date: breach_agreement_date,
       number_of_broken_agreements: number_of_broken_agreements,
-      expected_balance: expected_balance
+      expected_balance: expected_balance,
+      most_recent_agreement: most_recent_agreement
     }
   end
 
@@ -72,6 +73,7 @@ shared_examples 'TenancyClassification' do |condition_matrix|
       let(:breach_agreement_date) { options[:breach_agreement_date] }
       let(:number_of_broken_agreements) { options[:number_of_broken_agreements] }
       let(:expected_balance) { options[:expected_balance] }
+      let(:most_recent_agreement) { options[:most_recent_agreement] }
 
       it "returns `#{options[:outcome]}`" do
         expect(subject).to eq(options[:outcome])
