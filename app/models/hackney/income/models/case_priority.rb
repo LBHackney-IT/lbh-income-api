@@ -15,6 +15,8 @@ module Hackney
 
         belongs_to :case, class_name: 'Hackney::Income::Models::Case', optional: true
 
+        scope :by_payment_ref, ->(payment_ref) { where(payment_ref: payment_ref) }
+
         def tenancy_ref
           # TODO: please do not use tenancy_ref has been moved to Hackney::Income::Models::Case'
           read_attribute(:tenancy_ref)

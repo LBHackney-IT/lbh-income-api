@@ -21,6 +21,7 @@ module Hackney
       end
 
       def income_collection?
+        return false if parsed_metadata.dig(:template, :path).nil?
         parsed_metadata
           .dig(:template, :path)
           .include?(Hackney::PDF::GetTemplatesForUser::INCOME_COLLECTION_TEMPLATE_DIRECTORY_PATH)
