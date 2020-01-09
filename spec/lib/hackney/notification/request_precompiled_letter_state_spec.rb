@@ -18,7 +18,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
 
   let(:payment_ref) { Faker::Number.number(10) }
 
-  let(:case_priority) {create(:case_priority, payment_ref: payment_ref)}
+  let(:case_priority) { create(:case_priority, payment_ref: payment_ref) }
 
   let(:document) do
     create(:document,
@@ -41,7 +41,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   end
 
   context 'when failure' do
-    before {expect(notification_gateway).to receive(:precompiled_letter_state).and_return(status: 'validation-failed')}
+    before { expect(notification_gateway).to receive(:precompiled_letter_state).and_return(status: 'validation-failed') }
 
     it 'raises Sentry notification' do
       expect(Raven).to receive(:send_event)
@@ -50,7 +50,6 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   end
 
   context 'when an income collection letter fails validation' do
-
     let(:document) do
       create(:document,
              metadata: {
@@ -64,7 +63,6 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
     end
 
     it 'finds the relevant tenancy and writes into the action diary' do
-
       expect(notification_gateway).to receive(:precompiled_letter_state).and_return(status: 'validation-failed')
 
       expect(case_priority_store).to receive(:by_payment_ref).with(payment_ref).and_return(case_priority)
@@ -74,7 +72,6 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
         action_code: 'WAR',
         comment: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.'
       ).and_return(case_priority)
-
 
       expect { response }.to change { document.reload.status }.from('uploaded').to('validation-failed')
     end

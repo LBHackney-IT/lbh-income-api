@@ -62,20 +62,19 @@ describe Hackney::Income::TenancyPrioritiser::TenancyClassification do
       end
 
       context 'when the letter sent failed govnotify validation' do
-
         before do
           create(:document, status: 'validation-failed',
-                 metadata: {
-                   payment_ref: attributes[:payment_ref],
-                   template: {
-                     path: 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
-                     name: 'Income collection letter 1',
-                     id: 'income_collection_letter_1'
-                   }
-                 }.to_json)
+                            metadata: {
+                              payment_ref: attributes[:payment_ref],
+                              template: {
+                                path: 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
+                                name: 'Income collection letter 1',
+                                id: 'income_collection_letter_1'
+                              }
+                            }.to_json)
         end
 
-        let(:documents_related_to_case) { Hackney::Cloud::Document.by_payment_ref(attributes[:payment_ref])}
+        let(:documents_related_to_case) { Hackney::Cloud::Document.by_payment_ref(attributes[:payment_ref]) }
 
         it 'can classify a review failed letter tenancy' do
           expect(subject).to eq(:review_failed_letter)
