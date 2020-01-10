@@ -10,6 +10,7 @@ module Hackney
       MANUAL_GREEN_SMS_ACTION_CODE = 'GMS'.freeze
       MANUAL_AMBER_SMS_ACTION_CODE = 'AMS'.freeze
 
+      LETTER_FAILED_VALIDATION_CODE = 'VFL'.freeze
       # Codes for letters as follows:
       LETTER_1_IN_ARREARS_FH = 'LF1'.freeze
       LETTER_2_IN_ARREARS_FH = 'LF2'.freeze

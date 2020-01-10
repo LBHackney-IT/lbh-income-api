@@ -14,8 +14,10 @@ module Hackney
 
           add_action_diary_usecase.execute(
             tenancy_ref: related_case.tenancy_ref,
-            action_code: 'WAR',
-            comment: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.'
+            action_code: Hackney::Tenancy::ActionCodes::LETTER_FAILED_VALIDATION_CODE,
+            comment: "Letter '#{document.uuid}' from '#{document.parsed_metadata.dig(:template, :id)}' letter " \
+              'failed to send. Please check Gov Notify for more detail, once the issue is resolved update the ' \
+              "document by visiting documents?payment_ref=#{document.parsed_metadata.dig(:payment_ref)}"
           )
         end
 

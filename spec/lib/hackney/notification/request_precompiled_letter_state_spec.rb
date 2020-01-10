@@ -50,6 +50,8 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   end
 
   context 'when an income collection letter fails validation' do
+    let(:template_id) { Faker::Lorem.word }
+
     let(:document) do
       create(:document,
              metadata: {
@@ -57,7 +59,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
                template: {
                  path: 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
                  name: 'Income collection letter 1',
-                 id: 'income_collection_letter_1'
+                 id: template_id
                }
              }.to_json)
     end
@@ -69,8 +71,10 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
 
       expect(add_action_diary_usecase).to receive(:execute).with(
         tenancy_ref: case_priority.tenancy_ref,
-        action_code: 'WAR',
-        comment: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.'
+        action_code: 'VFL',
+        comment: "Letter '#{document.uuid}' from '#{template_id}' "\
+                 'letter failed to send. Please check Gov Notify for more detail, once the issue is '\
+                 "resolved update the document by visiting documents?payment_ref=#{payment_ref}"
       ).and_return(case_priority)
 
       expect { response }.to change { document.reload.status }.from('uploaded').to('validation-failed')
