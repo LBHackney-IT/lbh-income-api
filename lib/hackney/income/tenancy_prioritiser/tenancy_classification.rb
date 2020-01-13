@@ -45,8 +45,6 @@ module Hackney
         end
 
         def court_breach_visit?
-          return false if @criteria.breach_agreement_date.blank?
-          return false if @criteria.breach_agreement_date + 10.days > Date.today
           @criteria.last_communication_action.in?(court_breach_letter_actions) && last_communication_newer_than?(3.months.ago)
         end
 

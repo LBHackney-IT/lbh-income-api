@@ -13,8 +13,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
       last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 12.days.ago
+      last_communication_date: Date.today + 21
     },
     {
       outcome: :send_letter_one,
@@ -24,8 +23,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
       last_communication_action: court_breach_letter_code,
-      last_communication_date: 20.weeks.ago.to_date,
-      breach_agreement_date: 12.days.ago
+      last_communication_date: 20.weeks.ago.to_date
     },
     {
       outcome: :court_breach_visit,
@@ -35,52 +33,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
       last_communication_action: court_breach_letter_code,
-      last_communication_date: 3.months.ago,
-      breach_agreement_date: 12.days.ago
-    },
-    {
-      outcome: :send_letter_one,
-      nosps_in_last_year: 0,
-      weekly_rent: 5,
-      is_paused_until: nil,
-      balance: 15.0, # 3 * weekly_rent
-      active_agreement: false,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: Date.today
-    },
-    {
-      outcome: :send_letter_one,
-      nosps_in_last_year: 0,
-      weekly_rent: 5,
-      is_paused_until: nil,
-      balance: 15.0, # 3 * weekly_rent
-      active_agreement: false,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 10.days.ago
-    },
-    {
-      outcome: :court_breach_visit,
-      nosps_in_last_year: 0,
-      weekly_rent: 5,
-      is_paused_until: nil,
-      balance: 15.0, # 3 * weekly_rent
-      active_agreement: false,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 11.days.ago
-    },
-    {
-      outcome: :send_letter_one,
-      nosps_in_last_year: 0,
-      weekly_rent: 5,
-      is_paused_until: nil,
-      balance: 15.0, # 3 * weekly_rent
-      active_agreement: false,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 9.days.ago
+      last_communication_date: 3.months.ago
     },
     {
       outcome: :no_action,
@@ -90,19 +43,17 @@ describe 'Send Court Breach Letter Rule', type: :feature do
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
       last_communication_action: court_warning_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 9.days.ago
+      last_communication_date: Date.today + 21
     },
     {
-      outcome: :send_letter_one,
+      outcome: :court_breach_visit,
       nosps_in_last_year: 0,
       weekly_rent: 5,
       is_paused_until: nil,
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
-      last_communication_action: '',
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: ''
+      last_communication_action: court_breach_letter_code,
+      last_communication_date: Date.today + 21
     },
     {
       outcome: :send_letter_one,
@@ -112,8 +63,27 @@ describe 'Send Court Breach Letter Rule', type: :feature do
       balance: 15.0, # 3 * weekly_rent
       active_agreement: false,
       last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21,
-      breach_agreement_date: 2.days.ago
+      last_communication_date: Date.today - 200
+    },
+    {
+      outcome: :no_action,
+      nosps_in_last_year: 0,
+      weekly_rent: 5,
+      is_paused_until: nil,
+      balance: 15.0, # 3 * weekly_rent
+      active_agreement: false,
+      last_communication_action: court_warning_letter_code,
+      last_communication_date: Date.today + 21
+    },
+    {
+      outcome: :send_letter_one,
+      nosps_in_last_year: 0,
+      weekly_rent: 5,
+      is_paused_until: nil,
+      balance: 15.0, # 3 * weekly_rent
+      active_agreement: false,
+      last_communication_action: '',
+      last_communication_date: Date.today + 21
     }
   ]
 
