@@ -130,7 +130,13 @@ module Hackney
           attributes[:payment_ref]
         end
 
-        def most_recent_agreement; end
+        def most_recent_agreement
+          status = attributes[:most_recent_agreement_status].strip
+          {
+            breached: status == Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS,
+            start_date: attributes[:most_recent_agreement_date]
+          }
+        end
 
         def self.format_action_codes_for_sql
           Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL.map { |action_code| "('#{action_code}')" }
@@ -260,6 +266,19 @@ module Hackney
               AND arag_status = @ActiveArrearsAgreementStatus
               ORDER BY arag_startdate DESC
             )
+            DECLARE @MostRecentAgreementDate SMALLDATETIME = (
+              SELECT TOP 1 arag_startdate
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              ORDER BY arag_startdate DESC
+            )
+            DECLARE @MostRecentAgreementStatus CHAR(10) = (
+              SELECT TOP 1 arag_status
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              ORDER BY arag_startdate DESC
+            )
+
             DECLARE @BreachAgreementDate SMALLDATETIME = (
               SELECT TOP 1 arag_statusdate
               FROM [dbo].[arag]
@@ -308,7 +327,9 @@ module Hackney
               @UCDirectPaymentReceived as uc_direct_payment_received,
               @BreachAgreementDate as breach_agreement_date,
               @ExpectedBalance as expected_balance,
-              @PaymentRef as payment_ref
+              @PaymentRef as payment_ref,
+              @MostRecentAgreementDate as most_recent_agreement_date,
+              @MostRecentAgreementStatus as most_recent_agreement_status
           SQL
         end
 

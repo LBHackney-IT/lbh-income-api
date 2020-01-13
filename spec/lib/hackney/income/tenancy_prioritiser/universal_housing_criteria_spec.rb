@@ -602,6 +602,35 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
       end
     end
 
+    describe '#most_recent_agreement' do
+      let(:start_date) { Date.new(2020, 1, 1) }
+
+      context 'when a breached agreement exists' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 300, agreement_start_date: start_date)
+        end
+
+        it 'can return the breach status' do
+          expect(subject.most_recent_agreement[:breached]).to eq(true)
+        end
+
+        it 'can return the agreement start date' do
+          expect(subject.most_recent_agreement[:start_date]).to eq(start_date)
+        end
+      end
+
+      context 'when there are two agreements' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 300, agreement_start_date: 2.months.ago)
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 200, agreement_start_date: 1.month.ago)
+        end
+
+        it 'returns the most recent agreement' do
+          expect(subject.most_recent_agreement[:breached]).to eq(false)
+        end
+      end
+    end
+
     it 'has the same instance methods as the stub' do
       expect(criteria.methods).to match_array(Stubs::StubCriteria.new.methods)
     end
