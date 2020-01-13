@@ -4,7 +4,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
   let!(:message_id) { SecureRandom.uuid }
   let(:notification_gateway) { Hackney::Income::StubNotificationsGateway.new }
   let(:add_action_diary_usecase) { double(Hackney::Tenancy::AddActionDiaryEntry) }
-  let(:document_store) { Hackney::Cloud::Document }
+  let(:document_store) { Hackney::Cloud::Storage.new(double(:adapter), Hackney::Cloud::Document) }
   let(:case_priority_store) { double(Hackney::Income::Models::CasePriority) }
 
   let(:notification_response) do

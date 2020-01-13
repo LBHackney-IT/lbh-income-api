@@ -73,11 +73,10 @@ module Hackney
 
       def enqueue_request_all_precompiled_letter_states
         enqueue_job = Hackney::Income::Jobs::RequestPrecompiledLetterStateJob
-        document_store = Hackney::Cloud::Document
 
         Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates.new(
           enqueue_job: enqueue_job,
-          document_store: document_store
+          document_store: cloud_storage
         )
       end
 

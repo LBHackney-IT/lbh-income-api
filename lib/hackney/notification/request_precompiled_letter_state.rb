@@ -7,7 +7,7 @@ module Hackney
             message_id: document.ext_message_id
           )
 
-        update_document(document: document, status: response[:status])
+        document_store.update_document_status(document: document, status: response[:status])
 
         if document.income_collection? && document.failed?
           related_case = case_priority_store.by_payment_ref(document.parsed_metadata[:payment_ref])
@@ -22,18 +22,6 @@ module Hackney
         end
 
         response
-      end
-
-      def update_document(document:, status:)
-        Rails.logger.info "Document ext_message_id #{document.ext_message_id} found with status #{status}"
-        document.status = status
-        document.save!
-
-        message = "Document has been set to #{status} - id: #{document.id}, uuid: #{document.uuid}"
-        Rails.logger.info message
-
-        evt = Raven::Event.new(message: message)
-        Raven.send_event(evt) if document.failed?
       end
     end
   end
