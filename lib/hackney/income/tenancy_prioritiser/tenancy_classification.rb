@@ -21,9 +21,6 @@ module Hackney
 
           wanted_action ||= breach_letter_action
 
-          wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
-          wanted_action ||= :send_informal_agreement_breach_letter if send_informal_agreement_breach_letter?
-
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
           wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
@@ -56,16 +53,6 @@ module Hackney
           @documents.most_recent.failed? && @documents.most_recent.income_collection?
         end
 
-        def send_informal_agreement_breach_letter?
-          return false if @criteria.number_of_broken_agreements.zero?
-          return false if @criteria.active_agreement? == true
-          return false if @criteria.balance >= @criteria.expected_balance
-          return false if @criteria.courtdate.present? && @criteria.courtdate < Date.today
-          return false if @criteria.breach_agreement_date + 3.days > Date.today
-          return false unless @criteria.last_communication_action.in?(valid_actions_for_court_agreement_breach_letter_to_progress)
-          true
-        end
-
         def update_court_outcome_action?
           return false if @criteria.courtdate.blank?
           return false if @criteria.courtdate.future?
@@ -74,33 +61,20 @@ module Hackney
         end
 
         def breach_letter_action
-          return unless @criteria.most_recent_agreement.present?
-          return unless @criteria.most_recent_agreement[:start_date].present?
+          return if @criteria.most_recent_agreement.blank?
+          return if @criteria.most_recent_agreement[:start_date].blank?
           return unless @criteria.most_recent_agreement[:breached]
 
-          return :send_informal_agreement_breach_letter_new unless @criteria.courtdate.present?
+          return :send_informal_agreement_breach_letter if @criteria.courtdate.blank?
 
           court_date_after_agreement = @criteria.courtdate > @criteria.most_recent_agreement[:start_date]
-          court_date_long_before_agreement = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
+          agreement_months_after_court_date = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
 
-          if court_date_after_agreement || court_date_long_before_agreement
-            :send_informal_agreement_breach_letter_new
+          if court_date_after_agreement || agreement_months_after_court_date
+            :send_informal_agreement_breach_letter
           else
-            :send_court_agreement_breach_letter_new
+            :send_court_agreement_breach_letter
           end
-        end
-
-        def send_court_agreement_breach_letter?
-          return false if @criteria.number_of_broken_agreements < 1
-          return false if @criteria.active_agreement? == true
-          return false if @criteria.balance >= @criteria.expected_balance
-          return false if @criteria.latest_active_agreement_date.blank?
-          return false if @criteria.courtdate.blank?
-          return false if @criteria.latest_active_agreement_date <= @criteria.courtdate
-          return false if @criteria.breach_agreement_date.present? && @criteria.breach_agreement_date + 3.days > Date.today
-          return false unless @criteria.court_outcome.in?(active_agreement_court_outcomes)
-          return false unless @criteria.last_communication_action.in?(valid_actions_for_court_agreement_breach_letter_to_progress)
-          true
         end
 
         def send_sms?

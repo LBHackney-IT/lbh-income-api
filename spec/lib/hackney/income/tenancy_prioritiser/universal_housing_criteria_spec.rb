@@ -311,14 +311,38 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         it { is_expected.to be(false) }
       end
 
+      context 'when the tenant has a "first check" arrears agreement' do
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '100',
+            agreement_start_date: Time.zone.now
+          )
+        end
+
+        it { is_expected.to be(true) }
+      end
+
       context 'when the tenant has an active arrears agreement' do
-        before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '200') }
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '200',
+            agreement_start_date: Time.zone.now
+          )
+        end
 
         it { is_expected.to be(true) }
       end
 
       context 'when the tenant has a breached arrears agreement' do
-        before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '300') }
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '300',
+            agreement_start_date: Time.zone.now
+          )
+        end
 
         it { is_expected.to be(false) }
       end
@@ -616,6 +640,16 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
         it 'can return the agreement start date' do
           expect(subject.most_recent_agreement[:start_date]).to eq(start_date)
+        end
+      end
+
+      context 'when a first check agreement exists' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 100, agreement_start_date: start_date)
+        end
+
+        it 'is not in breach' do
+          expect(subject.most_recent_agreement[:breached]).to eq(false)
         end
       end
 
