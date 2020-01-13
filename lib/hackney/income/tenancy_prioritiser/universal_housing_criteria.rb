@@ -126,9 +126,31 @@ module Hackney
           attributes[:expected_balance]
         end
 
+        def payment_ref
+          attributes[:payment_ref]
+        end
+
         def self.format_action_codes_for_sql
           Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL.map { |action_code| "('#{action_code}')" }
                                                             .join(', ')
+        end
+
+        def self.build_last_communication_sql_query(column:)
+          letter_2_sent_action_comment_text = 'Policy generated'
+
+          <<-SQL
+            SELECT TOP 1 #{column}
+            FROM araction WITH (NOLOCK)
+            WHERE tag_ref = @TenancyRef
+            AND (
+              action_code IN (SELECT communication_types FROM @CommunicationTypes) OR
+              (
+                action_code = '#{Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH}' AND
+                action_comment collate SQL_Latin1_General_CP1_CI_AS LIKE '%#{letter_2_sent_action_comment_text}%'
+              )
+            )
+            ORDER BY action_date DESC
+          SQL
         end
 
         def self.build_sql
@@ -177,7 +199,9 @@ module Hackney
             DECLARE @WeeklyRent NUMERIC(9, 2) = (
               SELECT rent FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
-
+            DECLARE @PaymentRef VARCHAR(20) = (
+              SELECT u_saff_rentacc FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
             DECLARE @PatchCode VARCHAR(3) = (
               SELECT arr_patch
               FROM [dbo].[property]
@@ -190,20 +214,15 @@ module Hackney
             DECLARE @BreachedAgreementsCount INT = (SELECT COUNT(tag_ref) FROM [dbo].[arag] WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND arag_status = @BreachedArrearsAgreementStatus)
             DECLARE @NospsInLastYear INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(year, -1, GETDATE())))
             DECLARE @NospsInLastMonth INT = (SELECT COUNT(tag_ref) FROM araction WITH (NOLOCK) WHERE tag_ref = @TenancyRef AND action_code = @NospActionDiaryCode AND action_date >= CONVERT(date, DATEADD(month, -1, GETDATE())))
+
             DECLARE @LastCommunicationAction VARCHAR(60) = (
-              SELECT TOP 1 action_code
-              FROM araction WITH (NOLOCK)
-              WHERE tag_ref = @TenancyRef
-              AND action_code IN (SELECT communication_types FROM @CommunicationTypes)
-              ORDER BY action_date DESC
+              #{build_last_communication_sql_query(column: 'action_code')}
             )
+
             DECLARE @LastCommunicationDate SMALLDATETIME = (
-              SELECT TOP 1 action_date
-              FROM araction WITH (NOLOCK)
-              WHERE tag_ref = @TenancyRef
-              AND action_code IN (SELECT communication_types FROM @CommunicationTypes)
-              ORDER BY action_date DESC
+              #{build_last_communication_sql_query(column: 'action_date')}
             )
+
             DECLARE @UniversalCredit SMALLDATETIME = (
               SELECT TOP 1 action_date
               FROM araction
@@ -233,11 +252,11 @@ module Hackney
               ORDER BY action_date DESC
             )
             DECLARE @LatestActiveAgreementDate SMALLDATETIME = (
-              SELECT TOP 1 arag_statusdate
+              SELECT TOP 1 arag_startdate
               FROM [dbo].[arag]
               WHERE tag_ref = @TenancyRef
               AND arag_status = @ActiveArrearsAgreementStatus
-              ORDER BY arag_statusdate DESC
+              ORDER BY arag_startdate DESC
             )
             DECLARE @BreachAgreementDate SMALLDATETIME = (
               SELECT TOP 1 arag_statusdate
@@ -286,7 +305,8 @@ module Hackney
               @UCDirectPaymentRequested as uc_direct_payment_requested,
               @UCDirectPaymentReceived as uc_direct_payment_received,
               @BreachAgreementDate as breach_agreement_date,
-              @ExpectedBalance as expected_balance
+              @ExpectedBalance as expected_balance,
+              @PaymentRef as payment_ref
           SQL
         end
 

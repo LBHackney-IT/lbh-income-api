@@ -5,7 +5,7 @@ RSpec.describe Hackney::Income::Jobs::RequestPrecompiledLetterStateJob, type: :j
 
   describe '#perform' do
     it do
-      expect_any_instance_of(Hackney::Notification::RequestPrecompiledLetterState).to receive(:execute).with(message_id: document.ext_message_id)
+      expect_any_instance_of(Hackney::Notification::RequestPrecompiledLetterState).to receive(:execute).with(document: document)
       described_class.perform_now(document_id: document.id)
     end
   end

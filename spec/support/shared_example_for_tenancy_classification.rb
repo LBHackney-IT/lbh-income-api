@@ -26,7 +26,11 @@ end
 shared_examples 'TenancyClassification' do |condition_matrix|
   subject { assign_classification.execute }
 
-  let(:assign_classification) { Hackney::Income::TenancyPrioritiser::TenancyClassification.new(case_priority, criteria) }
+  let(:assign_classification) {
+    Hackney::Income::TenancyPrioritiser::TenancyClassification.new(
+      case_priority, criteria, []
+    )
+  }
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
   let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
 

@@ -11,7 +11,7 @@ describe '"Apply for Court Date" examples' do
     balance: 25.0,
     last_communication_action: court_warning_letter_code,
     last_communication_date: 3.weeks.ago.to_date,
-    courtdate: ''
+    courtdate: nil
   }
 
   examples = [
@@ -60,9 +60,14 @@ describe '"Apply for Court Date" examples' do
       active_agreement: true
     ),
     base_example.merge(
-      description: 'with a past court date',
+      description: 'that only had court warning letters before the last court date',
+      outcome: :update_court_outcome_action,
+      courtdate: 7.days.ago
+    ),
+    base_example.merge(
+      description: 'that had a court warning letter since the last court date',
       outcome: :apply_for_court_date,
-      courtdate: ''
+      courtdate: 5.months.ago
     ),
     base_example.merge(
       description: 'with an evicition date',

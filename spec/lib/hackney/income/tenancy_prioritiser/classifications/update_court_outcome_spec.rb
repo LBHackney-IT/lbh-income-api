@@ -56,13 +56,13 @@ describe '"Update court outcome" examples' do
       description: 'with no court date set and a court outcome has been reached',
       outcome: :no_action,
       court_outcome: 'Outcome reached',
-      courtdate: ''
+      courtdate: nil
     ),
     base_example.merge(
       description: 'with no court date or court outcome present',
       outcome: :no_action,
       court_outcome: '',
-      courtdate: ''
+      courtdate: nil
     ),
     base_example.merge(
       description: 'with a court outcome and eviction date in the furture',

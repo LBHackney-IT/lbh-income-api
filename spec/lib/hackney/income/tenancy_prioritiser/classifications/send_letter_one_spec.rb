@@ -14,7 +14,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # no previous communication
     {
@@ -28,7 +28,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: nil,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # no previous communication, arrears not high enough
     {
@@ -42,7 +42,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: nil,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # send letter one, four days ago
     {
@@ -56,7 +56,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 4.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # send letter one, four days ago, with the UH code
     {
@@ -70,7 +70,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 4.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # active_agreement test
     {
@@ -84,7 +84,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # balance test
     {
@@ -98,7 +98,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # last action was send letter two, falls back into send letter one and no action is carried out for  over 3 months
     {
@@ -112,7 +112,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 4.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # when the communication is old, but <something else isn't valid>
     {
@@ -126,7 +126,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 4.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :send_letter_one,
@@ -139,7 +139,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: nil,
       last_communication_action: nil,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :no_action,
@@ -152,7 +152,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: nil,
       last_communication_action: nil,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :no_action,
@@ -165,7 +165,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 4.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :no_action,
@@ -178,7 +178,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     }
   ]
 

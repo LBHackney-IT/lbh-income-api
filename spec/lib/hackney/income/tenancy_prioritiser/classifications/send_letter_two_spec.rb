@@ -15,7 +15,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # balance test
     {
@@ -29,7 +29,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # nosps in last year test
     {
@@ -43,7 +43,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # last communication date tests
     {
@@ -57,7 +57,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 5.days.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :no_action,
@@ -70,7 +70,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 3.months.from_now.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # last communication action test
     {
@@ -84,7 +84,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :send_letter_two,
@@ -97,7 +97,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     {
       outcome: :send_letter_two,
@@ -110,7 +110,7 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH,
       eviction_date: '',
-      courtdate: ''
+      courtdate: nil
     },
     # eviction date test
     {
@@ -133,7 +133,7 @@ describe 'Send Letter Two Rule', type: :feature do
       active_agreement: true,
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: letter_1_in_arrears_sent_code,
-      courtdate: ''
+      courtdate: nil
     }
   ]
 

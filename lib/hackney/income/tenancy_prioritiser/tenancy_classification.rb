@@ -2,23 +2,29 @@ module Hackney
   module Income
     class TenancyPrioritiser
       class TenancyClassification
-        def initialize(case_priority, criteria)
+        def initialize(case_priority, criteria, documents)
           @criteria = criteria
           @case_priority = case_priority
+          @documents = documents
         end
 
         def execute
           wanted_action = nil
 
+          wanted_action ||= :review_failed_letter if review_failed_letter?
+
           wanted_action ||= :no_action if @criteria.eviction_date.present?
+          wanted_action ||= :no_action if @criteria.courtdate&.future?
           wanted_action ||= :no_action if @case_priority.paused?
 
           wanted_action ||= :court_breach_visit if court_breach_visit?
           wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
           wanted_action ||= :send_informal_agreement_breach_letter if send_informal_agreement_breach_letter?
-          wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
-          wanted_action ||= :apply_for_court_date if apply_for_court_date?
+
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
+          wanted_action ||= :apply_for_court_date if apply_for_court_date?
+          wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
+
           wanted_action ||= :send_NOSP if send_nosp?
           wanted_action ||= :send_letter_two if send_letter_two?
           wanted_action ||= :send_letter_one if send_letter_one?
@@ -42,6 +48,11 @@ module Hackney
           return false if @criteria.breach_agreement_date.blank?
           return false if @criteria.breach_agreement_date + 10.days > Date.today
           @criteria.last_communication_action.in?(court_breach_letter_actions) && last_communication_newer_than?(3.months.ago)
+        end
+
+        def review_failed_letter?
+          return false if @documents.empty?
+          @documents.most_recent.failed? && @documents.most_recent.income_collection?
         end
 
         def send_informal_agreement_breach_letter?
@@ -139,6 +150,8 @@ module Hackney
           return false if last_communication_newer_than?(2.weeks.ago)
 
           return false if @criteria.nosp_served_date > 28.days.ago.to_date
+
+          return false if @criteria.courtdate.present? && @criteria.courtdate > @criteria.last_communication_date
 
           @criteria.balance >= arrear_accumulation_by_number_weeks(4)
         end

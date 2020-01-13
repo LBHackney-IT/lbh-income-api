@@ -63,11 +63,11 @@ module Hackney
       end
 
       def request_precompiled_letter_state
-        document_store = Hackney::Cloud::Document
+        case_priority_store = Hackney::Income::Models
         Hackney::Notification::RequestPrecompiledLetterState.new(
           notification_gateway: notifications_gateway,
           add_action_diary_usecase: add_action_diary,
-          document_store: document_store
+          case_priority_store: case_priority_store
         )
       end
 

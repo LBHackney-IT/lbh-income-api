@@ -4,6 +4,7 @@ describe Hackney::Income::StoredTenanciesGateway do
   let(:gateway) { described_class.new }
 
   let(:tenancy_model) { Hackney::Income::Models::CasePriority }
+  let(:document_model) { Hackney::Cloud::Document }
 
   context 'when storing a tenancy' do
     subject(:store_tenancy) do
@@ -26,8 +27,11 @@ describe Hackney::Income::StoredTenanciesGateway do
 
     before do
       expect(tenancy_classification_stub).to receive(:execute).and_return(classification)
+
+      expect(document_model).to receive(:by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
+
       expect(Hackney::Income::TenancyPrioritiser::TenancyClassification).to receive(:new)
-        .with(instance_of(tenancy_model), stubbed_criteria)
+        .with(instance_of(tenancy_model), stubbed_criteria, [])
         .and_return(tenancy_classification_stub)
     end
 
