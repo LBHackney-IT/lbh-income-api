@@ -44,7 +44,7 @@ module Hackney
 
       def all_documents(payment_ref: nil)
         if payment_ref.present?
-          document_model.by_payment_ref(payment_ref).order(created_at: :DESC)
+          document_model.by_payment_ref(payment_ref).exclude_uploaded.order(created_at: :DESC)
         else
           document_model.exclude_uploaded.order(created_at: :DESC)
         end
@@ -73,6 +73,7 @@ module Hackney
 
         evt = Raven::Event.new(message: message)
         Raven.send_event(evt) if document.failed?
+        document
       end
 
       private

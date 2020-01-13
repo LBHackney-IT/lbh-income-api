@@ -31,18 +31,22 @@ describe Hackney::Cloud::Storage, type: :model do
       subject { storage.all_documents(payment_ref: payment_ref_param) }
 
       let(:payment_ref) { Faker::Number.number(10) }
-      let!(:new_document) { create(:document, metadata: { payment_ref: payment_ref }.to_json) }
+      let!(:uploaded_document) { create(:document, status: :uploaded, metadata: { payment_ref: payment_ref }.to_json) }
+      let!(:downloaded_document) { create(:document, status: :downloaded, metadata: { payment_ref: payment_ref }.to_json) }
+      let!(:accepted_document) { create(:document, status: :accepted, metadata: { payment_ref: payment_ref }.to_json) }
 
       context 'when payment_ref exists' do
         let(:payment_ref_param) { payment_ref }
 
-        it { is_expected.to include(new_document) }
+        it { is_expected.to include(downloaded_document) }
+        it { is_expected.to include(accepted_document) }
+        it { is_expected.not_to include(uploaded_document) }
       end
 
       context 'when payment_ref does not exist' do
         let(:payment_ref_param) { 'NON-EXISTENT-PAYMENT-REF' }
 
-        it { is_expected.not_to include(new_document) }
+        it { is_expected.not_to include([downloaded_document, uploaded_document, accepted_document]) }
       end
     end
   end
@@ -93,6 +97,30 @@ describe Hackney::Cloud::Storage, type: :model do
             .and_return(double(:tempfile, path: '/tmp/tempfile'))
 
           expect(storage.read_document(document.id)[:filepath]).to eq('/tmp/tempfile')
+        end
+      end
+    end
+
+    describe '#update_document_status' do
+
+      let(:document) { create(:document) }
+      let(:status) { [:received, :accepted, :downloaded, :queued, :failure_reviewed].sample }
+
+      it 'status is updated' do
+        updated_document = storage.update_document_status(document: document, status: status)
+
+        expect(updated_document.status).to eq(status.to_s)
+      end
+
+      context 'when status is failed' do
+        let(:status) { 'validation-failed' }
+
+        it 'raises Sentry notification' do
+          expect(Raven).to receive(:send_event)
+
+          updated_document = storage.update_document_status(document: document, status: status)
+
+          expect(updated_document.status).to eq(status)
         end
       end
     end
