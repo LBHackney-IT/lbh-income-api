@@ -40,13 +40,13 @@ describe '"Court Breach - No Payment" examples' do
     base_example.merge(
       description: 'when there is no courtdate',
       outcome: :send_letter_one,
-      courtdate: '',
+      courtdate: nil,
       last_communication_action: visit_made_action_code,
       last_communication_date: 7.days.ago.to_date
     ),
     base_example.merge(
       description: 'when the court date is in the future',
-      outcome: :send_letter_one,
+      outcome: :no_action,
       courtdate: 3.months.from_now.to_date,
       last_communication_action: visit_made_action_code,
       last_communication_date: 7.days.ago.to_date
