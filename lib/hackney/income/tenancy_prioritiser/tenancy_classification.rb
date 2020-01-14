@@ -81,25 +81,36 @@ module Hackney
         end
 
         def breach_letter_action
-          return if @criteria.last_communication_action.in?([
+          return nil if @criteria.last_communication_action.in?([
             Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
             Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
           ])
 
-          return if @criteria.most_recent_agreement.blank?
-          return if @criteria.most_recent_agreement[:start_date].blank?
-          return unless @criteria.most_recent_agreement[:breached]
+          if court_breach_agreement?
+            return nil if @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::VISIT_MADE
+            :send_court_agreement_breach_letter
+          elsif breached_agreement?
+            :send_informal_agreement_breach_letter
+          end
+        end
 
-          return :send_informal_agreement_breach_letter if @criteria.courtdate.blank?
+        def breached_agreement?
+          return false if @criteria.most_recent_agreement.blank?
+          return false if @criteria.most_recent_agreement[:start_date].blank?
+
+          @criteria.most_recent_agreement[:breached]
+        end
+
+        def court_breach_agreement?
+          return false unless breached_agreement?
+          return false if @criteria.courtdate.blank?
 
           court_date_after_agreement = @criteria.courtdate > @criteria.most_recent_agreement[:start_date]
           agreement_months_after_court_date = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
 
-          if court_date_after_agreement || agreement_months_after_court_date
-            :send_informal_agreement_breach_letter
-          else
-            :send_court_agreement_breach_letter
-          end
+          return false if court_date_after_agreement || agreement_months_after_court_date
+
+          true
         end
 
         def send_sms?
