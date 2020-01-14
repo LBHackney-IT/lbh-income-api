@@ -66,11 +66,13 @@ module Hackney
       end
 
       def update_document_status(document:, status:)
+        raise "Invalid document status: #{status}" unless document_model.statuses.include?(status)
+
         Rails.logger.info "Document ext_message_id #{document.ext_message_id} found with status #{status}"
         document.status = status
         document.save!
 
-        message = "Document has been set to #{status} - id: #{document.id}, uuid: #{document.uuid}"
+        message = "Document has been set to #{document.status} - id: #{document.id}, uuid: #{document.uuid}"
         Rails.logger.info message
 
         evt = Raven::Event.new(message: message)

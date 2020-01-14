@@ -122,6 +122,15 @@ describe Hackney::Cloud::Storage, type: :model do
           expect(updated_document.status).to eq(status)
         end
       end
+
+      context 'when trying to set status to something invalid' do
+        let(:status) { :not_a_valid_status }
+
+        it 'raises a exception' do
+          expect { storage.update_document_status(document: document, status: status) }
+            .to raise_exception("Invalid document status: #{status}")
+        end
+      end
     end
   end
 end
