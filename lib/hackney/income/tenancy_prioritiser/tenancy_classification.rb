@@ -2,13 +2,16 @@ module Hackney
   module Income
     class TenancyPrioritiser
       class TenancyClassification
-        def initialize(case_priority, criteria)
+        def initialize(case_priority, criteria, documents)
           @criteria = criteria
           @case_priority = case_priority
+          @documents = documents
         end
 
         def execute
           wanted_action = nil
+
+          wanted_action ||= :review_failed_letter if review_failed_letter?
 
           wanted_action ||= :no_action if @criteria.eviction_date.present?
           wanted_action ||= :no_action if @criteria.courtdate&.future?
@@ -18,6 +21,9 @@ module Hackney
 
           wanted_action ||= :send_court_agreement_breach_letter if send_court_agreement_breach_letter?
           wanted_action ||= :send_informal_agreement_breach_letter if send_informal_agreement_breach_letter?
+          wanted_action ||= :court_breach_visit if court_breach_visit?
+
+          wanted_action ||= breach_letter_action
 
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
@@ -61,6 +67,15 @@ module Hackney
           true
         end
 
+        def court_breach_visit?
+          @criteria.last_communication_action.in?(court_breach_letter_actions) && last_communication_newer_than?(3.months.ago)
+        end
+
+        def review_failed_letter?
+          return false if @documents.empty?
+          @documents.most_recent.failed? && @documents.most_recent.income_collection?
+        end
+
         def update_court_outcome_action?
           return false if @criteria.courtdate.blank?
           return false if @criteria.courtdate.future?
@@ -81,6 +96,23 @@ module Hackney
           return false unless @criteria.court_outcome.in?(active_agreement_court_outcomes)
           return false unless @criteria.last_communication_action.in?(valid_actions_for_court_agreement_breach_letter_to_progress)
           true
+        end
+
+        def breach_letter_action
+          return if @criteria.most_recent_agreement.blank?
+          return if @criteria.most_recent_agreement[:start_date].blank?
+          return unless @criteria.most_recent_agreement[:breached]
+
+          return :send_informal_agreement_breach_letter if @criteria.courtdate.blank?
+
+          court_date_after_agreement = @criteria.courtdate > @criteria.most_recent_agreement[:start_date]
+          agreement_months_after_court_date = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
+
+          if court_date_after_agreement || agreement_months_after_court_date
+            :send_informal_agreement_breach_letter
+          else
+            :send_court_agreement_breach_letter
+          end
         end
 
         def send_sms?
@@ -178,6 +210,12 @@ module Hackney
 
         def arrear_accumulation_by_number_weeks(weeks)
           @criteria.weekly_rent * weeks
+        end
+
+        def court_breach_letter_actions
+          [
+            Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
+          ]
         end
 
         def after_letter_one_actions

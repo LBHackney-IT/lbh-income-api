@@ -311,14 +311,38 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         it { is_expected.to be(false) }
       end
 
+      context 'when the tenant has a "first check" arrears agreement' do
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '100',
+            agreement_start_date: Time.zone.now
+          )
+        end
+
+        it { is_expected.to be(true) }
+      end
+
       context 'when the tenant has an active arrears agreement' do
-        before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '200') }
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '200',
+            agreement_start_date: Time.zone.now
+          )
+        end
 
         it { is_expected.to be(true) }
       end
 
       context 'when the tenant has a breached arrears agreement' do
-        before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '300') }
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '300',
+            agreement_start_date: Time.zone.now
+          )
+        end
 
         it { is_expected.to be(false) }
       end
@@ -598,6 +622,45 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
       context 'when there is an expected balance set in an agreement' do
         it 'can retrun the expected balance of the account' do
           expect(subject.expected_balance).to eq(expected_balance)
+        end
+      end
+    end
+
+    describe '#most_recent_agreement' do
+      let(:start_date) { Date.new(2020, 1, 1) }
+
+      context 'when a breached agreement exists' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 300, agreement_start_date: start_date)
+        end
+
+        it 'can return the breach status' do
+          expect(subject.most_recent_agreement[:breached]).to eq(true)
+        end
+
+        it 'can return the agreement start date' do
+          expect(subject.most_recent_agreement[:start_date]).to eq(start_date)
+        end
+      end
+
+      context 'when a first check agreement exists' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 100, agreement_start_date: start_date)
+        end
+
+        it 'is not in breach' do
+          expect(subject.most_recent_agreement[:breached]).to eq(false)
+        end
+      end
+
+      context 'when there are two agreements' do
+        before do
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 300, agreement_start_date: 2.months.ago)
+          create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: 200, agreement_start_date: 1.month.ago)
+        end
+
+        it 'returns the most recent agreement' do
+          expect(subject.most_recent_agreement[:breached]).to eq(false)
         end
       end
     end

@@ -90,7 +90,9 @@ module Hackney
         end
 
         def active_agreement?
-          attributes.fetch(:active_agreements_count) > 0
+          return false if attributes[:most_recent_agreement_status].blank?
+
+          attributes[:most_recent_agreement_status].squish != Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS
         end
 
         def number_of_broken_agreements
@@ -124,6 +126,17 @@ module Hackney
 
         def expected_balance
           attributes[:expected_balance]
+        end
+
+        def payment_ref
+          attributes[:payment_ref]
+        end
+
+        def most_recent_agreement
+          {
+            breached: !active_agreement?,
+            start_date: attributes[:most_recent_agreement_date]
+          }
         end
 
         def self.format_action_codes_for_sql
@@ -195,7 +208,9 @@ module Hackney
             DECLARE @WeeklyRent NUMERIC(9, 2) = (
               SELECT rent FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
-
+            DECLARE @PaymentRef VARCHAR(20) = (
+              SELECT u_saff_rentacc FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
             DECLARE @PatchCode VARCHAR(3) = (
               SELECT arr_patch
               FROM [dbo].[property]
@@ -252,6 +267,19 @@ module Hackney
               AND arag_status = @ActiveArrearsAgreementStatus
               ORDER BY arag_startdate DESC
             )
+            DECLARE @MostRecentAgreementDate SMALLDATETIME = (
+              SELECT TOP 1 arag_startdate
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              ORDER BY arag_startdate DESC
+            )
+            DECLARE @MostRecentAgreementStatus CHAR(10) = (
+              SELECT TOP 1 arag_status
+              FROM [dbo].[arag]
+              WHERE tag_ref = @TenancyRef
+              ORDER BY arag_startdate DESC
+            )
+
             DECLARE @BreachAgreementDate SMALLDATETIME = (
               SELECT TOP 1 arag_statusdate
               FROM [dbo].[arag]
@@ -299,7 +327,10 @@ module Hackney
               @UCDirectPaymentRequested as uc_direct_payment_requested,
               @UCDirectPaymentReceived as uc_direct_payment_received,
               @BreachAgreementDate as breach_agreement_date,
-              @ExpectedBalance as expected_balance
+              @ExpectedBalance as expected_balance,
+              @PaymentRef as payment_ref,
+              @MostRecentAgreementDate as most_recent_agreement_date,
+              @MostRecentAgreementStatus as most_recent_agreement_status
           SQL
         end
 

@@ -2,12 +2,17 @@ module Hackney
   module Income
     class StoredTenanciesGateway
       GatewayModel = Hackney::Income::Models::CasePriority
+      DocumentModel = Hackney::Cloud::Document
 
       def store_tenancy(tenancy_ref:, criteria:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
+
+        documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
+
         classification_usecase = Hackney::Income::TenancyPrioritiser::TenancyClassification.new(
           gateway_model_instance,
-          criteria
+          criteria,
+          documents
         )
 
         begin
@@ -37,7 +42,8 @@ module Hackney
               uc_direct_payment_received: criteria.uc_direct_payment_received,
               latest_active_agreement_date: criteria.latest_active_agreement_date,
               breach_agreement_date: criteria.breach_agreement_date,
-              expected_balance: criteria.expected_balance
+              expected_balance: criteria.expected_balance,
+              payment_ref: criteria.payment_ref
             )
           end
         rescue ActiveRecord::RecordNotUnique
