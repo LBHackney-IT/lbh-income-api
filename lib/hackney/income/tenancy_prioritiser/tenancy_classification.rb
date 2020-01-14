@@ -28,6 +28,7 @@ module Hackney
           wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
 
           wanted_action ||= :send_NOSP if send_nosp?
+
           wanted_action ||= :send_letter_two if send_letter_two?
           wanted_action ||= :send_letter_one if send_letter_one?
           wanted_action ||= :send_first_SMS if send_sms?
@@ -51,11 +52,8 @@ module Hackney
           return false if @criteria.courtdate.blank?
           return false if @criteria.courtdate.future?
           return false if @criteria.courtdate < 3.months.ago
-          @criteria.court_outcome.in?(outright_possession_court_outcome_codes)
-        end
 
-        def court_breach_visit?
-          @criteria.last_communication_action.in?(court_breach_letter_actions) && last_communication_newer_than?(3.months.ago)
+          @criteria.court_outcome.in?(outright_possession_court_outcome_codes)
         end
 
         def review_failed_letter?
@@ -63,14 +61,22 @@ module Hackney
           @documents.most_recent.failed? && @documents.most_recent.income_collection?
         end
 
+        def court_breach_visit?
+          return false if @criteria.courtdate.blank?
+          return false unless court_breach_agreement?
+
+          @criteria.last_communication_action.in?(court_breach_letter_actions) &&
+            last_communication_older_than?(7.days.ago) &&
+            last_communication_newer_than?(3.months.ago)
+        end
+
         def court_breach_no_payment?
           return false if @criteria.courtdate.blank?
-          return false if @criteria.courtdate.future?
-          return false if @criteria.court_outcome.blank?
-          return false if @criteria.last_communication_action.blank?
-          return false if @criteria.last_communication_date.blank?
+          return false unless court_breach_agreement?
+          return false if @criteria.days_since_last_payment.to_i < 7
 
-          @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) && last_communication_older_than?(1.week.ago)
+          @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) &&
+            last_communication_older_than?(1.week.ago)
         end
 
         def update_court_outcome_action?

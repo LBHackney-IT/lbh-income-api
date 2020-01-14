@@ -1,39 +1,47 @@
 require 'rails_helper'
 
 describe 'Send Court Breach Letter Rule', type: :feature do
-  court_breach_letter_code = Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
-  court_warning_letter_code = Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
-
   base_example = {
     outcome: :court_breach_visit,
-    nosps_in_last_year: 0,
     weekly_rent: 5,
     is_paused_until: nil,
     balance: 15.0, # 3 * weekly_rent
     active_agreement: false,
-    last_communication_action: court_breach_letter_code,
-    last_communication_date: Date.today + 21
+    court_outcome: 'Jail',
+    last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
+    last_communication_date: 2.weeks.ago,
+    courtdate: 14.days.ago.to_date,
+    nosps_in_last_year: 1,
+    nosp_expiry_date: 2.months.from_now,
+    most_recent_agreement: {
+      start_date: 1.week.ago,
+      breached: true
+    }
   }
 
   examples = [
     base_example,
     base_example.merge(
-      description: 'with a valid last_communication_action',
-      outcome: :court_breach_visit,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today + 21
-    ),
-    base_example.merge(
       description: 'with a date outside of 3 months',
-      outcome: :send_letter_one,
-      last_communication_action: court_breach_letter_code,
-      last_communication_date: Date.today - 420
+      outcome: :no_action,
+      last_communication_date: 4.months.ago
     ),
     base_example.merge(
       description: 'with a last_communication_action which is NOT a court_breach_letter_code',
       outcome: :no_action,
-      last_communication_action: court_warning_letter_code,
-      last_communication_date: Date.today + 21
+      last_communication_action: Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
+    ),
+    base_example.deep_merge(
+      description: 'when there is no agreement',
+      outcome: :no_action,
+      most_recent_agreement: nil
+    ),
+    base_example.deep_merge(
+      description: 'when there is no breached agreement',
+      outcome: :no_action,
+      most_recent_agreement: {
+        breached: false
+      }
     )
   ]
 
