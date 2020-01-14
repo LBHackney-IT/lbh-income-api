@@ -38,6 +38,18 @@ describe 'Various "Send breach letter" examples (new)' do
       outcome: :send_informal_agreement_breach_letter,
       courtdate: 4.months.ago,
       court_outcome: 'something'
+    ),
+    base_example.merge(
+      description: 'with the last communication being a court breach letter',
+      outcome: :no_action,
+      last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
+      last_communication_date: 6.months.ago
+    ),
+    base_example.merge(
+      description: 'with the last communication being an informal breach letter',
+      outcome: :no_action,
+      last_communication_action: Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT,
+      last_communication_date: 6.months.ago
     )
   ]
 

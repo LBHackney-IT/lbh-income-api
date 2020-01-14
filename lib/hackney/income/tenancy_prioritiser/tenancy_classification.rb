@@ -81,6 +81,11 @@ module Hackney
         end
 
         def breach_letter_action
+          return if @criteria.last_communication_action.in?([
+            Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
+            Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
+          ])
+
           return if @criteria.most_recent_agreement.blank?
           return if @criteria.most_recent_agreement[:start_date].blank?
           return unless @criteria.most_recent_agreement[:breached]
@@ -248,12 +253,6 @@ module Hackney
         end
 
         def valid_actions_for_apply_for_court_date_to_progress
-          [
-            Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
-          ]
-        end
-
-        def valid_actions_for_court_agreement_breach_letter_to_progress
           [
             Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
           ]
