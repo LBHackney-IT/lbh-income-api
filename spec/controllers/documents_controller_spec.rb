@@ -20,4 +20,15 @@ describe DocumentsController do
       end
     end
   end
+
+  describe '#review_failure' do
+    let(:document_id) { Faker::Number.number(3) }
+
+    it 'correct usecase is called' do
+      expect_any_instance_of(Hackney::Letter::ReviewFailure)
+        .to receive(:execute).with(document_id: document_id)
+
+      post :review_failure, params: { id: document_id }
+    end
+  end
 end

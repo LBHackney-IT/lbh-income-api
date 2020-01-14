@@ -19,6 +19,12 @@ module Hackney
         )
       end
 
+      def review_failure
+        Hackney::Letter::ReviewFailure.new(
+          cloud_storage: cloud_storage
+        )
+      end
+
       def save_letter_to_cloud
         UseCases::SaveLetterToCloud.new(
           Rails.configuration.cloud_adapter

@@ -1,6 +1,8 @@
 module Hackney
   module Cloud
     class Storage
+      attr_reader :document_model
+
       HACKNEY_BUCKET_DOCS = Rails.application.config_for('cloud_storage')['bucket_docs']
       UPLOADING_CLOUD_STATUS = :uploading
 
@@ -75,10 +77,6 @@ module Hackney
         Raven.send_event(evt) if document.failed?
         document
       end
-
-      private
-
-      attr_reader :document_model
     end
   end
 end

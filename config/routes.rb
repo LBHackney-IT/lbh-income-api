@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     get '/documents/:id/download/', to: 'documents#download'
     get '/documents/', to: 'documents#index'
+    post '/documents/:id/review_failure', to: 'documents#review_failure'
 
     post '/messages/letters/send', to: 'letters#send_letter'
     post '/messages/letters', to: 'letters#create'

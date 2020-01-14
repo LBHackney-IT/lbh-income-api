@@ -19,6 +19,10 @@ class DocumentsController < ApplicationController
     send_file doc_download[:filepath], type: doc.mime_type, filename: letter_file_name(doc)
   end
 
+  def review_failure
+    render json: letter_use_case_factory.review_failure.execute(document_id: params.fetch(:id))
+  end
+
   def index
     render json: letter_use_case_factory.get_all_documents.execute(payment_ref: params.fetch(:payment_ref, nil))
   end

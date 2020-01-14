@@ -102,9 +102,8 @@ describe Hackney::Cloud::Storage, type: :model do
     end
 
     describe '#update_document_status' do
-
       let(:document) { create(:document) }
-      let(:status) { [:received, :accepted, :downloaded, :queued, :failure_reviewed].sample }
+      let(:status) { %i[received accepted downloaded queued failure_reviewed].sample }
 
       it 'status is updated' do
         updated_document = storage.update_document_status(document: document, status: status)

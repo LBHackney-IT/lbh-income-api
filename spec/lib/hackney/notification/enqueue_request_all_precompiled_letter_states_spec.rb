@@ -51,6 +51,7 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
       let!(:failed) { create(:document, status: 'validation-failed') }
       let!(:downloaded) { create(:document, status: :downloaded) }
       let!(:queued) { create(:document, status: :queued) }
+      let!(:failure_reviewed) { create(:document, status: :failure_reviewed) } # rubocop:disable LetSetup
 
       it { expect(subject.documents).to include(uploading) }
       it { expect(subject.documents).to include(uploaded) }
