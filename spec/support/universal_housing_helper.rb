@@ -41,7 +41,7 @@ module UniversalHousingHelper
       evictdate: eviction_date.to_date,
       intro_date: DateTime.now,
       intro_ext_date: DateTime.now,
-      u_saff_rentacc: u_saff_rentacc,
+      u_saff_rentacc: u_saff_rentacc.to_s + '          ',
       house_ref: house_ref,
       cot: cot,
       u_money_judgement: money_judgement,

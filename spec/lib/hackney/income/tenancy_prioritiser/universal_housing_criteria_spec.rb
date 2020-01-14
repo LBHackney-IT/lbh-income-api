@@ -20,6 +20,8 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
     let(:current_balance) { Faker::Number.decimal.to_f }
 
+    let(:payment_ref) { Faker::Number.number(10) }
+
     before {
       create_uh_tenancy_agreement(
         tenancy_ref: tenancy_ref,
@@ -28,7 +30,8 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         nosp_notice_expiry_date: nosp_notice_expiry_date,
         courtdate: courtdate,
         court_outcome: court_outcome,
-        eviction_date: eviction_date
+        eviction_date: eviction_date,
+        u_saff_rentacc: payment_ref
       )
     }
 
@@ -41,6 +44,14 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
       it 'returns the current balance of a tenancy' do
         expect(subject).to eq(current_balance)
+      end
+    end
+
+    describe '#payment_ref' do
+      subject { criteria.payment_ref }
+
+      it 'returns the current balance of a tenancy' do
+        expect(subject).to eq(payment_ref)
       end
     end
 
