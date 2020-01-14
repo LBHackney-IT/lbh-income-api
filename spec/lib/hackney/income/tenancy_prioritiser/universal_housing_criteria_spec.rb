@@ -31,7 +31,10 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
         courtdate: courtdate,
         court_outcome: court_outcome,
         eviction_date: eviction_date,
-        u_saff_rentacc: payment_ref
+        u_saff_rentacc: payment_ref,
+        rent: 5,
+        service: 4.5,
+        other_charge: 0.5
       )
     }
 
@@ -60,6 +63,30 @@ describe Hackney::Income::TenancyPrioritiser::UniversalHousingCriteria, universa
 
       it 'returns the weekly rent of a tenancy' do
         expect(subject).to eq(5)
+      end
+    end
+
+    describe '#weekly_service' do
+      subject { criteria.weekly_service }
+
+      it 'returns the weekly service of a tenancy' do
+        expect(subject).to eq(4.5)
+      end
+    end
+
+    describe '#weekly_other_charge' do
+      subject { criteria.weekly_other_charge }
+
+      it 'returns the weekly other charge of a tenancy' do
+        expect(subject).to eq(0.5)
+      end
+    end
+
+    describe '#weekly_gross_rent' do
+      subject { criteria.weekly_gross_rent }
+
+      it 'returns the weekly gross rent of a tenancy' do
+        expect(subject).to eq(10)
       end
     end
 

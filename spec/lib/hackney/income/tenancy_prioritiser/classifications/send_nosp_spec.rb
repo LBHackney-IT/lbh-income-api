@@ -170,6 +170,19 @@ describe 'Send NOSP Rule', type: :feature do
     {
       outcome: :send_NOSP,
       nosps_in_last_year: 0,
+      nosp_expiry_date: '',
+      weekly_rent: 5,
+      balance: 25.0, # 5 * weekly_rent
+      is_paused_until: nil,
+      active_agreement: false,
+      last_communication_date: 8.days.ago.to_date,
+      last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
+      eviction_date: nil,
+      court_outcome: 'Jail'
+    },
+    {
+      outcome: :send_NOSP,
+      nosps_in_last_year: 0,
       nosp_expiry_date: 1.month.ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent

@@ -27,6 +27,18 @@ module Hackney
           attributes.fetch(:weekly_rent).to_f
         end
 
+        def weekly_service
+          attributes.fetch(:weekly_service).to_f
+        end
+
+        def weekly_other_charge
+          attributes.fetch(:weekly_other_charge).to_f
+        end
+
+        def weekly_gross_rent
+          weekly_rent + weekly_service + weekly_other_charge
+        end
+
         def nosp_served_date
           return nil if date_not_valid?(attributes[:nosp_served_date])
 
@@ -208,6 +220,13 @@ module Hackney
             DECLARE @WeeklyRent NUMERIC(9, 2) = (
               SELECT rent FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
+            DECLARE @WeeklyService NUMERIC(9, 2) = (
+              SELECT service FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
+            DECLARE @WeeklyOtherCharge NUMERIC(9, 2) = (
+              SELECT other_charge FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
+            )
+
             DECLARE @PaymentRef VARCHAR(20) = (
               SELECT u_saff_rentacc FROM [dbo].[tenagree] WHERE tag_ref = @TenancyRef
             )
@@ -307,6 +326,8 @@ module Hackney
             SELECT
               @CurrentBalance as current_balance,
               @WeeklyRent as weekly_rent,
+              @WeeklyService as weekly_service,
+              @WeeklyOtherCharge as weekly_other_charge,
               @PatchCode as patch_code,
               @LastPaymentDate as last_payment_date,
               @ArrearsStartDate as arrears_start_date,

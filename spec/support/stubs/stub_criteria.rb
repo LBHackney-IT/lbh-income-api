@@ -56,6 +56,18 @@ module Stubs
       attributes[:weekly_rent]
     end
 
+    def weekly_service
+      attributes[:weekly_service]
+    end
+
+    def weekly_other_charge
+      attributes[:weekly_other_charge]
+    end
+
+    def weekly_gross_rent
+      weekly_rent.to_i + weekly_service.to_i + weekly_other_charge.to_i
+    end
+
     def nosp_served_date
       attributes[:nosp_served_date]
     end

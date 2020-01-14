@@ -98,7 +98,7 @@ module Hackney
 
         def send_letter_one?
           return false if @criteria.balance.blank?
-          return false if @criteria.weekly_rent.blank?
+          return false if @criteria.weekly_gross_rent.blank?
 
           return false if @criteria.nosp_served?
           return false if @criteria.active_agreement?
@@ -111,7 +111,7 @@ module Hackney
 
         def send_letter_two?
           return false if @criteria.balance.blank?
-          return false if @criteria.weekly_rent.blank?
+          return false if @criteria.weekly_gross_rent.blank?
 
           return false if @criteria.active_agreement?
           return false if @criteria.nosp_served?
@@ -126,7 +126,7 @@ module Hackney
 
         def send_nosp?
           return false if @criteria.balance.blank?
-          return false if @criteria.weekly_rent.blank?
+          return false if @criteria.weekly_gross_rent.blank?
 
           return false if @criteria.active_agreement?
           return false if @criteria.nosp_served?
@@ -144,7 +144,7 @@ module Hackney
 
         def send_court_warning_letter?
           return false if @criteria.balance.blank?
-          return false if @criteria.weekly_rent.blank?
+          return false if @criteria.weekly_gross_rent.blank?
 
           return false if @criteria.active_agreement?
 
@@ -158,7 +158,7 @@ module Hackney
 
         def apply_for_court_date?
           return false if @criteria.balance.blank?
-          return false if @criteria.weekly_rent.blank?
+          return false if @criteria.weekly_gross_rent.blank?
 
           return false unless @criteria.nosp_served?
 
@@ -181,7 +181,7 @@ module Hackney
         end
 
         def arrear_accumulation_by_number_weeks(weeks)
-          @criteria.weekly_rent * weeks
+          @criteria.weekly_gross_rent * weeks
         end
 
         def court_breach_letter_actions
@@ -196,6 +196,7 @@ module Hackney
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH,
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
             Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
           ]
         end
@@ -210,7 +211,8 @@ module Hackney
         def valid_actions_for_nosp_to_progress
           [
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
+            Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT
           ]
         end
 
