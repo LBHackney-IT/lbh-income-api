@@ -21,7 +21,8 @@ module Hackney
 
           wanted_action ||= :court_breach_visit if court_breach_visit?
           wanted_action ||= :court_breach_no_payment if court_breach_no_payment?
-          wanted_action ||= breach_letter_action
+
+          wanted_action ||= :send_court_agreement_breach_letter if court_agreement_letter_action?
 
           wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
           wanted_action ||= :apply_for_court_date if apply_for_court_date?
@@ -86,18 +87,13 @@ module Hackney
           @criteria.court_outcome.blank?
         end
 
-        def breach_letter_action
-          return nil if @criteria.last_communication_action.in?([
+        def court_agreement_letter_action?
+          return false if @criteria.last_communication_action.in?([
             Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
-            Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
+            Hackney::Tenancy::ActionCodes::VISIT_MADE
           ])
 
-          if court_breach_agreement?
-            return nil if @criteria.last_communication_action == Hackney::Tenancy::ActionCodes::VISIT_MADE
-            :send_court_agreement_breach_letter
-          elsif breached_agreement?
-            :send_informal_agreement_breach_letter
-          end
+          court_breach_agreement?
         end
 
         def breached_agreement?

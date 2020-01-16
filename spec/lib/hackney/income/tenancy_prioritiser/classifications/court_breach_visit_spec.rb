@@ -29,7 +29,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
     base_example.merge(
       description: 'with a last_communication_action which is NOT a court_breach_letter_code',
       outcome: :no_action,
-      last_communication_action: Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
+      last_communication_action: Hackney::Tenancy::ActionCodes::VISIT_MADE
     ),
     base_example.deep_merge(
       description: 'when there is no agreement',
