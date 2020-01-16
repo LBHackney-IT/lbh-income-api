@@ -22,12 +22,15 @@ We employ a variant of Clean Architecture, borrowing from [Made Tech Flavoured C
 2. Get a hackney aws account (see maintainers)
 3. Clone this repository.
 4. Login to ecr [Universal Housing Simulator][github-uh-simulator] [1]:
+
 ```bash
 $ aws configure
 $ aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh
 ```
+
 5. Duplicate `.env.sample` to `.env` and replace placeholders with valid secrets.
 6. Run setup
+
 ```bash
 make setup
 ```
@@ -106,7 +109,6 @@ Universal Housing configuration is given through environment variables, for exam
 
 We use a [Universal Housing simulator][github-uh-simulator] to run automated tests against, mirroring the structure of the legacy Universal Housing database.
 
-
 ## Cloud Storage and KMS (Key Management System)
 
 The letters generated (PDF files) will be saved in S3 using Client-Side Encryption with Aws KMS.
@@ -121,6 +123,7 @@ The Cloud Storage solution make use of the following ENV variables:
 Those keys need to be different for staging and production enviroments.
 
 In addition, 2 different users(or roles) are needed to manage the Customer Managed Key:
+
 - A user with permissions to manage the keys
 - A user with permissions to use the keys (to encrypt/decrypt document)
 
@@ -134,6 +137,34 @@ See `schedule.yml` for the definitions of what `cron` jobs we run. Read the [Sid
 
 If you need to add environment variables, you need to update the ECS Task Definition.
 
+## Automation of Sending Letters
+
+This section is regarding the automation of how we send letters to tenants. The automation process is broken down into various customisable sections which make up this feature.
+
+The `automate_sending_letters` orchestrator use case is where the code lives `lib/use_cases/automate_sending_letters.rb`
+
+You have the flexibility to change the automation settings within AWS, you can:
+
+- Turn on and off automation - **AWS VARIABLE CAN_AUTOMATE_LETTERS**
+- Turn on and off automation for income collection Letter 1 - **AWS VARIABLE AUTOMATE_INCOME_COLLECTION_LETTER_ONE**
+- Turn on and off automation for income collection Letter 2 - **AWS VARIABLE AUTOMATE_INCOME_COLLECTION_LETTER_TWO**
+- Add or remove patches which can allow for automation - **AWS VARIABLE PATCH_CODES_FOR_LETTER_AUTOMATION**
+
+The AWS variables are the same across staging and production.
+
+In order to change any of these variables you will need to:
+
+1. Login to AWS
+2. Go to ECS
+3. Click on Clusters
+4. Click on `ecs-hackney-apps`
+5. Search for `income-api-production` or `income-api-staging`
+6. Click on Tasks
+7. Click on a task definition e.g(`task-income-api-production:150`)
+8. Click create new revision and ensure this is done for both tasks (`income-api-production-worker` and `income-api-production`)
+9. Save the changes and ensure you now redeploy the application for the changes to take effect
+
+**IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
 ## Contacts
 
@@ -141,14 +172,13 @@ If you need to add environment variables, you need to update the ECS Task Defini
 
 - **Rashmi Shetty**, Development Manager at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
 - **Vlad Atamanyuk**, Junior Developer at London Borough of Hackney (vladyslav.atamanyuk@hackney.gov.uk)
-- **Mark Rosel**, Lead Engineer at [Made Tech][made-tech] (mark.rosel@madetech.com)
 - **Steven Leighton**, Engineer at [Made Tech][made-tech] (steven@madetech.com)
 - **Cormac Brady**, Engineer at [Made Tech][made-tech] (cormac@madetech.com)
 - **Elena Vilimaitė**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
+- **George Schena**, Engineer at [Made Tech][made-tech] (george@madetech.com)
 
 ### Other Contacts
 
-- **Jeff Pinkham**, Engineer at [Made Tech][made-tech] (jeff@madetech.com)
 - **Richard Foster**, Lead Engineer at [Made Tech][made-tech] (richard@madetech.com)
 - **Luke Morton**, Director at [Made Tech][made-tech] (luke@madetech.com)
 - **Dennis Robinson**, Delivery Lead at London Borough of Hackney (dennis.robinson@hackney.gov.uk)
