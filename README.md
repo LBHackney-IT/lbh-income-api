@@ -158,7 +158,7 @@ In order to change any of these variables you will need to:
 2. Go to ECS
 3. Click on Clusters
 4. Click on `ecs-hackney-apps`
-5. Search for `income-api-production` or `income-api-staging`
+5. Do the following for `income-api-production` and `income-api-staging` tasks
 6. Click on Tasks
 7. Click on a task definition e.g(`task-income-api-production:150`)
 8. Click create new revision and ensure this is done for both tasks (`income-api-production-worker` and `income-api-production`)
