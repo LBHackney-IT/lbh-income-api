@@ -74,7 +74,7 @@ module Hackney
         def court_breach_no_payment?
           return false if @criteria.courtdate.blank?
           return false unless court_breach_agreement?
-          return false if @criteria.days_since_last_payment.to_i < 7
+          return false if @criteria.days_since_last_payment.to_i < 8
 
           @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) &&
             last_communication_older_than?(1.week.ago)

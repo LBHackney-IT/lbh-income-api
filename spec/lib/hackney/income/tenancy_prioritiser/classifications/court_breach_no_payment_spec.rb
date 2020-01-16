@@ -12,7 +12,7 @@ describe '"Court Breach - No Payment" examples' do
     court_outcome: 'Jail',
     last_communication_action: Hackney::Tenancy::ActionCodes::VISIT_MADE,
     last_communication_date: 8.days.ago.to_date,
-    days_since_last_payment: 7,
+    days_since_last_payment: 8,
     most_recent_agreement: {
       start_date: 1.week.ago,
       breached: true
@@ -24,7 +24,7 @@ describe '"Court Breach - No Payment" examples' do
     base_example.deep_merge(
       description: 'when the days_since_last_payment is less than 7 days ago',
       outcome: :no_action,
-      days_since_last_payment: 5
+      days_since_last_payment: 7
     ),
     base_example.deep_merge(
       description: 'when the last_communication_action NOT a visit_made_action_code',
