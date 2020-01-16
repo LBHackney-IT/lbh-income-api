@@ -145,10 +145,10 @@ The `automate_sending_letters` orchestrator use case is where the code lives `li
 
 You have the flexibility to change the automation settings within AWS, you can:
 
-- Turn on and off automation - **AWS VARIABLE CAN_AUTOMATE_LETTERS**
-- Turn on and off automation for income collection Letter 1 - **AWS VARIABLE AUTOMATE_INCOME_COLLECTION_LETTER_ONE**
-- Turn on and off automation for income collection Letter 2 - **AWS VARIABLE AUTOMATE_INCOME_COLLECTION_LETTER_TWO**
-- Add or remove patches which can allow for automation - **AWS VARIABLE PATCH_CODES_FOR_LETTER_AUTOMATION**
+- Turn on and off automation - **AWS ENV VARIABLE** `CAN_AUTOMATE_LETTERS`
+- Turn on and off automation for income collection Letter 1 - **AWS ENV VARIABLE** `AUTOMATE_INCOME_COLLECTION_LETTER_ONE`
+- Turn on and off automation for income collection Letter 2 - **AWS ENV VARIABLE** `AUTOMATE_INCOME_COLLECTION_LETTER_TWO`
+- Add or remove patches which can allow for automation - **AWS ENV VARIABLE** `PATCH_CODES_FOR_LETTER_AUTOMATION`
 
 The AWS variables are the same across staging and production.
 
@@ -162,7 +162,8 @@ In order to change any of these variables you will need to:
 6. Click on Tasks
 7. Click on a task definition e.g(`task-income-api-production:150`)
 8. Click create new revision and ensure this is done for both tasks (`income-api-production-worker` and `income-api-production`)
-9. Save the changes and ensure you now redeploy the application for the changes to take effect
+9. Save the changes the changes
+10. **ENSURE YOU REDEPLOY**
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
