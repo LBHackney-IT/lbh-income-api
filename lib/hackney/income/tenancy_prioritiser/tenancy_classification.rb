@@ -107,12 +107,7 @@ module Hackney
           return false unless breached_agreement?
           return false if @criteria.courtdate.blank?
 
-          court_date_after_agreement = @criteria.courtdate > @criteria.most_recent_agreement[:start_date]
-          agreement_months_after_court_date = @criteria.courtdate + 3.months < @criteria.most_recent_agreement[:start_date]
-
-          return false if court_date_after_agreement || agreement_months_after_court_date
-
-          true
+          @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
         end
 
         def send_sms?

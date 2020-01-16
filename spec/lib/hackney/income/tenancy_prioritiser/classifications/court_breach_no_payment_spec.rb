@@ -44,10 +44,9 @@ describe '"Court Breach - No Payment" examples' do
       }
     ),
     base_example.deep_merge(
-      description: 'when there is no courtdate, and an informal breach letter sent',
+      description: 'when there is no courtdate',
       outcome: :no_action,
-      courtdate: nil,
-      last_communication_action: Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
+      courtdate: nil
     ),
     base_example.deep_merge(
       description: 'when the court date is in the future',
