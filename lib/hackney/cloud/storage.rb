@@ -53,7 +53,7 @@ module Hackney
       end
 
       def documents_to_update_status(time:)
-        document_model.where('updated_at >= ?', time)
+        document_model.where('updated_at >= ?', time).exclude_uploaded
                       .where.not(status: %i[nil validation-failed received])
       end
 

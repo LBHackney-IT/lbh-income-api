@@ -16,7 +16,7 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
   end
 
   describe '#execute' do
-    let!(:document) { create(:document) }
+    let!(:document) { create(:document, status: :queued) }
 
     it do
       expect {
@@ -33,13 +33,13 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
     end
 
     context 'when older than 7 days' do
-      let(:document) { create(:document, updated_at: (Time.now - 8.days)) }
+      let(:document) { create(:document, updated_at: (Time.now - 8.days), status: :queued) }
 
       it { expect(subject.documents).not_to include(document) }
     end
 
     context 'when less than 7 days' do
-      let(:document) { create(:document, updated_at: (Time.now - 6.days)) }
+      let(:document) { create(:document, updated_at: (Time.now - 6.days), status: :queued) }
 
       it { expect(subject.documents).to include(document) }
     end
@@ -55,7 +55,7 @@ describe Hackney::Notification::EnqueueRequestAllPrecompiledLetterStates do
       let!(:failure_reviewed) { create(:document, status: :failure_reviewed) } # rubocop:disable LetSetup
 
       it { expect(subject.documents).to include(uploading) }
-      it { expect(subject.documents).to include(uploaded) }
+      it { expect(subject.documents).not_to include(uploaded) }
       it { expect(subject.documents).to include(accepted) }
       it { expect(subject.documents).not_to include(received) }
       it { expect(subject.documents).not_to include(failed) }
