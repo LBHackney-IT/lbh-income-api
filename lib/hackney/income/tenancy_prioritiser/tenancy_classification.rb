@@ -235,7 +235,8 @@ module Hackney
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_2,
             Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_3,
             Hackney::Tenancy::ActionCodes::S0A_ALTERNATIVE_LETTER,
-            Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
+            Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT,
+            Hackney::Tenancy::ActionCodes::STAGE_THREE_COMPLETE
           ]
         end
 
