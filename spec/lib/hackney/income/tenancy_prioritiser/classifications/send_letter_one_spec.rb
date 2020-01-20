@@ -204,7 +204,7 @@ describe 'Send Letter One Rule', type: :feature do
       is_paused_until: '',
       active_agreement: false,
       last_communication_date: 2.weeks.ago.to_date,
-      last_communication_action: Hackney::Tenancy::ActionCodes::STAGE_THREE_COMPLETE,
+      last_communication_action: Hackney::Tenancy::ActionCodes::UH_STAGE_THREE_COMPLETE,
       eviction_date: '',
       courtdate: nil
     }
