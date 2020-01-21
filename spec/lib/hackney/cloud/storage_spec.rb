@@ -3,6 +3,8 @@ require 'rails_helper'
 describe Hackney::Cloud::Storage, type: :model do
   let(:cloud_adapter_fake) { double(:upload) }
   let(:storage) { described_class.new(cloud_adapter_fake, Hackney::Cloud::Document) }
+  let(:page_number) { 1 }
+  let(:documents_per_page) { 10 }
 
   describe '#upload' do
     it 'saves the file and return the ID' do
@@ -23,12 +25,31 @@ describe Hackney::Cloud::Storage, type: :model do
       create(:document, status: :queued)
     end
 
+    subject {
+      storage.all_documents(
+        documents_per_page: documents_per_page,
+        page_number: page_number
+      )
+    }
+
     it 'retrieves all documents except for the one marked as "uploaded"' do
-      expect(storage.all_documents).not_to include(uploaded)
+      expect(subject.documents).not_to include(uploaded)
+    end
+
+    context 'returns a paginated set of documents' do
+      let(:documents_per_page){ 3 }
+
+      it { expect(subject.number_of_pages).to eq(2) }
+      it {expect(subject.page_number).to eq(1)}
+      it {expect(subject.documents).to all(be_an(Hackney::Cloud::Document))}
     end
 
     context 'when payment_ref param is used' do
-      subject { storage.all_documents(payment_ref: payment_ref_param) }
+      subject { storage.all_documents(
+        payment_ref: payment_ref_param,
+        documents_per_page: documents_per_page,
+        page_number: page_number
+      ) }
 
       let(:payment_ref) { Faker::Number.number(10) }
       let!(:uploaded_document) { create(:document, status: :uploaded, metadata: { payment_ref: payment_ref }.to_json) }
@@ -38,15 +59,15 @@ describe Hackney::Cloud::Storage, type: :model do
       context 'when payment_ref exists' do
         let(:payment_ref_param) { payment_ref }
 
-        it { is_expected.to include(downloaded_document) }
-        it { is_expected.to include(accepted_document) }
-        it { is_expected.not_to include(uploaded_document) }
+        it { expect(subject.documents).to include(downloaded_document) }
+        it { expect(subject.documents).to include(accepted_document) }
+        it { expect(subject.documents).not_to include(uploaded_document) }
       end
 
       context 'when payment_ref does not exist' do
         let(:payment_ref_param) { 'NON-EXISTENT-PAYMENT-REF' }
 
-        it { is_expected.not_to include([downloaded_document, uploaded_document, accepted_document]) }
+        it { expect(subject.documents).not_to include([downloaded_document, uploaded_document, accepted_document]) }
       end
     end
   end

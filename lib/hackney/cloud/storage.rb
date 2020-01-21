@@ -44,12 +44,19 @@ module Hackney
         { filepath: response.path, document: document }
       end
 
-      def all_documents(payment_ref: nil)
-        if payment_ref.present?
-          document_model.by_payment_ref(payment_ref).exclude_uploaded.order(created_at: :DESC)
-        else
-          document_model.exclude_uploaded.order(created_at: :DESC)
-        end
+
+      def all_documents(payment_ref: nil, page_number:, documents_per_page:)
+        query = document_model.exclude_uploaded.order(created_at: :DESC)
+        query = query.by_payment_ref(payment_ref) if payment_ref.present?
+
+        number_of_pages = (query.count.to_f / documents_per_page).ceil
+        query.limit(documents_per_page).offset((page_number-1) * documents_per_page)
+
+        OpenStruct.new(
+          documents: query,
+          number_of_pages: number_of_pages,
+          page_number: page_number
+          )
       end
 
       def documents_to_update_status(time:)
