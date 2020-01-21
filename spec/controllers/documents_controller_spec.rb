@@ -3,6 +3,7 @@ require 'rails_helper'
 describe DocumentsController do
   let(:page_number) { 1 }
   let(:documents_per_page) { 10 }
+
   describe '#index' do
     it 'returns all documents' do
       expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
@@ -26,7 +27,6 @@ describe DocumentsController do
       end
     end
   end
-
 
   describe '#review_failure' do
     let(:document_id) { Faker::Number.number(3) }

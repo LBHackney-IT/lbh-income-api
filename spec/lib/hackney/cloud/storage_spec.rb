@@ -15,6 +15,13 @@ describe Hackney::Cloud::Storage, type: :model do
   end
 
   describe 'retrieve all document' do
+    subject {
+      storage.all_documents(
+        documents_per_page: documents_per_page,
+        page_number: page_number
+      )
+    }
+
     let!(:uploaded) { create(:document, status: :uploaded) }
 
     before do
@@ -25,31 +32,26 @@ describe Hackney::Cloud::Storage, type: :model do
       create(:document, status: :queued)
     end
 
-    subject {
-      storage.all_documents(
-        documents_per_page: documents_per_page,
-        page_number: page_number
-      )
-    }
-
     it 'retrieves all documents except for the one marked as "uploaded"' do
       expect(subject.documents).not_to include(uploaded)
     end
 
-    context 'returns a paginated set of documents' do
-      let(:documents_per_page){ 3 }
+    context 'when documents are paginated' do
+      let(:documents_per_page) { 3 }
 
       it { expect(subject.number_of_pages).to eq(2) }
-      it {expect(subject.page_number).to eq(1)}
-      it {expect(subject.documents).to all(be_an(Hackney::Cloud::Document))}
+      it { expect(subject.page_number).to eq(1) }
+      it { expect(subject.documents).to all(be_an(Hackney::Cloud::Document)) }
     end
 
     context 'when payment_ref param is used' do
-      subject { storage.all_documents(
-        payment_ref: payment_ref_param,
-        documents_per_page: documents_per_page,
-        page_number: page_number
-      ) }
+      subject {
+        storage.all_documents(
+          payment_ref: payment_ref_param,
+          documents_per_page: documents_per_page,
+          page_number: page_number
+        )
+      }
 
       let(:payment_ref) { Faker::Number.number(10) }
       let!(:uploaded_document) { create(:document, status: :uploaded, metadata: { payment_ref: payment_ref }.to_json) }
