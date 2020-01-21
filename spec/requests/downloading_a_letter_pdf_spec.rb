@@ -66,8 +66,8 @@ RSpec.describe 'Downloading a PDF', type: :request do
       it 'updates the status to downloaded' do
         get 'http://example.com/api/v1/documents'
         expect(response).to be_successful
-        response_payment_reference = JSON.parse(JSON.parse(response.body)[0]['metadata'])['payment_ref']
-        status = JSON.parse(response.body)[0]['status']
+        response_payment_reference = JSON.parse(JSON.parse(response.body)['documents'][0]['metadata'])['payment_ref']
+        status = JSON.parse(response.body)['documents'][0]['status']
         expect(response_payment_reference).to eq(payment_ref)
         expect(status).to eq('downloaded')
       end

@@ -3,6 +3,8 @@ module Hackney
     class Storage
       attr_reader :document_model
 
+      PaginatedDocumentsResponse = Struct.new(:documents, :number_of_pages, :page_number)
+
       HACKNEY_BUCKET_DOCS = Rails.application.config_for('cloud_storage')['bucket_docs']
       UPLOADING_CLOUD_STATUS = :uploading
 
@@ -52,11 +54,7 @@ module Hackney
         number_of_pages = (query.count.to_f / documents_per_page).ceil
         query.limit(documents_per_page).offset((page_number-1) * documents_per_page)
 
-        OpenStruct.new(
-          documents: query,
-          number_of_pages: number_of_pages,
-          page_number: page_number
-          )
+        PaginatedDocumentsResponse.new(query, number_of_pages, page_number)
       end
 
       def documents_to_update_status(time:)
