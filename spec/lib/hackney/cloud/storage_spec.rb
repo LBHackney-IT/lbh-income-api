@@ -42,6 +42,7 @@ describe Hackney::Cloud::Storage, type: :model do
       it { expect(subject.number_of_pages).to eq(2) }
       it { expect(subject.page_number).to eq(1) }
       it { expect(subject.documents).to all(be_an(Hackney::Cloud::Document)) }
+      it { expect(subject.documents.size).to eq(3) }
     end
 
     context 'when payment_ref param is used' do
