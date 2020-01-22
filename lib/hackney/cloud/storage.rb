@@ -51,7 +51,7 @@ module Hackney
         query = query.by_payment_ref(payment_ref) if payment_ref.present?
 
         number_of_pages = (query.count.to_f / documents_per_page).ceil
-        query.limit(documents_per_page).offset((page_number - 1) * documents_per_page)
+        query = query.limit(documents_per_page).offset((page_number - 1) * documents_per_page)
 
         PaginatedDocumentsResponse.new(query, number_of_pages, page_number)
       end
