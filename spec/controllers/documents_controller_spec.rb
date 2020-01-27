@@ -9,6 +9,7 @@ describe DocumentsController do
       expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
         .to receive(:execute).with(
           payment_ref: nil,
+          status: nil,
           page_number: 1,
           documents_per_page: 20
         )
@@ -21,9 +22,30 @@ describe DocumentsController do
 
       it 'returns all documents filtered by payment_ref' do
         expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
-          .to receive(:execute).with(payment_ref: payment_ref, page_number: page_number, documents_per_page: documents_per_page)
+          .to receive(:execute).with(
+            status: nil,
+            payment_ref: payment_ref,
+            page_number: page_number,
+            documents_per_page: documents_per_page
+          )
 
         get :index, params: { payment_ref: payment_ref, page_number: page_number, documents_per_page: documents_per_page }
+      end
+    end
+
+    context 'when filtering by status' do
+      let(:document_status) { Hackney::Cloud::Document.statuses.keys.sample }
+
+      it 'returns all documents filtered by payment_ref' do
+        expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
+          .to receive(:execute).with(
+            status: document_status,
+            payment_ref: nil,
+            page_number: page_number,
+            documents_per_page: documents_per_page
+          )
+
+        get :index, params: { status: document_status, page_number: page_number, documents_per_page: documents_per_page }
       end
     end
   end

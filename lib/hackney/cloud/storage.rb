@@ -46,9 +46,10 @@ module Hackney
         { filepath: response.path, document: document }
       end
 
-      def all_documents(payment_ref: nil, page_number:, documents_per_page:)
+      def all_documents(payment_ref: nil, status: nil, page_number: 1, documents_per_page: 20)
         query = document_model.exclude_uploaded.order(created_at: :DESC)
         query = query.by_payment_ref(payment_ref) if payment_ref.present?
+        query = query.where(status: status) if status.present?
 
         number_of_pages = (query.count.to_f / documents_per_page).ceil
         query = query.limit(documents_per_page).offset((page_number - 1) * documents_per_page)

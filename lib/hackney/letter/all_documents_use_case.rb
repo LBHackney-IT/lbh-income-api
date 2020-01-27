@@ -5,10 +5,11 @@ module Hackney
         @cloud_storage = cloud_storage
       end
 
-      def execute(payment_ref: nil, page_number: 1, documents_per_page: 20)
+      def execute(payment_ref: nil, status: nil, page_number: 1, documents_per_page: 20)
         response = @cloud_storage.all_documents(
           payment_ref: payment_ref,
           page_number: page_number,
+          status: status,
           documents_per_page: documents_per_page
         )
 

@@ -48,9 +48,7 @@ describe Hackney::Cloud::Storage, type: :model do
     context 'when payment_ref param is used' do
       subject {
         storage.all_documents(
-          payment_ref: payment_ref_param,
-          documents_per_page: documents_per_page,
-          page_number: page_number
+          payment_ref: payment_ref_param
         )
       }
 
@@ -71,6 +69,27 @@ describe Hackney::Cloud::Storage, type: :model do
         let(:payment_ref_param) { 'NON-EXISTENT-PAYMENT-REF' }
 
         it { expect(subject.documents).not_to include([downloaded_document, uploaded_document, accepted_document]) }
+      end
+    end
+
+    context 'when status param is used' do
+      subject {
+        storage.all_documents(
+          status: document_status
+        )
+      }
+
+      let(:payment_ref) { Faker::Number.number(10) }
+      let!(:uploaded_document) { create(:document, status: :uploaded) }
+      let!(:downloaded_document) { create(:document, status: :downloaded) }
+      let!(:accepted_document) { create(:document, status: :accepted) }
+
+      context 'when documents are filtered by status' do
+        let(:document_status) { :downloaded }
+
+        it { expect(subject.documents).to include(downloaded_document) }
+        it { expect(subject.documents).not_to include(accepted_document) }
+        it { expect(subject.documents).not_to include(uploaded_document) }
       end
     end
   end

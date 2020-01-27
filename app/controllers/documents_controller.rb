@@ -26,6 +26,7 @@ class DocumentsController < ApplicationController
   def index
     render json: letter_use_case_factory.get_all_documents.execute(
       payment_ref: params.fetch(:payment_ref, nil),
+      status: params.fetch(:status, nil),
       page_number: params.fetch(:page_number, 1).to_i,
       documents_per_page: params.fetch(:documents_per_page, 20).to_i
     )
