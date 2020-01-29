@@ -3,7 +3,7 @@ class ActionDiaryController < ApplicationController
 
   def create
     begin
-      income_use_case_factory.add_action_diary_and_sync_case.execute(
+      income_use_case_factory.add_action_diary_and_pause_case.execute(
         tenancy_ref: action_diary_params.fetch(:tenancy_ref),
         action_code: action_diary_params.fetch(:action_code),
         comment: action_diary_params.fetch(:comment),

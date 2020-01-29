@@ -3,11 +3,11 @@ require 'rails_helper'
 describe Hackney::Notification::SendManualSms do
   let(:tenancy) { create_tenancy_model }
   let(:notification_gateway) { Hackney::Income::StubNotificationsGateway.new }
-  let(:add_action_diary_and_sync_case_usecase) { double(UseCases::AddActionDiaryAndSyncCase) }
+  let(:add_action_diary_and_pause_case_usecase) { double(UseCases::AddActionDiaryAndPauseCase) }
   let(:send_sms) do
     described_class.new(
       notification_gateway: notification_gateway,
-      add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case_usecase
+      add_action_diary_and_pause_case_usecase: add_action_diary_and_pause_case_usecase
     )
   end
 
@@ -36,7 +36,7 @@ describe Hackney::Notification::SendManualSms do
     let(:username) { Faker::Name.name }
 
     before do
-      allow(add_action_diary_and_sync_case_usecase).to receive(:execute)
+      allow(add_action_diary_and_pause_case_usecase).to receive(:execute)
     end
 
     it 'maps the tenancy to a set of variables' do
@@ -66,7 +66,7 @@ describe Hackney::Notification::SendManualSms do
     end
 
     it 'writes a entry to the action diary using the template friendly name' do
-      expect(add_action_diary_and_sync_case_usecase).to receive(:execute)
+      expect(add_action_diary_and_pause_case_usecase).to receive(:execute)
         .with(
           username: username,
           tenancy_ref: tenancy.tenancy_ref,
@@ -94,7 +94,7 @@ describe Hackney::Notification::SendManualSms do
       let(:phone_number) { 'not a phone number' }
 
       it 'does not send an sms' do
-        expect(add_action_diary_and_sync_case_usecase).not_to receive(:send_text_message)
+        expect(add_action_diary_and_pause_case_usecase).not_to receive(:send_text_message)
         subject
       end
     end

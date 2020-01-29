@@ -75,7 +75,7 @@ describe 'manually sending a letter causes case priority to sync', type: :reques
         stub_action_diary_write(tenancy_ref: tenancy_ref, code: 'IC1', date: Time.zone.now)
       end
 
-      it 'updates the the classification when a user sends a letter' do
+      it 'pause case priority for resync when a user sends a letter' do
         expect(case_priority).to be_send_letter_one
 
         perform_enqueued_jobs(only: Hackney::Income::Jobs::SendLetterToGovNotifyJob) do
@@ -87,7 +87,8 @@ describe 'manually sending a letter causes case priority to sync', type: :reques
         expect(document).to be_queued
 
         case_priority.reload
-        expect(case_priority).to be_no_action
+        expect(case_priority.paused?).to eq(true)
+        expect(case_priority.is_paused_until).to eq(Date.tomorrow)
       end
     end
   end

@@ -57,6 +57,91 @@ module Hackney
 
       PAUSED_MISSING_DATA = 'RMD'.freeze
 
+      ADJOURNED_GENERALLY = 'ADG'.freeze
+      ADJOURNED_ON_TERMS = 'ADT'.freeze
+      CHARGE_AGAINST_PROPERTY = 'CAP'.freeze
+      COSTS_AWARDED = 'CAW'.freeze
+      COURT_BREACH_LETTER = 'CBL'.freeze
+      COURT_OUTCOME_LETTER = 'IC5'.freeze
+      COURT_WARNING_LETTER = 'IC4'.freeze
+      COURT_DATE_SET = 'CDS'.freeze
+      DWP_DIRECT_PAYMENTS_REQUESTED = 'DPQ'.freeze
+      DECEASED = 'DEC'.freeze
+      DELAYED_BENEFIT = 'MBH'.freeze
+      DIRECT_DEBIT_CANCELLED = 'DDC'.freeze
+      EVICTION = 'EVI'.freeze
+      EVICTION_DATE_SET = 'EDS'.freeze
+      FINANCIAL_INCLUSION_CALL = 'FIC'.freeze
+      FINANCIAL_INCLUSION_INTERVIEW = 'FIO'.freeze
+      FINANCIAL_INCLUSION_VISIT = 'FIV'.freeze
+      HB_INVESTIGATION_PENDING = 'MHB'.freeze
+      HB_OUTSTANDING = 'HBO'.freeze
+      INCOMING_TELEPHONE_CALL = 'INC'.freeze
+      MONEY_JUDGEMENT_AWARDED = 'MJA'.freeze
+      NOTICE_SERVED = 'NTS'.freeze
+      OFFICE_INTERVIEW = 'OFI'.freeze
+      OUT_OF_HOURS_CALL = 'OOC'.freeze
+      OUTGOING_TELEPHONE_CALL = 'OTC'.freeze
+      POSTPONED_POSSESSION = 'PPO'.freeze
+      PROMISE_OF_PAYMENT = 'POP'.freeze
+      REFERRED_FOR_DEBT_ADVICE = 'DEB'.freeze
+      SUSPENDED_POSSESSION = 'SPO'.freeze
+      UNIVERSAL_CREDIT = 'UCC'.freeze
+      UNSUCCESSFUL_VISIT = 'VIU'.freeze
+
+      CODES_THAT_PAUSES_CASES = [
+        ADJOURNED_GENERALLY, ADJOURNED_ON_TERMS, CHARGE_AGAINST_PROPERTY, COSTS_AWARDED, COURT_BREACH_LETTER,
+        COURT_OUTCOME_LETTER, COURT_WARNING_LETTER, COURT_DATE_SET, DWP_DIRECT_PAYMENTS_REQUESTED, DECEASED,
+        DELAYED_BENEFIT, DIRECT_DEBIT_CANCELLED, EVICTION, EVICTION_DATE_SET, FINANCIAL_INCLUSION_CALL,
+        FINANCIAL_INCLUSION_INTERVIEW, FINANCIAL_INCLUSION_VISIT, HB_INVESTIGATION_PENDING, HB_OUTSTANDING,
+        INCOMING_TELEPHONE_CALL, MONEY_JUDGEMENT_AWARDED, NOTICE_SERVED, OFFICE_INTERVIEW, OUT_OF_HOURS_CALL,
+        OUTGOING_TELEPHONE_CALL, POSTPONED_POSSESSION, PROMISE_OF_PAYMENT, REFERRED_FOR_DEBT_ADVICE,
+        SUSPENDED_POSSESSION, UNIVERSAL_CREDIT, UNSUCCESSFUL_VISIT, WARRANT_OF_POSSESSION,
+        COURT_BREACH_LETTER_SENT, VISIT_MADE, INCOME_COLLECTION_LETTER_1, INCOME_COLLECTION_LETTER_1_UH,
+        INCOME_COLLECTION_LETTER_2, INCOME_COLLECTION_LETTER_2_UH, INCOME_COLLECTION_LETTER_2_UH_ALT,
+        INCOME_COLLECTION_LETTER_2_UH_ALT_2, INCOME_COLLECTION_LETTER_2_UH_ALT_3, S0A_ALTERNATIVE_LETTER,
+        COURT_WARNING_LETTER_SENT, ADJOURNED_ON_TERMS_COURT_OUTCOME, POSTPONED_POSSESSIOON_COURT_OUTCOME,
+        SUSPENDED_POSSESSION_COURT_OUTCOME, WARRANT_OF_POSSESSION, AUTOMATED_SMS_ACTION_CODE, MANUAL_SMS_ACTION_CODE,
+        MANUAL_GREEN_SMS_ACTION_CODE, MANUAL_AMBER_SMS_ACTION_CODE, TEXT_MESSAGE_SENT
+      ].freeze
+
+      # ---------------------DO NOT TOUCH RICHARD'S SPECIAL LIL LIST--------------------
+      # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&@@@@@@@&@&@@@&&@@@@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&%%%%%&&&&&%%%%%%&&&&@@@@&&&&&&&&&@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&@&&&&&&&&%%%%&&&&@@@@&&&&@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@&&%%%%%&&&&%&&&&&&&&&&&&&&&&&&&&&&&&&&&&%&@@@@@&%%&@@@&%@@@@@@@
+      # @@@@@@@@@@@@@@&%%%%%&&&&&&&&&&&&&@@@@@&&&&&&&&&&%%%&%&&%%%&&@@@@@&&&&%//**.@@@@@
+      # @@@@@@@@@@@&&%&&&&&&&@@&&&%&&&&&&&@@@&&&&&&&&&&&&&@@&%##%%%&@@@@@@@@&@&%(///,@@@
+      # @@@@@@@@@&&%%%%%%&&&&&&&&&@&%&&@@&&&&&&&&&&%&%%%%%%%%&%%&&%%&&&@@@@@@@@&&%###@@@
+      # @@@@@@@&%%%%&&&%&&&&&&&&&@&%&&&&&&&&&&&&&%%%%####(######%%&&&&@@@@@@@@@@@&####@@
+      # @@@@&&%%%&&&&%&&&&&&&&&&@@&&&&%%%&&&&%%%%%###((((((((((((#%%%%%&&@@@@@&&&@%%##@@
+      # @@@&%&%&&&%&&&&&&%%&&&&&&&@&%%##%&%%%%%%####(((((((((((((###%%%&&@@&&&&&&&%#%@@@
+      # @@&&&&%%&&&&&&%%%&&&&&&%&&%%#%#%%%%%%%%#####((((((((//////(#%&&%%%%&%%&&&#*** @@
+      # @@%&&&%%&&&&%%%&&&&&&&%%%%%&%&&%%%%%%%%%%##((((((/////////((#%%%%&&%&%&&%((((@@@
+      # @@%%&&%%&&%&&&&&&&&&&&&&%&&&&&&&&%%%%%%##(#(((///////////////(%%%##%&&&&&##(#@@@
+      # @@%%&&&%%%%&@&&&@&&&&@&&&&&&&&&%%##((((((////////////////////(#%&%%%&&&@&#####@@
+      # @@@%&&&&%%&&&@&&&%#(((((((((((((((((//((((((((##%%&&&%%#(((((((%&@&%#&&@%#(#####
+      # @@@%%%&&%%&&@&#(((//((###%#%%%%#######((##%%&&@@@&&&&&%%%%%%&@@@@(***%@%(///*,*,
+      # @@@%%%&&%&&@&%#((((#%&&&&&@@@@@@@&&&&&&&@@@&%%&&&%%%&@@@@&%%%#%@(#&&&&#///#&&(/#
+      # @@&%%%%&&&@@&%#%&@&%%#%%%&%%&@@&&%%&@@@@@@%#%&&&%%%%@@&%#((//*(&//#&&%((**#&&#/#
+      # &%%%#((#%&%%&@@@%###%&&&&%%@@@&&%##%@#(//#@%%%%%%%###(((((///*##//(#&%#(/*/%%(##
+      # %%%#%%%((#%&%(#@#%&&&%%######%%%#(#@#(((///&%#(((((((((((((/*/%///(%%%&%#//#(##(
+      # %%%(##(//(&&#//##/((##((((((((((((&#(((/////(&%#((((((((((%%#/*////(/#%%(/#/***/
+      # %%#(#((/(#&&(///%#/(##(((((((((#%@%(((/(////(#%#%%%%%#(//*////////(*/(//((//(#%@
+      # %%%#(((((#((#(///(%&&&&&&&@@@@&%##(((((((((///(###((////****/////((//////*,/#@@@
+      # %%%%%(((/((//((/////(/////(((##((#%&%%%%##((#((((#%###((///////(((((#((/*,,@@@@@
+      # @%%%%%(//////(#((((((((((((##((((######%%#((((((((/(####((((((((/((##(((* @@@@@@
+      # @@@%%%%(/////((((((((##(###((############(((//(//((##(((((((((((/(//,,( @@@@@@@@
+      # @@@@@%%%%%#%%%#((((####(((#(###(##%%%%%%%%%%%%#####%%#((((((((//(/,*((@@@@@@@@@@
+      # @@@@@@@&%%%%%%%((((((##(((##%%######((((/(((//**///*/((((((((((((/((#@@@@@@@@@@@
+      # @@@@@@@@@@@@%%%%(((#((#(((((((((((###%%%%%%##((/////((((((((((((/##(%&@@@@@@@@@@
+      # @@@@@@@@@@@@@%%%%###########((((((((((####((////////((((#######//(#%@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@#%%%#%############(((((((((((///////(((((######(/*//@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@&%((%%%%%%#######(((((((((((((((((#####%%##((///.@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@%((#%&&%%%%%%%%%######%%%%#%%%%%%%%%%##((/..@@@@@@@@@@@@@@@@@@
+      # @@@@@@@@@@@@@@@@@@@@@%(#%%&&&&&&&&&&&&&&&&&&&&&&&%%###%%&@@@@@@@@@@@@@@@@@@@@@@@
       FOR_UH_CRITERIA_SQL = [
         INCOME_COLLECTION_LETTER_1, INCOME_COLLECTION_LETTER_1_UH, INCOME_COLLECTION_LETTER_2,
         INCOME_COLLECTION_LETTER_2_UH_ALT, INCOME_COLLECTION_LETTER_2_UH_ALT_2,

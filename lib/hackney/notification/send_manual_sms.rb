@@ -15,7 +15,7 @@ module Hackney
           Rails.logger.info("Manual SMS sent using template_id: #{template_id}, reference was: #{reference}")
 
           template_name = @notification_gateway.get_template_name(template_id)
-          @add_action_diary_and_sync_case_usecase.execute(
+          @add_action_diary_and_pause_case_usecase.execute(
             username: username,
             tenancy_ref: tenancy_ref,
             action_code: Hackney::Notification::ManualActionCode.get_by_sms_template_name(template_name: template_name),

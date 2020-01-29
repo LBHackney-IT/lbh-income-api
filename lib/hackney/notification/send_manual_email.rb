@@ -9,7 +9,7 @@ module Hackney
           variables: variables
         )
         template_name = notification_gateway.get_template_name(template_id)
-        add_action_diary_and_sync_case_usecase.execute(
+        add_action_diary_and_pause_case_usecase.execute(
           username: username,
           tenancy_ref: tenancy_ref,
           action_code: Hackney::Tenancy::ActionCodes::MANUAL_EMAIL_ACTION_CODE,

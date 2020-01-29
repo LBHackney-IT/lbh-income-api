@@ -9,14 +9,14 @@ module Hackney
           )
 
         # FIXME: this must be in a background job => UH is unreliable
-        # TODO: create job to accept exact same args as add_action_diary_and_sync_case_usecase
+        # TODO: create job to accept exact same args as add_action_diary_and_pause_case_usecase
 
         tenancy_ref ||= leasehold_gateway.get_tenancy_ref(payment_ref: payment_ref).dig(:tenancy_ref)
 
         ad_code = action_code(template_id: template_id)
         Rails.logger.info "writing action diary code #{ad_code} from template_id: #{template_id} for Letter '#{unique_reference}'"
 
-        add_action_diary_and_sync_case_usecase.execute(
+        add_action_diary_and_pause_case_usecase.execute(
           username: username,
           tenancy_ref: tenancy_ref,
           action_code: ad_code,

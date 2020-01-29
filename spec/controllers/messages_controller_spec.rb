@@ -28,7 +28,7 @@ describe MessagesController, type: :controller do
     }
   end
 
-  let(:dummy_action_diary_usecase) { double(UseCases::AddActionDiaryAndSyncCase) }
+  let(:dummy_action_diary_usecase) { double(UseCases::AddActionDiaryAndPauseCase) }
   let(:expeted_templates) { Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.to_json }
 
   before do
@@ -38,7 +38,7 @@ describe MessagesController, type: :controller do
       transfer_nested_constants: true
     )
 
-    stub_const('UseCases::AddActionDiaryAndSyncCase', dummy_action_diary_usecase)
+    stub_const('UseCases::AddActionDiaryAndPauseCase', dummy_action_diary_usecase)
     allow(dummy_action_diary_usecase).to receive(:new).and_return(dummy_action_diary_usecase)
     allow(dummy_action_diary_usecase).to receive(:execute)
   end
