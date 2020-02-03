@@ -155,15 +155,19 @@ The AWS variables are the same across staging and production.
 In order to change any of these variables you will need to:
 
 1. Login to AWS
-2. Go to ECS
-3. Click on Clusters
-4. Click on `ecs-hackney-apps`
-5. Do the following for `income-api-production` and `income-api-staging` tasks
-6. Click on Tasks
-7. Click on a task definition e.g(`task-income-api-production:150`)
-8. Click create new revision and ensure this is done for both tasks (`income-api-production-worker` and `income-api-production`)
-9. Save the changes the changes
-10. **ENSURE YOU REDEPLOY**
+2. Go to **ECS**
+3. Locate and select **Task Definitions** on the left-hand sidebar
+4. Search for `task-income-` in the 'Filter in this page' field above the table.
+5. Select `income-api-production` or `income-api-staging`.
+6. Click on a Task definition e.g(`task-income-api-production:150`)
+7. Click **Create new revision**
+8. Locate 'Container definitions' and select the `income-api-production-worker` container.
+9. Locate the 'ENVIRONMENT' section of the slide-out.
+10. Add/Modify the relevant Environment Variables.
+11. Click **Update** at the bottom of the slide-out when you have finished making changes/additions.
+12. Click **Create** at the bottom of the 'Create new revision' page.
+13. There is a new Task Definition, but it has not been applied yet.  
+**You must ENSURE YOU REDEPLOY to have your changes be applied**
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
