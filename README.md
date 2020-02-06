@@ -108,7 +108,7 @@ Then we have an automated four step deployment process, which runs in CircleCI.
   5.2. Compare this with the hash shown in the commits list.
 6. Once you are happy, click 'Rerun workflow' on Circle CI.
 7. There are **manual stages** that need to be triggered within the workflow.  
-Remember to do this, or the new commit will not make it to production.
+Remember to do this, or the new workflow/deployment will not make it to production.
 
 ### Connection to Universal Housing
 
