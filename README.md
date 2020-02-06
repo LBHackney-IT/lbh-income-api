@@ -97,6 +97,17 @@ Then we have an automated four step deployment process, which runs in CircleCI.
 3. We manually confirm a production deployment in the CircleCI workflow once we're happy with our changes in staging.
 4. The app is deployed to production.
 
+#### Manual Redeployment
+
+1. Browse to the `master` branch on GitHub.
+2. Browse to 'Commits'.
+3. Locate and click the checks indicator for the commit you would like to deploy from.
+4. Click a stage's 'Details' link.
+5. Confirm the commit SHA is the same  
+  5.1. On Circle CI, the hash is shown on the right-hand side of the page, under 'Triggered by'.  
+  5.2. Compare this with the hash shown in the commits list.
+6. Once you are happy, click 'Rerun workflow' on Circle CI.
+
 ### Connection to Universal Housing
 
 Universal Housing configuration is given through environment variables, for example using development details:
@@ -170,7 +181,7 @@ In order to change any of these variables you will need to:
 14. Check that all the Environment Variables are correct, look for issues such as trailing whitespace e.g ``AUTOMATE_INCOME_COLLECTION_LETTER_ONE\t``  or special characters.
 15. If you find any issues with any of the Envrionment Variables follow the above steps to create a new Task Defintion with the corrected Environment Variables.
 16. There is now a new Task Definition, but it has not been applied yet.  
-**You must ENSURE YOU REDEPLOY to have your changes be applied**
+**You must ENSURE YOU [REDEPLOY](#manual-redeployment) to have your changes be applied**
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
