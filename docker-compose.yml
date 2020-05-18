@@ -14,8 +14,10 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - GOV_NOTIFY_API_KEY=${GOV_NOTIFY_API_KEY}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USERNAME=foo
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
+      - DATABASE_URL=mysql2://root:bar@db-development/app-database-development
     ports:
       - 3000:3000
     volumes:
@@ -24,6 +26,8 @@ services:
     depends_on:
       - universal_housing_simulator
       - redis
+      - db-development
+      - db-test
   universal_housing_simulator:
     image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/universal-housing-simulator-loaded:latest
     ports:
@@ -34,3 +38,34 @@ services:
     hostname: redis
     ports:
       - 6379:6379
+  db-development:
+    image: mysql:5.7
+    volumes:
+      - dev_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=app-database-development
+      - MYSQL_USERNAME=foo
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
+    ports:
+      - "3307:3306"
+    expose:
+      - '3306'
+  db-test:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=app-database-test
+      - MYSQL_USERNAME=foo
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
+    volumes:
+      - test_data:/var/lib/mysql
+    ports:
+      - "3308:3309"
+    expose:
+      - '3309'
+volumes:
+  dev_data: {}
+  test_data: {}

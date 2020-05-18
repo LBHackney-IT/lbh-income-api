@@ -1,4 +1,5 @@
 ENV['RAILS_ENV'] = 'test'
+ENV['DATABASE_URL']= 'mysql2://root:bar@db-test/app-database-test'
 
 ENV['TENANCY_API_HOST'] = 'example.com'
 ENV['TENANCY_API_KEY'] = '1234'

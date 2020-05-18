@@ -1,14 +1,18 @@
-development:
-  adapter: mysql2
-  encoding: utf8
-  database: db/development
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV.fetch("DB_USERNAME") %>
-  password: <%= ENV.fetch("DB_PASSWORD") %>
-test:
-  adapter: mysql2
-  encoding: utf8
-  database: db/test
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV.fetch("DB_USERNAME") %>
-  password: <%= ENV.fetch("DB_PASSWORD") %>
+# All environments are injected via DATABASE_URL
+
+# development:
+#   adapter: mysql2
+#   encoding: utf8
+#   database: app-database-<%= ENV.fetch("RAILS_ENV") %>
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   username: <%= ENV.fetch("MYSQL_USERNAME") %>
+#   password: <%= ENV.fetch("MYSQL_PASSWORD") %>
+# test:
+#   adapter: mysql2
+#   encoding: utf8
+#   database: app-database-test
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   username: <%= ENV.fetch("MYSQL_USERNAME") %>
+#   password: <%= ENV.fetch("MYSQL_PASSWORD") %>
+
+  # staging and production should be injected via DATABASE_URL
