@@ -14,6 +14,8 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - GOV_NOTIFY_API_KEY=${GOV_NOTIFY_API_KEY}
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
     ports:
       - 3000:3000
     volumes:
@@ -22,6 +24,7 @@ services:
     depends_on:
       - universal_housing_simulator
       - redis
+      - db
   universal_housing_simulator:
     image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/universal-housing-simulator-loaded:latest
     ports:
@@ -32,3 +35,15 @@ services:
     hostname: redis
     ports:
       - 6379:6379
+  db:
+    image: mysql:5.7
+    volumes:
+      - ${PWD}/db/data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
+    ports:
+      - 3306:3306
+volumes:
+  dev_data: {}
