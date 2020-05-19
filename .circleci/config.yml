@@ -15,6 +15,9 @@ jobs:
           command: |
             docker-compose build
       - run:
+          name: Create db
+          command: docker-compose run -e RAILS_ENV=test --rm app rails db:create
+      - run:
           name: Run migrations
           command: docker-compose run -e RAILS_ENV=test --rm app rails db:migrate
       - run:
