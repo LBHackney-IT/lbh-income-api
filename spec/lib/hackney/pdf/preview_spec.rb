@@ -8,6 +8,14 @@ describe Hackney::PDF::Preview do
     )
   end
 
+  before do
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+    stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+      status: 200,
+      body: stub_response_body
+    )
+  end
+
   let(:get_templates_gateway) { instance_double(Hackney::PDF::GetTemplatesForUser) }
   let(:leasehold_information_gateway) { instance_double(Hackney::Income::UniversalHousingLeaseholdGateway) }
   let(:test_template_id) { 123_123 }

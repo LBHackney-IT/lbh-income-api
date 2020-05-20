@@ -26,6 +26,12 @@ RSpec.describe 'Downloading a PDF', type: :request do
     create_valid_uh_records_for_a_letter
 
     stub_request(:post, 'http://example.com/api/v2/tenancies/arrears-action-diary')
+
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+    stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+      status: 200,
+      body: stub_response_body
+    )
   end
 
   after { Timecop.return }

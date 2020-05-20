@@ -8,7 +8,7 @@ describe Hackney::PDF::PreviewGenerator do
   end
 
   before do
-    stub_response_body = File.read(File.dirname(__FILE__) + '/test_bank_holidays_api_response.txt')
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
     stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
       status: 200,
       body: stub_response_body
@@ -56,6 +56,8 @@ describe Hackney::PDF::PreviewGenerator do
 
       expect(preview_with_errors[:html]).to eq(translated_working_days_html)
       expect(preview_with_errors[:errors]).to eq([])
+
+      Timecop.return
     end
   end
 
