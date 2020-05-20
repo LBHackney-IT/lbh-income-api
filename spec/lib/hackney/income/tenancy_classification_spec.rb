@@ -104,6 +104,38 @@ describe Hackney::Income::TenancyClassification do
     end
   end
 
+  context 'when there are arrears' do
+    let(:balance) { 20.00 }
+
+    context 'when a NOSP has expired' do
+      let(:nosp) { Hackney::Domain::Nosp.new(served_date: Time.zone.now - 29.days) }
+
+      context 'without a court date' do
+        let(:courtdate) { nil }
+
+        it 'recommends to send a new NOSP' do
+          expect(subject).to eq(:send_NOSP)
+        end
+      end
+
+      context 'with a court date in the past' do
+        let(:courtdate) { Time.zone.now - 1.week }
+
+        it 'has no action' do
+          expect(subject).to eq(:no_action)
+        end
+      end
+
+      context 'with a court date in the future' do
+        let(:courtdate) { Time.zone.now + 1.week }
+
+        it 'has no action' do
+          expect(subject).to eq(:no_action)
+        end
+      end
+    end
+  end
+
   context 'when checking that Action Codes are used in UH Criteria SQL' do
     let(:action_codes) { Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL }
     let(:unused_action_codes_required_for_uh_criteria_sql) { result - action_codes }
