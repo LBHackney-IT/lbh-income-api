@@ -203,7 +203,6 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 - **Rashmi Shetty**, Development Manager at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
 - **Vlad Atamanyuk**, Junior Developer at London Borough of Hackney (vladyslav.atamanyuk@hackney.gov.uk)
 - **Steven Leighton**, Engineer at [Made Tech][made-tech] (steven@madetech.com)
-- **Cormac Brady**, Engineer at [Made Tech][made-tech] (cormac@madetech.com)
 - **Elena Vilimaitė**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
 - **George Schena**, Engineer at [Made Tech][made-tech] (george@madetech.com)
 
