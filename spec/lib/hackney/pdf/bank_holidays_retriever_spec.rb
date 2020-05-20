@@ -33,4 +33,26 @@ describe Hackney::PDF::BankHolidaysRetriever do
       expect { bank_holidays = described_class.new.execute } .to raise_error(StandardError, /Retrieval Failed/)
     end
   end
+
+  context 'when API request responds with 200 but body is empty' do
+    it 'returns an empty array if body is an empty hash' do
+      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+        status: 200,
+        body: '{}'
+      )
+
+      bank_holidays = described_class.new.execute
+      expect(bank_holidays).to eq([])
+    end
+
+    it 'returns an empty array if body is an empty string' do
+      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+        status: 200,
+        body: ''
+      )
+
+      bank_holidays = described_class.new.execute
+      expect(bank_holidays).to eq([])
+    end
+  end
 end
