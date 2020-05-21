@@ -39,10 +39,9 @@ gem 'pdfkit'
 gem 'phonelib'
 gem 'redis-rails'
 gem 'sentry-raven'
-gem 'wkhtmltopdf-binary'
-
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
+gem 'wkhtmltopdf-binary'
 
 group :test do
   gem 'pdf-reader'
@@ -59,7 +58,6 @@ group :development, :test do
   gem 'pry'
   gem 'rspec-its'
   gem 'rspec-rails'
-  gem 'sqlite3'
   gem 'timecop'
   gem 'webmock'
 end

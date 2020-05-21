@@ -57,6 +57,18 @@ $ make serve
 
 #### Testing
 
+To setup or reset your test database run
+
+```sh
+$ make test-setup
+```
+
+To run tests:
+
+```sh
+$ make test
+```
+
 To run linting and tests:
 
 ```sh

@@ -66,7 +66,6 @@ RSpec.describe 'Income Collection Letters', type: :request do
             'id' => 'income_collection_letter_1'
           },
           'username' => user[:name],
-          'document_id' => 1,
           'errors' => []
         }
       }
@@ -80,11 +79,16 @@ RSpec.describe 'Income Collection Letters', type: :request do
 
         # UUID: is always different can ignore this.
         # TODO: Test `preview` content separatly
-        keys_to_ignore = %w[preview uuid]
+        keys_to_ignore = %w[preview uuid document_id]
 
-        json_response = JSON.parse(response.body).except(*keys_to_ignore)
+        full_response = JSON.parse(response.body)
+        filtered_response = full_response.except(*keys_to_ignore)
 
-        expect(json_response).to eq(expected_json_response_as_hash)
+        expect(filtered_response).to eq(expected_json_response_as_hash)
+
+        keys_to_ignore.each do |key|
+          expect(full_response).to have_key(key)
+        end
       end
     end
   end
