@@ -14,8 +14,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - GOV_NOTIFY_API_KEY=${GOV_NOTIFY_API_KEY}
-      - MYSQL_PASSWORD=bar
-      - MYSQL_ROOT_PASSWORD=bar
     ports:
       - 3000:3000
     volumes:

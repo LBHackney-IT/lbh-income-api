@@ -4,7 +4,7 @@ development:
   database: app-database-<%= ENV.fetch("RAILS_ENV") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: <%= ENV.fetch("MYSQL_PASSWORD") %>
+  password: bar
   host: incomeapi-db
 test:
   adapter: mysql2
@@ -12,7 +12,7 @@ test:
   database: app-database-<%= ENV.fetch("RAILS_ENV") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: <%= ENV.fetch("MYSQL_PASSWORD") %>
+  password: bar
   host: incomeapi-db
 
   # staging and production should be injected via DATABASE_URL

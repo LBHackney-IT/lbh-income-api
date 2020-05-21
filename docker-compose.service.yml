@@ -16,8 +16,6 @@ services:
       - GOV_NOTIFY_API_KEY=${GOV_NOTIFY_API_KEY}
       - TENANCY_API_HOST=http://tenancyapi:80
       - TENANCY_API_KEY=''
-      - MYSQL_PASSWORD=bar
-      - MYSQL_ROOT_PASSWORD=bar
     ports:
       - 3000:3000
     volumes:
