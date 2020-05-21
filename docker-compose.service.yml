@@ -16,8 +16,6 @@ services:
       - GOV_NOTIFY_API_KEY=${GOV_NOTIFY_API_KEY}
       - TENANCY_API_HOST=http://tenancyapi:80
       - TENANCY_API_KEY=''
-      - MYSQL_PASSWORD=bar
-      - MYSQL_ROOT_PASSWORD=bar
     ports:
       - 3000:3000
     volumes:
@@ -28,14 +26,14 @@ services:
       - universal_housing_simulator
       - redis
       - tenancyapi
-      - db
+      - incomeapi-db
   redis:
     image: redis:5.0.3-alpine
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     ports:
       - 6379:6379
-  db:
+  incomeapi-db:
     image: mysql:5.7
     volumes:
       - dev_data:/var/lib/mysql

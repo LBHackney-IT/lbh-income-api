@@ -21,7 +21,7 @@ jobs:
             DOCKERIZE_VERSION: v0.3.0
       - run:
           name: Start db container
-          command: docker-compose up -d db 
+          command: docker-compose up -d incomeapi-db 
       - run:
           name: Wait for db container
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
