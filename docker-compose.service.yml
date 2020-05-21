@@ -28,14 +28,14 @@ services:
       - universal_housing_simulator
       - redis
       - tenancyapi
-      - db
+      - incomeapi-db
   redis:
     image: redis:5.0.3-alpine
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     ports:
       - 6379:6379
-  db:
+  incomeapi-db:
     image: mysql:5.7
     volumes:
       - dev_data:/var/lib/mysql
