@@ -77,7 +77,7 @@ module Stubs
     end
 
     def nosp
-      @nosp ||= Hackney::Domain::Nosp.new(served_date: nosp_served_date)
+      @nosp ||= Hackney::Domain::Nosp.new(served_date: nosp_served_date, active_time: 3.months)
     end
 
     def nosp_served_date
