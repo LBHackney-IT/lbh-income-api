@@ -13,10 +13,22 @@ RUN wget https://web.archive.org/web/20191028054637/http://www.freetds.org/files
   make && \
   make install
 
+ENV DOCKERIZE_VERSION=v0.3.0
+RUN wget --quiet https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+ tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+ rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 ENV RAILS_ENV ${RAILS_ENV}
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle check || bundle install
 
+# Add a script to be executed every time the container starts.
+COPY bin/entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
 COPY . /app
 EXPOSE 3000
+
+CMD ["rails", "server", "-b", "0.0.0.0"]
