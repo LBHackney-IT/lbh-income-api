@@ -10,6 +10,9 @@ then
   echo "Waiting for database to come up on $DATABASE_SERVICE"
   # Wait for database to come up
   dockerize -wait "$DATABASE_SERVICE" -timeout 1m
+
+  # Create database - will not fail if it already exists
+  rails db:create
 fi
 
 # Migrate database
