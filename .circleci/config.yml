@@ -36,7 +36,7 @@ jobs:
           command: docker-compose run -e RAILS_ENV=test --rm app rspec
       - run:
           name: Run linting
-          command: docker-compose run --rm app rubocop
+          command: docker-compose run -e RAILS_ENV=test --rm app rubocop
       - store_artifacts:
           path: coverage
 
