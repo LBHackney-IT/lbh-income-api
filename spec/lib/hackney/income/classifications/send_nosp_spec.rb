@@ -17,7 +17,7 @@ describe 'Send NOSP Rule', type: :feature do
     # out of date nosp, heavily in arrears, no recent activity
     {
       outcome: :send_NOSP,
-      nosp_served_date: 14.months.ago.to_date,
+      nosp_served_date: 65.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
       is_paused_until: nil,
@@ -28,14 +28,14 @@ describe 'Send NOSP Rule', type: :feature do
     # out of date nosp, heavily in arrears, recent letter 2
     {
       outcome: :send_NOSP,
-      nosp_served_date: 14.months.ago.to_date,
+      nosp_served_date: 65.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
       is_paused_until: nil,
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-      court_outcome: 'Jail'
+      court_outcome: 'Snail'
     },
     {
       outcome: :apply_for_court_date,
@@ -47,7 +47,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Mail'
     },
     {
       outcome: :send_court_warning_letter,
@@ -59,7 +59,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Fail'
     },
     # With a recent NOSP
     {
@@ -72,7 +72,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Trail'
     },
     {
       outcome: :no_action,
@@ -84,7 +84,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Hail'
     },
     {
       outcome: :no_action,
@@ -107,7 +107,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 5.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Pale'
     },
     {
       outcome: :no_action,
@@ -153,7 +153,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 8.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Tail'
     },
     {
       outcome: :send_NOSP,
@@ -165,7 +165,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 8.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Ale'
     },
     {
       outcome: :send_NOSP,
@@ -177,7 +177,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 8.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Kale'
     },
     {
       outcome: :send_NOSP,
@@ -189,11 +189,11 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 8.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Male'
     },
     {
       outcome: :send_NOSP,
-      nosp_served_date: 14.months.ago.to_date,
+      nosp_served_date: 17.months.ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
@@ -201,7 +201,7 @@ describe 'Send NOSP Rule', type: :feature do
       last_communication_date: 7.months.ago.to_date,
       last_communication_action: 'ANYTHING',
       eviction_date: nil,
-      court_outcome: 'Jail'
+      court_outcome: 'Nail'
     },
     {
       outcome: :send_NOSP,
