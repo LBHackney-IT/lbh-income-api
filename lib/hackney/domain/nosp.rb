@@ -3,11 +3,11 @@ module Hackney
     # What a NOSP is:
     #
     # Expires Date is when the NOSP can now be actioned upon.
-    #   The Tenant has 28 days to pay the arrears before Court action can take place.
+    #   The Tenant has active_time (default 28 days) to pay the arrears before Court action can take place.
     #   This is the "cooling off period".
     #
     # Served - This is when there is a date from UH
-    # Cool off Period - This is the period from NOSP served to 28 days after
+    # Cool off Period - This is the period from NOSP served to active_time (default 28 days) after
     # Active - This when the Tenant can be taken to court if the arrears are "high" enough; after
     #          the cooling off period.
     # Valid - This is during the cooling off period and when the NOSP is "active".
