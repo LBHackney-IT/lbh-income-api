@@ -66,7 +66,7 @@ describe TenanciesController, type: :controller do
           assigned_user_id: nil,
           balance: tenancy_1.balance.to_s,
           broken_court_order: nil,
-          case_id: 1,
+          case_id: tenancy_1.case_id,
           classification: nil,
           court_outcome: nil,
           courtdate: nil,
@@ -115,13 +115,13 @@ describe TenanciesController, type: :controller do
             tenancy_ref: tenancy_1.tenancy_ref,
             nosp: {
               active: true,
-              expires_date: (nosp_served_date + 3.months).iso8601(3),
+              expires_date: (nosp_served_date + 3.months).strftime('%FT%T.000Z'),
               in_cool_off_period: false,
-              served_date: nosp_served_date.iso8601(3),
-              valid_until_date: (nosp_served_date + 3.months + 52.weeks).iso8601(3),
+              served_date: nosp_served_date.strftime('%FT%T.000Z'),
+              valid_until_date: (nosp_served_date + 3.months + 52.weeks).strftime('%FT%T.000Z'),
               valid: true
             },
-            nosp_served_date: nosp_served_date.iso8601(3),
+            nosp_served_date: nosp_served_date.strftime('%FT%T.000Z'),
             # The follwoing attributes are stored on the Case Pirority Model
             active_nosp: nil,
             nosp_served: nil

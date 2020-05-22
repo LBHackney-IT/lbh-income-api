@@ -26,9 +26,22 @@ services:
       - universal_housing_simulator
       - redis
       - tenancyapi
+      - incomeapi-db
   redis:
     image: redis:5.0.3-alpine
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     ports:
       - 6379:6379
+  incomeapi-db:
+    image: mysql:5.7
+    volumes:
+      - dev_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_PASSWORD=bar
+      - MYSQL_ROOT_PASSWORD=bar
+    ports:
+      - 3306:3306
+volumes:
+  dev_data: {}
