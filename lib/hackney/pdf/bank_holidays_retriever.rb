@@ -6,34 +6,29 @@ module Hackney
       DEFAULT_GROUP = 'england-and-wales'
 
       def execute
-        make_request
-        begin
-          get_dates
-        rescue
-          return []
-        end
+        get_dates
+      rescue
+        []
       end
 
       def uri
         URI.parse(API_URL)
       end
 
-      def make_request
-        @response ||= Net::HTTP.get_response(uri)
-
-        return raise_error unless @response.is_a?(Net::HTTPOK)
-      end
-
       def get_dates
-        @data ||= JSON.parse(@response.body)
+        response = Net::HTTP.get_response(uri)
 
-        return [] if @data.empty?
+        raise_error(response) unless response.is_a?(Net::HTTPOK)
 
-        @data.dig(DEFAULT_GROUP, 'events')&.pluck('date')
+        data = JSON.parse(response.body)
+
+        return [] if data.empty?
+
+        data.dig(DEFAULT_GROUP, 'events')&.pluck('date')
       end
 
-      def raise_error
-        raise UnsuccessfulRetrievalError, "Retrieval Failed: #{@response.message} (#{@response.code || @response.status}) #{@response.body}"
+      def raise_error(response)
+        raise UnsuccessfulRetrievalError, "Retrieval Failed: #{response.message} (#{response.code || response.status}) #{response.body}"
       end
     end
   end
