@@ -76,4 +76,3 @@ module Hackney
     end
   end
 end
-
