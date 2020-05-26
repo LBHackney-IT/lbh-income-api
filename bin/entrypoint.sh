@@ -11,8 +11,8 @@ then
   # Wait for database to come up
   dockerize -wait "$DATABASE_SERVICE" -timeout 1m
 
-  # Create database - will not fail if it already exists
-  rails db:create
+  # Setup the database - safe if it is already configured
+  rails db:setup
 fi
 
 # Start app
