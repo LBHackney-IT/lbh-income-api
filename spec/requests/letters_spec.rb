@@ -32,6 +32,8 @@ RSpec.describe 'Letters', type: :request do
       status: 200,
       body: stub_response_body
     )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   describe 'POST /api/v1/messages/letters' do

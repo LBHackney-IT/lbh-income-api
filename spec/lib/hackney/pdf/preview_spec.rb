@@ -14,6 +14,8 @@ describe Hackney::PDF::Preview do
       status: 200,
       body: stub_response_body
     )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   let(:get_templates_gateway) { instance_double(Hackney::PDF::GetTemplatesForUser) }

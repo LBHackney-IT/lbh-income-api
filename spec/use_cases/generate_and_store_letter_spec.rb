@@ -11,6 +11,8 @@ describe UseCases::GenerateAndStoreLetter do
       status: 200,
       body: stub_response_body
     )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   let(:use_case) { described_class.new }

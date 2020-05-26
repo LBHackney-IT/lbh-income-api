@@ -32,6 +32,8 @@ RSpec.describe 'Downloading a PDF', type: :request do
       status: 200,
       body: stub_response_body
     )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   after { Timecop.return }

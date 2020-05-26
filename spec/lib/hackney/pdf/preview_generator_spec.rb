@@ -13,6 +13,8 @@ describe Hackney::PDF::PreviewGenerator do
       status: 200,
       body: stub_response_body
     )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   let(:test_username) { 'Dave' }
