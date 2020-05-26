@@ -26,7 +26,7 @@ module Hackney
       end
 
       def raise_error(response)
-        raise UnsuccessfulRetrievalError, "Retrieval Failed: #{response.message} (#{response.code || response.status}) #{response.body}"
+        raise UnsuccessfulRetrievalError, "Retrieval Failed: #{response.message} (#{response.code || response.status})"
       end
     end
   end
