@@ -9,7 +9,7 @@ RSpec.describe Hackney::PDF::BankHolidays, type: :model do
       body: stub_response_body
     )
 
-    Rails.cache.clear
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   let(:bank_holidays_retriever) { instance_double(Hackney::PDF::BankHolidaysRetriever, execute: nil) }
