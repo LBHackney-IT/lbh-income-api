@@ -44,15 +44,5 @@ describe Hackney::PDF::BankHolidaysRetriever do
       bank_holidays = described_class.new.execute
       expect(bank_holidays).to eq([])
     end
-
-    it 'returns an empty array if body is an empty string' do
-      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
-        status: 200,
-        body: ''
-      )
-
-      bank_holidays = described_class.new.execute
-      expect(bank_holidays).to eq([])
-    end
   end
 end
