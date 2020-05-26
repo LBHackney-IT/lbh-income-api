@@ -47,7 +47,7 @@ describe Hackney::PDF::BankHolidaysRetriever do
     end
 
     it 'raises an UnsuccessfulRetrievalError' do
-      expect { bank_holidays = described_class.new.execute } .to raise_error(StandardError, /Retrieval Failed/)
+      expect { described_class.new.execute } .to raise_error(StandardError, /Retrieval Failed/)
     end
   end
 
