@@ -29,7 +29,7 @@ test-db-destroy:
 
 .PHONY: test
 test:
-	docker-compose run --rm -e "RAILS_ENV=test" app rspec
+	docker-compose run --rm -e RAILS_ENV=test app rspec
 
 .PHONY: lint
 lint:
