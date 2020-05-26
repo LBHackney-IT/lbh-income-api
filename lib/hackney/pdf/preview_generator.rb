@@ -50,6 +50,7 @@ module Hackney
       end
 
       private
+
       def get_bank_holidays
         Hackney::PDF::BankHolidays.dates
       end

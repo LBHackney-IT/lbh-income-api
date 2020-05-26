@@ -27,7 +27,6 @@ RSpec.describe 'Letters', type: :request do
     mock_aws_client
     create_valid_uh_records_for_a_letter
 
-
     stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
     stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
       status: 200,

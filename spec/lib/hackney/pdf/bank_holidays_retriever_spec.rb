@@ -13,11 +13,11 @@ describe Hackney::PDF::BankHolidaysRetriever do
     it 'returns list of bank holiday dates' do
       bank_holidays = described_class.new.execute
       expect(bank_holidays.length).to eq(56)
-      expect(bank_holidays.include? '2020-05-08').to eq(true)
-      expect(bank_holidays.include? '2021-05-03').to eq(true)
-      expect(bank_holidays.include? '2019-12-25').to eq(true)
-      expect(bank_holidays.include? '2020-12-25').to eq(true)
-      expect(bank_holidays.include? '2021-12-27').to eq(true)
+      expect(bank_holidays.include?('2020-05-08')).to eq(true)
+      expect(bank_holidays.include?('2021-05-03')).to eq(true)
+      expect(bank_holidays.include?('2019-12-25')).to eq(true)
+      expect(bank_holidays.include?('2020-12-25')).to eq(true)
+      expect(bank_holidays.include?('2021-12-27')).to eq(true)
     end
   end
 

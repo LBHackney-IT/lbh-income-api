@@ -51,7 +51,7 @@ describe Hackney::PDF::PreviewGenerator do
     let(:translated_working_days_html) { File.open('spec/lib/hackney/pdf/translated_test_working_days_template.html').read }
 
     it 'sets the next working day as the sending date' do
-      Timecop.freeze(2020, 05, 22)
+      Timecop.freeze(2020, 5, 22)
       preview_with_errors = subject.execute(letter_params: test_letter_params, username: test_username)
 
       expect(preview_with_errors[:html]).to eq(translated_working_days_html)
