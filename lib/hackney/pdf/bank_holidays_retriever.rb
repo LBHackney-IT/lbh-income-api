@@ -6,7 +6,9 @@ module Hackney
       DEFAULT_GROUP = 'england-and-wales'.freeze
 
       def execute
-        get_dates
+        Rails.cache.fetch('Hackney/PDF/BankHolidays', expires_in: 1.day) do
+          get_dates
+        end
       end
 
       def uri

@@ -8,6 +8,8 @@ describe Hackney::PDF::BankHolidaysRetriever do
         status: 200,
         body: stub_response_body
       )
+
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
     end
 
     it 'returns list of bank holiday dates' do
@@ -19,6 +21,19 @@ describe Hackney::PDF::BankHolidaysRetriever do
       expect(bank_holidays.include?('2020-12-25')).to eq(true)
       expect(bank_holidays.include?('2021-12-27')).to eq(true)
     end
+
+    it 'makes a call to the API when nothing is cached' do
+      bank_holidays = described_class.new
+      expect(bank_holidays).to receive(:get_dates)
+      bank_holidays.execute
+    end
+
+    it 'does not make a call to the API when something is cached' do
+      bank_holidays = described_class.new
+      expect(bank_holidays).to receive(:get_dates).once
+      bank_holidays.execute
+      bank_holidays.execute
+    end
   end
 
   context 'when API request does not return 200' do
@@ -27,6 +42,8 @@ describe Hackney::PDF::BankHolidaysRetriever do
         status: 500,
         body: nil
       )
+
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
     end
 
     it 'raises an UnsuccessfulRetrievalError' do
@@ -40,6 +57,7 @@ describe Hackney::PDF::BankHolidaysRetriever do
         status: 200,
         body: '{}'
       )
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
 
       bank_holidays = described_class.new.execute
       expect(bank_holidays).to eq([])

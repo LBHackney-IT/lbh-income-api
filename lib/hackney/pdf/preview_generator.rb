@@ -52,7 +52,7 @@ module Hackney
       private
 
       def get_bank_holidays
-        Hackney::PDF::BankHolidays.dates(Hackney::PDF::BankHolidaysRetriever.new)
+        Hackney::PDF::BankHolidaysRetriever.new.execute
       end
 
       def get_date
