@@ -57,6 +57,18 @@ $ make serve
 
 #### Testing
 
+To setup or reset your test database run
+
+```sh
+$ make test-setup
+```
+
+To run tests:
+
+```sh
+$ make test
+```
+
 To run linting and tests:
 
 ```sh
@@ -196,6 +208,31 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
+### Re-running Sync
+
+1. You first need to SSH onto the ECS instance  
+> #### TODO
+> - Who to talk to
+> - Instance?
+> - SSH key
+2. You will need to run commands on the `income-api-*-worker`.  
+Run an interactive terminal on the container:  
+```
+$ docker ps 
+$ docker exec -it <CONTAINER_ID> bash
+```
+3. Verify that you are on the correct container, in the correct environment, etc. E.g.  
+```
+$ echo $RAILS_ENV
+$ echo $CAN_AUTOMATE_LETTERS
+```
+4. Enqueue the sync `Rake` task.  
+```
+$ bundle exec rake income:sync:enqueue
+```
+5. Verify that the sync is running.
+
+
 ## Contacts
 
 ### Active Maintainers
@@ -203,7 +240,6 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 - **Rashmi Shetty**, Development Manager at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
 - **Vlad Atamanyuk**, Junior Developer at London Borough of Hackney (vladyslav.atamanyuk@hackney.gov.uk)
 - **Steven Leighton**, Engineer at [Made Tech][made-tech] (steven@madetech.com)
-- **Cormac Brady**, Engineer at [Made Tech][made-tech] (cormac@madetech.com)
 - **Elena Vilimaitė**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
 - **George Schena**, Engineer at [Made Tech][made-tech] (george@madetech.com)
 

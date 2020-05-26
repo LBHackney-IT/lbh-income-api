@@ -19,6 +19,12 @@ serve:
 	-rm tmp/pids/server.pid &> /dev/null
 	docker-compose up
 
+.PHONY: test-setup
+test-setup:
+	docker-compose run --rm app /bin/bash -c "rake db:drop RAILS_ENV=test \
+																						&& rake db:create RAILS_ENV=test \
+																						&& rake db:migrate RAILS_ENV=test"
+
 .PHONY: test
 test:
 	docker-compose run --rm app rspec

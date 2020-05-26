@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_01_06_154443) do
 
-  create_table "case_priorities", force: :cascade do |t|
+  create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -24,11 +24,11 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
     t.boolean "broken_court_order"
     t.boolean "nosp_served"
     t.boolean "active_nosp"
-    t.integer "assigned_user_id"
+    t.bigint "assigned_user_id"
     t.datetime "is_paused_until"
     t.string "pause_reason"
     t.text "pause_comment"
-    t.integer "case_id"
+    t.bigint "case_id"
     t.datetime "nosp_served_date"
     t.datetime "nosp_expiry_date"
     t.decimal "weekly_rent", precision: 10, scale: 2
@@ -45,20 +45,20 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
     t.datetime "uc_direct_payment_received"
     t.datetime "latest_active_agreement_date"
     t.datetime "breach_agreement_date"
-    t.decimal "expected_balance"
+    t.decimal "expected_balance", precision: 10
     t.string "payment_ref"
     t.index ["assigned_user_id"], name: "index_case_priorities_on_assigned_user_id"
     t.index ["case_id"], name: "index_case_priorities_on_case_id"
     t.index ["tenancy_ref"], name: "index_case_priorities_on_tenancy_ref", unique: true
   end
 
-  create_table "cases", force: :cascade do |t|
+  create_table "cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
+  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "documents", force: :cascade do |t|
+  create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "uuid", null: false
     t.string "extension", null: false
     t.string "metadata"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
     t.index ["uuid"], name: "index_documents_on_uuid", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "provider_uid"
     t.string "provider"
     t.string "name"
@@ -100,4 +100,5 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
     t.integer "role", default: 0
   end
 
+  add_foreign_key "case_priorities", "users", column: "assigned_user_id"
 end
