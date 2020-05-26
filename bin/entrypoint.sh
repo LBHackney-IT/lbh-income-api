@@ -15,8 +15,5 @@ then
   rails db:create
 fi
 
-# Migrate database
-rails db:migrate
-
 # Start app
 exec "$@"

@@ -18,6 +18,7 @@ services:
       - 3000:3000
     volumes:
       - .:/app
+    command: sh -c 'rails db:migrate && rails s --binding=0.0.0.0'
     depends_on:
       - universal_housing_simulator
       - redis
