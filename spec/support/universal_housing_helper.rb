@@ -257,7 +257,8 @@ module UniversalHousingHelper
       aline1: aline1,
       aline2: aline2,
       aline3: aline3,
-      aline4: aline4
+      aline4: aline4,
+      ci_post_code: ''
     )
   end
 
