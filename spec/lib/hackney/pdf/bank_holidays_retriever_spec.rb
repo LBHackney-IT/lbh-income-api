@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Hackney::PDF::BankHolidaysRetriever do
   context 'when API request returns a 200' do
     before do
-      stub_response_body = File.read(File.dirname(__FILE__) + '/test_bank_holidays_api_response.txt')
+      stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
       stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
         status: 200,
         body: stub_response_body
@@ -35,7 +35,7 @@ describe Hackney::PDF::BankHolidaysRetriever do
   # end
 
   context 'when API request responds with 200 but body is empty' do
-    it 'returns an empty array if body is an empty hash' do
+    it 'returns an empty array' do
       stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
         status: 200,
         body: '{}'

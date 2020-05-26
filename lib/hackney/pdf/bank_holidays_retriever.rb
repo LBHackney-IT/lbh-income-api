@@ -1,7 +1,7 @@
 module Hackney
   module PDF
     class BankHolidaysRetriever
-      UnsuccessfulRetrievalError = Class.new(StandardError)
+      # UnsuccessfulRetrievalError = Class.new(StandardError)
       API_URL = 'https://www.gov.uk/bank-holidays.json'.freeze
       DEFAULT_GROUP = 'england-and-wales'.freeze
 
