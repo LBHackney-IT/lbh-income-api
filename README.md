@@ -57,10 +57,10 @@ $ make serve
 
 #### Testing
 
-To setup or reset your test database run
+To reset your test database run
 
 ```sh
-$ make test-setup
+$ make test-db-destroy
 ```
 
 To run tests:
@@ -123,11 +123,11 @@ Then we have an automated four step deployment process, which runs in CircleCI.
 2. Browse to 'Commits'.
 3. Locate and click the checks indicator for the commit you would like to deploy from.
 4. Click a stage's 'Details' link.
-5. Confirm the commit SHA is the same  
-  5.1. On Circle CI, the hash is shown on the right-hand side of the page, under 'Triggered by'.  
+5. Confirm the commit SHA is the same
+  5.1. On Circle CI, the hash is shown on the right-hand side of the page, under 'Triggered by'.
   5.2. Compare this with the hash shown in the commits list.
 6. Once you are happy, click 'Rerun workflow' on Circle CI.
-7. There are **manual stages** that need to be triggered within the workflow.  
+7. There are **manual stages** that need to be triggered within the workflow.
 Remember to do this, or the new workflow/deployment will not make it to production.
 
 ### Connection to Universal Housing
@@ -192,18 +192,18 @@ In order to change any of these variables you will need to:
 3. Locate and select **Task Definitions** on the left-hand sidebar
 4. Search for `task-income-` in the 'Filter in this page' field above the table.
 5. Select `income-api-production` or `income-api-staging`.
-6. Click on the Task definition you'd like to base your new one off.  
+6. Click on the Task definition you'd like to base your new one off.
 This will usually be the most recent, i.e. the one with the greatest tag number.
 7. Click **Create new revision**
 8. Locate 'Container definitions' and select the `income-api-production-worker` container.
 9. Locate the 'ENVIRONMENT' section of the slide-out.
-10. Add/Modify the relevant Environment Variables.  
+10. Add/Modify the relevant Environment Variables.
 11. Click **Update** at the bottom of the slide-out when you have finished making changes/additions.
-12. Click **Create** at the bottom of the 'Create new revision' page.  
-13. Verify that the Environment Variables have been inputted correctly, to check this click on the **JSON** tab of the newly created task definition 
+12. Click **Create** at the bottom of the 'Create new revision' page.
+13. Verify that the Environment Variables have been inputted correctly, to check this click on the **JSON** tab of the newly created task definition
 14. Check that all the Environment Variables are correct, look for issues such as trailing whitespace e.g. `AUTOMATE_INCOME_COLLECTION_LETTER_ONE\t` (i.e. trailing \<TAB\> character) or special characters.
 15. If you find any issues with any of the Environment Variables, follow the above steps to create a new Task Definition with the correct ones.
-16. There is now a new Task Definition, but it has not been applied yet.  
+16. There is now a new Task Definition, but it has not been applied yet.
 **You must ENSURE YOU [REDEPLOY](#manual-redeployment) to have your changes applied**
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
