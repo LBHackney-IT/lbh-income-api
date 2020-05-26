@@ -12,14 +12,13 @@ jobs:
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
           name: Build projects
-          command: |
-            docker-compose build
+          command: make docker-build
       - run:
           name: Run tests
-          command: docker-compose run -e RAILS_ENV=test --rm app rspec
+          command: make test
       - run:
           name: Run linting
-          command: docker-compose run -e RAILS_ENV=test --rm app rubocop
+          command: make lint
       - store_artifacts:
           path: coverage
 
