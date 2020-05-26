@@ -208,6 +208,31 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
+### Re-running Sync
+
+1. You first need to SSH onto the ECS instance  
+> #### TODO
+> - Who to talk to
+> - Instance?
+> - SSH key
+2. You will need to run commands on the `income-api-*-worker`.  
+Run an interactive terminal on the container:  
+```
+$ docker ps 
+$ docker exec -it <CONTAINER_ID> bash
+```
+3. Verify that you are on the correct container, in the correct environment, etc. E.g.  
+```
+$ echo $RAILS_ENV
+$ echo $CAN_AUTOMATE_LETTERS
+```
+4. Enqueue the sync `Rake` task.  
+```
+$ bundle exec rake income:sync:enqueue
+```
+5. Verify that the sync is running.
+
+
 ## Contacts
 
 ### Active Maintainers
