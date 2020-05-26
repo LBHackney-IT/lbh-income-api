@@ -19,23 +19,21 @@ serve:
 	-rm tmp/pids/server.pid &> /dev/null
 	docker-compose up
 
-.PHONY: test-setup
-test-setup:
-	docker-compose run --rm app /bin/bash -c "rake db:drop RAILS_ENV=test \
-																						&& rake db:create RAILS_ENV=test \
-																						&& rake db:migrate RAILS_ENV=test"
-
-.PHONY: test
-test:
-	docker-compose run --rm app rspec
-
 .PHONY: shell
 shell:
 	docker-compose run --rm app /bin/bash
 
+.PHONY: test-db-destroy
+test-db-destroy:
+	docker-compose rm --stop -v incomeapi-db
+
+.PHONY: test
+test:
+	docker-compose run --rm -e "RAILS_ENV=test" app rspec
+
 .PHONY: lint
 lint:
-	docker-compose run --rm app rubocop
+	docker-compose run --rm -e RAILS_ENV=test app rubocop
 
 .PHONY: check
 check: lint test
