@@ -44,9 +44,9 @@ module Hackney
 
         def action_diary_name(username)
           return username if username.length < 40
-          
-          username = username.split(" ")
-          username.map {|n| n.equal?(username.last) ? n.capitalize : n[0].capitalize }.join(". ")
+
+          username = username.split(' ')
+          username.map { |n| n.equal?(username.last) ? n.capitalize : n[0].capitalize }.join('. ')
         end
       end
     end
