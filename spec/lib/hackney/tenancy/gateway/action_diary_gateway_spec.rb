@@ -69,6 +69,30 @@ describe Hackney::Tenancy::Gateway::ActionDiaryGateway do
         times: 1
       )
     end
+
+    it 'creates a entry with shortened user name if username supplied is longer than 40 chars' do
+      gateway.create_entry(
+        tenancy_ref: tenancy_ref,
+        action_code: action_code,
+        comment: comment,
+        username: 'Hubert Wolfeschlegelsteinhausenbergerdorff',
+        date: date
+      )
+
+      assert_requested(
+        :post, host + '/api/v2/tenancies/arrears-action-diary',
+        headers: required_headers,
+        body: {
+          tenancyAgreementRef: tenancy_ref,
+          actionCode: action_code,
+          actionCategory: '9',
+          comment: comment,
+          username: 'H. Wolfeschlegelsteinhausenbergerdorff',
+          createdDate: date
+        },
+        times: 1
+      )
+    end
   end
 
   context 'when tenancy api returns an error' do
