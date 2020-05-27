@@ -28,7 +28,7 @@ module Hackney
             createdDate: date.iso8601
           }
 
-          body[:username] = username if username.present?
+          body[:username] = action_diary_name(username) if username.present?
 
           response = self.class.post('/api/v2/tenancies/arrears-action-diary', @options.merge(body: body.to_json))
 
@@ -38,6 +38,15 @@ module Hackney
           end
 
           response
+        end
+
+        private
+
+        def action_diary_name(username)
+          return username if username.length < 40
+
+          username = username.split(' ')
+          username.map { |n| n.equal?(username.last) ? n.capitalize : n[0].capitalize }.join('. ')
         end
       end
     end
