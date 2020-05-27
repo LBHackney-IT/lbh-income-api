@@ -51,8 +51,20 @@ module Hackney
 
       private
 
+      def get_bank_holidays
+        Hackney::PDF::BankHolidaysRetriever.new.execute
+      end
+
       def get_date
-        (Time.now + 1.day).strftime('%d %B %Y')
+        possible_date = Time.now + 1.day
+        possible_date += 2.day if possible_date.saturday?
+        possible_date += 1.day if possible_date.sunday?
+
+        bank_holidays = get_bank_holidays
+
+        possible_date += 1.day while bank_holidays.include?(possible_date.strftime('%Y-%m-%d')) == true
+
+        possible_date.strftime('%d %B %Y')
       end
 
       def get_return_date

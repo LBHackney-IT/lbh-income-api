@@ -7,6 +7,16 @@ describe Hackney::PDF::PreviewGenerator do
     )
   end
 
+  before do
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+    stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+      status: 200,
+      body: stub_response_body
+    )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
+  end
+
   let(:test_username) { 'Dave' }
   let(:test_template_path) { 'spec/lib/hackney/pdf/test_template.erb' }
   let(:test_letter_params) do
@@ -30,6 +40,27 @@ describe Hackney::PDF::PreviewGenerator do
 
     expect(preview_with_errors[:html]).to eq(translated_html)
     expect(preview_with_errors[:errors]).to eq([])
+  end
+
+  context 'when tomorrow is not a working day' do
+    subject do
+      described_class.new(
+        template_path: test_working_days_path
+      )
+    end
+
+    let(:test_working_days_path) { 'spec/lib/hackney/pdf/test_working_days_template.erb' }
+    let(:translated_working_days_html) { File.open('spec/lib/hackney/pdf/translated_test_working_days_template.html').read }
+
+    it 'sets the next working day as the sending date' do
+      Timecop.freeze(2020, 5, 22)
+      preview_with_errors = subject.execute(letter_params: test_letter_params, username: test_username)
+
+      expect(preview_with_errors[:html]).to eq(translated_working_days_html)
+      expect(preview_with_errors[:errors]).to eq([])
+
+      Timecop.return
+    end
   end
 
   context 'when data is missing' do

@@ -1,0 +1,66 @@
+require 'rails_helper'
+
+describe Hackney::PDF::BankHolidaysRetriever do
+  context 'when API request returns a 200' do
+    before do
+      stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+        status: 200,
+        body: stub_response_body
+      )
+
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
+    end
+
+    it 'returns list of bank holiday dates' do
+      bank_holidays = described_class.new.execute
+      expect(bank_holidays.length).to eq(56)
+      expect(bank_holidays.include?('2020-05-08')).to eq(true)
+      expect(bank_holidays.include?('2021-05-03')).to eq(true)
+      expect(bank_holidays.include?('2019-12-25')).to eq(true)
+      expect(bank_holidays.include?('2020-12-25')).to eq(true)
+      expect(bank_holidays.include?('2021-12-27')).to eq(true)
+    end
+
+    it 'makes a call to the API when nothing is cached' do
+      bank_holidays = described_class.new
+      expect(bank_holidays).to receive(:get_dates)
+      bank_holidays.execute
+    end
+
+    it 'does not make a call to the API when something is cached' do
+      bank_holidays = described_class.new
+      expect(bank_holidays).to receive(:get_dates).once
+      bank_holidays.execute
+      bank_holidays.execute
+    end
+  end
+
+  context 'when API request does not return 200' do
+    before do
+      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+        status: 500,
+        body: nil
+      )
+
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
+    end
+
+    it 'raises an UnsuccessfulRetrievalError' do
+      expect { described_class.new.execute } .to raise_error(StandardError, /Retrieval Failed/)
+    end
+  end
+
+  context 'when API request responds with 200 but body is empty' do
+    it 'returns an empty array' do
+      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+        status: 200,
+        body: '{}'
+      )
+      Rails.cache.delete('Hackney/PDF/BankHolidays')
+
+      bank_holidays = described_class.new.execute
+      expect(bank_holidays).to eq([])
+    end
+  end
+end

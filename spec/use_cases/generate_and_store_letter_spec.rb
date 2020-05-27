@@ -5,6 +5,14 @@ describe UseCases::GenerateAndStoreLetter do
 
   before do
     mock_aws_client
+
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+    stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+      status: 200,
+      body: stub_response_body
+    )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
   end
 
   let(:use_case) { described_class.new }

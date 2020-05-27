@@ -31,14 +31,6 @@ module Hackney
 
       private
 
-      def get_date
-        (Time.now + 1.day).strftime('%d %B %Y')
-      end
-
-      def get_return_date
-        30.days.from_now.strftime('%d %B %Y')
-      end
-
       def get_sending_date
         Time.now.strftime('%d %B %Y')
       end
