@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::Income::TenancyClassification do
+shared_examples 'TenancyClassification Contract' do
   subject { assign_classification.execute }
 
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
