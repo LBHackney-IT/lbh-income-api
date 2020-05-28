@@ -61,7 +61,10 @@ describe '"Apply for Court Date" examples' do
     base_example.merge(
       description: 'that had a court warning letter since the last court date',
       outcome: :apply_for_court_date,
-      courtdate: 5.months.ago
+      courtdate: 5.months.ago,
+      # We've intentionally added a court outcome to this test scenario to prevent
+      # the 'update_court_outcome_action' from being recommended.
+      court_outcome: 'pay up jimmy'
     ),
     base_example.merge(
       description: 'with an evicition date',
