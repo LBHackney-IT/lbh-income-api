@@ -5,7 +5,7 @@ describe '"Apply for Court Date" examples' do
 
   base_example = {
     outcome: :apply_for_court_date,
-    nosp_served_date: (3.months + 1.day).ago.to_date,
+    nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
     weekly_rent: 5,
     balance: 25.0,
     last_communication_action: court_warning_letter_code,

@@ -115,10 +115,10 @@ describe TenanciesController, type: :controller do
             tenancy_ref: tenancy_1.tenancy_ref,
             nosp: {
               active: true,
-              expires_date: (nosp_served_date + 3.months).strftime('%FT%T.000Z'),
+              expires_date: (nosp_served_date + Hackney::Domain::Nosp::ACTIVE_TIME).strftime('%FT%T.000Z'),
               in_cool_off_period: false,
               served_date: nosp_served_date.strftime('%FT%T.000Z'),
-              valid_until_date: (nosp_served_date + 3.months + 52.weeks).strftime('%FT%T.000Z'),
+              valid_until_date: (nosp_served_date + Hackney::Domain::Nosp::ACTIVE_TIME + 52.weeks).strftime('%FT%T.000Z'),
               valid: true
             },
             nosp_served_date: nosp_served_date.strftime('%FT%T.000Z'),

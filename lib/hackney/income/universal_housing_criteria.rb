@@ -128,7 +128,7 @@ module Hackney
       end
 
       def nosp
-        @nosp ||= Hackney::Domain::Nosp.new(served_date: nosp_served_date, active_time: 3.months)
+        @nosp ||= Hackney::Domain::Nosp.new(served_date: nosp_served_date)
       end
 
       def self.format_action_codes_for_sql
