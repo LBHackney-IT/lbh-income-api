@@ -597,7 +597,7 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
         end
 
         context 'with a served date that is over 16 months ago' do
-          let(:nosp_notice_served_date) { 65.weeks.ago }
+          let(:nosp_notice_served_date) { 66.weeks.ago }
 
           it 'is not cooling off' do
             expect(criteria.nosp.in_cool_off_period?).to eq(false)

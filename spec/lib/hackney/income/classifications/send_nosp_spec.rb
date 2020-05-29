@@ -17,7 +17,7 @@ describe 'Send NOSP Rule', type: :feature do
     # out of date nosp, heavily in arrears, no recent activity
     {
       outcome: :send_NOSP,
-      nosp_served_date: 65.weeks.ago.to_date,
+      nosp_served_date: 66.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
       is_paused_until: nil,
@@ -28,7 +28,7 @@ describe 'Send NOSP Rule', type: :feature do
     # out of date nosp, heavily in arrears, recent letter 2
     {
       outcome: :send_NOSP,
-      nosp_served_date: 65.weeks.ago.to_date,
+      nosp_served_date: 66.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
       is_paused_until: nil,
