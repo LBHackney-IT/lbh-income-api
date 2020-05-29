@@ -93,8 +93,9 @@ describe TenanciesController, type: :controller do
       )
     end
 
+    # Currently tests when a tenancy has a NOSP after the new 3 month actionable period. Will have to change back to 28 days in future
     context 'when the tenancy has a NOSP' do
-      let(:nosp_served_date) { 1.month.ago }
+      let(:nosp_served_date) { 4.month.ago }
       let(:tenancy_1) { create(:case_priority, tenancy_ref: 1234, nosp_served_date: nosp_served_date) }
 
       it 'returns a tenancy' do
@@ -114,10 +115,10 @@ describe TenanciesController, type: :controller do
             tenancy_ref: tenancy_1.tenancy_ref,
             nosp: {
               active: true,
-              expires_date: (nosp_served_date + 28.days).strftime('%FT%T.000Z'),
+              expires_date: (nosp_served_date + Hackney::Domain::Nosp::ACTIVE_TIME).strftime('%FT%T.000Z'),
               in_cool_off_period: false,
               served_date: nosp_served_date.strftime('%FT%T.000Z'),
-              valid_until_date: (nosp_served_date + 28.days + 52.weeks).strftime('%FT%T.000Z'),
+              valid_until_date: (nosp_served_date + Hackney::Domain::Nosp::ACTIVE_TIME + 52.weeks).strftime('%FT%T.000Z'),
               valid: true
             },
             nosp_served_date: nosp_served_date.strftime('%FT%T.000Z'),
