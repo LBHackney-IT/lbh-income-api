@@ -22,7 +22,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     end
 
     let(:stubbed_criteria) { Stubs::StubCriteria.new }
-    let(:tenancy_classification_stub) { double('TenancyClassification') }
+    let(:tenancy_classification_stub) { double('Classifier') }
     let(:classification) { 'no_action' }
 
     before do
@@ -30,7 +30,7 @@ describe Hackney::Income::StoredTenanciesGateway do
 
       expect(document_model).to receive(:by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
 
-      expect(Hackney::Income::TenancyClassification).to receive(:new)
+      expect(Hackney::Income::TenancyClassification::Classifier).to receive(:new)
         .with(instance_of(tenancy_model), stubbed_criteria, [])
         .and_return(tenancy_classification_stub)
     end

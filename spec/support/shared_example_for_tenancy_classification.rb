@@ -24,11 +24,11 @@ end
 # Alternatively, see any file that uses the Shared Example and see what they are supplying.
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
-  describe Hackney::Income::TenancyClassificationV1 do
+  describe Hackney::Income::TenancyClassification::V1::Classifier do
     it_behaves_like 'TenancyClassification Internal', condition_matrix
   end
 
-  describe Hackney::Income::TenancyClassificationV2 do
+  describe Hackney::Income::TenancyClassification::V2::Classifier do
     it_behaves_like 'TenancyClassification Internal', condition_matrix
   end
 end
