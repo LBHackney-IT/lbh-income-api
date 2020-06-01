@@ -37,8 +37,14 @@ module Hackney
 
             actions << :no_action if actions.none?
 
-            if actions.length > 1
-              raise "Error: Multiple recommended actions #{actions} found for criteria." unless actions == %i[send_letter_one send_first_SMS]
+            if actions.length > 1 && actions != %i[send_letter_one send_first_SMS]
+              Rails.logger.error(
+                'CLASSIFIER: Multiple recommended actions from V2' \
+                "Actions: #{actions} " \
+                "Criteria: #{criteria} " \
+                "CasePriority: #{case_priority} " \
+                "Document Count: #{documents.length}"
+              )
             end
 
             validate_wanted_action(actions.first)
