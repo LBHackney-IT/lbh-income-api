@@ -19,7 +19,15 @@ module Hackney
           version1_action = @version1_classifier.execute
           version2_action = @version2_classifier.execute
 
-          Rails.logger.error("The action from V1 #{version1_action} does not match V2 #{version2_action}") if version1_action != version2_action
+          if version1_action != version2_action
+            Rails.logger.error(
+              "CLASSIFIER: V1: #{version1_action} " \
+               "V2: #{version2_action} " \
+               "Criteria: #{criteria} " \
+               "CasePriority: #{case_priority} " \
+               "Document Count: #{documents.length}"
+            )
+          end
 
           version1_action
         end
