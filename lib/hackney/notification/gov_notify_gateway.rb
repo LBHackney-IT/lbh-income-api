@@ -14,24 +14,24 @@ module Hackney
       end
 
       def send_text_message(phone_number:, template_id:, reference:, variables:)
-        responce = client.send_sms(
+        response = client.send_sms(
           phone_number: pre_release_phone_number(phone_number),
           template_id: template_id,
           personalisation: variables,
           reference: reference,
           sms_sender_id: @sms_sender_id
         )
-        create_notification_receipt(responce)
+        create_notification_receipt(response)
       end
 
       def send_email(recipient:, template_id:, reference:, variables:)
-        responce = client.send_email(
+        response = client.send_email(
           email_address: pre_release_email(recipient),
           template_id: template_id,
           personalisation: variables,
           reference: reference
         )
-        create_notification_receipt(responce)
+        create_notification_receipt(response)
       end
 
       def send_precompiled_letter(unique_reference:, letter_pdf:)
@@ -76,8 +76,8 @@ module Hackney
         @client ||= Notifications::Client.new(@api_key)
       end
 
-      def create_notification_receipt(responce)
-        body = responce.content&.fetch('body', nil)
+      def create_notification_receipt(response)
+        body = response.content&.fetch('body', nil)
         Hackney::Notification::Domain::NotificationReceipt.new(body: body)
       end
 
