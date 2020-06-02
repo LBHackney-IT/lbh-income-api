@@ -3,12 +3,13 @@ require 'rails_helper'
 describe UseCases::AddActionDiaryAndPauseCase do
   let(:add_action_diary_and_sync_case) {
     described_class.new(sql_pause_tenancy_gateway: sql_pause_tenancy_gateway,
-                        add_action_diary: add_action_diary)
+                        add_action_diary: add_action_diary,
+                        get_tenancy: get_tenancy)
   }
 
   let(:sql_pause_tenancy_gateway) { spy }
   let(:add_action_diary) { spy }
-
+  let(:get_tenancy) { double }
   let(:username) { Faker::Name.name }
   let(:tenancy_ref) { Faker::Lorem.characters(8) }
   let(:action_code) { Faker::Internet.slug }
@@ -29,10 +30,29 @@ describe UseCases::AddActionDiaryAndPauseCase do
     end
   end
 
+  context "when adding to the action diary to a tenancy that's not in a worktray" do
+    it "will call the add_action_diary with the correct data and doesn't call sql_pause_tenancy_gateway" do
+      allow(get_tenancy).to receive(:execute).with(tenancy_ref: tenancy_ref).and_return(nil)
+
+      add_action_diary_and_sync_case.execute(
+        tenancy_ref: tenancy_ref,
+        action_code: action_code,
+        comment: comment,
+        username: username
+      )
+
+      allow(add_action_diary_and_sync_case).to receive(:execute)
+      expect(sql_pause_tenancy_gateway).not_to have_received(:set_paused_until)
+      expect(add_action_diary).to have_received(:execute)
+    end
+  end
+
   context 'when adding to the action diary that needs to be paused for rsync' do
     let(:action_code) { Hackney::Tenancy::ActionCodes::CODES_THAT_PAUSES_CASES.sample }
 
     it 'will call the add_action_diary and sql_pause_tenancy_gateway with the correct data' do
+      allow(get_tenancy).to receive(:execute).with(tenancy_ref: tenancy_ref).and_return(tenancy_ref)
+
       add_action_diary_and_sync_case.execute(
         tenancy_ref: tenancy_ref,
         action_code: action_code,

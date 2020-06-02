@@ -131,7 +131,8 @@ module Hackney
       def add_action_diary_and_pause_case
         UseCases::AddActionDiaryAndPauseCase.new(
           sql_pause_tenancy_gateway: sql_pause_tenancy_gateway,
-          add_action_diary: add_action_diary
+          add_action_diary: add_action_diary,
+          get_tenancy: get_tenancy
         )
       end
 
