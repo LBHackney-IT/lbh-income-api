@@ -24,10 +24,20 @@ end
 # Alternatively, see any file that uses the Shared Example and see what they are supplying.
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
+  describe Hackney::Income::TenancyClassification::V1::Classifier do
+    it_behaves_like 'TenancyClassification Internal', condition_matrix
+  end
+
+  describe Hackney::Income::TenancyClassification::V2::Classifier do
+    it_behaves_like 'TenancyClassification Internal', condition_matrix
+  end
+end
+
+shared_examples 'TenancyClassification Internal' do |condition_matrix|
   subject { assign_classification.execute }
 
   let(:assign_classification) {
-    Hackney::Income::TenancyClassification.new(
+    described_class.new(
       case_priority, criteria, []
     )
   }
