@@ -12,7 +12,7 @@ module Hackney
           def execute
             actions = []
 
-            actions << Rulesets::ReviewFailedLetter.valid?(@case_priority, @criteria, @documents)
+            actions << Rulesets::ReviewFailedLetter.execute(@case_priority, @criteria, @documents)
 
             actions << :apply_for_outright_possession_warrant if apply_for_outright_possession_warrant?
 

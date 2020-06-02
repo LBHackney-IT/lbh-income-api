@@ -4,7 +4,7 @@ module Hackney
       module V2
         module Rulesets
           class ReviewFailedLetter
-            def self.valid?(case_priority, criteria, documents)
+            def self.execute(case_priority, criteria, documents)
               return nil if documents.empty?
               return :review_failed_letter if documents.most_recent.failed? && documents.most_recent.income_collection?
             end
