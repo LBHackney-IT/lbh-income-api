@@ -4,10 +4,10 @@ RSpec.describe 'Downloading a PDF', type: :request do
   include MockAwsHelper
 
   let(:real_template_id) { 'letter_before_action' }
-  let(:payment_ref) { Faker::Number.number(6) }
-  let(:house_ref) { Faker::Number.number(6) }
-  let(:prop_ref) { Faker::Number.number(6) }
-  let(:tenancy_ref) { Faker::Number.number(6) }
+  let(:payment_ref) { Faker::Number.number(digits: 6).to_s }
+  let(:house_ref) { Faker::Number.number(digits: 6) }
+  let(:prop_ref) { Faker::Number.number(digits: 6) }
+  let(:tenancy_ref) { Faker::Number.number(digits: 6).to_s }
   let(:postcode) { Faker::Address.postcode }
   let(:letter_json) { [] }
   let(:user_group) { 'leasehold-group' }

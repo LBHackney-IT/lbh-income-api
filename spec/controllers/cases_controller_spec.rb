@@ -54,9 +54,9 @@ describe CasesController do
     end
 
     context 'when retrieving cases' do
-      let(:page_number) { Faker::Number.number(2).to_i }
-      let(:number_per_page) { Faker::Number.number(2).to_i }
-      let(:patch) { Faker::Lorem.characters(3) }
+      let(:page_number) { Faker::Number.number(digits: 2).to_i }
+      let(:number_per_page) { Faker::Number.number(digits: 2).to_i }
+      let(:patch) { Faker::Lorem.characters(number: 3) }
 
       it 'creates the view my cases use case' do
         allow(view_my_cases_instance)

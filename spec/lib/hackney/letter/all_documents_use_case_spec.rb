@@ -10,7 +10,7 @@ describe Hackney::Letter::AllDocumentsUseCase do
 
   let(:page_number) { 1 }
   let(:documents_per_page) { 10 }
-  let(:payment_ref) { Faker::Number.number(10) }
+  let(:payment_ref) { Faker::Number.number(digits: 10) }
   let(:document_status) { Hackney::Cloud::Document.statuses.keys.sample }
 
   before do

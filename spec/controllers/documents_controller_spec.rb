@@ -18,7 +18,7 @@ describe DocumentsController do
     end
 
     context 'when the payment_ref param is present' do
-      let(:payment_ref) { Faker::Number.number(10) }
+      let(:payment_ref) { Faker::Number.number(digits: 10).to_s }
 
       it 'returns all documents filtered by payment_ref' do
         expect_any_instance_of(Hackney::Letter::AllDocumentsUseCase)
@@ -51,7 +51,7 @@ describe DocumentsController do
   end
 
   describe '#review_failure' do
-    let(:document_id) { Faker::Number.number(3) }
+    let(:document_id) { Faker::Number.number(digits: 3).to_s }
 
     it 'correct usecase is called' do
       expect_any_instance_of(Hackney::Letter::ReviewFailure)

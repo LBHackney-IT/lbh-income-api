@@ -3,9 +3,9 @@ require 'rails_helper'
 describe Hackney::IncomeCollection::Letter do
   let(:letter_params) do
     {
-      tenancy_ref: Faker::Number.number(6),
-      payment_ref: Faker::Number.number(8),
-      total_collectable_arrears_balance: Faker::Number.number(3),
+      tenancy_ref: Faker::Number.number(digits: 6),
+      payment_ref: Faker::Number.number(digits: 8),
+      total_collectable_arrears_balance: Faker::Number.number(digits: 3),
       title: Faker::Job.title,
       forename: Faker::Name.first_name,
       surname: Faker::Name.last_name,

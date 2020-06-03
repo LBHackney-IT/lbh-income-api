@@ -24,9 +24,9 @@ describe SanatizeMessagesProcessor do
           email_address: Faker::Internet.email,
           message: {
             email_address: Faker::Internet.email,
-            reference: Faker::Lorem.characters(8),
+            reference: Faker::Lorem.characters(number: 8),
             template_id: 'da658c4f-daa6-4691-8ec0-035837089fb5',
-            tenancy_ref: Faker::Lorem.characters(8),
+            tenancy_ref: Faker::Lorem.characters(number: 8),
             variables: {
               balance: 501.89,
               'first name' => 'Luz',
@@ -36,9 +36,9 @@ describe SanatizeMessagesProcessor do
               title: 'Miss'
             }
           },
-          reference: "manual_#{Faker::Lorem.characters(8)}",
+          reference: "manual_#{Faker::Lorem.characters(number: 8)}",
           template_id: 'da658c4f-daa6-4691-8ec0-035837089fb5',
-          tenancy_ref: Faker::Lorem.characters(8),
+          tenancy_ref: Faker::Lorem.characters(number: 8),
           variables: {
             balance: 501.89,
             'first name' => 'Luz',

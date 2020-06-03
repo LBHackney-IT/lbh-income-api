@@ -3,14 +3,14 @@ require 'rails_helper'
 describe Hackney::ServiceCharge::Letter::LetterTwo do
   let(:letter_params) {
     {
-      payment_ref: Faker::Number.number(4),
+      payment_ref: Faker::Number.number(digits: 4),
       lessee_full_name: Faker::Name.name,
       correspondence_address1: Faker::Address.street_address,
       correspondence_address2: Faker::Address.secondary_address,
       correspondence_address3: Faker::Address.city,
       correspondence_postcode: Faker::Address.zip_code,
       property_address: Faker::Address.street_address,
-      total_collectable_arrears_balance: Faker::Number.number(3)
+      total_collectable_arrears_balance: Faker::Number.number(digits: 3)
     }
   }
 

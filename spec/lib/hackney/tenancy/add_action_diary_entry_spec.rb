@@ -5,7 +5,7 @@ describe Hackney::Tenancy::AddActionDiaryEntry do
   let(:username) { Faker::Name.name }
 
   let(:usecase) { described_class.new(action_diary_gateway: action_diary_gateway) }
-  let(:tenancy_ref) { Faker::Lorem.characters(8) }
+  let(:tenancy_ref) { Faker::Lorem.characters(number: 8) }
   let(:action_code) { Faker::Internet.slug }
   let(:comment) { Faker::Lorem.paragraph }
   let(:date) { Faker::Date.backward }

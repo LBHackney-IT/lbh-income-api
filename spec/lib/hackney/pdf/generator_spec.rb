@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Hackney::PDF::Generator do
   let(:gateway) { described_class.new }
-  let(:html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
+  let(:html) { "<h1>#{Faker::TvShows::RickAndMorty.quote}</h1>" }
 
   context 'when generating a pdf' do
     subject do

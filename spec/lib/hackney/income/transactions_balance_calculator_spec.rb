@@ -9,11 +9,11 @@ describe Hackney::Income::TransactionsBalanceCalculator do
     )
   end
 
-  let(:current_balance) { Faker::Number.decimal(2).to_f }
+  let(:current_balance) { Faker::Number.decimal(l_digits: 2).to_f }
   let(:base_time) { Time.now }
-  let(:transaction_three) { -Faker::Number.decimal(2).to_f }
-  let(:transaction_two) { -Faker::Number.decimal(2).to_f }
-  let(:transaction_one) { Faker::Number.decimal(2).to_f }
+  let(:transaction_three) { -Faker::Number.decimal(l_digits: 2).to_f }
+  let(:transaction_two) { -Faker::Number.decimal(l_digits: 2).to_f }
+  let(:transaction_one) { Faker::Number.decimal(l_digits: 2).to_f }
 
   let(:shuffled_transactions) do
     [

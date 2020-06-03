@@ -67,7 +67,7 @@ module TenancyHelper
   # TODO: rename with CasePriority
   def create_tenancy_model
     Hackney::Income::Models::CasePriority.new.tap do |t|
-      t.tenancy_ref = Faker::Lorem.characters(5)
+      t.tenancy_ref = Faker::Lorem.characters(number: 5)
       t.balance = Faker::Commerce.price
     end
   end

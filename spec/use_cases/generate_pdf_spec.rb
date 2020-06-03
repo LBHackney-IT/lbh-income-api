@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UseCases::GeneratePdf do
   subject { described_class.new }
 
-  let(:uuid) { Faker::Lorem.characters(5) }
+  let(:uuid) { Faker::Lorem.characters(number: 5) }
   let(:letter_html) { 'some_html_data' }
 
   context 'with the uuid and letter_html' do

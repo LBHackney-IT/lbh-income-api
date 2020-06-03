@@ -15,7 +15,7 @@ shared_examples 'TenancyClassification Contract' do
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
       eviction_date: eviction_date,
-      payment_ref: Faker::Number.number(10),
+      payment_ref: Faker::Number.number(digits: 10),
       total_payment_amount_in_week: total_payment_amount_in_week
     }
   end

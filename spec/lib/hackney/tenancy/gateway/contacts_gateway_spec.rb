@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Tenancy::Gateway::ContactsGateway do
-  let(:hostname) { Faker::Internet.url('example.com') }
+  let(:hostname) { Faker::Internet.url(host: 'example.com') }
   let(:api_key) { SecureRandom.uuid }
   let(:gateway) { described_class.new(host: hostname, api_key: api_key) }
 
@@ -107,7 +107,7 @@ describe Hackney::Tenancy::Gateway::ContactsGateway do
             "last_name": Faker::Name.last_name,
             "full_name": Faker::Name.name,
             "title": Faker::Name.prefix,
-            "age": Faker::Number.number(2),
+            "age": Faker::Number.number(digits: 2),
             "telephone1": Faker::PhoneNumber.phone_number,
             "telephone2": Faker::PhoneNumber.phone_number,
             "telephone3": Faker::PhoneNumber.phone_number
@@ -124,7 +124,7 @@ describe Hackney::Tenancy::Gateway::ContactsGateway do
             "last_name": Faker::Name.last_name,
             "full_name": Faker::Name.name,
             "title": Faker::Name.prefix,
-            "age": Faker::Number.number(2),
+            "age": Faker::Number.number(digits: 2),
             "telephone1": Faker::PhoneNumber.phone_number,
             "telephone2": Faker::PhoneNumber.phone_number,
             "telephone3": Faker::PhoneNumber.phone_number
@@ -141,7 +141,7 @@ describe Hackney::Tenancy::Gateway::ContactsGateway do
             "last_name": Faker::Name.last_name,
             "full_name": Faker::Name.name,
             "title": Faker::Name.prefix,
-            "age": Faker::Number.number(2),
+            "age": Faker::Number.number(digits: 2),
             "telephone1": Faker::PhoneNumber.phone_number,
             "telephone2": Faker::PhoneNumber.phone_number,
             "telephone3": Faker::PhoneNumber.phone_number
