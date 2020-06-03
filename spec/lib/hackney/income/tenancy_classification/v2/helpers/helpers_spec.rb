@@ -88,4 +88,42 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
   end
+
+  describe 'should_prevent_action?' do
+    subject { helpers.should_prevent_action? }
+
+    context 'when the case does not have a future court date, and does not have an eviction date, and is not paused' do
+      let(:courtdate) { nil }
+      let(:eviction_date) { nil }
+      let(:case_priority) { build(:case_priority, is_paused_until: nil) }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the case does have a future court date' do
+      let(:courtdate) { 7.days.from_now }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when the case does have an eviction date' do
+      let(:eviction_date) { 7.days.from_now }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when the case is paused' do
+      let(:case_priority) { build(:case_priority, is_paused_until: 7.days.from_now) }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+  end
 end

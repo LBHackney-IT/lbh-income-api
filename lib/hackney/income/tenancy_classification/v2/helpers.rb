@@ -20,6 +20,10 @@ module Hackney
           def court_date_in_future?
             @criteria.courtdate.present? && @criteria.courtdate.future?
           end
+
+          def should_prevent_action?
+            case_has_eviction_date? || court_date_in_future? || case_paused?
+          end
         end
       end
     end
