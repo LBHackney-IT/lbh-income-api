@@ -21,7 +21,7 @@ serve:
 
 .PHONY: shell
 shell:
-	docker-compose run --rm app /bin/bash
+	docker-compose run --rm -e RAILS_ENV=test app /bin/bash
 
 .PHONY: test-db-destroy
 test-db-destroy:

@@ -1,4 +1,4 @@
-FROM ruby:2.5.3
+FROM ruby:2.7.1
 
 ARG RAILS_ENV=development
 WORKDIR /app
@@ -21,6 +21,7 @@ RUN wget --quiet https://github.com/jwilder/dockerize/releases/download/$DOCKERI
 ENV RAILS_ENV ${RAILS_ENV}
 
 COPY Gemfile Gemfile.lock ./
+RUN gem install bundler:1.17.3
 RUN bundle check || bundle install
 
 # Add a script to be executed every time the container starts.
