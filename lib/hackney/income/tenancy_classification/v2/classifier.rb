@@ -12,7 +12,7 @@ module Hackney
           def execute
             actions = []
 
-            actions << :review_failed_letter if review_failed_letter?
+            actions << Rulesets::ReviewFailedLetter.execute(@case_priority, @criteria, @documents)
 
             actions << :apply_for_outright_possession_warrant if apply_for_outright_possession_warrant?
 
@@ -34,6 +34,8 @@ module Hackney
             actions << :send_letter_two if send_letter_two?
             actions << :send_letter_one if send_letter_one?
             actions << :send_first_SMS if send_sms?
+
+            actions.compact!
 
             actions << :no_action if actions.none?
 
@@ -67,11 +69,6 @@ module Hackney
             return false if @criteria.last_communication_action.in?(after_apply_for_outright_possession_actions)
 
             @criteria.court_outcome.in?(outright_possession_court_outcome_codes) && should_prevent_action?
-          end
-
-          def review_failed_letter?
-            return false if @documents.empty?
-            @documents.most_recent.failed? && @documents.most_recent.income_collection?
           end
 
           def court_breach_visit?
