@@ -5,7 +5,7 @@ module Hackney
     class SendManualSms < BaseManualGateway
       def execute(username:, tenancy_ref:, template_id:, phone_number:, reference:, variables:)
         phone = Phonelib.parse(phone_number)
-        if phone.valid?
+        if phone.valid? && govnotify_valid?(phone.full_e164)
           notification_receipt = @notification_gateway.send_text_message(
             phone_number: phone.full_e164,
             template_id: template_id,
@@ -22,8 +22,16 @@ module Hackney
             comment: "#{template_name}' SMS sent to '#{phone.full_e164}' with content '#{notification_receipt.body_without_newlines}'"
           )
         else
-          Rails.logger.warn("Invalid phone number when trying to send manual SMS (reference: '#{reference}') using template_id: #{template_id}, ignoring")
+          error_msg = "Invalid phone number when trying to send manual SMS (reference: '#{reference}') using template_id: #{template_id}"
+          Rails.logger.warn(error_msg)
+          raise ArgumentError, error_msg
         end
+      end
+
+      private
+
+      def govnotify_valid?(phone)
+        phone.match('^\\+447[\\d]{9}$')
       end
     end
   end

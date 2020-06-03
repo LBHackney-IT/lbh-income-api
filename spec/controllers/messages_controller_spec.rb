@@ -3,13 +3,16 @@ require 'rails_helper'
 describe MessagesController, type: :controller do
   include MessagesHelper
 
+  let(:phone_number) { Faker::PhoneNumber.phone_number }
+  let(:reference) { Faker::HitchhikersGuideToTheGalaxy.starship }
+  let(:template_id) { Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id] }
   let(:sms_params) do
     {
       username: Faker::Name.name,
       tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
-      template_id: Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id],
-      phone_number: Faker::PhoneNumber.phone_number,
-      reference: Faker::HitchhikersGuideToTheGalaxy.starship,
+      template_id: template_id,
+      phone_number: phone_number,
+      reference: reference,
       variables: {
         'first name' => Faker::HitchhikersGuideToTheGalaxy.character
       }.to_s
@@ -55,6 +58,32 @@ describe MessagesController, type: :controller do
 
     patch :send_sms, params: sms_params
     expect(response.status).to eq(204)
+  end
+
+  context 'when fails to send sms' do
+    let(:phone_number) { '02035618998' }
+
+    it 'returns an error message' do
+      expect_any_instance_of(Hackney::Notification::SendManualSms).to receive(:execute).with(
+        username: sms_params.fetch(:username),
+        tenancy_ref: sms_params.fetch(:tenancy_ref),
+        template_id: sms_params.fetch(:template_id),
+        phone_number: sms_params.fetch(:phone_number),
+        reference: sms_params.fetch(:reference),
+        variables: sms_params.fetch(:variables)
+      ).and_call_original
+
+      patch :send_sms, params: sms_params
+      expect(response.status).to eq(422)
+
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      expect(json).to eq(
+        code: 422,
+        message: "Invalid phone number when trying to send manual SMS (reference: '#{reference}') using template_id: #{template_id}",
+        status: 'error'
+      )
+    end
   end
 
   it 'sends an email' do
