@@ -9,7 +9,7 @@ module Hackney
             @documents = documents
           end
 
-          def case_paused
+          def case_paused?
             @case_priority.paused?
           end
         end
