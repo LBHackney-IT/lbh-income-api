@@ -16,6 +16,10 @@ module Hackney
           def case_has_eviction_date?
             @criteria.eviction_date.present?
           end
+
+          def court_date_in_future?
+            @criteria.courtdate.present? && @criteria.courtdate.future?
+          end
         end
       end
     end
