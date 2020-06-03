@@ -12,6 +12,10 @@ module Hackney
           def case_paused?
             @case_priority.paused?
           end
+
+          def case_has_eviction_date?
+            @criteria.eviction_date.present?
+          end
         end
       end
     end
