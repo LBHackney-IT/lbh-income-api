@@ -263,10 +263,6 @@ module Hackney
             @case_priority.paused?
           end
 
-          def last_communication_older_than?(date)
-            @criteria.last_communication_date <= date.to_date
-          end
-
           def last_communication_newer_than?(date)
             @criteria.last_communication_date > date.to_date
           end

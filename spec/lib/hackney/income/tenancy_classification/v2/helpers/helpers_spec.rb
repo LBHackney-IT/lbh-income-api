@@ -14,10 +14,12 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   let(:case_priority) { build(:case_priority, is_paused_until: nil) }
   let(:eviction_date) { nil }
   let(:courtdate) { nil }
+  let(:last_communication_date) { nil }
   let(:criteria) {
     Stubs::StubCriteria.new(
       eviction_date: eviction_date,
-      courtdate: courtdate
+      courtdate: courtdate,
+      last_communication_date: last_communication_date
     )
   }
 
@@ -133,6 +135,42 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
       it 'returns true' do
         expect(subject).to eq(true)
+      end
+    end
+  end
+
+  describe 'last_communication_older_than?' do
+    subject { helpers.last_communication_older_than? 1.month.ago }
+
+    context 'when a cases last communication date was in the past' do
+      let(:last_communication_date) { 2.months.ago }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when a cases last communication date is today' do
+      let(:last_communication_date) { 1.month.ago.to_date }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when a cases last communication date is in the future' do
+      let(:last_communication_date) { 1.month.from_now }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when a there is no last communication date for a case' do
+      let(:last_communication_date) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
       end
     end
   end
