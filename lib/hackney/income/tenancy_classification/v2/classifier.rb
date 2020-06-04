@@ -3,11 +3,12 @@ module Hackney
     module TenancyClassification
       module V2
         class Classifier
+          include Helpers
+
           def initialize(case_priority, criteria, documents)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents
-            @helpers = Helpers.new(case_priority, criteria, documents)
           end
 
           def execute
@@ -16,7 +17,7 @@ module Hackney
               Rulesets::ApplyForOutrightPossessionWarrant
             ]
 
-            actions = rulesets.map { |ruleset| ruleset.execute(@helpers, @case_priority, @criteria, @documents) }
+            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
 
             actions << :court_breach_visit if court_breach_visit?
             actions << :court_breach_no_payment if court_breach_no_payment?
@@ -64,7 +65,7 @@ module Hackney
           end
 
           def court_breach_visit?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.courtdate.blank?
             return false unless court_breach_agreement?
 
@@ -74,7 +75,7 @@ module Hackney
           end
 
           def court_breach_no_payment?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.courtdate.blank?
             return false unless court_breach_agreement?
             return false if @criteria.days_since_last_payment.to_i < 8
@@ -84,7 +85,7 @@ module Hackney
           end
 
           def update_court_outcome_action?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.courtdate.blank?
             return false if @criteria.courtdate.future?
 
@@ -92,7 +93,7 @@ module Hackney
           end
 
           def court_agreement_letter_action?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.last_communication_action.in?([
               Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
               Hackney::Tenancy::ActionCodes::VISIT_MADE
@@ -102,7 +103,7 @@ module Hackney
           end
 
           def breached_agreement?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.most_recent_agreement.blank?
             return false if @criteria.most_recent_agreement[:start_date].blank?
 
@@ -110,12 +111,12 @@ module Hackney
           end
 
           def informal_breached_agreement?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             breached_agreement? && !court_breach_agreement?
           end
 
           def informal_agreement_breach_letter?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.nosp.served?
             return false if @criteria.last_communication_action.in?([
               Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT,
@@ -131,7 +132,7 @@ module Hackney
           end
 
           def informal_breached_after_letter?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.nosp.served?
             return false if @criteria.last_communication_action != Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
             return false if last_communication_newer_than?(7.days.ago)
@@ -140,7 +141,7 @@ module Hackney
           end
 
           def court_breach_agreement?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false unless breached_agreement?
             return false if @criteria.courtdate.blank?
 
@@ -148,7 +149,7 @@ module Hackney
           end
 
           def send_sms?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.courtdate.present?
             return false if @criteria.nosp.served?
@@ -166,7 +167,7 @@ module Hackney
           end
 
           def send_letter_one?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.weekly_gross_rent.blank?
             return false if @criteria.nosp.served?
@@ -179,7 +180,7 @@ module Hackney
           end
 
           def send_letter_two?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
@@ -195,7 +196,7 @@ module Hackney
           end
 
           def send_nosp?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
@@ -214,7 +215,7 @@ module Hackney
           end
 
           def send_court_warning_letter?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
@@ -229,7 +230,7 @@ module Hackney
           end
 
           def apply_for_court_date?
-            return false if @helpers.should_prevent_action?
+            return false if should_prevent_action?
             return false if @criteria.balance.blank?
             return false if @criteria.weekly_gross_rent.blank?
             return false if @criteria.active_agreement?

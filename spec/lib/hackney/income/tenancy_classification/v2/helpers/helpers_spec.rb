@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 describe Hackney::Income::TenancyClassification::V2::Helpers do
+  class HelperClass
+    include Hackney::Income::TenancyClassification::V2::Helpers
+
+    def initialize(case_priority, criteria, documents)
+      @case_priority = case_priority
+      @criteria = criteria
+      @documents = documents
+    end
+  end
+
   let(:case_priority) { build(:case_priority, is_paused_until: nil) }
   let(:eviction_date) { nil }
   let(:courtdate) { nil }
@@ -11,7 +21,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     )
   }
 
-  let(:helpers) { described_class.new(case_priority, criteria, nil) }
+  let(:helpers) { HelperClass.new(case_priority, criteria, nil) }
 
   describe 'case_paused?' do
     subject { helpers.case_paused? }
