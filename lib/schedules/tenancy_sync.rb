@@ -12,11 +12,11 @@ class TenancySync
 
     begin
       use_case_factory.schedule_sync_cases.execute
-    rescue Sequel::DatabaseConnectionError => err
+    rescue Sequel::DatabaseConnectionError => e
       raise 'All retries are exhausted' if retry_count >= max_retries
       retry_count += 1
       delay *= retry_count
-      puts "[#{Time.now}] Oh no, we failed on #{err.inspect}."
+      puts "[#{Time.now}] Oh no, we failed on #{e.inspect}."
 
       puts "Retries left: #{max_retries - retry_count}"
       puts "Retrying in: #{delay} seconds"

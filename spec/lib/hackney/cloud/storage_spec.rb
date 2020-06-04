@@ -52,7 +52,7 @@ describe Hackney::Cloud::Storage, type: :model do
         )
       }
 
-      let(:payment_ref) { Faker::Number.number(10) }
+      let(:payment_ref) { Faker::Number.number(digits: 10) }
       let!(:uploaded_document) { create(:document, status: :uploaded, metadata: { payment_ref: payment_ref }.to_json) }
       let!(:downloaded_document) { create(:document, status: :downloaded, metadata: { payment_ref: payment_ref }.to_json) }
       let!(:accepted_document) { create(:document, status: :accepted, metadata: { payment_ref: payment_ref }.to_json) }
@@ -79,7 +79,7 @@ describe Hackney::Cloud::Storage, type: :model do
         )
       }
 
-      let(:payment_ref) { Faker::Number.number(10) }
+      let(:payment_ref) { Faker::Number.number(digits: 10) }
       let!(:uploaded_document) { create(:document, status: :uploaded) }
       let!(:downloaded_document) { create(:document, status: :downloaded) }
       let!(:accepted_document) { create(:document, status: :accepted) }
@@ -100,7 +100,7 @@ describe Hackney::Cloud::Storage, type: :model do
       let(:filename) { File.basename(file) }
       let(:uuid) { SecureRandom.uuid }
       let(:metadata) { { bunnies: true } }
-      let(:letter_html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
+      let(:letter_html) { "<h1>#{Faker::TvShows::RickAndMorty.quote}</h1>" }
 
       it 'creates a new entry' do
         expect { storage.save(letter_html: letter_html, uuid: uuid, filename: filename, metadata: metadata) }.to(change(Hackney::Cloud::Document, :count).by(1))

@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Hackney::Income::ViewCases do
   subject { view_cases.execute(page_number: page_number, number_per_page: number_per_page) }
 
-  let(:page_number) { Faker::Number.number(2).to_i }
-  let(:number_per_page) { Faker::Number.number(2).to_i }
+  let(:page_number) { Faker::Number.number(digits: 2).to_i }
+  let(:number_per_page) { Faker::Number.number(digits: 2).to_i }
   let(:tenancy_api_gateway) { Hackney::Income::TenancyApiGatewayStub.new({}) }
   let(:stored_tenancies_gateway) { Hackney::Income::StoredTenancyGatewayStub.new({}) }
 
@@ -37,7 +37,7 @@ describe Hackney::Income::ViewCases do
     let(:other_tenancy_attributes) { random_tenancy_attributes }
     let(:tenancy_priority_factors) { random_tenancy_priority_factors }
     let(:tenancy_priority_band) { Faker::Internet.slug }
-    let(:tenancy_priority_score) { Faker::Number.number(5).to_i }
+    let(:tenancy_priority_score) { Faker::Number.number(digits: 5).to_i }
 
     let(:tenancy_list) do
       {
@@ -209,7 +209,7 @@ describe Hackney::Income::ViewCases do
           )
         }
 
-        let(:patch) { Faker::Lorem.characters(3) }
+        let(:patch) { Faker::Lorem.characters(number: 3) }
 
         it 'asks the gateway for cases filtered by patch' do
           expect(stored_tenancies_gateway)
@@ -238,7 +238,7 @@ describe Hackney::Income::ViewCases do
   end
 
   context 'when counting the number of pages of tenancies' do
-    let(:number_of_pages) { Faker::Number.number(3).to_i }
+    let(:number_of_pages) { Faker::Number.number(digits: 3).to_i }
 
     it 'consults the stored tenancies gateway' do
       expect(stored_tenancies_gateway).to receive(:number_of_pages).with(
@@ -264,24 +264,24 @@ describe Hackney::Income::ViewCases do
   def random_tenancy_priority_factors
     {
       balance: Faker::Commerce.price,
-      days_in_arrears: Faker::Number.number(2),
-      days_since_last_payment: Faker::Number.number(2),
-      number_of_broken_agreements: Faker::Number.number(1),
-      active_agreement: Faker::Number.between(0, 1),
-      broken_court_order: Faker::Number.between(0, 1),
-      nosp_served: Faker::Number.between(0, 1),
-      active_nosp: Faker::Number.between(0, 1),
+      days_in_arrears: Faker::Number.number(digits: 2),
+      days_since_last_payment: Faker::Number.number(digits: 2),
+      number_of_broken_agreements: Faker::Number.number(digits: 1),
+      active_agreement: Faker::Number.between(from: 0, to: 1),
+      broken_court_order: Faker::Number.between(from: 0, to: 1),
+      nosp_served: Faker::Number.between(from: 0, to: 1),
+      active_nosp: Faker::Number.between(from: 0, to: 1),
 
       courtdate: Date.today - 5,
       court_outcome: Faker::Lorem.word,
       eviction_date: Date.today + 1.month,
-      patch_code: Faker::Lorem.characters(3),
+      patch_code: Faker::Lorem.characters(number: 3),
       classification: 'no_action',
       latest_active_agreement_date: 1.week.ago,
       breach_agreement_date: 5.days.ago,
       expected_balance: Faker::Commerce.price,
-      pause_reason: Faker::Lorem.characters(3),
-      pause_comment: Faker::Lorem.characters(3),
+      pause_reason: Faker::Lorem.characters(number: 3),
+      pause_comment: Faker::Lorem.characters(number: 3),
       is_paused_until: Date.today + 1.day
     }
   end
@@ -293,10 +293,10 @@ describe Hackney::Income::ViewCases do
       current_arrears_agreement_status: Faker::Internet.slug,
       latest_action: {
         code: Faker::Internet.slug,
-        date: Faker::Time.forward(23, :morning)
+        date: Faker::Time.forward(days: 23, period: :morning)
       },
       primary_contact: {
-        name: Faker::TheFreshPrinceOfBelAir.character,
+        name: Faker::TvShows::TheFreshPrinceOfBelAir.character,
         short_address: Faker::Address.street_address,
         postcode: Faker::Address.postcode
       }

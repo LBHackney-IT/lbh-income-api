@@ -21,7 +21,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
   end
 
   context 'when sending an income collection letter' do
-    let(:tenancy_ref) { Faker::Number.number(6) }
+    let(:tenancy_ref) { Faker::Number.number(digits: 6) }
     let(:subject) do
       send_precompiled_letter.execute(
         payment_ref: nil,
@@ -38,7 +38,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
   end
 
   context 'when sending a leasehold letter' do
-    let(:payment_ref) { Faker::Number.number(6) }
+    let(:payment_ref) { Faker::Number.number(digits: 6) }
     let(:subject) do
       send_precompiled_letter.execute(
         payment_ref: payment_ref,
@@ -50,7 +50,7 @@ describe Hackney::Notification::SendManualPrecompiledLetter do
     end
 
     before {
-      allow_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).and_return(tenancy_ref: Faker::Number.number(6))
+      allow_any_instance_of(leasehold_gateway).to receive(:get_tenancy_ref).and_return(tenancy_ref: Faker::Number.number(digits: 6))
     }
 
     it 'will send the letter by calling the leasehold gateway using a payment_ref' do

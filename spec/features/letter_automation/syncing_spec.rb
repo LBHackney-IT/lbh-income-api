@@ -6,8 +6,8 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   include MockAwsHelper
   include ActiveJob::TestHelper
 
-  let(:tenancy_ref) { "#{Faker::Number.number(6)}/#{Faker::Number.number(2)}" }
-  let(:payment_ref) { Faker::Number.number(4) }
+  let(:tenancy_ref) { "#{Faker::Number.number(digits: 6)}/#{Faker::Number.number(digits: 2)}" }
+  let(:payment_ref) { Faker::Number.number(digits: 4).to_s }
   let(:current_balance) { BigDecimal('525.00') }
   let(:income_use_case_factory) { Hackney::Income::UseCaseFactory.new }
   let(:case_priority) { Hackney::Income::Models::CasePriority.last }
@@ -21,8 +21,8 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   before do
     mock_aws_client
     create_valid_uh_records_for_an_income_letter(
-      property_ref: Faker::Number.number(4),
-      house_ref: Faker::Number.number(4),
+      property_ref: Faker::Number.number(digits: 4),
+      house_ref: Faker::Number.number(digits: 4),
       postcode: Faker::Address.postcode,
       leasedate: Time.zone.now.beginning_of_hour
     )

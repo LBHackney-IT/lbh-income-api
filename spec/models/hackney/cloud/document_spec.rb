@@ -5,7 +5,7 @@ describe Hackney::Cloud::Document do
     described_class.delete_all
   }
 
-  let(:payment_ref) { Faker::Number.number(10) }
+  let(:payment_ref) { Faker::Number.number(digits: 10) }
 
   let(:status) { :downloaded }
 

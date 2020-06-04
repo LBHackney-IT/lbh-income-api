@@ -48,8 +48,8 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
   let(:lessee_full_name) { 'Mr John Doe Smith' }
 
   let(:prop_ref) { Random.rand(100).to_s }
-  let(:sc_leasedate) { Faker::Date.forward(10) }
-  let(:commencement_of_tenancy) { Faker::Date.backward(10) }
+  let(:sc_leasedate) { Faker::Date.forward(days: 10) }
+  let(:commencement_of_tenancy) { Faker::Date.backward(days: 10) }
 
   describe 'get_tenancy_ref returns a tenancy_ref in exchange for a payment_ref' do
     context 'when payment_ref does not exist' do

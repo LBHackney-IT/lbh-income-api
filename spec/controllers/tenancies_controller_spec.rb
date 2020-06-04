@@ -4,8 +4,8 @@ describe TenanciesController, type: :controller do
   let(:paused_parms) do
     {
       username: Faker::Name.name,
-      tenancy_ref: Faker::Lorem.characters(8),
-      is_paused_until: Faker::Date.forward(23).to_s,
+      tenancy_ref: Faker::Lorem.characters(number: 8),
+      is_paused_until: Faker::Date.forward(days: 23).to_s,
       pause_reason: Faker::Lorem.sentence,
       pause_comment: Faker::Lorem.paragraph,
       action_code: Faker::Internet.slug
@@ -14,8 +14,8 @@ describe TenanciesController, type: :controller do
   let(:params2) do
     {
       username: Faker::Name.name,
-      tenancy_ref: Faker::Lorem.characters(8),
-      is_paused_until: Faker::Date.backward(23).to_s,
+      tenancy_ref: Faker::Lorem.characters(number: 8),
+      is_paused_until: Faker::Date.backward(days: 23).to_s,
       pause_reason: Faker::Lorem.sentence,
       pause_comment: Faker::Lorem.paragraph,
       action_code: Faker::Internet.slug
@@ -186,7 +186,7 @@ describe TenanciesController, type: :controller do
   context 'when receiving a request missing params' do
     it 'returns a 400 - bad request' do
       assert_incomplete_params(
-        tenancy_ref: Faker::Lorem.characters(8)
+        tenancy_ref: Faker::Lorem.characters(number: 8)
       )
     end
   end

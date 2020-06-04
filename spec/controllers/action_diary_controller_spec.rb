@@ -4,7 +4,7 @@ describe ActionDiaryController, type: :controller do
   let(:action_diary_params) do
     {
       username: Faker::Name.name,
-      tenancy_ref: Faker::Lorem.characters(8),
+      tenancy_ref: Faker::Lorem.characters(number: 8),
       action_code: Faker::Internet.slug,
       comment: Faker::Lorem.paragraph
     }

@@ -20,7 +20,7 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
 
     let(:current_balance) { Faker::Number.decimal.to_f }
 
-    let(:payment_ref) { Faker::Number.number(10) }
+    let(:payment_ref) { Faker::Number.number(digits: 10).to_s }
 
     before {
       create_uh_tenancy_agreement(

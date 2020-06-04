@@ -7,31 +7,31 @@ describe Hackney::Income::SqlLegalCasesGateway, universal: true do
 
   let(:tenancy_ref_array) do
     [
-      Faker::Lorem.characters(8),
-      Faker::Lorem.characters(8),
-      Faker::Lorem.characters(8),
-      Faker::Lorem.characters(8),
-      Faker::Lorem.characters(8)
+      Faker::Lorem.characters(number: 8),
+      Faker::Lorem.characters(number: 8),
+      Faker::Lorem.characters(number: 8),
+      Faker::Lorem.characters(number: 8),
+      Faker::Lorem.characters(number: 8)
     ]
   end
 
   let(:property_ref_array) do
     [
-      Faker::Lorem.characters(4),
-      Faker::Lorem.characters(4),
-      Faker::Lorem.characters(4),
-      Faker::Lorem.characters(4),
-      Faker::Lorem.characters(4)
+      Faker::Lorem.characters(number: 4),
+      Faker::Lorem.characters(number: 4),
+      Faker::Lorem.characters(number: 4),
+      Faker::Lorem.characters(number: 4),
+      Faker::Lorem.characters(number: 4)
     ]
   end
 
-  let(:patch_code) { Faker::Lorem.characters(3) }
+  let(:patch_code) { Faker::Lorem.characters(number: 3) }
 
   let(:patch_codes) do
     [
-      Faker::Lorem.characters(3),
-      Faker::Lorem.characters(3),
-      Faker::Lorem.characters(3)
+      Faker::Lorem.characters(number: 3),
+      Faker::Lorem.characters(number: 3),
+      Faker::Lorem.characters(number: 3)
     ]
   end
 

@@ -6,7 +6,7 @@ describe Hackney::Income::SqlPauseTenancyGateway do
   let(:tenancy_1) { create_tenancy_model }
   let(:pause_reason) { Faker::Lorem.sentence }
   let(:pause_comment) { Faker::Lorem.paragraph }
-  let(:future_date) { Faker::Time.forward(23).iso8601 }
+  let(:future_date) { Faker::Time.forward(days: 23).iso8601 }
   let(:invalid_string) { SecureRandom.uuid }
   let(:gateway_model) { described_class::GatewayModel }
 

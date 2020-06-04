@@ -6,24 +6,24 @@ describe MessagesController, type: :controller do
   let(:sms_params) do
     {
       username: Faker::Name.name,
-      tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
+      tenancy_ref: "#{Faker::Number.number(digits: 8)}/#{Faker::Number.number(digits: 2)}",
       template_id: Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id],
       phone_number: Faker::PhoneNumber.phone_number,
-      reference: Faker::HitchhikersGuideToTheGalaxy.starship,
+      reference: Faker::Movies::HitchhikersGuideToTheGalaxy.starship,
       variables: {
-        'first name' => Faker::HitchhikersGuideToTheGalaxy.character
+        'first name' => Faker::Movies::HitchhikersGuideToTheGalaxy.character
       }.to_s
     }
   end
   let(:email_params) do
     {
       username: Faker::Name.name,
-      tenancy_ref: "#{Faker::Number.number(8)}/#{Faker::Number.number(2)}",
-      template_id: Faker::HitchhikersGuideToTheGalaxy.planet,
+      tenancy_ref: "#{Faker::Number.number(digits: 8)}/#{Faker::Number.number(digits: 2)}",
+      template_id: Faker::Movies::HitchhikersGuideToTheGalaxy.planet,
       email_address: Faker::Internet.email,
-      reference: Faker::HitchhikersGuideToTheGalaxy.starship,
+      reference: Faker::Movies::HitchhikersGuideToTheGalaxy.starship,
       variables: {
-        'first name' => Faker::HitchhikersGuideToTheGalaxy.character
+        'first name' => Faker::Movies::HitchhikersGuideToTheGalaxy.character
       }.to_s
     }
   end

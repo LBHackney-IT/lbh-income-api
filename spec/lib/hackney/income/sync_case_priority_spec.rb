@@ -32,7 +32,7 @@ describe Hackney::Income::SyncCasePriority do
       build(:case_priority,
             tenancy_ref: tenancy_ref,
             classification: :send_letter_one,
-            patch_code: Faker::Number.number(4))
+            patch_code: Faker::Number.number(digits: 4))
     }
 
     it 'calls the automate_sending_letters usecase' do
@@ -50,7 +50,7 @@ describe Hackney::Income::SyncCasePriority do
       build(:case_priority,
             tenancy_ref: tenancy_ref,
             classification: :send_letter_one,
-            patch_code: Faker::Number.number(4),
+            patch_code: Faker::Number.number(digits: 4),
             is_paused_until: Date.today + 2.days)
     }
 

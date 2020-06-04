@@ -7,7 +7,7 @@ describe Hackney::Income::Jobs::SaveAndSendLetterJob do
   # let(:stringio) { StringIO.new(file.read)}
   let(:file_name) { 'test_pdf.pdf' }
   let(:bucket_name) { 'my-bucket' }
-  let(:letter_html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
+  let(:letter_html) { "<h1>#{Faker::TvShows::RickAndMorty.quote}</h1>" }
   let(:uuid) { SecureRandom.uuid }
   let(:doc) { create(:document, filename: 'my-doc.pdf') }
 
