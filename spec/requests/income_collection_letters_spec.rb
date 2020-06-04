@@ -32,7 +32,7 @@ RSpec.describe 'Income Collection Letters', type: :request do
         tenancy_ref: 'abc', template_id: 'income_collection_letter_1', user: user
       }
 
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'raises an error with bogus template_id' do

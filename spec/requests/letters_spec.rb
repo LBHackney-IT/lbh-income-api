@@ -45,7 +45,7 @@ RSpec.describe 'Letters', type: :request do
         user: user
       }
 
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'raises an error with bogus template_id' do
