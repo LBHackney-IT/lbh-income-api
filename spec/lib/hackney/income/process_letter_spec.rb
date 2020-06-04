@@ -6,9 +6,9 @@ describe Hackney::Income::ProcessLetter do
   let(:cloud_storage_spy) { spy }
   let(:username) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
-  let(:html) { "<h1>#{Faker::RickAndMorty.quote}</h1>" }
+  let(:html) { "<h1>#{Faker::TvShows::RickAndMorty.quote}</h1>" }
   let(:uuid) { SecureRandom.uuid }
-  let(:payment_ref) { Faker::Number.number(6) }
+  let(:payment_ref) { Faker::Number.number(digits: 6) }
   let(:template_name) { Faker::Lorem.word }
 
   it 'calls storage.save' do

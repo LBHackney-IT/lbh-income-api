@@ -11,7 +11,7 @@ describe UseCases::AddActionDiaryAndPauseCase do
   let(:add_action_diary) { spy }
   let(:get_tenancy) { double }
   let(:username) { Faker::Name.name }
-  let(:tenancy_ref) { Faker::Lorem.characters(8) }
+  let(:tenancy_ref) { Faker::Lorem.characters(number: 8) }
   let(:action_code) { Faker::Internet.slug }
   let(:comment) { Faker::Lorem.paragraph }
 

@@ -5,6 +5,7 @@ gem 'aws-sdk-s3'
 gem 'loofah', '>= 2.2.3'
 gem 'rack', '>= 2.0.6'
 
+ruby '2.7.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.2'
 # Use sqlite3 as the database for Active Record
@@ -26,7 +27,7 @@ gem 'puma', '~> 3.12'
 gem 'faker'
 
 gem 'httparty'
-gem 'mysql2'
+gem 'mysql2', '~> 0.5.2'
 gem 'sequel'
 gem 'tiny_tds'
 gem 'uk_postcode'
@@ -65,7 +66,8 @@ end
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'rubocop', '~> 0.63.1'
+  gem 'rubocop', '~> 0.74.0', require: false
+  gem 'rubocop-faker'
   gem 'rubocop-rspec', '~> 1.31.0'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

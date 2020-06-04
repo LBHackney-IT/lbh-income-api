@@ -21,9 +21,9 @@ describe UseCases::AutomateSendingLetters do
 
   let(:case_priority) {
     build(:case_priority,
-          tenancy_ref: Faker::Number.number(4),
+          tenancy_ref: Faker::Number.number(digits: 4),
           classification: :send_letter_one,
-          patch_code: Faker::Number.number(4))
+          patch_code: Faker::Number.number(digits: 4))
   }
 
   let(:letter) { 'income_collection_letter_1' }
@@ -142,9 +142,9 @@ describe UseCases::AutomateSendingLetters do
 
     let(:case_priority) {
       build(:case_priority,
-            tenancy_ref: Faker::Number.number(4),
+            tenancy_ref: Faker::Number.number(digits: 4),
             classification: classification,
-            patch_code: Faker::Number.number(4))
+            patch_code: Faker::Number.number(digits: 4))
     }
 
     before do

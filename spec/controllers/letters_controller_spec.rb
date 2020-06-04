@@ -40,7 +40,7 @@ describe LettersController, type: :controller do
     let(:send_letter_to_gov_notify) { double }
     let(:find_document) { double }
 
-    let(:tenancy_ref) { Faker::Number.number(4) }
+    let(:tenancy_ref) { Faker::Number.number(digits: 4).to_s }
     let(:document) { Hackney::Cloud::Document.new }
 
     before do
@@ -65,7 +65,7 @@ describe LettersController, type: :controller do
 
   describe '#create' do
     let(:generate_and_store_use_case_spy) { spy }
-    let(:payment_ref) { Faker::Number.number(6) }
+    let(:payment_ref) { Faker::Number.number(digits: 6) }
     let(:dummy_json_hash) { { uuid: SecureRandom.uuid } }
 
     before do

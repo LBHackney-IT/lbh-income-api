@@ -5,8 +5,8 @@ describe Hackney::Income::SetTenancyPausedStatus do
 
   let(:action_diary_gateway) { double(Hackney::Tenancy::Gateway::ActionDiaryGateway) }
 
-  let(:tenancy_ref) { Faker::Lorem.characters(8) }
-  let(:future_date) { Faker::Date.forward(23).to_s }
+  let(:tenancy_ref) { Faker::Lorem.characters(number: 8) }
+  let(:future_date) { Faker::Date.forward(days: 23).to_s }
   let(:pause_reason) { Faker::Lorem.sentence }
   let(:pause_comment) { Faker::Lorem.paragraph }
   let(:username) { Faker::Name.name }

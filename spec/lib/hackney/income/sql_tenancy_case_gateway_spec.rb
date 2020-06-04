@@ -7,7 +7,7 @@ describe Hackney::Income::SqlTenancyCaseGateway do
 
   context 'when persisting tenancies which do not exist in the database' do
     let(:tenancies) do
-      random_size_array = (0..Faker::Number.between(1, 10)).to_a
+      random_size_array = (0..Faker::Number.between(from: 1, to: 10)).to_a
       random_size_array.map { create_tenancy_model }
     end
 

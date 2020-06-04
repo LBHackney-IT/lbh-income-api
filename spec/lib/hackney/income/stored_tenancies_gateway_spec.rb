@@ -98,10 +98,10 @@ describe Hackney::Income::StoredTenanciesGateway do
     context 'when there are multiple tenancies' do
       let(:multiple_attributes) do
         multiple_attributes = []
-        Faker::Number.number(1).to_i.times do
+        Faker::Number.number(digits: 1).to_i.times do
           multiple_attributes.append(
             tenancy_ref: Faker::Internet.slug,
-            balance: Faker::Number.number(3).to_i
+            balance: Faker::Number.number(digits: 3).to_i
           )
         end
         multiple_attributes
@@ -224,14 +224,14 @@ describe Hackney::Income::StoredTenanciesGateway do
     let(:is_paused) { nil }
     let(:pause_reason_filter) { nil }
 
-    let(:num_paused_cases_without_reason) { Faker::Number.between(2, 10) }
-    let(:num_paused_cases_with_reason) { Faker::Number.between(2, 10) }
+    let(:num_paused_cases_without_reason) { Faker::Number.between(from: 2, to: 10) }
+    let(:num_paused_cases_with_reason) { Faker::Number.between(from: 2, to: 10) }
     let(:num_paused_cases) { num_paused_cases_with_reason + num_paused_cases_without_reason }
-    let(:num_active_cases) { Faker::Number.between(2, 20) }
-    let(:num_pages) { Faker::Number.between(1, 5) }
+    let(:num_active_cases) { Faker::Number.between(from: 2, to: 20) }
+    let(:num_pages) { Faker::Number.between(from: 1, to: 5) }
     let(:pause_reason) { Faker::Lorem.word }
     let(:pause_comment) { Faker::Lorem.paragraph }
-    let(:is_paused_until_date) { Faker::Date.forward(3) }
+    let(:is_paused_until_date) { Faker::Date.forward(days: 3) }
 
     before do
       num_paused_cases_with_reason.times do
@@ -246,7 +246,7 @@ describe Hackney::Income::StoredTenanciesGateway do
         create(:case_priority, balance: 40)
       end
 
-      create_list(:case_priority, 2, balance: 40, is_paused_until: Faker::Date.backward(1))
+      create_list(:case_priority, 2, balance: 40, is_paused_until: Faker::Date.backward(days: 1))
     end
 
     context 'when we call get_tenancies' do
@@ -379,7 +379,7 @@ describe Hackney::Income::StoredTenanciesGateway do
 
         context 'with one no_action classification case' do
           before do
-            create(:case_priority, balance: 40, is_paused_until: Faker::Date.forward(1), classification: :no_action)
+            create(:case_priority, balance: 40, is_paused_until: Faker::Date.forward(days: 1), classification: :no_action)
           end
 
           it 'shows the number of pages of paused cases with one no_action classification' do
@@ -476,7 +476,7 @@ describe Hackney::Income::StoredTenanciesGateway do
     let(:cases_with_no_action) { 5 }
     let(:cases_with_warning_letter_action) { 5 }
 
-    let(:num_pages) { Faker::Number.between(1, 5) }
+    let(:num_pages) { Faker::Number.between(from: 1, to: 5) }
 
     before do
       cases_with_no_action.times do
@@ -537,13 +537,13 @@ describe Hackney::Income::StoredTenanciesGateway do
   end
 
   context 'when there are tenancies with different patches' do
-    let(:patch_1) { Faker::Lorem.characters(3) }
-    let(:patch_2) { Faker::Lorem.characters(3) }
+    let(:patch_1) { Faker::Lorem.characters(number: 3) }
+    let(:patch_2) { Faker::Lorem.characters(number: 3) }
 
-    let(:num_cases_in_patch_1) { Faker::Number.between(2, 10) }
-    let(:num_cases_in_patch_2) { Faker::Number.between(2, 20) }
-    let(:num_cases_in_no_patches) { Faker::Number.between(1, 3) }
-    let(:num_pages) { Faker::Number.between(1, 5) }
+    let(:num_cases_in_patch_1) { Faker::Number.between(from: 2, to: 10) }
+    let(:num_cases_in_patch_2) { Faker::Number.between(from: 2, to: 20) }
+    let(:num_cases_in_no_patches) { Faker::Number.between(from: 1, to: 3) }
+    let(:num_pages) { Faker::Number.between(from: 1, to: 5) }
 
     before do
       num_cases_in_patch_1.times do

@@ -15,7 +15,7 @@ describe Hackney::Notification::RequestPrecompiledLetterState do
     )
   end
 
-  let(:payment_ref) { Faker::Number.number(10) }
+  let(:payment_ref) { Faker::Number.number(digits: 10) }
 
   let(:case_priority) { create(:case_priority, payment_ref: payment_ref) }
 

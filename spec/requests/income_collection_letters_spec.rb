@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Income Collection Letters', type: :request do
   include MockAwsHelper
 
-  let(:property_ref) { Faker::Number.number(4) }
-  let(:tenancy_ref) { "#{Faker::Number.number(6)}/#{Faker::Number.number(2)}" }
-  let(:payment_ref) { Faker::Number.number(4) }
-  let(:house_ref) { Faker::Number.number(4) }
+  let(:property_ref) { Faker::Number.number(digits: 4).to_s }
+  let(:tenancy_ref) { "#{Faker::Number.number(digits: 6)}/#{Faker::Number.number(digits: 2)}" }
+  let(:payment_ref) { Faker::Number.number(digits: 4).to_s }
+  let(:house_ref) { Faker::Number.number(digits: 4).to_s }
   let(:postcode) { Faker::Address.postcode }
   let(:leasedate) { Time.zone.now.beginning_of_hour }
   let(:template) { 'income_collection_letter_1' }
@@ -32,7 +32,7 @@ RSpec.describe 'Income Collection Letters', type: :request do
         tenancy_ref: 'abc', template_id: 'income_collection_letter_1', user: user
       }
 
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'raises an error with bogus template_id' do

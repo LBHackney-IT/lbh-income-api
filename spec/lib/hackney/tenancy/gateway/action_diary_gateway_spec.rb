@@ -3,9 +3,9 @@ require 'rails_helper'
 describe Hackney::Tenancy::Gateway::ActionDiaryGateway do
   subject(:gateway) { described_class.new(host: host, api_key: key) }
 
-  let(:host) { Faker::Internet.url('example.com') }
+  let(:host) { Faker::Internet.url(host: 'example.com') }
   let(:key) { SecureRandom.uuid }
-  let(:tenancy_ref) { Faker::Lorem.characters(8) }
+  let(:tenancy_ref) { Faker::Lorem.characters(number: 8) }
   let(:username) { Faker::Name.name }
   let(:action_code) { Faker::Internet.slug }
   let(:comment) { Faker::Lorem.paragraph }

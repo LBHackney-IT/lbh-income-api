@@ -64,7 +64,7 @@ describe Hackney::PDF::GetTemplatesForUser do
   end
 
   context 'when user is in the income collection and leasehold services group' do
-    let(:user_groups) { ['leasehold-group', 'income-group'] }
+    let(:user_groups) { %w[leasehold-group income-group] }
 
     it 'templates are found in the correct directory' do
       allow(Dir).to receive(:glob)

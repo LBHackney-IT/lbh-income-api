@@ -1,5 +1,42 @@
 require 'rails_helper'
 
+describe Hackney::Income::TenancyClassification::Classifier do
+  subject { assign_classification.execute }
+
+  let(:case_priority) { build(:case_priority) }
+  let(:criteria) { Stubs::StubCriteria.new }
+  let(:documents_related_to_case) { [] }
+
+  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case) }
+
+  context 'when v1 does not match v2' do
+    let(:v1_classifier) { instance_double(Hackney::Income::TenancyClassification::V1::Classifier) }
+    let(:v2_classifier) { instance_double(Hackney::Income::TenancyClassification::V2::Classifier) }
+
+    before do
+      allow(Rails.logger).to receive(:error)
+
+      allow(Hackney::Income::TenancyClassification::V1::Classifier)
+        .to receive(:new)
+        .and_return(v1_classifier)
+      allow(Hackney::Income::TenancyClassification::V2::Classifier)
+        .to receive(:new)
+        .and_return(v2_classifier)
+
+      allow(v1_classifier)
+        .to receive(:execute)
+        .and_return(:send_first_SMS)
+      allow(v2_classifier)
+        .to receive(:execute)
+        .and_return(:no_action)
+    end
+
+    it 'returns the v1 response' do
+      expect(subject).to eq(:send_first_SMS)
+    end
+  end
+end
+
 shared_examples 'TenancyClassification Contract' do
   subject { assign_classification.execute }
 
@@ -15,7 +52,7 @@ shared_examples 'TenancyClassification Contract' do
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
       eviction_date: eviction_date,
-      payment_ref: Faker::Number.number(10),
+      payment_ref: Faker::Number.number(digits: 10),
       total_payment_amount_in_week: total_payment_amount_in_week
     }
   end

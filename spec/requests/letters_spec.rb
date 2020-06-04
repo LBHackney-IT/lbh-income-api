@@ -3,16 +3,16 @@ require 'rails_helper'
 RSpec.describe 'Letters', type: :request do
   include MockAwsHelper
 
-  let(:property_ref) { Faker::Number.number(4) }
-  let(:tenancy_ref) { "#{Faker::Number.number(6)}/#{Faker::Number.number(2)}" }
-  let(:payment_ref) { Faker::Number.number(4) }
-  let(:house_ref) { Faker::Number.number(4) }
+  let(:property_ref) { Faker::Number.number(digits: 4).to_s }
+  let(:tenancy_ref) { "#{Faker::Number.number(digits: 6)}/#{Faker::Number.number(digits: 2)}" }
+  let(:payment_ref) { Faker::Number.number(digits: 4).to_s }
+  let(:house_ref) { Faker::Number.number(digits: 4).to_s }
   let(:postcode) { Faker::Address.postcode }
   let(:leasedate) { Time.zone.now.beginning_of_hour }
   let(:template) { 'letter_1_in_arrears_FH' }
   let(:user_group) { 'leasehold-group' }
-  let(:total_collectable_arrears_balance) { Faker::Number.number(3).to_f }
-  let(:money_judgement) { Faker::Number.number(2).to_f }
+  let(:total_collectable_arrears_balance) { Faker::Number.number(digits: 3).to_f }
+  let(:money_judgement) { Faker::Number.number(digits: 2).to_f }
   let(:lba_balance) { BigDecimal(total_collectable_arrears_balance.to_s) - BigDecimal(money_judgement.to_s) }
 
   let(:user) {
@@ -45,7 +45,7 @@ RSpec.describe 'Letters', type: :request do
         user: user
       }
 
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'raises an error with bogus template_id' do
