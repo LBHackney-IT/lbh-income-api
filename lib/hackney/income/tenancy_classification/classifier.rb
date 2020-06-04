@@ -3,6 +3,10 @@ module Hackney
     module TenancyClassification
       class Classifier
         def initialize(case_priority, criteria, documents)
+          @case_priority = case_priority
+          @criteria = criteria
+          @documents = documents
+
           @version1_classifier = Hackney::Income::TenancyClassification::V1::Classifier.new(
             case_priority,
             criteria,
@@ -23,9 +27,9 @@ module Hackney
             Rails.logger.error(
               "CLASSIFIER: V1: #{version1_action} " \
                "V2: #{version2_action} " \
-               "Criteria: #{criteria} " \
-               "CasePriority: #{case_priority} " \
-               "Document Count: #{documents.length}"
+               "Criteria: #{@criteria} " \
+               "CasePriority: #{@case_priority} " \
+               "Document Count: #{@documents.length}"
             )
           end
 
