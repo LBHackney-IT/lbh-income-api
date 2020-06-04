@@ -166,11 +166,39 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
 
-    context 'when a there is no last communication date for a case' do
+    context 'when there is no last communication date for a case' do
       let(:last_communication_date) { nil }
 
       it 'returns false' do
         expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'last_communication_newer_than?' do
+    subject { helpers.last_communication_newer_than? 3.month.ago }
+
+    context 'when there is no last communication date for a case' do
+      let(:last_communication_date) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the last communication happend a couple of months ago' do
+      let(:last_communication_date) { 4.months.ago }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the last communication was a month ago' do
+      let(:last_communication_date) { 1.month.ago }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
       end
     end
   end
