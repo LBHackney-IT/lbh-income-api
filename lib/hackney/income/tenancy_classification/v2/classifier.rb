@@ -14,7 +14,8 @@ module Hackney
           def execute
             rulesets = [
               Rulesets::ReviewFailedLetter,
-              Rulesets::ApplyForOutrightPossessionWarrant
+              Rulesets::ApplyForOutrightPossessionWarrant,
+              Rulesets::SendSMS
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
@@ -36,20 +37,23 @@ module Hackney
 
             actions << :send_letter_two if send_letter_two?
             actions << :send_letter_one if send_letter_one?
-            actions << :send_first_SMS if send_sms?
 
             actions.compact!
 
             actions << :no_action if actions.none?
 
-            if actions.length > 1 && actions != %i[send_letter_one send_first_SMS]
-              Rails.logger.error(
-                'CLASSIFIER: Multiple recommended actions from V2' \
-                "Actions: #{actions} " \
-                "Criteria: #{@criteria} " \
-                "CasePriority: #{@case_priority} " \
-                "Document Count: #{@documents.length}"
-              )
+            if actions.length > 1
+              if actions == %i[send_first_SMS send_letter_one]
+                actions = %i[send_letter_one]
+              else
+                Rails.logger.error(
+                  'CLASSIFIER: Multiple recommended actions from V2' \
+                  "Actions: #{actions} " \
+                  "Criteria: #{@criteria} " \
+                  "CasePriority: #{@case_priority} " \
+                  "Document Count: #{@documents.length}"
+                )
+              end
             end
 
             validate_wanted_action(actions.first)
@@ -146,24 +150,6 @@ module Hackney
             return false if @criteria.courtdate.blank?
 
             @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
-          end
-
-          def send_sms?
-            return false if should_prevent_action?
-            return false if @criteria.balance.blank?
-            return false if @criteria.courtdate.present?
-            return false if @criteria.nosp.served?
-            return false if @criteria.active_agreement?
-
-            if @criteria.last_communication_action.present?
-              return false if @criteria.last_communication_action.in?(sms_action_codes) &&
-                              last_communication_newer_than?(7.days.ago)
-
-              return false if !@criteria.last_communication_action.in?(sms_action_codes) &&
-                              last_communication_newer_than?(3.months.ago)
-            end
-
-            @criteria.balance >= 5 && no_court_date?
           end
 
           def send_letter_one?
@@ -347,16 +333,6 @@ module Hackney
               Hackney::Tenancy::ActionCodes::ADJOURNED_ON_TERMS_COURT_OUTCOME,
               Hackney::Tenancy::ActionCodes::POSTPONED_POSSESSIOON_COURT_OUTCOME,
               Hackney::Tenancy::ActionCodes::SUSPENDED_POSSESSION_COURT_OUTCOME
-            ]
-          end
-
-          def sms_action_codes
-            [
-              Hackney::Tenancy::ActionCodes::AUTOMATED_SMS_ACTION_CODE,
-              Hackney::Tenancy::ActionCodes::MANUAL_SMS_ACTION_CODE,
-              Hackney::Tenancy::ActionCodes::MANUAL_GREEN_SMS_ACTION_CODE,
-              Hackney::Tenancy::ActionCodes::MANUAL_AMBER_SMS_ACTION_CODE,
-              Hackney::Tenancy::ActionCodes::TEXT_MESSAGE_SENT
             ]
           end
         end
