@@ -263,10 +263,6 @@ module Hackney
             @criteria.last_communication_date <= date.to_date
           end
 
-          def last_communication_newer_than?(date)
-            @criteria.last_communication_date > date.to_date
-          end
-
           def balance_is_in_arrears_by_number_of_weeks?(weeks)
             balance_with_1_week_grace >= arrear_accumulation_by_number_weeks(weeks)
           end
