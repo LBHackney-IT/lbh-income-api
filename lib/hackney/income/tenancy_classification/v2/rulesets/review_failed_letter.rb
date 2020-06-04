@@ -6,8 +6,15 @@ module Hackney
           class ReviewFailedLetter
             class << self
               def execute(case_priority, criteria, documents)
-                return nil if documents.empty?
-                return :review_failed_letter if documents.most_recent.failed? && documents.most_recent.income_collection?
+                return :review_failed_letter if action_valid(case_priority, criteria, documents)
+              end
+
+              private
+
+              def action_valid(case_priority, criteria, documents)
+                return false if documents.empty?
+
+                documents.most_recent.failed? && documents.most_recent.income_collection?
               end
             end
           end
