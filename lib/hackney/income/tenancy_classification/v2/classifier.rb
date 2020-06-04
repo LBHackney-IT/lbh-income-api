@@ -15,7 +15,7 @@ module Hackney
 
             actions << Rulesets::ReviewFailedLetter.execute(@case_priority, @criteria, @documents)
 
-            actions << :apply_for_outright_possession_warrant if apply_for_outright_possession_warrant?
+            actions << Rulesets::ApplyForOutrightPossessionWarrant.execute(@helpers, @case_priority, @criteria, @documents)
 
             actions << :court_breach_visit if court_breach_visit?
             actions << :court_breach_no_payment if court_breach_no_payment?
@@ -60,17 +60,6 @@ module Hackney
           def validate_wanted_action(wanted_action)
             return false if Hackney::Income::Models::CasePriority.classifications.key?(wanted_action)
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
-          end
-
-          def apply_for_outright_possession_warrant?
-            return false if @helpers.should_prevent_action?
-            return false if @criteria.active_agreement?
-            return false if @criteria.courtdate.blank?
-            return false if @criteria.courtdate.future?
-            return false if @criteria.courtdate < 3.months.ago
-            return false if @criteria.last_communication_action.in?(after_apply_for_outright_possession_actions)
-
-            @criteria.court_outcome.in?(outright_possession_court_outcome_codes)
           end
 
           def court_breach_visit?
@@ -364,19 +353,6 @@ module Hackney
               Hackney::Tenancy::ActionCodes::ADJOURNED_ON_TERMS_COURT_OUTCOME,
               Hackney::Tenancy::ActionCodes::POSTPONED_POSSESSIOON_COURT_OUTCOME,
               Hackney::Tenancy::ActionCodes::SUSPENDED_POSSESSION_COURT_OUTCOME
-            ]
-          end
-
-          def outright_possession_court_outcome_codes
-            [
-              Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
-              Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
-            ]
-          end
-
-          def after_apply_for_outright_possession_actions
-            [
-              Hackney::Tenancy::ActionCodes::WARRANT_OF_POSSESSION
             ]
           end
 
