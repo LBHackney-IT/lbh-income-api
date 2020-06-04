@@ -18,6 +18,10 @@ module Hackney
           def should_prevent_action?
             case_has_eviction_date? || court_date_in_future? || case_paused?
           end
+
+          def no_court_date?
+            @criteria.courtdate.blank?
+          end
         end
       end
     end

@@ -255,10 +255,6 @@ module Hackney
             @criteria.courtdate&.future?
           end
 
-          def no_court_date?
-            @criteria.courtdate.blank?
-          end
-
           def case_paused?
             @case_priority.paused?
           end

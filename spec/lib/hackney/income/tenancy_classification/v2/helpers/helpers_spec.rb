@@ -136,4 +136,32 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
   end
+
+  describe 'no_court_date?' do
+    subject { helpers.no_court_date? }
+
+    context 'when the criteria has a future court date' do
+      let(:courtdate) { 6.days.from_now }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the criteria has a past court date' do
+      let(:courtdate) { 6.days.ago }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the criteria does not have a court date' do
+      let(:courtdate) { nil }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+  end
 end
