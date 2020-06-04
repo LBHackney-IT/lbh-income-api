@@ -29,8 +29,8 @@ describe Hackney::Notification::SendManualSms do
     end
 
     let(:template_id) { '00004' }
-    let(:phone_number) { '020 8356 3000' }
-    let(:e164_phone_number) { '+442083563000' }
+    let(:phone_number) { '07333444555' }
+    let(:e164_phone_number) { '+447333444555' }
     let(:reference) { Faker::Superhero.prefix }
     let(:first_name) { Faker::Superhero.name }
     let(:username) { Faker::Name.name }
@@ -71,7 +71,7 @@ describe Hackney::Notification::SendManualSms do
           username: username,
           tenancy_ref: tenancy.tenancy_ref,
           action_code: 'GMS',
-          comment: "A Quicker Template' SMS sent to '+442083563000' with content 'a body should be here?'"
+          comment: "A Quicker Template' SMS sent to '#{e164_phone_number}' with content 'a body should be here?'"
         )
         .once
 
@@ -95,7 +95,13 @@ describe Hackney::Notification::SendManualSms do
 
       it 'does not send an sms' do
         expect(add_action_diary_and_pause_case_usecase).not_to receive(:send_text_message)
-        subject
+
+        expect do
+          subject
+        end.to raise_error(
+          ArgumentError,
+          "Invalid phone number when trying to send manual SMS (reference: '#{reference}') using template_id: #{template_id}"
+        )
       end
     end
   end

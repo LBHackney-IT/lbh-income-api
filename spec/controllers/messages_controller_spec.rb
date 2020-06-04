@@ -3,7 +3,7 @@ require 'rails_helper'
 describe MessagesController, type: :controller do
   include MessagesHelper
 
-  let(:phone_number) { Faker::PhoneNumber.phone_number }
+  let(:phone_number) { '07333444555' }
   let(:reference) { Faker::HitchhikersGuideToTheGalaxy.starship }
   let(:template_id) { Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id] }
   let(:sms_params) do
