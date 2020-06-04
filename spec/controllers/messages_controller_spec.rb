@@ -4,7 +4,7 @@ describe MessagesController, type: :controller do
   include MessagesHelper
 
   let(:phone_number) { '07333444555' }
-  let(:reference) { Faker::HitchhikersGuideToTheGalaxy.starship }
+  let(:reference) { Faker::Movies::HitchhikersGuideToTheGalaxy.starship }
   let(:template_id) { Hackney::Notification::GovNotifyGateway::EXAMPLE_TEMPLATES.sample[:id] }
   let(:sms_params) do
     {
