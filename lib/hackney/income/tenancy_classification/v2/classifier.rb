@@ -11,11 +11,12 @@ module Hackney
           end
 
           def execute
-            actions = []
+            rulesets = [
+              Rulesets::ReviewFailedLetter,
+              Rulesets::ApplyForOutrightPossessionWarrant
+            ]
 
-            actions << Rulesets::ReviewFailedLetter.execute(@case_priority, @criteria, @documents)
-
-            actions << Rulesets::ApplyForOutrightPossessionWarrant.execute(@helpers, @case_priority, @criteria, @documents)
+            actions = rulesets.map { |ruleset| ruleset.execute(@helpers, @case_priority, @criteria, @documents) }
 
             actions << :court_breach_visit if court_breach_visit?
             actions << :court_breach_no_payment if court_breach_no_payment?

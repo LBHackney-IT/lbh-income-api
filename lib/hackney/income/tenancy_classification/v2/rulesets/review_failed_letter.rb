@@ -5,7 +5,7 @@ module Hackney
         module Rulesets
           class ReviewFailedLetter
             class << self
-              def execute(case_priority, criteria, documents)
+              def execute(helpers, case_priority, criteria, documents)
                 return :review_failed_letter if action_valid(case_priority, criteria, documents)
               end
 
