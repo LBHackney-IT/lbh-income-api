@@ -18,6 +18,15 @@ module Hackney
           def should_prevent_action?
             case_has_eviction_date? || court_date_in_future? || case_paused?
           end
+
+          def no_court_date?
+            @criteria.courtdate.blank?
+          end
+
+          def last_communication_newer_than?(date)
+            return false if @criteria.last_communication_date.blank?
+            @criteria.last_communication_date > date.to_date
+          end
         end
       end
     end
