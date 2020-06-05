@@ -4,9 +4,16 @@ class CreateAgreements < ActiveRecord::Migration[5.2]
       t.string :agreement_type
       t.decimal :starting_balance
       t.decimal :amount
-      t.integer :number_of_payments
       t.datetime :start_date
       t.integer :frequency
+      t.string :current_state
+
+      t.timestamps
+    end
+
+    create_table :agreement_states do |t|
+      t.belongs_to :agreement
+      t.string :agreement_state
 
       t.timestamps
     end
