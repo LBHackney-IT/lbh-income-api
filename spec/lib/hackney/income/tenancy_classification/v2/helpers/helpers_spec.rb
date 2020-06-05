@@ -15,11 +15,13 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   let(:eviction_date) { nil }
   let(:courtdate) { nil }
   let(:last_communication_date) { nil }
+  let(:most_recent_agreement) { nil }
   let(:criteria) {
     Stubs::StubCriteria.new(
       eviction_date: eviction_date,
       courtdate: courtdate,
-      last_communication_date: last_communication_date
+      last_communication_date: last_communication_date,
+      most_recent_agreement: most_recent_agreement
     )
   }
 
@@ -199,6 +201,49 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
       it 'returns true' do
         expect(subject).to eq(true)
+      end
+    end
+  end
+
+  describe 'breached_agreement?' do
+    subject { helpers.breached_agreement? }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
+
+      it 'returns false' do
+        allow(helpers).to receive(:should_prevent_action?).and_return(true)
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when a case doesnt have a recent agreement' do
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the most recent agreement does not have a start date' do
+      let(:most_recent_agreement) { { start_date: nil, breached: true } }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement and it has been breached' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: true } }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when there is an agreement and it has not been breached' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
       end
     end
   end

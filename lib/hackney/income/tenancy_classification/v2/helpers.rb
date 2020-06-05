@@ -28,6 +28,14 @@ module Hackney
             return false if @criteria.last_communication_date.blank?
             @criteria.last_communication_date > date.to_date
           end
+
+          def breached_agreement?
+            return false if should_prevent_action?
+            return false if @criteria.most_recent_agreement.blank?
+            return false if @criteria.most_recent_agreement[:start_date].blank?
+
+            @criteria.most_recent_agreement[:breached]
+          end
         end
       end
     end
