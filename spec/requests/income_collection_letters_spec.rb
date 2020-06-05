@@ -12,11 +12,12 @@ RSpec.describe 'Income Collection Letters', type: :request do
   let(:template) { 'income_collection_letter_1' }
   let(:user_group) { 'income-collection-group' }
   let(:current_balance) { BigDecimal('525.00') }
+  let(:name) { Faker::Name.name }
 
   let(:user) {
     {
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
+      name: name,
+      email: Faker::Internet.email(name: name),
       groups: [user_group]
     }
   }

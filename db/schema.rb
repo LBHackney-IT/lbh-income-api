@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_154443) do
+ActiveRecord::Schema.define(version: 2020_06_05_072913) do
 
   create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_154443) do
   create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "uuid", null: false
     t.string "extension", null: false
-    t.string "metadata"
+    t.text "metadata"
     t.string "filename"
     t.string "url"
     t.string "mime_type", null: false

@@ -8,6 +8,9 @@ class MessagesController < ApplicationController
       reference: params.fetch(:reference),
       variables: params.fetch(:variables)
     )
+  rescue ArgumentError => e
+    render(json: { status: 'error', code: 422, message: e.message }, status: :unprocessable_entity)
+    nil
   end
 
   def send_email
