@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_05_072913) do
+ActiveRecord::Schema.define(version: 2020_06_05_100310) do
+
+  create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.string "agreement_state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_agreement_states_on_agreement_id"
+  end
+
+  create_table "agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "agreement_type"
+    t.decimal "starting_balance", precision: 10
+    t.decimal "amount", precision: 10
+    t.datetime "start_date"
+    t.integer "frequency"
+    t.string "current_state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
