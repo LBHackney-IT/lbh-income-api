@@ -29,7 +29,6 @@ module Hackney
 
             actions << :send_court_warning_letter if send_court_warning_letter?
             actions << :apply_for_court_date if apply_for_court_date?
-            # actions << :update_court_outcome_action if update_court_outcome_action?
 
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
             actions << :informal_breached_after_letter if informal_breached_after_letter?
