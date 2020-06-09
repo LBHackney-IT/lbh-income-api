@@ -16,12 +16,12 @@ module Hackney
               Rulesets::ApplyForOutrightPossessionWarrant,
               Rulesets::ReviewFailedLetter,
               Rulesets::SendSMS,
-              Rulesets::UpdateCourtOutcomeAction
+              Rulesets::UpdateCourtOutcomeAction,
+              Rulesets::CourtBreachVisit
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
 
-            actions << :court_breach_visit if court_breach_visit?
             actions << :court_breach_no_payment if court_breach_no_payment?
 
             # TODO(AO): Possible missing test for below
@@ -68,16 +68,6 @@ module Hackney
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
           end
 
-          def court_breach_visit?
-            return false if should_prevent_action?
-            return false if @criteria.courtdate.blank?
-            return false unless court_breach_agreement?
-
-            @criteria.last_communication_action.in?(court_breach_letter_actions) &&
-              last_communication_older_than?(7.days.ago) &&
-              last_communication_newer_than?(3.months.ago)
-          end
-
           def court_breach_no_payment?
             return false if should_prevent_action?
             return false if @criteria.courtdate.blank?
@@ -96,14 +86,6 @@ module Hackney
             ])
 
             court_breach_agreement?
-          end
-
-          def breached_agreement?
-            return false if should_prevent_action?
-            return false if @criteria.most_recent_agreement.blank?
-            return false if @criteria.most_recent_agreement[:start_date].blank?
-
-            @criteria.most_recent_agreement[:breached]
           end
 
           def informal_breached_agreement?
@@ -134,14 +116,6 @@ module Hackney
             return false if last_communication_newer_than?(7.days.ago)
 
             informal_breached_agreement?
-          end
-
-          def court_breach_agreement?
-            return false if should_prevent_action?
-            return false unless breached_agreement?
-            return false if @criteria.courtdate.blank?
-
-            @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
           end
 
           def send_letter_one?
@@ -237,10 +211,6 @@ module Hackney
             @case_priority.paused?
           end
 
-          def last_communication_older_than?(date)
-            @criteria.last_communication_date <= date.to_date
-          end
-
           def balance_is_in_arrears_by_number_of_weeks?(weeks)
             balance_with_1_week_grace >= arrear_accumulation_by_number_weeks(weeks)
           end
@@ -263,12 +233,6 @@ module Hackney
 
           def arrear_accumulation_by_number_weeks(weeks)
             @criteria.weekly_gross_rent * weeks
-          end
-
-          def court_breach_letter_actions
-            [
-              Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
-            ]
           end
 
           def valid_actions_for_court_breach_no_payment
