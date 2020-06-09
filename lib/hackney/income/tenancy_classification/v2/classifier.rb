@@ -13,16 +13,6 @@ module Hackney
 
           def execute
             rulesets = [
-              #               Rulesets::ApplyForOutrightPossessionWarrant,
-              #               Rulesets::ReviewFailedLetter,
-              # <<<<<<< HEAD
-              #               Rulesets::SendSMS,
-              #               Rulesets::UpdateCourtOutcomeAction
-              # =======
-              #               Rulesets::ApplyForOutrightPossessionWarrant,
-              #               Rulesets::CourtBreachVisit
-              # >>>>>>> 566c988338248deaa8059a4627c2931923d0c26e
-              #
               Rulesets::ApplyForOutrightPossessionWarrant,
               Rulesets::ReviewFailedLetter,
               Rulesets::SendSMS,
