@@ -17,12 +17,11 @@ module Hackney
               Rulesets::ReviewFailedLetter,
               Rulesets::SendSMS,
               Rulesets::UpdateCourtOutcomeAction,
-              Rulesets::CourtBreachVisit
+              Rulesets::CourtBreachVisit,
+              Rulesets::CourtBreachNoPayment
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
-
-            actions << :court_breach_no_payment if court_breach_no_payment?
 
             # TODO(AO): Possible missing test for below
             actions << :send_court_agreement_breach_letter if court_agreement_letter_action?
@@ -66,16 +65,6 @@ module Hackney
           def validate_wanted_action(wanted_action)
             return false if Hackney::Income::Models::CasePriority.classifications.key?(wanted_action)
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
-          end
-
-          def court_breach_no_payment?
-            return false if should_prevent_action?
-            return false if @criteria.courtdate.blank?
-            return false unless court_breach_agreement?
-            return false if @criteria.days_since_last_payment.to_i < 8
-
-            @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) &&
-              last_communication_older_than?(1.week.ago)
           end
 
           def court_agreement_letter_action?
@@ -233,12 +222,6 @@ module Hackney
 
           def arrear_accumulation_by_number_weeks(weeks)
             @criteria.weekly_gross_rent * weeks
-          end
-
-          def valid_actions_for_court_breach_no_payment
-            [
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
-            ]
           end
 
           def after_letter_one_actions
