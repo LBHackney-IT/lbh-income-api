@@ -247,4 +247,58 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
   end
+
+  describe 'court_breach_agreement?' do
+    subject { helpers.court_breach_agreement? }
+    let(:most_recent_agreement) { { start_date: start_date, breached: breached } }
+    let(:start_date) { 1.week.ago.to_date }
+    let(:breached) { false }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      it 'returns false' do
+        allow(helpers).to receive(:should_prevent_action?).and_return(true)
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when an agreement has not been breached' do
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is no courtdate' do
+      let(:breached) { true }
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the agreement start date is ahead of the courtdate' do
+      let(:courtdate) { 2.weeks.ago }
+      let(:breached) { true }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when the agreement start date is before the courtdate' do
+      let(:courtdate) { 6.days.ago }
+      let(:breached) { true }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the agreement start date is the same as the courtdate' do
+      let(:courtdate) { 1.week.ago.to_date }
+      let(:breached) { true }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
 end

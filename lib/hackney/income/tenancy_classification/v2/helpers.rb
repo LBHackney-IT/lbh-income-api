@@ -36,6 +36,14 @@ module Hackney
 
             @criteria.most_recent_agreement[:breached]
           end
+
+          def court_breach_agreement?
+            return false if should_prevent_action?
+            return false unless breached_agreement?
+            return false if @criteria.courtdate.blank?
+
+            @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
+          end
         end
       end
     end
