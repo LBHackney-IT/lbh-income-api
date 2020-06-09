@@ -1,17 +1,13 @@
 class AgreementsController < ApplicationController
   def index
-    requested_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: agreements_params.fetch(:tenancy_ref))
+    tenancy_ref = agreements_params.fetch(:tenancy_ref)
 
-    agreements = requested_agreements.map do |agreement|
-      {
-        tenancyRef: agreement.tenancy_ref,
-      }
-    end
+    response = Hackney::Income::ViewAgreements.execute(tenancy_ref: tenancy_ref)
 
-    render json: { agreements: agreements }
+    render json: response
   end
 
   def agreements_params
-    params.permit([:tenancy_ref]) 
+    params.permit([:tenancy_ref])
   end
 end
