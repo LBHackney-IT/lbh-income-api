@@ -250,6 +250,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
   describe 'court_breach_agreement?' do
     subject { helpers.court_breach_agreement? }
+
     let(:most_recent_agreement) { { start_date: start_date, breached: breached } }
     let(:start_date) { 1.week.ago.to_date }
     let(:breached) { false }
@@ -269,6 +270,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
     context 'when there is no courtdate' do
       let(:breached) { true }
+
       it 'returns false' do
         expect(subject).to eq(false)
       end

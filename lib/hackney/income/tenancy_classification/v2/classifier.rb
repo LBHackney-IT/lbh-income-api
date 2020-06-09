@@ -14,12 +14,12 @@ module Hackney
           def execute
             rulesets = [
               Rulesets::ReviewFailedLetter,
-              Rulesets::ApplyForOutrightPossessionWarrant
+              Rulesets::ApplyForOutrightPossessionWarrant,
+              Rulesets::CourtBreachVisit
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
 
-            actions << :court_breach_visit if court_breach_visit?
             actions << :court_breach_no_payment if court_breach_no_payment?
 
             # TODO(AO): Possible missing test for below
@@ -62,16 +62,6 @@ module Hackney
           def validate_wanted_action(wanted_action)
             return false if Hackney::Income::Models::CasePriority.classifications.key?(wanted_action)
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
-          end
-
-          def court_breach_visit?
-            return false if should_prevent_action?
-            return false if @criteria.courtdate.blank?
-            return false unless court_breach_agreement?
-
-            @criteria.last_communication_action.in?(court_breach_letter_actions) &&
-              last_communication_older_than?(7.days.ago) &&
-              last_communication_newer_than?(3.months.ago)
           end
 
           def court_breach_no_payment?
@@ -269,12 +259,6 @@ module Hackney
 
           def arrear_accumulation_by_number_weeks(weeks)
             @criteria.weekly_gross_rent * weeks
-          end
-
-          def court_breach_letter_actions
-            [
-              Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
-            ]
           end
 
           def valid_actions_for_court_breach_no_payment

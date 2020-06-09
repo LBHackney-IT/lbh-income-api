@@ -44,6 +44,12 @@ module Hackney
 
             @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
           end
+
+          def court_breach_letter_actions
+            [
+              Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
+            ]
+          end
         end
       end
     end
