@@ -1,4 +1,4 @@
-require 'rails_helper'
+rsrequire 'rails_helper'
 
 describe Hackney::Income::UniversalHousingCriteria, universal: true do
   subject(:criteria) { described_class.for_tenancy(universal_housing_client, tenancy_ref) }
