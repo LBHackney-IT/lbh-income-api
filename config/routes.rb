@@ -1,6 +1,8 @@
 require_relative 'routes/sidekiq'
 
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   scope '/api/v1' do
     get '/cases', to: 'cases#index'
     get '/sync-cases', to: 'cases#sync'
