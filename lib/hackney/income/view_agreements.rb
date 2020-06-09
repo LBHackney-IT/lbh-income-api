@@ -7,10 +7,16 @@ module Hackney
         agreements = requested_agreements.map do |agreement|
           {
             tenancyRef: agreement.tenancy_ref,
+            agreementType: agreement.agreement_type,
+            startingBalance: agreement.starting_balance,
+            amount: agreement.amount,
+            startDate: agreement.start_date,
+            frequency: agreement.frequency,
+            history: []
           }
         end
 
-        { agreements: agreements}
+        { agreements: agreements }
       end
     end
   end
