@@ -28,7 +28,7 @@ paths:
           description: Agreement not found
       tags:
         - agreements
-  /agreement/{tenancy_ref}:
+  /agreements/{tenancy_ref}:
     post:
       summary: 'Create an agreement for the tenancy id'
       description: Create agreement with specified tenancy id
