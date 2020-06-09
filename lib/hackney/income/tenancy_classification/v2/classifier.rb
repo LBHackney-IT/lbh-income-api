@@ -15,7 +15,8 @@ module Hackney
             rulesets = [
               Rulesets::ApplyForOutrightPossessionWarrant,
               Rulesets::ReviewFailedLetter,
-              Rulesets::SendSMS
+              Rulesets::SendSMS,
+              Rulesets::UpdateCourtOutcomeAction
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
@@ -28,7 +29,6 @@ module Hackney
 
             actions << :send_court_warning_letter if send_court_warning_letter?
             actions << :apply_for_court_date if apply_for_court_date?
-            actions << :update_court_outcome_action if update_court_outcome_action?
 
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
             actions << :informal_breached_after_letter if informal_breached_after_letter?
@@ -86,14 +86,6 @@ module Hackney
 
             @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) &&
               last_communication_older_than?(1.week.ago)
-          end
-
-          def update_court_outcome_action?
-            return false if should_prevent_action?
-            return false if @criteria.courtdate.blank?
-            return false if @criteria.courtdate.future?
-
-            @criteria.court_outcome.blank?
           end
 
           def court_agreement_letter_action?
