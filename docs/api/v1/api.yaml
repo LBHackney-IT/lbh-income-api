@@ -1,0 +1,105 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: 'LBH Income API'
+  description: 'The Income API is the back-end of Hackney Income Collection Service'
+paths:        
+  /agreements/{tenancy_ref}:
+    get:
+      summary: 'Find agreements by tenancy id'
+      description: Returns agreements with specified tenancy id
+      operationId: getAgreementsByTenancyId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tenancy_ref
+        required: true
+        type: string
+        description: tenancy Id record to retrieve 
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/agreementsList'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Agreement not found
+      tags:
+        - agreements
+  /agreement/{tenancy_ref}:
+    post:
+      summary: 'Create an agreement for the tenancy id'
+      description: Create agreement with specified tenancy id
+      operationId: postAgreementForTenancy
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tenancy_ref
+        required: true
+        type: string
+        description: Agreement for tenancy
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/agreement'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Agreement not found
+      tags:
+        - agreements
+        
+definitions:
+  agreementsList:
+    type: object
+    properties:
+      agreements:
+        type: array
+        items: 
+          $ref: '#/definitions/agreement'
+  agreement:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 12
+      tenancyRef:
+        type: string
+        example: '1'
+      agreementType:
+        type: string
+        example: 'informal'
+      startingBalance:
+        type: number
+        example: '1000'
+      amount:
+        type: number
+        example: '50'
+      startDate:
+        type: string
+        format: date
+      frequency:
+        type: string
+        example: 'weekly'
+      state:
+        type: string
+        example: 'active'
+      history:
+        type: array
+        items: 
+          $ref: '#/definitions/history'
+  history: 
+    type: object
+    properties:
+      state: 
+        type: string
+        example: 'breached'
+      date:
+        type: string
+        format: date
+schemes:
+ - https
