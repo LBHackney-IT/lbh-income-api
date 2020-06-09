@@ -69,7 +69,7 @@ definitions:
         example: 12
       tenancyRef:
         type: string
-        example: 1
+        example: '1'
       agreementType:
         type: string
         example: 'informal'
@@ -88,5 +88,18 @@ definitions:
       state:
         type: string
         example: 'active'
+      history:
+        type: array
+        items: 
+          $ref: '#/definitions/history'
+  history: 
+    type: object
+    properties:
+      state: 
+        type: string
+        example: 'breached'
+      date:
+        type: string
+        format: date
 schemes:
  - https
