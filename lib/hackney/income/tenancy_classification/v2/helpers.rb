@@ -54,6 +54,12 @@ module Hackney
               Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
             ]
           end
+
+          def valid_actions_for_court_breach_no_payment
+            [
+              Hackney::Tenancy::ActionCodes::VISIT_MADE
+            ]
+          end
         end
       end
     end
