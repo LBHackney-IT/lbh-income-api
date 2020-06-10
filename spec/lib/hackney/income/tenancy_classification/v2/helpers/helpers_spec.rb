@@ -16,12 +16,18 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   let(:eviction_date) { nil }
   let(:courtdate) { nil }
   let(:most_recent_agreement) { nil }
+  let(:total_payment_amount_in_week) { 0 }
+  let(:weekly_rent) { 0 }
+  let(:balance) { 0 }
   let(:criteria) {
     Stubs::StubCriteria.new(
       eviction_date: eviction_date,
       courtdate: courtdate,
       last_communication_date: last_communication_date,
-      most_recent_agreement: most_recent_agreement
+      most_recent_agreement: most_recent_agreement,
+      total_payment_amount_in_week: total_payment_amount_in_week,
+      weekly_rent: weekly_rent,
+      balance: balance
     )
   }
 
@@ -355,6 +361,66 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       let(:breached) { true }
 
       it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'calculated_grace_amount' do
+    subject { helpers.calculated_grace_amount }
+
+    context 'when total payment amount not being above the weekly rent' do
+      let(:total_payment_amount_in_week) { -5 }
+
+      it 'return 0' do
+        expect(subject).to eq(0)
+      end
+    end
+
+    context 'when total payment amount is above the weekly rent' do
+      let(:total_payment_amount_in_week) { 5 }
+      let(:weekly_rent) { 5 }
+
+      it 'returns the sum of gross rent and payment amount' do
+        expect(subject).to eq(10)
+      end
+    end
+  end
+
+  describe 'balance_with_1_week_grace' do
+    subject { helpers.balance_with_1_week_grace }
+
+    context 'when total payment amount not being above the weekly rent' do
+      let(:balance) { 15 }
+
+      it 'return the difference between balance and grace amount' do
+        allow(helpers).to receive(:calculated_grace_amount).and_return(5)
+        expect(subject).to eq(10)
+      end
+    end
+  end
+
+  describe 'balance_is_in_arrears_by_amount?' do
+    subject { helpers.balance_is_in_arrears_by_amount?(amount) }
+
+    let(:balance) { 15 }
+
+    context 'when grace balance_with_1_week_grace is more than amount' do
+      let(:amount) { 0 }
+
+      it 'returns true' do
+        allow(helpers).to receive(:balance_with_1_week_grace).and_return(5)
+
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when grace balance_with_1_week_grace is more than amount' do
+      let(:amount) { 30 }
+
+      it 'returns false' do
+        allow(helpers).to receive(:balance_with_1_week_grace).and_return(5)
+
         expect(subject).to eq(false)
       end
     end
