@@ -2,7 +2,7 @@ module Hackney
   module Income
     class ViewAgreements
       def self.execute(tenancy_ref:)
-        requested_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref)
+        requested_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
 
         agreements = requested_agreements.map do |agreement|
           {
@@ -14,16 +14,15 @@ module Hackney
             startDate: agreement.start_date,
             frequency: agreement.frequency,
             currentState: agreement.current_state,
-            history: agreement_state_history(agreement.id)
+            history: agreement_state_history(agreement.agreement_states)
           }
         end
 
         { agreements: agreements }
       end
 
-      def self.agreement_state_history(agreement_id)
-        states = Hackney::Income::Models::AgreementState.where(agreement_id: agreement_id)
-        states.map do |state|
+      def self.agreement_state_history(agreement_states)
+        agreement_states.map do |state|
           {
             state: state.agreement_state,
             date: state.created_at
