@@ -51,3 +51,21 @@ RSpec.describe 'GET /api/v1/agreements/{tenancy_ref}', type: :request do
     end
   end
 end
+
+RSpec.describe 'POST /api/v1/agreement/{tenancy_ref}', type: :request do
+  path '/agreement/{tenancy_ref}' do
+    it 'creates an agreement for the given tenancy_ref' do
+      tenancy_ref = '123'
+
+      post "/api/v1/agreement/#{tenancy_ref}", params: {
+        agreement_type: 'informal',
+        amount: '100',
+        start_date: '10-06-2020',
+        frequency: 'weekly'
+      }
+
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+    end
+  end
+end
