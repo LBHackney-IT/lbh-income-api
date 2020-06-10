@@ -6,17 +6,29 @@ module Hackney
 
         agreements = requested_agreements.map do |agreement|
           {
+            id: agreement.id,
             tenancyRef: agreement.tenancy_ref,
             agreementType: agreement.agreement_type,
             startingBalance: agreement.starting_balance,
             amount: agreement.amount,
             startDate: agreement.start_date,
             frequency: agreement.frequency,
-            history: []
+            currentState: agreement.current_state,
+            history: agreement_state_history(agreement.id)
           }
         end
 
         { agreements: agreements }
+      end
+
+      def self.agreement_state_history(agreement_id)
+        states = Hackney::Income::Models::AgreementState.where(agreement_id: agreement_id)
+        states.map do |state|
+          {
+            state: state.agreement_state,
+            date: state.created_at
+          }
+        end
       end
     end
   end
