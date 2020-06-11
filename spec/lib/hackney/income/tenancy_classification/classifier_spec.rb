@@ -153,22 +153,6 @@ shared_examples 'TenancyClassification Contract' do
       end
     end
 
-    describe '#court_breach_letter_actions' do
-      let(:result) { assign_classification.send(:court_breach_letter_actions) }
-
-      it 'contains action codes within the UH Criteria Codes' do
-        expect(result - action_codes).to be_empty
-      end
-    end
-
-    describe '#valid_actions_for_court_breach_no_payment' do
-      let(:result) { assign_classification.send(:valid_actions_for_court_breach_no_payment) }
-
-      it 'contains action codes within the UH Criteria Codes' do
-        expect(result - action_codes).to be_empty
-      end
-    end
-
     describe '#valid_actions_for_apply_for_court_date_to_progress' do
       let(:result) { assign_classification.send(:valid_actions_for_apply_for_court_date_to_progress) }
 

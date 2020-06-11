@@ -138,12 +138,6 @@ module Hackney
             @case_priority.paused?
           end
 
-          def valid_actions_for_court_breach_no_payment
-            [
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
-            ]
-          end
-
           def after_court_warning_letter_actions
             [
               Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT

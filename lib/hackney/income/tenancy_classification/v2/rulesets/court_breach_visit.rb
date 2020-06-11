@@ -19,6 +19,12 @@ module Hackney
                 last_communication_older_than?(7.days.ago) &&
                 last_communication_newer_than?(3.months.ago)
             end
+
+            def court_breach_letter_actions
+              [
+                Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
+              ]
+            end
           end
         end
       end
