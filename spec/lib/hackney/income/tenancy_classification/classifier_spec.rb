@@ -145,14 +145,6 @@ shared_examples 'TenancyClassification Contract' do
     let(:action_codes) { Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL }
     let(:unused_action_codes_required_for_uh_criteria_sql) { result - action_codes }
 
-    describe '#valid_actions_for_nosp_to_progress' do
-      let(:result) { assign_classification.send(:valid_actions_for_nosp_to_progress) }
-
-      it 'contains Letter 2 UH code that is used for an edge case in the UH Criteria SQL' do
-        expect(unused_action_codes_required_for_uh_criteria_sql).to eq([Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH])
-      end
-    end
-
     describe '#after_court_warning_letter_actions' do
       let(:result) { assign_classification.send(:after_court_warning_letter_actions) }
 

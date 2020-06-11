@@ -49,6 +49,14 @@ module Hackney
             @criteria.most_recent_agreement[:start_date] > @criteria.courtdate
           end
 
+          def balance_is_in_arrears_by_number_of_weeks?(weeks)
+            balance_with_1_week_grace >= arrear_accumulation_by_number_weeks(weeks)
+          end
+
+          def arrear_accumulation_by_number_weeks(weeks)
+            @criteria.weekly_gross_rent * weeks
+          end
+
           def court_breach_letter_actions
             [
               Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT

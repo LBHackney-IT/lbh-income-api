@@ -415,11 +415,47 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
 
-    context 'when grace balance_with_1_week_grace is more than amount' do
+    context 'when grace balance_with_1_week_grace is less than amount' do
       let(:amount) { 30 }
 
       it 'returns false' do
         allow(helpers).to receive(:balance_with_1_week_grace).and_return(5)
+
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'arrear_accumulation_by_number_weeks' do
+    subject { helpers.arrear_accumulation_by_number_weeks(weeks) }
+
+    let(:weekly_rent) { 10 }
+
+    context 'when grace balance_with_1_week_grace is more than amount' do
+      let(:weeks) { 3 }
+
+      it 'returns gross rent multiplied by weeks' do
+        expect(subject).to eq(30)
+      end
+    end
+  end
+
+  describe 'balance_is_in_arrears_by_number_of_weeks?' do
+    subject { helpers.balance_is_in_arrears_by_number_of_weeks?(2) }
+
+    context 'when grace balance_with_1_week_grace is more than arrears accumulation by 2 weeks' do
+      it 'returns true' do
+        allow(helpers).to receive(:balance_with_1_week_grace).and_return(50)
+        allow(helpers).to receive(:arrear_accumulation_by_number_weeks).and_return(15)
+
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when grace balance_with_1_week_grace is less than arrears accumulation by 2 weeks' do
+      it 'returns false' do
+        allow(helpers).to receive(:balance_with_1_week_grace).and_return(5)
+        allow(helpers).to receive(:arrear_accumulation_by_number_weeks).and_return(15)
 
         expect(subject).to eq(false)
       end
