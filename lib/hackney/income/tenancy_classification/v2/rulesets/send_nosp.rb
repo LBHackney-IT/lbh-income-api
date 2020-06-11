@@ -31,11 +31,11 @@ module Hackney
 
             def valid_actions_for_nosp_to_progress
               [
-                  Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-                  Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
-                  Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
-                  Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_2,
-                  Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_3
+                Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
+                Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
+                Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
+                Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_2,
+                Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_3
               ]
             end
           end

@@ -35,7 +35,6 @@ module Hackney
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
             actions << :informal_breached_after_letter if informal_breached_after_letter?
 
-
             actions.compact!
 
             actions << :no_action if actions.none?
@@ -106,7 +105,6 @@ module Hackney
             informal_breached_agreement?
           end
 
-
           def send_court_warning_letter?
             return false if should_prevent_action?
             return false if @criteria.balance.blank?
@@ -150,14 +148,6 @@ module Hackney
 
           def case_paused?
             @case_priority.paused?
-          end
-
-          def balance_is_in_arrears_by_number_of_weeks?(weeks)
-            balance_with_1_week_grace >= arrear_accumulation_by_number_weeks(weeks)
-          end
-
-          def arrear_accumulation_by_number_weeks(weeks)
-            @criteria.weekly_gross_rent * weeks
           end
 
           def valid_actions_for_court_breach_no_payment
