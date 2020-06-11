@@ -201,6 +201,10 @@ module Hackney
         Hackney::Income::ViewAgreements
       end
 
+      def create_agreement
+        Hackney::Income::CreateAgreement
+      end
+
       private
 
       def cloud_storage

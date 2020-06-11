@@ -8,22 +8,16 @@ class AgreementsController < ApplicationController
   end
 
   def create
-    tenancy_ref = params.fetch(:tenancy_ref)
-
     agreement_params = {
       tenancy_ref: params.fetch(:tenancy_ref),
       agreement_type: params.fetch(:agreement_type),
       # TODO: starting_balance: starting_balance,
       amount: params.fetch(:amount),
       start_date: params.fetch(:start_date),
-      frequency: params.fetch(:frequency),
-      current_state: 'active'
+      frequency: params.fetch(:frequency)
     }
 
-    Hackney::Income::Models::Agreement.create!(agreement_params)
-    new_agreement = income_use_case_factory.view_agreements.execute(tenancy_ref: tenancy_ref)[:agreements].first
-
-    response = new_agreement
+    response = income_use_case_factory.create_agreement.execute(new_agreement_params: agreement_params)
 
     render json: response
   end
