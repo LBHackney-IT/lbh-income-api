@@ -68,6 +68,22 @@ module Hackney
               Hackney::Tenancy::ActionCodes::VISIT_MADE
             ]
           end
+
+          def balance_is_in_arrears_by_amount?(amount)
+            balance_with_1_week_grace >= amount
+          end
+
+          def balance_with_1_week_grace
+            @criteria.balance - calculated_grace_amount
+          end
+
+          def calculated_grace_amount
+            grace_amount = @criteria.weekly_gross_rent + @criteria.total_payment_amount_in_week
+
+            return 0 if grace_amount.negative?
+
+            grace_amount
+          end
         end
       end
     end
