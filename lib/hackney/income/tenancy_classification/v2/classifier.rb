@@ -20,13 +20,11 @@ module Hackney
               Rulesets::SendLetterTwo,
               Rulesets::UpdateCourtOutcomeAction,
               Rulesets::CourtBreachVisit,
-              Rulesets::CourtBreachNoPayment
+              Rulesets::CourtBreachNoPayment,
+              Rulesets::SendCourtAgreementBreachLetter # TODO(AO): Possible missing test for this classification
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
-
-            # TODO(AO): Possible missing test for below
-            actions << :send_court_agreement_breach_letter if court_agreement_letter_action?
 
             actions << :send_court_warning_letter if send_court_warning_letter?
             actions << :apply_for_court_date if apply_for_court_date?
@@ -64,16 +62,6 @@ module Hackney
           def validate_wanted_action(wanted_action)
             return false if Hackney::Income::Models::CasePriority.classifications.key?(wanted_action)
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
-          end
-
-          def court_agreement_letter_action?
-            return false if should_prevent_action?
-            return false if @criteria.last_communication_action.in?([
-              Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
-            ])
-
-            court_breach_agreement?
           end
 
           def informal_breached_agreement?
