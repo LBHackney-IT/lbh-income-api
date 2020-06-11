@@ -18,6 +18,7 @@ module Hackney
               Rulesets::SendSMS,
               Rulesets::UpdateCourtOutcomeAction,
               Rulesets::CourtBreachVisit,
+              Rulesets::SendNOSP,
               Rulesets::CourtBreachNoPayment
             ]
 
@@ -31,8 +32,6 @@ module Hackney
 
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
             actions << :informal_breached_after_letter if informal_breached_after_letter?
-
-            actions << :send_NOSP if send_nosp?
 
             actions << :send_letter_two if send_letter_two?
             actions << :send_letter_one if send_letter_one?
@@ -136,25 +135,6 @@ module Hackney
             balance_is_in_arrears_by_amount?(10) && no_court_date?
           end
 
-          def send_nosp?
-            return false if should_prevent_action?
-            return false if @criteria.balance.blank?
-            return false if @criteria.weekly_gross_rent.blank?
-
-            return false if @criteria.active_agreement?
-
-            return false if @criteria.nosp.valid?
-            return false if @criteria.court_outcome.blank?
-
-            unless @criteria.nosp.served?
-              return false unless @criteria.last_communication_action.in?(valid_actions_for_nosp_to_progress)
-              return false if last_communication_older_than?(3.months.ago)
-              return false if last_communication_newer_than?(1.week.ago)
-            end
-
-            balance_is_in_arrears_by_number_of_weeks?(4)
-          end
-
           def send_court_warning_letter?
             return false if should_prevent_action?
             return false if @criteria.balance.blank?
@@ -200,10 +180,6 @@ module Hackney
             @case_priority.paused?
           end
 
-          def balance_is_in_arrears_by_number_of_weeks?(weeks)
-            balance_with_1_week_grace >= arrear_accumulation_by_number_weeks(weeks)
-          end
-
           def balance_is_in_arrears_by_amount?(amount)
             balance_with_1_week_grace >= amount
           end
@@ -218,10 +194,6 @@ module Hackney
             return 0 if grace_amount.negative?
 
             grace_amount
-          end
-
-          def arrear_accumulation_by_number_weeks(weeks)
-            @criteria.weekly_gross_rent * weeks
           end
 
           def after_letter_one_actions
@@ -242,16 +214,6 @@ module Hackney
             [
               Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1,
               Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_1_UH
-            ]
-          end
-
-          def valid_actions_for_nosp_to_progress
-            [
-              Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-              Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH,
-              Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT,
-              Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_2,
-              Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2_UH_ALT_3
             ]
           end
 
