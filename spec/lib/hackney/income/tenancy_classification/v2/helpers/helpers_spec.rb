@@ -400,6 +400,42 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
+  describe 'informal_breached_agreement?' do
+    subject { helpers.informal_breached_agreement? }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      it 'return false' do
+        allow(helpers).to receive(:should_prevent_action?).and_return(true)
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement and it has not been breached' do
+      it 'returns false' do
+        allow(helpers).to receive(:breached_agreement?).and_return(false)
+
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement is court ordered' do
+      it 'returns false' do
+        allow(helpers).to receive(:court_breach_agreement?).and_return(true)
+
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when agreemnt is not court ordered and it breached' do
+      it 'returns false' do
+        allow(helpers).to receive(:court_breach_agreement?).and_return(false)
+        allow(helpers).to receive(:breached_agreement?).and_return(true)
+
+        expect(subject).to eq(true)
+      end
+    end
+  end
+
   describe 'balance_is_in_arrears_by_amount?' do
     subject { helpers.balance_is_in_arrears_by_amount?(amount) }
 
