@@ -33,6 +33,11 @@ module Hackney
             @criteria.last_communication_date > date.to_date
           end
 
+          def informal_breached_agreement?
+            return false if should_prevent_action?
+            breached_agreement? && !court_breach_agreement?
+          end
+
           def breached_agreement?
             return false if should_prevent_action?
             return false if @criteria.most_recent_agreement.blank?

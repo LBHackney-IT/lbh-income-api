@@ -22,6 +22,7 @@ module Hackney
               Rulesets::CourtBreachVisit,
               Rulesets::SendNOSP,
               Rulesets::CourtBreachNoPayment,
+              Rulesets::InformalBreachedAfterLetter,
               Rulesets::SendCourtAgreementBreachLetter # TODO(AO): Possible missing test for this classification
             ]
 
@@ -31,7 +32,6 @@ module Hackney
             actions << :apply_for_court_date if apply_for_court_date?
 
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
-            actions << :informal_breached_after_letter if informal_breached_after_letter?
 
             actions.compact!
 
@@ -63,11 +63,6 @@ module Hackney
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
           end
 
-          def informal_breached_agreement?
-            return false if should_prevent_action?
-            breached_agreement? && !court_breach_agreement?
-          end
-
           def informal_agreement_breach_letter?
             return false if should_prevent_action?
             return false if @criteria.nosp.served?
@@ -80,15 +75,6 @@ module Hackney
             if @criteria.last_communication_date.present?
               return false if last_communication_newer_than?(7.days.ago)
             end
-
-            informal_breached_agreement?
-          end
-
-          def informal_breached_after_letter?
-            return false if should_prevent_action?
-            return false if @criteria.nosp.served?
-            return false if @criteria.last_communication_action != Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT
-            return false if last_communication_newer_than?(7.days.ago)
 
             informal_breached_agreement?
           end
