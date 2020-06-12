@@ -23,12 +23,12 @@ module Hackney
               Rulesets::SendNOSP,
               Rulesets::CourtBreachNoPayment,
               Rulesets::InformalBreachedAfterLetter,
-              Rulesets::SendCourtAgreementBreachLetter # TODO(AO): Possible missing test for this classification
+              Rulesets::SendCourtAgreementBreachLetter, # TODO(AO): Possible missing test for this classification
+              Rulesets::SendCourtWarningLetter
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
 
-            actions << :send_court_warning_letter if send_court_warning_letter?
             actions << :apply_for_court_date if apply_for_court_date?
 
             actions << :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
@@ -79,21 +79,6 @@ module Hackney
             informal_breached_agreement?
           end
 
-          def send_court_warning_letter?
-            return false if should_prevent_action?
-            return false if @criteria.balance.blank?
-            return false if @criteria.weekly_gross_rent.blank?
-
-            return false if @criteria.active_agreement?
-
-            return false if @criteria.last_communication_action.in?(after_court_warning_letter_actions)
-
-            return false unless @criteria.nosp.valid?
-            return false unless @criteria.nosp.active?
-
-            balance_is_in_arrears_by_number_of_weeks?(4)
-          end
-
           def apply_for_court_date?
             return false if should_prevent_action?
             return false if @criteria.balance.blank?
@@ -122,12 +107,6 @@ module Hackney
 
           def case_paused?
             @case_priority.paused?
-          end
-
-          def after_court_warning_letter_actions
-            [
-              Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
-            ]
           end
 
           def valid_actions_for_apply_for_court_date_to_progress
