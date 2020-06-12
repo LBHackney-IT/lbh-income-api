@@ -57,18 +57,6 @@ module Hackney
             @criteria.weekly_gross_rent * weeks
           end
 
-          def court_breach_letter_actions
-            [
-              Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT
-            ]
-          end
-
-          def valid_actions_for_court_breach_no_payment
-            [
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
-            ]
-          end
-
           def balance_is_in_arrears_by_amount?(amount)
             balance_with_1_week_grace >= amount
           end

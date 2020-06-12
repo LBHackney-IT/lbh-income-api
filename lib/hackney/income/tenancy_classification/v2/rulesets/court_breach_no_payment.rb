@@ -19,6 +19,12 @@ module Hackney
               @criteria.last_communication_action.in?(valid_actions_for_court_breach_no_payment) &&
                 last_communication_older_than?(1.week.ago)
             end
+
+            def valid_actions_for_court_breach_no_payment
+              [
+                Hackney::Tenancy::ActionCodes::VISIT_MADE
+              ]
+            end
           end
         end
       end
