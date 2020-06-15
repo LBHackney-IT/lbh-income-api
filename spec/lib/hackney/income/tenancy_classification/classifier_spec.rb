@@ -141,19 +141,6 @@ shared_examples 'TenancyClassification Contract' do
     end
   end
 
-  context 'when checking that Action Codes are used in UH Criteria SQL' do
-    let(:action_codes) { Hackney::Tenancy::ActionCodes::FOR_UH_CRITERIA_SQL }
-    let(:unused_action_codes_required_for_uh_criteria_sql) { result - action_codes }
-
-    describe '#valid_actions_for_apply_for_court_date_to_progress' do
-      let(:result) { assign_classification.send(:valid_actions_for_apply_for_court_date_to_progress) }
-
-      it 'contains action codes within the UH Criteria Codes' do
-        expect(unused_action_codes_required_for_uh_criteria_sql).to be_empty
-      end
-    end
-  end
-
   describe '#calculated_grace_amount' do
     it 'uses #weekly_gross_rent' do
       expect(criteria).to receive(:weekly_gross_rent).and_return(0)
