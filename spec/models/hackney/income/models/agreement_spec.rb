@@ -13,15 +13,16 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'start_date',
       'created_at',
       'updated_at',
+      'tenancy_ref',
       'id'
     )
   end
 
   it 'has an associated agreement_state' do
-    agreement = described_class.create!
-    agreement.create_agreement_state
+    agreement = described_class.create(tenancy_ref: '123')
+    Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id)
 
-    expect(described_class.first.agreement_state).to be_a Hackney::Income::Models::AgreementState
+    expect(described_class.first.agreement_states.first).to be_a Hackney::Income::Models::AgreementState
     expect(Hackney::Income::Models::AgreementState.first.agreement_id).to eq(agreement.id)
   end
 
