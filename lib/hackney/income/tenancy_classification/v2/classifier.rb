@@ -61,18 +61,6 @@ module Hackney
             raise ArgumentError, "Tried to classify a case as #{wanted_action}, but this is not on the list of valid classifications."
           end
 
-          def case_has_eviction_date?
-            @criteria.eviction_date.present?
-          end
-
-          def court_date_in_future?
-            @criteria.courtdate&.future?
-          end
-
-          def case_paused?
-            @case_priority.paused?
-          end
-
           def active_agreement_court_outcomes
             [
               Hackney::Tenancy::ActionCodes::ADJOURNED_ON_TERMS_COURT_OUTCOME,
