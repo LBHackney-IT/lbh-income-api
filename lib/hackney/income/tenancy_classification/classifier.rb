@@ -31,6 +31,10 @@ module Hackney
                "CasePriority: #{@case_priority} " \
                "Document Count: #{@documents.length}"
             )
+          else
+            Rails.logger.info(
+              'Classifier V1 & V2 Match'
+            )
           end
 
           version1_action
