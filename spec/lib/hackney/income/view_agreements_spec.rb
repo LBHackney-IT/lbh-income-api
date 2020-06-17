@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::ViewAgreements do
-  subject { described_class.execute(tenancy_ref: tenancy_ref) }
+  subject { described_class.new.execute(tenancy_ref: tenancy_ref) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
 
@@ -43,12 +43,12 @@ describe Hackney::Income::ViewAgreements do
       expect(response[:agreements].first[:amount]).to eq(amount)
       expect(response[:agreements].first[:startDate]).to eq(start_date)
       expect(response[:agreements].first[:frequency]).to eq(frequency)
-      expect(response[:agreements].first[:currentState]).to eq(current_state)
+      expect(response[:agreements].first[:currentState]).to eq(nil)
       expect(response[:agreements].first[:history]).to match([])
     end
 
     it 'correctly maps all agreement_states in history' do
-      first_state = Hackney::Income::Models::AgreementState.create!(agreement_id: expected_agreement.id, agreement_state: 'active')
+      first_state = Hackney::Income::Models::AgreementState.create!(agreement_id: expected_agreement.id, agreement_state: 'live')
       second_state = Hackney::Income::Models::AgreementState.create!(agreement_id: expected_agreement.id, agreement_state: 'breached')
 
       response = subject
