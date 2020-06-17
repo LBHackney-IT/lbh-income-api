@@ -18,9 +18,9 @@ describe Hackney::Income::Models::Agreement, type: :model do
     )
   end
 
-  it 'has an associated agreement_state' do
+  it 'can have an associated agreement_state' do
     agreement = described_class.create(tenancy_ref: '123')
-    Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id)
+    Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
 
     expect(described_class.first.agreement_states.first).to be_a Hackney::Income::Models::AgreementState
     expect(Hackney::Income::Models::AgreementState.first.agreement_id).to eq(agreement.id)
@@ -49,6 +49,22 @@ describe Hackney::Income::Models::Agreement, type: :model do
     it 'raises an error when frequency is invalid' do
       expect { described_class.new(frequency: 'invalid_frequency') }
         .to raise_error ArgumentError, "'invalid_frequency' is not a valid frequency"
+    end
+  end
+
+  describe 'current_state' do
+    it 'returns nil if there are no associated agreement states' do
+      agreement = described_class.create(tenancy_ref: '123')
+
+      expect(agreement.current_state).to be_nil
+    end
+
+    it 'returns the latest agreement state' do
+      agreement = described_class.create(tenancy_ref: '123')
+      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
+      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'breached')
+
+      expect(agreement.current_state).to eq('breached')
     end
   end
 end
