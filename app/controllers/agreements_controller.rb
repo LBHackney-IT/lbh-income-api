@@ -11,7 +11,6 @@ class AgreementsController < ApplicationController
     agreement_params = {
       tenancy_ref: params.fetch(:tenancy_ref),
       agreement_type: params.fetch(:agreement_type),
-      # TODO: starting_balance: starting_balance,
       amount: params.fetch(:amount),
       start_date: params.fetch(:start_date),
       frequency: params.fetch(:frequency)

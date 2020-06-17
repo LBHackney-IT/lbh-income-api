@@ -3,6 +3,7 @@ require 'swagger_helper'
 RSpec.describe 'Agreements', type: :request do
   describe 'GET /api/v1/agreements/{tenancy_ref}' do
     path '/agreements/{tenancy_ref}' do
+      let(:view_agreements_instance) { instance_double(Hackney::Income::ViewAgreements) }
       let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
       let(:agreement_type) { 'formal' }
       let(:starting_balance) { Faker::Commerce.price(range: 10...1000) }
@@ -29,7 +30,8 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       before do
-        allow(Hackney::Income::ViewAgreements).to receive(:execute)
+        allow(Hackney::Income::ViewAgreements).to receive(:new).and_return(view_agreements_instance)
+        allow(view_agreements_instance).to receive(:execute)
           .with(tenancy_ref: tenancy_ref)
           .and_return(agreements_response)
       end
@@ -53,57 +55,61 @@ RSpec.describe 'Agreements', type: :request do
     end
   end
 
-RSpec.describe 'POST /api/v1/agreement/{tenancy_ref}', type: :request do
-  path '/agreement/{tenancy_ref}' do
-    let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
-    let(:agreement_type) { 'informal' }
-    let(:amount) { Faker::Commerce.price(range: 10...100) }
-    let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
-    let(:frequency) { 'weekly' }
-    let(:current_state) { 'active' }
+  describe 'POST /api/v1/agreement/{tenancy_ref}' do
+    path '/agreement/{tenancy_ref}' do
+      let(:create_agreement_instance) { instance_double(Hackney::Income::CreateAgreement) }
+      let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
+      let(:agreement_type) { 'informal' }
+      let(:amount) { Faker::Commerce.price(range: 10...100) }
+      let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
+      let(:frequency) { 'weekly' }
+      let(:current_state) { 'active' }
+      let(:starting_balance) { Faker::Commerce.price(range: 100...1000) }
 
-    let(:new_agreement_params) do
-      {
-        tenancy_ref: tenancy_ref,
-        agreement_type: agreement_type,
-        amount: amount.to_s,
-        start_date: start_date.to_s,
-        frequency: frequency
-      }
-    end
+      let(:new_agreement_params) do
+        {
+          tenancy_ref: tenancy_ref,
+          agreement_type: agreement_type,
+          amount: amount.to_s,
+          start_date: start_date.to_s,
+          frequency: frequency
+        }
+      end
 
-    let(:create_agreement_response) do
-      {
-        id: 1,
-        tenancyRef: tenancy_ref,
-        agreementType: agreement_type,
-        # TODO: starting_balance
-        amount: amount,
-        startDate: start_date,
-        frequency: frequency,
-        currentState: current_state,
-        history: []
-      }
-    end
+      let(:create_agreement_response) do
+        {
+          id: 1,
+          tenancyRef: tenancy_ref,
+          agreementType: agreement_type,
+          startingBalance: starting_balance,
+          amount: amount,
+          startDate: start_date,
+          frequency: frequency,
+          currentState: current_state,
+          history: []
+        }
+      end
 
-    before do
-      allow(Hackney::Income::CreateAgreement).to receive(:execute)
-        .with(new_agreement_params: new_agreement_params)
-        .and_return(create_agreement_response)
-    end
+      before do
+        allow(Hackney::Income::CreateAgreement).to receive(:new).and_return(create_agreement_instance)
+        allow(create_agreement_instance).to receive(:execute)
+          .with(new_agreement_params: new_agreement_params)
+          .and_return(create_agreement_response)
+      end
 
-    it 'creates a new active agreement for the given tenancy_ref' do
-      post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
+      it 'creates a new active agreement for the given tenancy_ref' do
+        post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
 
-      parsed_response = JSON.parse(response.body)
-      expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
-      expect(parsed_response['agreementType']).to eq(agreement_type)
-      # TODO: starting_balance
-      expect(parsed_response['amount']).to eq(amount)
-      expect(parsed_response['startDate']).to eq(start_date.to_s)
-      expect(parsed_response['frequency']).to eq(frequency)
-      expect(parsed_response['currentState']).to eq('active')
-      expect(parsed_response['history']).to eq([])
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+        expect(parsed_response['agreementType']).to eq(agreement_type)
+        expect(parsed_response['startingBalance']).to eq(starting_balance)
+        expect(parsed_response['amount']).to eq(amount)
+        expect(parsed_response['startDate']).to eq(start_date.to_s)
+        expect(parsed_response['frequency']).to eq(frequency)
+        expect(parsed_response['currentState']).to eq('active')
+        expect(parsed_response['history']).to eq([])
+      end
     end
   end
 end
