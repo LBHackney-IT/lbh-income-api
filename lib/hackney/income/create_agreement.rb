@@ -1,7 +1,7 @@
 module Hackney
   module Income
     class CreateAgreement
-      include AgreementHelper
+      include AgreementResponseHelper
 
       def execute(new_agreement_params:)
         case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: new_agreement_params[:tenancy_ref])
@@ -27,7 +27,7 @@ module Hackney
         new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
         Hackney::Income::Models::AgreementState.create!(agreement_id: new_agreement.id, agreement_state: agreement_params[:current_state])
 
-        create_agreement_response(agreement: new_agreement)
+        map_agreement_to_response(agreement: new_agreement)
       end
     end
   end

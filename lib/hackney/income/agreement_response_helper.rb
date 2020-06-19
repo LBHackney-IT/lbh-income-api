@@ -1,7 +1,7 @@
 module Hackney
   module Income
-    module AgreementHelper
-      def create_agreement_response(agreement:)
+    module AgreementResponseHelper
+      def map_agreement_to_response(agreement:)
         {
           id: agreement.id,
           tenancyRef: agreement.tenancy_ref,
@@ -11,11 +11,11 @@ module Hackney
           startDate: agreement.start_date,
           frequency: agreement.frequency,
           currentState: agreement.current_state,
-          history: agreement_state_history(agreement.agreement_states)
+          history: map_agreement_state_history(agreement.agreement_states)
         }
       end
 
-      def agreement_state_history(agreement_states)
+      def map_agreement_state_history(agreement_states)
         agreement_states.map do |state|
           {
             state: state.agreement_state,

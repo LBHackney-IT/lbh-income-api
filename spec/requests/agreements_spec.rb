@@ -76,7 +76,7 @@ RSpec.describe 'Agreements', type: :request do
         }
       end
 
-      let(:create_agreement_response) do
+      let(:map_agreement_to_response) do
         {
           id: 1,
           tenancyRef: tenancy_ref,
@@ -94,7 +94,7 @@ RSpec.describe 'Agreements', type: :request do
         allow(Hackney::Income::CreateAgreement).to receive(:new).and_return(create_agreement_instance)
         allow(create_agreement_instance).to receive(:execute)
           .with(new_agreement_params: new_agreement_params)
-          .and_return(create_agreement_response)
+          .and_return(map_agreement_to_response)
       end
 
       it 'creates a new active agreement for the given tenancy_ref' do
