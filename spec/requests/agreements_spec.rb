@@ -63,7 +63,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:amount) { Faker::Commerce.price(range: 10...100) }
       let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
       let(:frequency) { 'weekly' }
-      let(:current_state) { 'active' }
+      let(:current_state) { 'live' }
       let(:starting_balance) { Faker::Commerce.price(range: 100...1000) }
 
       let(:new_agreement_params) do
@@ -76,38 +76,38 @@ RSpec.describe 'Agreements', type: :request do
         }
       end
 
-      let(:map_agreement_to_response) do
-        {
+      let(:created_agreement) do
+        Hackney::Income::Models::Agreement.create(
           id: 1,
-          tenancyRef: tenancy_ref,
-          agreementType: agreement_type,
-          startingBalance: starting_balance,
+          tenancy_ref: tenancy_ref,
+          agreement_type: agreement_type,
+          starting_balance: starting_balance,
           amount: amount,
-          startDate: start_date,
+          start_date: start_date,
           frequency: frequency,
-          currentState: current_state,
-          history: []
-        }
+          current_state: current_state
+        )
       end
 
       before do
         allow(Hackney::Income::CreateAgreement).to receive(:new).and_return(create_agreement_instance)
         allow(create_agreement_instance).to receive(:execute)
           .with(new_agreement_params: new_agreement_params)
-          .and_return(map_agreement_to_response)
+          .and_return(created_agreement)
       end
 
       it 'creates a new active agreement for the given tenancy_ref' do
         post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
 
         parsed_response = JSON.parse(response.body)
+
         expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
         expect(parsed_response['agreementType']).to eq(agreement_type)
         expect(parsed_response['startingBalance']).to eq(starting_balance)
         expect(parsed_response['amount']).to eq(amount)
-        expect(parsed_response['startDate']).to eq(start_date.to_s)
+        expect(parsed_response['startDate']).to include(start_date.to_s)
         expect(parsed_response['frequency']).to eq(frequency)
-        expect(parsed_response['currentState']).to eq('active')
+        expect(parsed_response['currentState']).to eq(nil)
         expect(parsed_response['history']).to eq([])
       end
     end
