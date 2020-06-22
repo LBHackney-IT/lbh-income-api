@@ -33,17 +33,18 @@ describe Hackney::Income::CreateAgreement do
     it 'creates and returns a new live agreement' do
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
 
-      response = subject.execute(new_agreement_params: new_agreement_params)
+      created_agreement = subject.execute(new_agreement_params: new_agreement_params)
 
-      expect(response[:tenancyRef]).to eq(tenancy_ref)
-      expect(response[:agreementType]).to eq(agreement_type)
-      expect(response[:amount]).to eq(amount)
-      expect(response[:startDate]).to eq(start_date)
-      expect(response[:frequency]).to eq(frequency)
-      expect(response[:currentState]).to eq('live')
-      expect(response[:history].count).to eq(1)
-      expect(response[:history].first[:state]).to eq('live')
-      expect(response[:startingBalance]).to eq(100)
+      latest_agreement_id = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).first.id
+      expect(created_agreement).to be_an_instance_of(Hackney::Income::Models::Agreement)
+      expect(created_agreement.id).to eq(latest_agreement_id)
+      expect(created_agreement.tenancy_ref).to eq(tenancy_ref)
+      expect(created_agreement.agreement_type).to eq(agreement_type)
+      expect(created_agreement.amount).to eq(amount)
+      expect(created_agreement.start_date).to eq(start_date)
+      expect(created_agreement.frequency).to eq(frequency)
+      expect(created_agreement.current_state).to eq('live')
+      expect(created_agreement.starting_balance).to eq(100)
     end
   end
 
@@ -58,8 +59,8 @@ describe Hackney::Income::CreateAgreement do
 
       expect(agreements.count).to eq(2)
 
-      expect(agreements.first.tenancy_ref).to eq(existing_agreement[:tenancyRef])
-      expect(agreements.second.tenancy_ref).to eq(new_agreement[:tenancyRef])
+      expect(agreements.first.tenancy_ref).to eq(existing_agreement.tenancy_ref)
+      expect(agreements.second.tenancy_ref).to eq(new_agreement.tenancy_ref)
       expect(agreements.first.current_state).to eq('cancelled')
     end
   end
