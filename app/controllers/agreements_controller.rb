@@ -4,8 +4,13 @@ class AgreementsController < ApplicationController
   def index
     tenancy_ref = agreements_params.fetch(:tenancy_ref)
 
-    response = income_use_case_factory.view_agreements.execute(tenancy_ref: tenancy_ref)
+    requested_agreements = income_use_case_factory.view_agreements.execute(tenancy_ref: tenancy_ref)
 
+    agreements = requested_agreements.map do |agreement|
+      map_agreement_to_response(agreement: agreement)
+    end
+
+    response = { agreements: agreements }
     render json: response
   end
 

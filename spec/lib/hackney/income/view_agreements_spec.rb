@@ -6,8 +6,8 @@ describe Hackney::Income::ViewAgreements do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
 
   context 'when there are no agreements for the tenancy' do
-    it 'returns nothing' do
-      expect(subject[:agreements]).to eq([])
+    it 'returns an empty array' do
+      expect(subject).to eq([])
     end
   end
 
@@ -17,7 +17,7 @@ describe Hackney::Income::ViewAgreements do
     let(:amount) { Faker::Commerce.price(range: 10...100) }
     let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     let(:frequency) { 'weekly' }
-    let(:current_state) { 'active' }
+    let(:current_state) { 'live' }
     let(:agreement_params) do
       {
         tenancy_ref: tenancy_ref,
@@ -35,34 +35,15 @@ describe Hackney::Income::ViewAgreements do
     it 'returns all agreements with the given tenancy_ref' do
       response = subject
 
-      expect(response[:agreements].count).to eq(1)
-      expect(response[:agreements].first[:id]).to eq(expected_agreement.id)
-      expect(response[:agreements].first[:tenancyRef]).to eq(tenancy_ref)
-      expect(response[:agreements].first[:agreementType]).to eq(agreement_type)
-      expect(response[:agreements].first[:startingBalance]).to eq(starting_balance)
-      expect(response[:agreements].first[:amount]).to eq(amount)
-      expect(response[:agreements].first[:startDate]).to eq(start_date)
-      expect(response[:agreements].first[:frequency]).to eq(frequency)
-      expect(response[:agreements].first[:currentState]).to eq(nil)
-      expect(response[:agreements].first[:history]).to match([])
-    end
-
-    it 'correctly maps all agreement_states in history' do
-      first_state = Hackney::Income::Models::AgreementState.create!(agreement_id: expected_agreement.id, agreement_state: 'live')
-      second_state = Hackney::Income::Models::AgreementState.create!(agreement_id: expected_agreement.id, agreement_state: 'breached')
-
-      response = subject
-
-      expect(response[:agreements].first[:history]).to match([
-        {
-          state: first_state.agreement_state,
-          date: first_state.created_at
-        },
-        {
-          state: second_state.agreement_state,
-          date: second_state.created_at
-        }
-      ])
+      expect(response.count).to eq(1)
+      expect(response.first.id).to eq(expected_agreement.id)
+      expect(response.first.tenancy_ref).to eq(tenancy_ref)
+      expect(response.first.agreement_type).to eq(agreement_type)
+      expect(response.first.starting_balance).to eq(starting_balance)
+      expect(response.first.amount).to eq(amount)
+      expect(response.first.start_date).to eq(start_date)
+      expect(response.first.frequency).to eq(frequency)
+      expect(response.first.current_state).to eq(nil)
     end
   end
 end
