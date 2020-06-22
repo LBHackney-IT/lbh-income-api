@@ -87,7 +87,7 @@ definitions:
         example: 'weekly'
       currentState:
         type: string
-        example: 'active'
+        example: 'live'
       history:
         type: array
         items: 
