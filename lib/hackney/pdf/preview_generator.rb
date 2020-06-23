@@ -14,7 +14,7 @@ module Hackney
       def initialize(template_path:)
         @template_path = template_path
         @errors = []
-        @sending_date = get_date
+        @sending_date = get_next_working_day
         @today_date = get_sending_date
         @return_date_lba = get_return_date
         @logo = File.open(LOGO_PATH).read
@@ -51,20 +51,8 @@ module Hackney
 
       private
 
-      def get_bank_holidays
-        Hackney::PDF::BankHolidaysRetriever.new.execute
-      end
-
-      def get_date
-        possible_date = Time.now + 1.day
-        possible_date += 2.day if possible_date.saturday?
-        possible_date += 1.day if possible_date.sunday?
-
-        bank_holidays = get_bank_holidays
-
-        possible_date += 1.day while bank_holidays.include?(possible_date.strftime('%Y-%m-%d')) == true
-
-        possible_date.strftime('%d %B %Y')
+      def get_next_working_day
+        Hackney::PDF::NextWorkingDayRetriever.new.execute
       end
 
       def get_return_date
