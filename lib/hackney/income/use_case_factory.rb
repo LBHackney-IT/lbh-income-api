@@ -198,7 +198,11 @@ module Hackney
       end
 
       def view_agreements
-        Hackney::Income::ViewAgreements
+        Hackney::Income::ViewAgreements.new
+      end
+
+      def create_agreement
+        Hackney::Income::CreateAgreement.new
       end
 
       private

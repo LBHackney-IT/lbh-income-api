@@ -62,6 +62,7 @@ group :development, :test do
   gem 'rspec-its'
   gem 'rspec-rails'
   gem 'rswag-specs'
+  gem 'shoulda-matchers', '~> 4.0'
   gem 'timecop'
   gem 'webmock'
 end

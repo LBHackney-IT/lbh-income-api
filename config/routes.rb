@@ -28,5 +28,6 @@ Rails.application.routes.draw do
     get '/messages/letters/get_templates', to: 'letters#get_templates'
 
     get '/agreements/:tenancy_ref', to: 'agreements#index'
+    post '/agreement/:tenancy_ref', to: 'agreements#create'
   end
 end

@@ -85,9 +85,9 @@ definitions:
       frequency:
         type: string
         example: 'weekly'
-      state:
+      currentState:
         type: string
-        example: 'active'
+        example: 'live'
       history:
         type: array
         items: 
