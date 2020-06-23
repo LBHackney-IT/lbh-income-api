@@ -13,8 +13,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:current_state) { 'active' }
       let(:agreements_array) do
         [
-          Hackney::Income::Models::Agreement.create(
-            id: 1,
+          Hackney::Income::Models::Agreement.create!(
             tenancy_ref: tenancy_ref,
             agreement_type: agreement_type,
             starting_balance: starting_balance,
@@ -97,8 +96,7 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       let(:created_agreement) do
-        Hackney::Income::Models::Agreement.create(
-          id: 1,
+        Hackney::Income::Models::Agreement.new(
           tenancy_ref: tenancy_ref,
           agreement_type: agreement_type,
           starting_balance: starting_balance,
