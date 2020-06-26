@@ -35,8 +35,11 @@ module Hackney
 
       def get_next_working_day(bank_holidays)
         possible_date = Time.now + 1.day
+
+        possible_date += 1.day while bank_holidays.include?(possible_date.strftime('%Y-%m-%d')) == true
         possible_date += 2.day if possible_date.saturday?
         possible_date += 1.day if possible_date.sunday?
+        return possible_date if bank_holidays.empty?
         possible_date += 1.day while bank_holidays.include?(possible_date.strftime('%Y-%m-%d')) == true
         possible_date
       end

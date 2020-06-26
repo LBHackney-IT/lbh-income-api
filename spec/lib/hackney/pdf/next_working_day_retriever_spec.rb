@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 describe Hackney::PDF::NextWorkingDayRetriever do
+  before do
+    stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
+    stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
+      status: 200,
+      body: stub_response_body
+    )
+
+    Rails.cache.delete('Hackney/PDF/BankHolidays')
+  end
+
   context 'when API request returns a 200' do
-    before do
-      stub_response_body = File.read('spec/lib/hackney/pdf/test_bank_holidays_api_response.txt')
-      stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
-        status: 200,
-        body: stub_response_body
-      )
-
-      Rails.cache.delete('Hackney/PDF/BankHolidays')
-    end
-
     it 'returns the next working day' do
       Timecop.freeze(2020, 5, 22)
       next_working_day = described_class.new.execute
@@ -33,6 +33,42 @@ describe Hackney::PDF::NextWorkingDayRetriever do
     end
   end
 
+  context 'when tomorrow is the next working day' do
+    it "returns tomorrow's date" do
+      Timecop.freeze(2020, 6, 25)
+      next_working_day = described_class.new.execute
+      expect(next_working_day).to eq('26 June 2020')
+      Timecop.return
+    end
+  end
+
+  context 'when tomorrow is a Saturday and the following Monday is a working day' do
+    it "returns Monday's date" do
+      Timecop.freeze(2020, 6, 26)
+      next_working_day = described_class.new.execute
+      expect(next_working_day).to eq('29 June 2020')
+      Timecop.return
+    end
+  end
+
+  context 'when tomorrow is a Saturday and the following Monday is a bank holiday' do
+    it "returns Tuesday's date" do
+      Timecop.freeze(2020, 5, 22)
+      next_working_day = described_class.new.execute
+      expect(next_working_day).to eq('26 May 2020')
+      Timecop.return
+    end
+  end
+
+  context 'when tomorrow is a bank holiday Friday and the following Monday is a working day' do
+    it "returns Monday's date" do
+      Timecop.freeze(2020, 5, 7)
+      next_working_day = described_class.new.execute
+      expect(next_working_day).to eq('11 May 2020')
+      Timecop.return
+    end
+  end
+
   context 'when Bank Holidays API request does not return 200' do
     before do
       stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
@@ -49,15 +85,17 @@ describe Hackney::PDF::NextWorkingDayRetriever do
   end
 
   context 'when Bank Holidays API request responds with 200 but body is empty' do
-    it "returns an tomorrow's date" do
+    it "returns tomorrow's date" do
       stub_request(:get, 'https://www.gov.uk/bank-holidays.json').to_return(
         status: 200,
         body: '{}'
       )
       Rails.cache.delete('Hackney/PDF/BankHolidays')
 
+      Timecop.freeze(2020, 6, 25)
       next_working_day = described_class.new.execute
-      expect(next_working_day).to eq((Time.now + 1.day).strftime('%d %B %Y'))
+      expect(next_working_day).to eq('26 June 2020')
+      Timecop.return
     end
   end
 end
