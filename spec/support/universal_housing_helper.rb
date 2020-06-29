@@ -286,6 +286,43 @@ module UniversalHousingHelper
     )
   end
 
+  def create_uh_direct_debit(tenancy_ref:, ddagree_status: 399, lu_type: 'DDS', lu_desc:)
+
+    ddagree_ref = Faker::Number.number(digits: 8).to_s
+
+    Hackney::UniversalHousing::Client.connection[:ddagacc].insert(
+        tag_ref: tenancy_ref,
+        due_per_period_ta: 1.0,
+        ddagree_ref: ddagree_ref,
+        current_debits: 0,
+        ent_value: 0,
+        arag_amount: 0,
+        other_dd: 0,
+        current_balance: 0,
+        total_due: 0,
+        fixed_total_due: 0,
+        include_balance: 0,
+        detail_schedule: 0,
+        due_per_period: 0,
+        other_rec: 0,
+        reduction_cd: 0,
+        reduction_ev: 0,
+        reduction_od: 0,
+        reduction_cb: 0,
+        reduction_or: 0,
+        reduction_aa: 0,
+        smooth_rough: 0
+    )
+    Hackney::UniversalHousing::Client.connection[:ddagree].insert(
+        ddagree_ref: ddagree_ref
+    )
+    Hackney::UniversalHousing::Client.connection[:lookup_DDS].insert(
+        lu_ref: ddagree_status,
+        lu_type: lu_type,
+        lu_desc: lu_desc
+    )
+  end
+
   def create_uh_u_letsvoids(payment_ref:, prop_ref:)
     Hackney::UniversalHousing::Client.connection[:u_letsvoids].insert(
       payment_ref: payment_ref,
