@@ -12,6 +12,12 @@ then
   dockerize -wait "$DATABASE_SERVICE" -timeout 1m
 
   # Setup the database - safe if it is already configured
+
+  if [ "$RAILS_ENV" = "development" ]
+  then
+    rails db:environment:set RAILS_ENV=development
+  fi
+
   rails db:setup
 fi
 
