@@ -29,5 +29,6 @@ Rails.application.routes.draw do
 
     get '/agreements/:tenancy_ref', to: 'agreements#index'
     post '/agreement/:tenancy_ref', to: 'agreements#create'
+    post '/agreements/:agreement_id/cancel', to: 'agreements#cancel'
   end
 end
