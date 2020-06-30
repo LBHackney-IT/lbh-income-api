@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe Hackney::Income::Models::Agreement, type: :model do
+  let(:user_name) { Faker::Name.name }
+
   it 'includes the fields for a formal/informal agreement' do
     agreement = described_class.new
 
@@ -11,6 +13,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'frequency',
       'current_state',
       'start_date',
+      'created_by',
       'created_at',
       'updated_at',
       'tenancy_ref',
@@ -19,7 +22,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   it 'can have an associated agreement_state' do
-    agreement = described_class.create(tenancy_ref: '123')
+    agreement = described_class.create(tenancy_ref: '123', created_by: user_name)
     Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
 
     expect(described_class.first.agreement_states.first).to be_a Hackney::Income::Models::AgreementState
@@ -53,14 +56,13 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   describe 'current_state' do
-    it 'returns nil if there are no associated agreement states' do
-      agreement = described_class.create(tenancy_ref: '123')
+    let(:agreement) { described_class.create(tenancy_ref: '123', created_by: user_name) }
 
+    it 'returns nil if there are no associated agreement states' do
       expect(agreement.current_state).to be_nil
     end
 
     it 'returns the latest agreement state' do
-      agreement = described_class.create(tenancy_ref: '123')
       Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
       Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'breached')
 
