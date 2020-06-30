@@ -52,8 +52,8 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
       end
 
       context 'when letters have been sent the tenant' do
-        let (:newer_letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
-        let (:older_letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
+        let(:newer_letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
+        let(:older_letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
 
         before {
           create_uh_action(tenancy_ref: tenancy_ref, code: newer_letter_code, date: Date.today)
@@ -82,7 +82,7 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
       end
 
       context 'when in communication with the tenant' do
-        let (:letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
+        let(:letter_code) { Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample }
 
         before {
           create_uh_action(tenancy_ref: tenancy_ref, code: letter_code, date: Date.yesterday)
@@ -99,7 +99,7 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
       subject { criteria.lessee }
 
       context 'when in communication with the tenant' do
-        let (:lessee_name) { Faker::Games::LeagueOfLegends.champion }
+        let(:lessee_name) { Faker::Games::LeagueOfLegends.champion }
 
         before {
           create_uh_househ(house_ref: house_ref, house_desc: lessee_name)
@@ -118,7 +118,7 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
         create_uh_direct_debit(tenancy_ref: tenancy_ref, lu_desc: status)
       }
 
-      let (:status) { Faker::Games::LeagueOfLegends.summoner_spell }
+      let(:status) { Faker::Games::LeagueOfLegends.summoner_spell }
 
       context 'when in communication with the tenant' do
         it 'return the direct debit status' do
