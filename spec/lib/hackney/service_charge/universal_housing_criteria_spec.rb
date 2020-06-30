@@ -111,7 +111,6 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
       end
     end
 
-
     describe '#direct_debit_status' do
       subject { criteria.direct_debit_status }
 
@@ -123,7 +122,19 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
 
       context 'when in communication with the tenant' do
         it 'return the direct debit status' do
-          expect(subject).to eq(status+'!')
+          expect(subject).to eq(status)
+        end
+      end
+
+      context 'when there is more than one direct debit' do
+        before {
+          create_uh_direct_debit(tenancy_ref: tenancy_ref, ddagree_status: 123, ddstart: '2020-06-30 00:00:00', lu_desc: new_status)
+        }
+
+        let(:new_status) { Faker::Games::LeagueOfLegends.champion }
+
+        it 'returns the latest direct debit status' do
+          expect(subject).to eq(new_status)
         end
       end
     end
@@ -174,7 +185,7 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
     end
 
     it 'has the same instance methods as the stub' do
-      expect(criteria.methods).to match_array(Stubs::StubCriteria.new.methods)
+      expect(criteria.methods).to match_array(Stubs::StubServiceChargeCriteria.new.methods)
     end
   end
 

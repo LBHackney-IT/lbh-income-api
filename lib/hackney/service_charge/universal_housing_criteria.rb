@@ -5,7 +5,7 @@ module Hackney
         result_from_sql = universal_housing_client[build_sql, tenancy_ref].first
         result_from_sql ||= {}
 
-        new(tenancy_ref, attributes_of_sql_result.symbolize_keys)
+        new(tenancy_ref, result_from_sql.symbolize_keys)
       end
 
       def initialize(tenancy_ref, result_from_sql)
