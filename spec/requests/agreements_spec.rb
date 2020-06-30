@@ -47,6 +47,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['startDate']).to include(start_date.to_s)
         expect(parsed_response['agreements'].first['frequency']).to eq(frequency)
         expect(parsed_response['agreements'].first['currentState']).to eq(nil)
+        expect(parsed_response['agreements'].first['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['agreements'].first['history']).to eq([])
       end
 
@@ -96,7 +97,7 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       let(:created_agreement) do
-        Hackney::Income::Models::Agreement.new(
+        Hackney::Income::Models::Agreement.create(
           tenancy_ref: tenancy_ref,
           agreement_type: agreement_type,
           starting_balance: starting_balance,
@@ -126,6 +127,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['startDate']).to include(start_date.to_s)
         expect(parsed_response['frequency']).to eq(frequency)
         expect(parsed_response['currentState']).to eq(nil)
+        expect(parsed_response['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['history']).to eq([])
       end
     end
