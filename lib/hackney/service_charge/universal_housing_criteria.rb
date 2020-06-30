@@ -2,51 +2,51 @@ module Hackney
   module ServiceCharge
     class UniversalHousingCriteria
       def self.for_lease(universal_housing_client, tenancy_ref)
-        attributes = universal_housing_client[build_sql, tenancy_ref].first
-        attributes ||= {}
+        result_from_sql = universal_housing_client[build_sql, tenancy_ref].first
+        result_from_sql ||= {}
 
-        new(tenancy_ref, attributes.symbolize_keys)
+        new(tenancy_ref, attributes_of_sql_result.symbolize_keys)
       end
 
-      def initialize(tenancy_ref, attributes)
+      def initialize(tenancy_ref, result_from_sql)
         @tenancy_ref = tenancy_ref
-        @attributes = attributes
+        @attributes_of_sql_result = result_from_sql
       end
 
       def patch_code
-        attributes.fetch(:patch_code)
+        attributes_of_sql_result.fetch(:patch_code)
       end
 
       def payment_ref
-        attributes[:payment_ref].strip
+        attributes_of_sql_result[:payment_ref].strip
       end
 
       def lessee
-        attributes[:lessee].strip
+        attributes_of_sql_result[:lessee].strip
       end
 
       def tenure_type
-        attributes[:tenure_type].strip
+        attributes_of_sql_result[:tenure_type].strip
       end
 
       def balance
-        attributes[:balance].to_f
+        attributes_of_sql_result[:balance].to_f
       end
 
       def property_address
-        "#{attributes[:property_address_line_1].strip}, London, #{attributes[:property_post_code].strip}"
+        "#{attributes_of_sql_result[:property_address_line_1].strip}, London, #{attributes_of_sql_result[:property_post_code].strip}"
       end
 
       def latest_letter
-        attributes[:latest_letter]
+        attributes_of_sql_result[:latest_letter]
       end
 
       def latest_letter_date
-        attributes[:latest_letter_date]
+        attributes_of_sql_result[:latest_letter_date]
       end
 
       def direct_debit_status
-        attributes[:direct_debit_status].strip
+        attributes_of_sql_result[:direct_debit_status].strip
       end
 
       def self.format_letter_action_codes_for_sql
@@ -81,21 +81,20 @@ module Hackney
           )
 
           DECLARE @DirectDebitStatus VARCHAR(60) = (
-            SELECT
-              lookup_DDS.lu_desc
+            SELECT TOP 1
+              lookup.lu_desc
             FROM
               ddagacc
               INNER JOIN
                 ddagree
                 ON ddagacc.ddagree_ref = ddagree.ddagree_ref
               LEFT JOIN
-                lookup as lookup_DDS
-                ON ddagree.ddagree_status = lookup_DDS.lu_ref
-                AND lookup_DDS.lu_type = 'DDS'
-            WHERE
-              ddagacc.tag_ref = @TenancyRef
-              AND ddagree.ddagree_status < '400'
-            )
+                lookup
+                ON ddagree.ddagree_status = lookup.lu_ref
+                AND lookup.lu_type = 'DDS'
+            WHERE ddagacc.tag_ref = @TenancyRef
+            ORDER BY ddagree.ddstart DESC
+          )
 
           SELECT
             tenagree.cur_bal as balance,
@@ -118,7 +117,7 @@ module Hackney
 
       private
 
-      attr_reader :tenancy_ref, :attributes
+      attr_reader :tenancy_ref, :attributes_of_sql_result
     end
   end
 end
