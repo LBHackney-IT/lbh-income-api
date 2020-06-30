@@ -88,6 +88,12 @@ definitions:
       currentState:
         type: string
         example: 'live'
+      createdBy:
+        type: string
+        example: 'Joe Bloggs'
+      createdAt:
+        type: string
+        format: date
       history:
         type: array
         items: 
