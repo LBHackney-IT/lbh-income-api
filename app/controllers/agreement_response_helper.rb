@@ -10,6 +10,7 @@ module AgreementResponseHelper
       frequency: agreement.frequency,
       currentState: agreement.current_state,
       createdAt: agreement.created_at.strftime('%F'),
+      createdBy: agreement.created_by,
       history: map_agreement_state_history(agreement.agreement_states)
     }
   end
