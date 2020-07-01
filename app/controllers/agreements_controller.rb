@@ -31,8 +31,12 @@ class AgreementsController < ApplicationController
 
   def cancel
     cancelled_agreement = income_use_case_factory.cancel_agreement.execute(agreement_id: params.fetch(:agreement_id))
-    response = map_agreement_to_response(agreement: cancelled_agreement)
-    render json: response
+    if cancelled_agreement
+      response = map_agreement_to_response(agreement: cancelled_agreement)
+      render json: response
+    else
+      render json: { error: 'agreement not found' }, status: :not_found
+    end
   end
 
   def agreements_params

@@ -167,6 +167,24 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['createdBy']).to eq(created_by)
         expect(parsed_response['history'].last['state']).to eq('cancelled')
       end
+
+      context 'when the agreement does not exist it returns 404' do
+        let(:cancel_agreement_instance) { instance_double(Hackney::Income::CancelAgreement) }
+
+        before do
+          allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
+          allow(cancel_agreement_instance).to receive(:execute)
+            .with(agreement_id: 'N0PE')
+            .and_return(nil)
+        end
+
+        it 'returns 404' do
+          post '/api/v1/agreements/N0PE/cancel'
+
+          expect(response).to have_http_status(:not_found)
+          expect(JSON.parse(response.body)['error']).to eq('agreement not found')
+        end
+      end
     end
   end
 end

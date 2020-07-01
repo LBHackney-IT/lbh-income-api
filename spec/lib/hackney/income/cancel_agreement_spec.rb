@@ -35,6 +35,14 @@ describe Hackney::Income::CancelAgreement do
     expect(cancelled_agreement.current_state).to eq('cancelled')
   end
 
+  context 'when the agreement does not exist' do
+    it 'returns nil' do
+      non_existent_agreement_id = Faker::Number.number(digits: 10)
+
+      expect(subject.execute(agreement_id: non_existent_agreement_id)).to be_nil
+    end
+  end
+
   context 'when an agreement is completed' do
     before do
       Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'completed')
