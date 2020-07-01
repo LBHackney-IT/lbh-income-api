@@ -4,9 +4,9 @@ module Hackney
       def execute(agreement_id:)
         agreement = Hackney::Income::Models::Agreement.find(agreement_id)
 
-        return agreement if agreement.current_state == 'cancelled'
+        return agreement unless agreement.active?
 
-        Hackney::Income::Models::AgreementState.create!(agreement_id: agreement_id, agreement_state: 'cancelled')
+        Hackney::Income::Models::AgreementState.create!(agreement_id: agreement_id, agreement_state: :cancelled)
 
         agreement
       end

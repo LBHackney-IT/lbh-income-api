@@ -23,6 +23,10 @@ describe Hackney::Income::CancelAgreement do
 
   let!(:agreement) { Hackney::Income::Models::Agreement.create!(agreement_params) }
 
+  before do
+    Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
+  end
+
   it 'cancelles a given agreement' do
     cancelled_agreement = subject.execute(agreement_id: agreement.id)
 
@@ -31,20 +35,37 @@ describe Hackney::Income::CancelAgreement do
     expect(cancelled_agreement.current_state).to eq('cancelled')
   end
 
-  context 'when an agreement already cancelled' do
+  context 'when an agreement is completed' do
+    before do
+      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'completed')
+    end
+
+    it 'returns the initial agreement' do
+      expect(agreement.current_state).to eq('completed')
+      expect(agreement.agreement_states.length).to eq(2)
+
+      cancelled_agreement = subject.execute(agreement_id: agreement.id)
+
+      expect(cancelled_agreement.id).to eq(agreement.id)
+      expect(cancelled_agreement.current_state).to eq('completed')
+      expect(cancelled_agreement.agreement_states.length).to eq(2)
+    end
+  end
+
+  context 'when an agreement is already cancelled' do
     before do
       Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'cancelled')
     end
 
     it 'returns the initial agreement' do
       expect(agreement.current_state).to eq('cancelled')
-      expect(agreement.agreement_states.length).to eq(1)
+      expect(agreement.agreement_states.length).to eq(2)
 
       cancelled_agreement = subject.execute(agreement_id: agreement.id)
 
       expect(cancelled_agreement.id).to eq(agreement.id)
       expect(cancelled_agreement.current_state).to eq('cancelled')
-      expect(cancelled_agreement.agreement_states.length).to eq(1)
+      expect(cancelled_agreement.agreement_states.length).to eq(2)
     end
   end
 end
