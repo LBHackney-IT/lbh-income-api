@@ -19,8 +19,10 @@ module Hackney
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
 
         if active_agreements.any?
+          cancel_agreement = Hackney::Income::CancelAgreement.new
+
           active_agreements.each do |agreement|
-            Hackney::Income::Models::AgreementState.create!(agreement_id: agreement.id, agreement_state: :cancelled)
+            cancel_agreement.execute(agreement_id: agreement.id)
           end
         end
 
