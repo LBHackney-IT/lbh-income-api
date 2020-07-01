@@ -13,7 +13,7 @@ describe Hackney::Income::CreateAgreement do
   let(:existing_agreement_params) do
     {
       tenancy_ref: tenancy_ref,
-      agreement_type: 'formal',
+      agreement_type: 'informal',
       amount: Faker::Commerce.price(range: 10...100),
       start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
       frequency: frequency,
@@ -52,7 +52,7 @@ describe Hackney::Income::CreateAgreement do
     end
   end
 
-  context 'when there is a previous agreement for the tenancy' do
+  context 'when there is a previous live agreement for the tenancy' do
     it "creates and returns a new live agreement and the previous agreement's state is set to 'cancelled' " do
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
 
@@ -66,6 +66,31 @@ describe Hackney::Income::CreateAgreement do
       expect(agreements.first.tenancy_ref).to eq(existing_agreement.tenancy_ref)
       expect(agreements.second.tenancy_ref).to eq(new_agreement.tenancy_ref)
       expect(agreements.first.current_state).to eq('cancelled')
+    end
+  end
+
+  context 'when there is a previous breached agreement for the tenancy' do
+    before do
+      breached_agreement = Hackney::Income::Models::Agreement.create(
+        tenancy_ref: tenancy_ref,
+        current_state: 'breached',
+        created_by: created_by
+      )
+      Hackney::Income::Models::AgreementState.create(agreement_id: breached_agreement.id, agreement_state: 'breached')
+      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
+    end
+
+    it 'cancelles the existing breached agreement and creates a new live agreement' do
+      subject.execute(new_agreement_params: new_agreement_params)
+
+      agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
+
+      expect(agreements.first.agreement_states.length).to eq(2)
+      expect(agreements.first.agreement_states.last.agreement_state).to eq('cancelled')
+      expect(agreements.first.current_state).to eq('cancelled')
+
+      expect(agreements.count).to eq(2)
+      expect(agreements.second.current_state).to eq('live')
     end
   end
 end
