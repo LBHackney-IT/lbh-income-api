@@ -1,7 +1,7 @@
 module Hackney
   module ServiceCharge
     class UniversalHousingPrioritisationGateway
-      def priorities_for_lease(payment_ref)
+      def priorities_for_lease(tenancy_ref)
         logger("> About to connect to UH for #{tenancy_ref}")
         overall_start_time = Time.zone.now
 
@@ -9,7 +9,7 @@ module Hackney
           logger(">> About to start getting Criteria (overall time taken so far): #{Time.zone.now - overall_start_time}ms")
           criteria_start_time = Time.zone.now
 
-          criteria = Hackney::Income::UniversalHousingCriteria.for_lease(database, payment_ref)
+          criteria = Hackney::Income::UniversalHousingCriteria.for_lease(database, tenancy_ref)
 
           logger(">> Time taken for Criteria from UH: #{Time.zone.now - criteria_start_time}ms")
 
