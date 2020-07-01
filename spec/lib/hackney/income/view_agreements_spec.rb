@@ -18,6 +18,7 @@ describe Hackney::Income::ViewAgreements do
     let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     let(:frequency) { 'weekly' }
     let(:current_state) { 'live' }
+    let(:created_by) { Faker::Name.name }
     let(:agreement_params) do
       {
         tenancy_ref: tenancy_ref,
@@ -26,7 +27,8 @@ describe Hackney::Income::ViewAgreements do
         amount: amount,
         start_date: start_date,
         frequency: frequency,
-        current_state: current_state
+        current_state: current_state,
+        created_by: created_by
       }
     end
 
@@ -43,6 +45,7 @@ describe Hackney::Income::ViewAgreements do
       expect(response.first.amount).to eq(amount)
       expect(response.first.start_date).to eq(start_date)
       expect(response.first.frequency).to eq(frequency)
+      expect(response.first.created_by).to eq(created_by)
       expect(response.first.current_state).to eq(nil)
     end
   end
