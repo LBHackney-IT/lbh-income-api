@@ -22,12 +22,16 @@ describe Hackney::Income::CancelAgreement do
   end
 
   let!(:agreement) { Hackney::Income::Models::Agreement.create!(agreement_params) }
+  let(:active_state) { %w[live breached].sample }
 
   before do
-    Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
+    Hackney::Income::Models::AgreementState.create(
+      agreement_id: agreement.id,
+      agreement_state: active_state
+    )
   end
 
-  it 'cancelles a given agreement' do
+  it 'cancelles an active agreement' do
     cancelled_agreement = subject.execute(agreement_id: agreement.id)
 
     expect(cancelled_agreement.id).to eq(agreement.id)
