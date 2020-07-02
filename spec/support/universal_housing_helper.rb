@@ -5,7 +5,7 @@ module UniversalHousingHelper
                                   nosp_notice_served_date: '1900-01-01 00:00:00 +0000', nosp_notice_expiry_date: '1900-01-01 00:00:00 +0000',
                                   money_judgement: 0.0, charging_order: 0.0, bal_dispute: 0.0, courtdate: '1900-01-01 00:00:00 +0000',
                                   court_outcome: nil, eviction_date: '1900-01-01 00:00:00 +0000', agreement_type: 'M',
-                                  service: 0.0, other_charge: 0.0)
+                                  service: 0.0, other_charge: 0.0, rentgrp_ref: 'HRA')
     Hackney::UniversalHousing::Client.connection[:tenagree].insert(
       tag_ref: tenancy_ref,
       cur_bal: current_balance,
@@ -16,6 +16,7 @@ module UniversalHousingHelper
       terminated: terminated ? 1 : 0,
       tenure: tenure_type,
       high_action: high_action,
+      rentgrp_ref: rentgrp_ref,
       spec_terms: true,
       other_accounts: false,
       active: true,
