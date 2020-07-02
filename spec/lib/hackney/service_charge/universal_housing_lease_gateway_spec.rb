@@ -27,7 +27,7 @@ describe Hackney::ServiceCharge::UniversalHousingLeaseGateway, universal: true d
         create_uh_tenancy_agreement(tenancy_ref: '000003/01', current_balance: 50.00)
       end
 
-      it 'returns only the master account tenancy' do
+      it 'returns only the one in lease rent group' do
         expect(subject).to eq(['000001/01'])
       end
     end
