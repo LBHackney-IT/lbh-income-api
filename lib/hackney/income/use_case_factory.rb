@@ -205,6 +205,10 @@ module Hackney
         Hackney::Income::CreateAgreement.new
       end
 
+      def cancel_agreement
+        Hackney::Income::CancelAgreement.new
+      end
+
       private
 
       def cloud_storage

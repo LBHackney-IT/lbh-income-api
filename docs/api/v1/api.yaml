@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '1.0'
+  version: "1.1"
   title: 'LBH Income API'
   description: 'The Income API is the back-end of Hackney Income Collection Service'
 paths:        
@@ -41,6 +41,30 @@ paths:
         required: true
         type: string
         description: Agreement for tenancy
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/agreement'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Agreement not found
+      tags:
+        - agreements
+  /agreements/{agreement_id}/cancel:
+    post:
+      summary: 'Cancel an agreement with id'
+      description: Cancel agreement with specified id
+      operationId: cancelAgreement
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: agreement_id
+        required: true
+        type: string
+        description: Id of an agreement
       responses:
         200:
           description: successful operation

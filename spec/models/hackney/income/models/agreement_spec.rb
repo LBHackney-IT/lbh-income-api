@@ -69,4 +69,28 @@ describe Hackney::Income::Models::Agreement, type: :model do
       expect(agreement.current_state).to eq('breached')
     end
   end
+
+  describe 'active?' do
+    let(:agreement) { described_class.create(tenancy_ref: '123', created_by: user_name) }
+
+    it 'returns false if there are no associated agreement states' do
+      expect(agreement.current_state).to be_falsey
+    end
+
+    it 'returns true if agreement state is an active state' do
+      state = %w[live breached].sample
+      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: state)
+
+      expect(agreement.current_state).to eq(state)
+      expect(agreement).to be_active
+    end
+
+    it 'returns false if agreement is inactive' do
+      state = %w[cancelled completed].sample
+      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: state)
+
+      expect(agreement.current_state).to eq(state)
+      expect(agreement).not_to be_active
+    end
+  end
 end
