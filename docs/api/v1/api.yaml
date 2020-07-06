@@ -118,6 +118,9 @@ definitions:
       createdAt:
         type: string
         format: date
+      notes:
+        type: string
+        example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
       history:
         type: array
         items: 
