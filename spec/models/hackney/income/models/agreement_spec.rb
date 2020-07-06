@@ -17,6 +17,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'created_at',
       'updated_at',
       'tenancy_ref',
+      'notes',
       'id'
     )
   end
