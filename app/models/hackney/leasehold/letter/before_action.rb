@@ -1,7 +1,7 @@
 module Hackney
-  module ServiceCharge
+  module Leasehold
     class Letter
-      class BeforeAction < Hackney::ServiceCharge::Letter
+      class BeforeAction < Hackney::Leasehold::Letter
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/leasehold/letter_before_action.erb'
         ].freeze

@@ -1,5 +1,5 @@
 module Stubs
-  class StubServiceChargeCriteria
+  class StubLeaseholdCriteria
     def initialize(attributes = {})
       @attributes = attributes
     end

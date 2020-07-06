@@ -1,5 +1,5 @@
 module Hackney
-  module ServiceCharge
+  module Leasehold
     class UniversalHousingLeaseGateway
       def self.lease_in_arrears
         Hackney::UniversalHousing::Client.with_connection do |database|

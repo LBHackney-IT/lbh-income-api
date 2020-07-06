@@ -1,7 +1,7 @@
 module Hackney
-  module ServiceCharge
+  module Leasehold
     module Exceptions
-      class ServiceChargeException < StandardError
+      class LeaseholdException < StandardError
         attr_reader :response
         def initialize(response)
           super

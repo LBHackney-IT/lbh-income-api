@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::ServiceCharge::UniversalHousingLeaseGateway, universal: true do
+describe Hackney::Leasehold::UniversalHousingLeaseGateway, universal: true do
   context 'when retrieving tenancy refs for cases in arrears' do
     subject { described_class.lease_in_arrears }
 
