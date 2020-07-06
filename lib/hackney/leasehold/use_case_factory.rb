@@ -1,7 +1,6 @@
 module Hackney
   module Leasehold
     class UseCaseFactory
-
       def uh_lease_gateway
         Hackney::Leasehold::UniversalHousingLeaseGateway
       end
