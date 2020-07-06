@@ -9,6 +9,7 @@ describe Hackney::Income::CreateAgreement do
   let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
   let(:frequency) { 'weekly' }
   let(:created_by) { Faker::Name.name }
+  let(:notes) { Faker::ChuckNorris.fact }
 
   let(:existing_agreement_params) do
     {
@@ -17,7 +18,8 @@ describe Hackney::Income::CreateAgreement do
       amount: Faker::Commerce.price(range: 10...100),
       start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
       frequency: frequency,
-      created_by: created_by
+      created_by: created_by,
+      notes: notes
     }
   end
 
@@ -28,7 +30,8 @@ describe Hackney::Income::CreateAgreement do
       amount: amount,
       start_date: start_date,
       frequency: frequency,
-      created_by: created_by
+      created_by: created_by,
+      notes: notes
     }
   end
 
@@ -49,6 +52,7 @@ describe Hackney::Income::CreateAgreement do
       expect(created_agreement.current_state).to eq('live')
       expect(created_agreement.starting_balance).to eq(100)
       expect(created_agreement.created_by).to eq(created_by)
+      expect(created_agreement.notes).to eq(notes)
     end
   end
 

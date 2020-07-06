@@ -21,7 +21,8 @@ class AgreementsController < ApplicationController
       amount: params.fetch(:amount),
       start_date: params.fetch(:start_date),
       frequency: params.fetch(:frequency),
-      created_by: params.fetch(:created_by)
+      created_by: params.fetch(:created_by),
+      notes: params.fetch(:notes)
     }
 
     created_agreement = income_use_case_factory.create_agreement.execute(new_agreement_params: agreement_params)
