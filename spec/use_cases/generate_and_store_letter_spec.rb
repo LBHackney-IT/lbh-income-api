@@ -66,7 +66,7 @@ describe UseCases::GenerateAndStoreLetter do
 
     context 'when the missing data mandatory' do
       let(:payment_ref) { Faker::Number.number(digits: 4) }
-      let(:mandatory_fields) { Hackney::ServiceCharge::Letter::DEFAULT_MANDATORY_LETTER_FIELDS }
+      let(:mandatory_fields) { Hackney::Leasehold::Letter::DEFAULT_MANDATORY_LETTER_FIELDS }
 
       it 'returns errors' do
         expect_any_instance_of(Hackney::Income::UniversalHousingLeaseholdGateway)

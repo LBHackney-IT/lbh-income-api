@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::ServiceCharge::Letter do
+describe Hackney::Leasehold::Letter do
   let(:letter_params) {
     {
       payment_ref: Faker::Number.number(digits: 4),
@@ -78,11 +78,11 @@ describe Hackney::ServiceCharge::Letter do
 
   context 'when generating LBA letter' do
     it 'generates an LBA letter' do
-      expect(Hackney::ServiceCharge::Letter::BeforeAction).to receive(:new).with(letter_params).and_call_original
+      expect(Hackney::Leasehold::Letter::BeforeAction).to receive(:new).with(letter_params).and_call_original
 
       letter = described_class.build(
         letter_params: letter_params,
-        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS.sample
+        template_path: Hackney::Leasehold::Letter::BeforeAction::TEMPLATE_PATHS.sample
       )
 
       expect(letter.errors).to eq [
@@ -94,7 +94,7 @@ describe Hackney::ServiceCharge::Letter do
     it 'returns the correct lba balance' do
       letter = described_class.build(
         letter_params: letter_params,
-        template_path: Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS.sample
+        template_path: Hackney::Leasehold::Letter::BeforeAction::TEMPLATE_PATHS.sample
       )
       expected_balance = format('%.2f', letter_params[:total_collectable_arrears_balance].to_f - letter_params[:money_judgement].to_f)
       expect(letter.lba_balance).to eq(expected_balance.to_s)
@@ -103,11 +103,11 @@ describe Hackney::ServiceCharge::Letter do
 
   context 'when generating letter two' do
     it 'generates letter 2 letter' do
-      expect(Hackney::ServiceCharge::Letter::LetterTwo).to receive(:new).with(letter_params).and_call_original
+      expect(Hackney::Leasehold::Letter::LetterTwo).to receive(:new).with(letter_params).and_call_original
 
       letter = described_class.build(
         letter_params: letter_params,
-        template_path: Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS.sample
+        template_path: Hackney::Leasehold::Letter::LetterTwo::TEMPLATE_PATHS.sample
       )
 
       expect(letter.errors).to eq [

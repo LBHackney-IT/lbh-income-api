@@ -1,5 +1,5 @@
 module Hackney
-  module ServiceCharge
+  module Leasehold
     class Letter
       DEFAULT_MANDATORY_LETTER_FIELDS = %i[payment_ref lessee_full_name
                                            correspondence_address1 correspondence_address2
@@ -16,9 +16,9 @@ module Hackney
 
       def self.build(letter_params:, template_path:)
         case template_path
-        when *Hackney::ServiceCharge::Letter::BeforeAction::TEMPLATE_PATHS
+        when *Hackney::Leasehold::Letter::BeforeAction::TEMPLATE_PATHS
           Letter::BeforeAction.new(letter_params)
-        when *Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
+        when *Hackney::Leasehold::Letter::LetterTwo::TEMPLATE_PATHS
           Letter::LetterTwo.new(letter_params)
         else
           new(letter_params)

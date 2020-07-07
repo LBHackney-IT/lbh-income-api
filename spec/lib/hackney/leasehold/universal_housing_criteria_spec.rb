@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
+describe Hackney::Leasehold::UniversalHousingCriteria, universal: true do
   subject(:criteria) { described_class.for_lease(universal_housing_client, tenancy_ref) }
 
   context 'when there is a tenancy agreement' do
@@ -185,7 +185,7 @@ describe Hackney::ServiceCharge::UniversalHousingCriteria, universal: true do
     end
 
     it 'has the same instance methods as the stub' do
-      expect(criteria.methods).to match_array(Stubs::StubServiceChargeCriteria.new.methods)
+      expect(criteria.methods).to match_array(Stubs::StubLeaseholdCriteria.new.methods)
     end
   end
 

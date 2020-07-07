@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::ServiceCharge::Letter::LetterTwo do
+describe Hackney::Leasehold::Letter::LetterTwo do
   let(:letter_params) {
     {
       payment_ref: Faker::Number.number(digits: 4),
@@ -16,7 +16,7 @@ describe Hackney::ServiceCharge::Letter::LetterTwo do
 
   context 'when the letter is being generated' do
     it 'checks that the template file exists' do
-      files = Hackney::ServiceCharge::Letter::LetterTwo::TEMPLATE_PATHS
+      files = Hackney::Leasehold::Letter::LetterTwo::TEMPLATE_PATHS
 
       files.each do |file|
         expect(Pathname.new(file)).to exist

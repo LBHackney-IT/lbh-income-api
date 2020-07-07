@@ -14,7 +14,7 @@ class ApplicationController < ActionController::API
   end
 
   def service_charge_use_case_factory
-    @service_charge_use_case_factory ||= Hackney::ServiceCharge::UseCaseFactory.new
+    @service_charge_use_case_factory ||= Hackney::Leasehold::UseCaseFactory.new
   end
 
   def set_raven_context

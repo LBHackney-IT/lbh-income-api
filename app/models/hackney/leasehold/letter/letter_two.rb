@@ -1,7 +1,7 @@
 module Hackney
-  module ServiceCharge
+  module Leasehold
     class Letter
-      class LetterTwo < Hackney::ServiceCharge::Letter
+      class LetterTwo < Hackney::Leasehold::Letter
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/leasehold/letter_2_in_arrears_FH.erb',
           'lib/hackney/pdf/templates/leasehold/letter_2_in_arrears_LH.erb',

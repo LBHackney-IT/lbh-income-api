@@ -1,4 +1,4 @@
-require "#{Rails.root}/lib/hackney/service_charge/exceptions/service_charge_exception"
+require "#{Rails.root}/lib/hackney/leasehold/exceptions/service_charge_exception"
 require 'hackney/income/universal_housing_leasehold_gateway.rb'
 
 class LettersController < ApplicationController
