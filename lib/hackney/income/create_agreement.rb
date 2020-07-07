@@ -1,6 +1,10 @@
 module Hackney
   module Income
     class CreateAgreement
+      def initialize(add_action_diary:)
+        @add_action_diary = add_action_diary
+      end
+
       def execute(new_agreement_params:)
         tenancy_ref = new_agreement_params[:tenancy_ref]
         case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref)
@@ -29,6 +33,13 @@ module Hackney
 
         new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
         Hackney::Income::Models::AgreementState.create!(agreement_id: new_agreement.id, agreement_state: :live)
+
+        @add_action_diary.execute(
+          tenancy_ref: tenancy_ref,
+          action_code: 'AGR',
+          comment: "Informal Agreement created: #{new_agreement.notes}",
+          username: new_agreement.created_by
+        )
 
         new_agreement
       end

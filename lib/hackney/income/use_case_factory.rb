@@ -202,7 +202,7 @@ module Hackney
       end
 
       def create_agreement
-        Hackney::Income::CreateAgreement.new
+        Hackney::Income::CreateAgreement.new(add_action_diary: add_action_diary)
       end
 
       def cancel_agreement

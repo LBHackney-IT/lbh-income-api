@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::CreateAgreement do
-  subject { described_class.new }
+  subject { described_class.new(add_action_diary: add_action_diary) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:agreement_type) { 'informal' }
@@ -33,6 +33,20 @@ describe Hackney::Income::CreateAgreement do
       created_by: created_by,
       notes: notes
     }
+  end
+
+  let(:add_action_diary) { spy }
+
+  it 'calls the add_action_diary when a new agreement is created' do
+    Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
+    subject.execute(new_agreement_params: new_agreement_params)
+
+    expect(add_action_diary).to have_received(:execute).with(
+      tenancy_ref: tenancy_ref,
+      comment: "Informal Agreement created: #{notes}",
+      username: created_by,
+      action_code: 'AGR'
+    )
   end
 
   context 'when there are no previous agreements for the tenancy' do
