@@ -1,8 +1,9 @@
 module Hackney
   module Income
     class CreateAgreement
-      def initialize(add_action_diary:)
+      def initialize(add_action_diary:, cancel_agreement:)
         @add_action_diary = add_action_diary
+        @cancel_agreement = cancel_agreement
       end
 
       def execute(new_agreement_params:)
@@ -24,10 +25,8 @@ module Hackney
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
 
         if active_agreements.any?
-          cancel_agreement = Hackney::Income::CancelAgreement.new
-
           active_agreements.each do |agreement|
-            cancel_agreement.execute(agreement_id: agreement.id)
+            @cancel_agreement.execute(agreement_id: agreement.id)
           end
         end
 

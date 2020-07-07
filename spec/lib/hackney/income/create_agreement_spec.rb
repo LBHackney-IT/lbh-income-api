@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::CreateAgreement do
-  subject { described_class.new(add_action_diary: add_action_diary) }
+  subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:agreement_type) { 'informal' }
@@ -36,6 +36,7 @@ describe Hackney::Income::CreateAgreement do
   end
 
   let(:add_action_diary) { spy }
+  let(:cancel_agreement) { spy }
 
   it 'calls the add_action_diary when a new agreement is created' do
     Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
@@ -71,7 +72,7 @@ describe Hackney::Income::CreateAgreement do
   end
 
   context 'when there is a previous live agreement for the tenancy' do
-    it "creates and returns a new live agreement and the previous agreement's state is set to 'cancelled' " do
+    it 'creates and returns a new live agreement and cancelles the previous live agreement' do
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
 
       existing_agreement = subject.execute(new_agreement_params: existing_agreement_params)
@@ -83,7 +84,7 @@ describe Hackney::Income::CreateAgreement do
 
       expect(agreements.first.tenancy_ref).to eq(existing_agreement.tenancy_ref)
       expect(agreements.second.tenancy_ref).to eq(new_agreement.tenancy_ref)
-      expect(agreements.first.current_state).to eq('cancelled')
+      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
     end
   end
 
@@ -103,9 +104,7 @@ describe Hackney::Income::CreateAgreement do
 
       agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
 
-      expect(agreements.first.agreement_states.length).to eq(2)
-      expect(agreements.first.agreement_states.last.agreement_state).to eq('cancelled')
-      expect(agreements.first.current_state).to eq('cancelled')
+      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
 
       expect(agreements.count).to eq(2)
       expect(agreements.second.current_state).to eq('live')
