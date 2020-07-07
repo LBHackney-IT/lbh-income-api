@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_111144) do
+ActiveRecord::Schema.define(version: 2020_07_06_144853) do
 
   create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2020_06_30_111144) do
     t.datetime "updated_at", null: false
     t.string "tenancy_ref", null: false
     t.string "created_by", null: false
+    t.text "notes"
   end
 
   create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

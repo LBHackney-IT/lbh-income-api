@@ -9,6 +9,7 @@ RSpec.describe 'Agreements', type: :request do
   let(:current_state) { 'live' }
   let(:starting_balance) { Faker::Commerce.price(range: 100...1000) }
   let(:created_by) { Faker::Name.name }
+  let(:notes) { Faker::ChuckNorris.fact }
 
   describe 'GET /api/v1/agreements/{tenancy_ref}' do
     path '/agreements/{tenancy_ref}' do
@@ -23,7 +24,8 @@ RSpec.describe 'Agreements', type: :request do
             start_date: start_date,
             frequency: frequency,
             current_state: current_state,
-            created_by: created_by
+            created_by: created_by,
+            notes: notes
           )
         ]
       end
@@ -52,6 +54,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['currentState']).to eq(nil)
         expect(parsed_response['agreements'].first['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['agreements'].first['createdBy']).to eq(created_by)
+        expect(parsed_response['agreements'].first['notes']).to eq(notes)
         expect(parsed_response['agreements'].first['history']).to eq([])
       end
 
@@ -89,7 +92,8 @@ RSpec.describe 'Agreements', type: :request do
           amount: amount.to_s,
           start_date: start_date.to_s,
           frequency: frequency,
-          created_by: created_by
+          created_by: created_by,
+          notes: notes
         }
       end
 
@@ -121,6 +125,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['currentState']).to eq(nil)
         expect(parsed_response['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['createdBy']).to eq(created_by)
+        expect(parsed_response['notes']).to eq(notes)
         expect(parsed_response['history']).to eq([])
       end
     end
