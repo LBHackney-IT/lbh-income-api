@@ -1,7 +1,18 @@
 module Stubs
   class StubLeaseholdCriteria
-    def initialize(attributes = {})
-      @attributes = attributes
+    def initialize(attributes = { lessee: 'e vilimaite' })
+      @attributes_of_sql_result = attributes.reverse_merge(
+        balance: Faker::Number.decimal(l_digits: 3, r_digits: 3),
+        payment_ref: Faker::Number.number(digits: 10).to_s,
+        patch_code: Faker::Alphanumeric.alpha(number: 3).upcase,
+        property_address_line_1: Faker::Address.street_address,
+        property_post_code: Faker::Address.postcode,
+        lessee: Faker::Name.name,
+        tenure_type: Faker::Music::RockBand.name,
+        direct_debit_status: ['Live', 'First Payment', 'Cancelled', 'Last Payment'].sample,
+        latest_letter: Hackney::Tenancy::ActionCodes::FOR_UH_LEASEHOLD_SQL.sample,
+        latest_letter_date: Faker::Date.between(from: 20.days.ago, to: Date.today).to_s
+      )
     end
 
     def patch_code
@@ -42,6 +53,6 @@ module Stubs
 
     private
 
-    attr_reader :attributes
+    attr_reader :attributes_of_sql_result
   end
 end
