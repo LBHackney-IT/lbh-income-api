@@ -8,6 +8,13 @@ module Hackney
       def prioritisation_gateway
         Hackney::Leasehold::UniversalHousingPrioritisationGateway.new
       end
+
+      def sync_case_attributes
+        Hackney::Leasehold::SyncCaseAttributes.new(
+          prioritisation_gateway: prioritisation_gateway,
+          stored_tenancies_gateway: stored_tenancies_gateway
+        )
+      end
     end
   end
 end

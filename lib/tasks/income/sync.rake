@@ -27,10 +27,9 @@ namespace :income do
       use_case_factory = Hackney::Leasehold::UseCaseFactory.new
 
       tenancy_refs = use_case_factory.uh_lease_gateway.lease_in_arrears
-
       tenancy_refs.each do |tenancy_ref|
         p '- - - - - - - - -'
-        pp use_case_factory.prioritisation_gateway.priorities_for_lease(tenancy_ref)
+        p use_case_factory.sync_case_attributes.execute(tenancy_ref: tenancy_ref)
       end
     end
   end
