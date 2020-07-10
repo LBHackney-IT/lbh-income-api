@@ -46,7 +46,7 @@ module Hackney
       end
 
       def direct_debit_status
-        attributes_of_sql_result[:direct_debit_status].strip
+        attributes_of_sql_result[:direct_debit_status].nil? ? attributes_of_sql_result[:direct_debit_status] : attributes_of_sql_result[:direct_debit_status].strip
       end
 
       def self.format_letter_action_codes_for_sql

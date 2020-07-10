@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-describe Hackney::Leasehold::StoredTenanciesGateway do
+describe Hackney::Leasehold::StoredCasesGateway do
   let(:gateway) { described_class.new }
 
   let(:tenancy_model) { Hackney::Leasehold::CaseAttributes }
 
   context 'when storing a tenancy' do
-    subject(:store_tenancy) do
-      gateway.store_tenancy(
+    subject(:store_case) do
+      gateway.store_case(
         tenancy_ref: attributes.fetch(:tenancy_ref),
         criteria: attributes.fetch(:criteria)
       )
@@ -26,20 +26,18 @@ describe Hackney::Leasehold::StoredTenanciesGateway do
       let(:created_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'creates the tenancy' do
-        store_tenancy
+        store_case
         expect(created_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
       end
 
       it 'returns the tenancy' do
-        expect(store_tenancy).to eq(created_tenancy)
+        expect(store_case).to eq(created_tenancy)
       end
     end
 
     context 'when the tenancy already exists' do
       let!(:pre_existing_tenancy) do
         tenancy_model.create!(
-          tenancy_ref: attributes.fetch(:tenancy_ref),
-
           tenancy_ref: attributes.fetch(:tenancy_ref),
           balance: attributes.fetch(:criteria).balance,
           payment_ref: attributes.fetch(:criteria).payment_ref,
@@ -56,17 +54,17 @@ describe Hackney::Leasehold::StoredTenanciesGateway do
       let(:stored_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'updates the tenancy' do
-        store_tenancy
+        store_case
         expect(stored_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
       end
 
       it 'does not create a new tenancy' do
-        store_tenancy
+        store_case
         expect(tenancy_model.count).to eq(1)
       end
 
       it 'returns the tenancy' do
-        expect(store_tenancy).to eq(pre_existing_tenancy)
+        expect(store_case).to eq(pre_existing_tenancy)
       end
     end
   end

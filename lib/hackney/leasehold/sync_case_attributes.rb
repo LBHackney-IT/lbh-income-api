@@ -1,16 +1,16 @@
 module Hackney
   module Leasehold
     class SyncCaseAttributes
-      def initialize(prioritisation_gateway:, stored_tenancies_gateway:)
-        @prioritisation_gateway = prioritisation_gateway
-        @stored_tenancies_gateway = stored_tenancies_gateway
+      def initialize(universal_housing_gateway:, stored_case_gateway:)
+        @universal_housing_gateway = universal_housing_gateway
+        @stored_case_gateway = stored_case_gateway
       end
 
       def execute(tenancy_ref:)
-        priorities = @prioritisation_gateway.priorities_for_lease(tenancy_ref)
-        @stored_tenancies_gateway.store_tenancy(
+        case_attributes = @universal_housing_gateway.fetch(tenancy_ref)
+        @stored_case_gateway.store_case(
           tenancy_ref: tenancy_ref,
-          criteria: priorities.fetch(:criteria)
+          criteria: case_attributes
         )
       end
     end

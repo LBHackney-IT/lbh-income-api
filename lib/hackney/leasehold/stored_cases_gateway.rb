@@ -1,9 +1,9 @@
 module Hackney
   module Leasehold
-    class StoredTenanciesGateway
+    class StoredCasesGateway
       GatewayModel = Hackney::Leasehold::CaseAttributes
 
-      def store_tenancy(tenancy_ref:, criteria:)
+      def store_case(tenancy_ref:, criteria:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
 
         begin

@@ -1,6 +1,6 @@
 module Stubs
   class StubLeaseholdCriteria
-    def initialize(attributes = { })
+    def initialize(attributes = {})
       @attributes_of_sql_result = attributes.reverse_merge(
         balance: Faker::Number.decimal(l_digits: 3, r_digits: 3),
         payment_ref: Faker::Number.number(digits: 10).to_s,
