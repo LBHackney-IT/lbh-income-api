@@ -57,6 +57,10 @@ module Hackney
             @criteria.last_communication_date > date.to_date
           end
 
+          def active_agreement?
+            @criteria.active_agreement? || (@criteria.most_recent_agreement.present? && @criteria.most_recent_agreement[:status].in?(%i[active breached]))
+          end
+
           def informal_breached_agreement?
             return false if should_prevent_action?
             breached_agreement? && !court_breach_agreement?
