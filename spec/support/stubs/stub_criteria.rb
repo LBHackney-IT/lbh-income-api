@@ -4,6 +4,10 @@ module Stubs
       @attributes = attributes
     end
 
+    def tenancy_ref
+      'StubCriteria'
+    end
+
     def days_since_last_payment
       attributes[:days_since_last_payment]
     end
