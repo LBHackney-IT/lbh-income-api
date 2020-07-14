@@ -18,7 +18,6 @@ module Hackney
               return false if @criteria.active_agreement?
 
               return false if @criteria.nosp.valid?
-              return false if @criteria.court_outcome.blank?
 
               unless @criteria.nosp.served?
                 return false unless @criteria.last_communication_action.in?(valid_actions_for_nosp_to_progress)
