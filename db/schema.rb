@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_153106) do
+ActiveRecord::Schema.define(version: 2020_07_13_143051) do
+
+  create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "tenancy_ref"
+    t.string "payment_ref"
+    t.float "balance"
+    t.string "patch_code"
+    t.string "classification"
+    t.string "pause_reason"
+    t.text "pause_comment"
+    t.datetime "pause_until"
+    t.string "action_type"
+    t.string "service_area_type"
+    t.text "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenancy_ref"], name: "index_actions_on_tenancy_ref", unique: true
+  end
 
   create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
@@ -108,25 +125,6 @@ ActiveRecord::Schema.define(version: 2020_07_07_153106) do
     t.string "username"
     t.string "email"
     t.index ["uuid"], name: "index_documents_on_uuid", unique: true
-  end
-
-  create_table "leasehold_case_attributes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "payment_ref"
-    t.string "tenancy_ref"
-    t.string "patch"
-    t.float "balance"
-    t.text "property_address"
-    t.string "lessee"
-    t.string "tenure_type"
-    t.string "direct_debit_status"
-    t.string "latest_letter"
-    t.string "latest_letter_date"
-    t.datetime "is_paused_until"
-    t.string "pause_reason"
-    t.text "pause_comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenancy_ref"], name: "index_leasehold_case_attributes_on_tenancy_ref"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
