@@ -42,9 +42,7 @@ module Hackney
                 Rails.logger.error(
                   'CLASSIFIER: Multiple recommended actions from V2' \
                   "Actions: #{actions} " \
-                  "Criteria: #{@criteria} " \
-                  "CasePriority: #{@case_priority} " \
-                  "Document Count: #{@documents.length}"
+                  "tenancy_ref: #{@criteria.tenancy_ref}"
                 )
               end
             end

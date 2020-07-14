@@ -27,13 +27,11 @@ module Hackney
             Rails.logger.error(
               "CLASSIFIER: V1: #{version1_action} " \
                "V2: #{version2_action} " \
-               "Criteria: #{@criteria} " \
-               "CasePriority: #{@case_priority} " \
-               "Document Count: #{@documents.length}"
+               "tenancy_ref: #{@criteria.tenancy_ref}"
             )
           else
             Rails.logger.info(
-              'Classifier V1 & V2 Match'
+              "Classifier V1 & V2 Match for tenancy_ref: #{@criteria.tenancy_ref}"
             )
           end
 

@@ -1,6 +1,8 @@
 module Hackney
   module Income
     class UniversalHousingCriteria
+      attr_reader :tenancy_ref
+
       def self.for_tenancy(universal_housing_client, tenancy_ref)
         attributes = universal_housing_client[build_sql, tenancy_ref].first
         attributes ||= {}
@@ -264,7 +266,7 @@ module Hackney
 
       private
 
-      attr_reader :tenancy_ref, :attributes
+      attr_reader :attributes
 
       def day_difference(date_a, date_b)
         (date_a.to_date - date_b.to_date).to_i
