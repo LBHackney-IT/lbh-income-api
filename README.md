@@ -210,28 +210,48 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 
 ### Re-running Sync
 
-1. You first need to SSH onto the ECS instance  
+1. You first need to SSH onto the ECS instance
 > #### TODO
 > - Who to talk to
 > - Instance?
 > - SSH key
-2. You will need to run commands on the `income-api-*-worker`.  
-Run an interactive terminal on the container:  
+2. You will need to run commands on the `income-api-*-worker`.
+Run an interactive terminal on the container:
 ```
-$ docker ps 
+$ docker ps
 $ docker exec -it <CONTAINER_ID> bash
 ```
-3. Verify that you are on the correct container, in the correct environment, etc. E.g.  
+3. Verify that you are on the correct container, in the correct environment, etc. E.g.
 ```
 $ echo $RAILS_ENV
 $ echo $CAN_AUTOMATE_LETTERS
 ```
-4. Enqueue the sync `Rake` task.  
+4. Enqueue the sync `Rake` task.
 ```
 $ bundle exec rake income:sync:enqueue
 ```
 5. Verify that the sync is running.
 
+## Debugging Production
+
+### Accessing a worker instance
+
+The income-api runs in an a docker container in ECS. To access a container you'll first need to access the docker EC2
+host. This can be done by investigating the docker cluster in ECS and getting a valid SSH key.
+
+Once you're on the cluster worker, you can list the docker instances using a filter.
+
+Here's an example for listing the production workers.
+```bash
+[ec2-user@ip- ~]$ docker ps --filter 'name=income-api-production-worker'
+CONTAINER ID        IMAGE                                                                             COMMAND                  CREATED             STATUS              PORTS               NAMES
+0a40e6ad57a5        775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production   "entrypoint.sh sh -c…"   6 days ago          Up 6 days           3000/tcp            ecs-task-income-api-production-198-income-api-production-worker-b4b9f786d7d9f2b42f00
+```
+
+You can then run commands on the worker using a command like this, replacing `env` with `bash` if you'd rather get a shell prompt
+```bash
+docker exec --tty --interactive $(docker ps --quiet --filter 'name=income-api-production-worker') env
+```
 
 ## Contacts
 
