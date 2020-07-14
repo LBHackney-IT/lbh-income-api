@@ -18,6 +18,7 @@ module Hackney
               return false if @criteria.active_agreement?
 
               return false if @criteria.nosp.valid?
+              return false if court_warrant_active?
 
               return false if court_outcome_missing?
 
