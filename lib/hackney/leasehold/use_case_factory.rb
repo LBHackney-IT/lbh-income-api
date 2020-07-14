@@ -10,7 +10,7 @@ module Hackney
       end
 
       def stored_case_gateway
-        Hackney::Leasehold::StoredCasesGateway.new
+        Hackney::Leasehold::StoredActionGateway.new
       end
 
       def sync_case_attributes

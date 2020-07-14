@@ -2,7 +2,7 @@ module Hackney
   module IncomeCollection
     class Action < ApplicationRecord
       enum service_area_type: {
-          rent: 0, leasehold: 1
+          rent: 'rent', leasehold: 'leasehold'
       }
       validates :tenancy_ref, presence: true, uniqueness: true
 
