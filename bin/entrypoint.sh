@@ -18,6 +18,7 @@ then
     rails db:environment:set RAILS_ENV=development
   fi
 
+  rake db:migrate
   rails db:setup
 fi
 
