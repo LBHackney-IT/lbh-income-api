@@ -23,6 +23,13 @@ module Hackney
             @criteria.courtdate.blank?
           end
 
+          def court_outcome_missing?
+            return false if court_date_in_future?
+            return false if no_court_date?
+
+            @criteria.court_outcome.blank?
+          end
+
           def last_communication_older_than?(date)
             return false if @criteria.last_communication_date.blank?
             @criteria.last_communication_date <= date.to_date
