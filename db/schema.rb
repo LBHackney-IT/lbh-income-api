@@ -82,9 +82,9 @@ ActiveRecord::Schema.define(version: 2020_07_15_102014) do
 
   create_table "court_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
-    t.datetime "court_decision_date"
-    t.text "court_outcome"
-    t.decimal "balance_at_outcome_date", precision: 10
+    t.datetime "court_decision_date", null: false
+    t.text "court_outcome", null: false
+    t.decimal "balance_at_outcome_date", precision: 10, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agreement_id"], name: "index_court_details_on_agreement_id"
