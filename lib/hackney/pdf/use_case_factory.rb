@@ -15,7 +15,8 @@ module Hackney
       def get_income_preview
         Hackney::PDF::IncomePreview.new(
           get_templates_gateway: get_templates,
-          income_information_gateway: Hackney::Income::UniversalHousingIncomeGateway.new
+          income_information_gateway: Hackney::Income::UniversalHousingIncomeGateway.new,
+          tenancy_case_gateway: Hackney::Income::SqlTenancyCaseGateway.new
         )
       end
     end

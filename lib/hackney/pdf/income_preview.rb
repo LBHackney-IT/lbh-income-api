@@ -1,9 +1,10 @@
 module Hackney
   module PDF
     class IncomePreview
-      def initialize(get_templates_gateway:, income_information_gateway:)
+      def initialize(get_templates_gateway:, income_information_gateway:, tenancy_case_gateway:)
         @get_templates_gateway = get_templates_gateway
         @income_information_gateway = income_information_gateway
+        @tenancy_case_gateway = tenancy_case_gateway # Hackney::Income::SqlTenancyCaseGateway.new
       end
 
       def execute(tenancy_ref:, template_id:, user:)
@@ -29,7 +30,10 @@ module Hackney
       private
 
       def get_income_info(tenancy_ref)
-        @income_information_gateway.get_income_info(tenancy_ref: tenancy_ref)
+        info_from_uh = @income_information_gateway.get_income_info(tenancy_ref: tenancy_ref)
+        stored_info = @tenancy_case_gateway.find(tenancy_ref: tenancy_ref)
+        info_from_uh[:total_collectable_arrears_balance] = stored_info.collectable_arrears
+        info_from_uh
       end
 
       def get_template_by_id(template_id, user)
