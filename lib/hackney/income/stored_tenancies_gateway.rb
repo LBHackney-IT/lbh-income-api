@@ -18,7 +18,8 @@ module Hackney
         begin
           gateway_model_instance.tap do |tenancy|
             tenancy.assign_attributes(
-              balance: criteria.balance,
+              balance: criteria.balance, # new el balance aka arrears
+              collectable_arrears: criteria.collectable_arrears,
               weekly_rent: criteria.weekly_rent,
               days_since_last_payment: criteria.days_since_last_payment,
               active_agreement: criteria.active_agreement?,

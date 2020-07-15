@@ -197,6 +197,44 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
       end
     end
 
+    describe '#collectable_arrears' do
+      subject { criteria.collectable_arrears }
+
+      let(:payment) { -Faker::Number.decimal(l_digits: 2) }
+      let(:rent) { Faker::Number.decimal(l_digits: 2) }
+
+      context 'when the tenant has never paid' do
+        it { is_expected.to eq(current_balance) }
+      end
+
+      context 'when rent was issued on monday and a payment was made on tuesday' do
+        before do
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RNT',  amount: rent, date: Date.today.beginning_of_week)
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RPY',  amount: payment, date: Date.today.beginning_of_week + 1.day)
+        end
+
+        it { is_expected.to eq(current_balance - (rent + payment)) }
+      end
+
+      context 'when rent was issued last week on monday and a payment was made this week on tuesday' do
+        before do
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RNT',  amount: rent, date: (Date.today - 7.days).beginning_of_week)
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RPY',  amount: payment, date: Date.today.beginning_of_week + 1.day)
+        end
+
+        it { is_expected.to eq(current_balance - payment) }
+      end
+
+      context 'when rent was issued on monday this week and a payment was made last week on monday' do
+        before do
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RNT',  amount: rent, date: Date.today.beginning_of_week)
+          create_uh_transaction(tenancy_ref: tenancy_ref, type: 'RPY',  amount: payment, date: (Date.today - 7.days).beginning_of_week)
+        end
+
+        it { is_expected.to eq(current_balance - rent) }
+      end
+    end
+
     describe '#last_communciation_action' do
       subject { criteria.last_communication_action }
 
