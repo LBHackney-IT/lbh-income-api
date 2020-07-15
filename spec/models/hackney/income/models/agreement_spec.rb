@@ -37,6 +37,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
       end
     end
 
+    it { is_expected.to validate_presence_of(:agreement_type) }
+
     it 'raises an error when agreement_type is invalid' do
       expect { described_class.new(agreement_type: 'invalid_type') }
         .to raise_error ArgumentError, "'invalid_type' is not a valid agreement_type"
@@ -92,6 +94,13 @@ describe Hackney::Income::Models::Agreement, type: :model do
 
       expect(agreement.current_state).to eq(state)
       expect(agreement).not_to be_active
+    end
+  end
+
+
+  context 'formal agreement' do
+    it 'should have associated court details' do
+
     end
   end
 end
