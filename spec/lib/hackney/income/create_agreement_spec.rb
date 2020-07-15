@@ -93,7 +93,8 @@ describe Hackney::Income::CreateAgreement do
       breached_agreement = Hackney::Income::Models::Agreement.create(
         tenancy_ref: tenancy_ref,
         current_state: 'breached',
-        created_by: created_by
+        created_by: created_by,
+        agreement_type: 'informal'
       )
       Hackney::Income::Models::AgreementState.create(agreement_id: breached_agreement.id, agreement_state: 'breached')
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
