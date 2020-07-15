@@ -30,6 +30,7 @@ describe 'manually sending a letter causes case priority to sync', type: :reques
       postage: 'second'
     )
   }
+  let(:collectable_arrears) { 486.90 }
 
   let!(:original_env_can_auto_letters) { ENV['CAN_AUTOMATE_LETTERS'] }
   let!(:original_env_patch_codes_letters) { ENV['PATCH_CODES_FOR_LETTER_AUTOMATION'] }
@@ -42,6 +43,11 @@ describe 'manually sending a letter causes case priority to sync', type: :reques
       house_ref: house_ref,
       postcode: postcode,
       leasedate: leasedate
+    )
+
+    Hackney::Income::Models::CasePriority.create!(
+      tenancy_ref: tenancy_ref,
+      collectable_arrears: collectable_arrears
     )
 
     stub_const('Notifications::Client', gov_notify_client)

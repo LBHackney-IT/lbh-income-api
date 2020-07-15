@@ -4,14 +4,17 @@ describe Hackney::PDF::IncomePreview do
   subject do
     described_class.new(
       get_templates_gateway: get_templates_gateway,
-      income_information_gateway: income_information_gateway
+      income_information_gateway: income_information_gateway,
+      tenancy_case_gateway: tenancy_case_gateway
     )
   end
 
   let(:get_templates_gateway) { instance_double(Hackney::PDF::GetTemplatesForUser) }
   let(:income_information_gateway) { instance_double(Hackney::Income::UniversalHousingIncomeGateway) }
+  let(:tenancy_case_gateway) { Hackney::Income::SqlTenancyCaseGateway.new }
   let(:username) { Faker::Name.name }
   let(:test_template_id) { 123_123 }
+  let(:test_collectable_arrears) { 3506.90 }
   let(:test_template) do
     {
       path: 'spec/lib/hackney/pdf/test_income_template.erb',
@@ -35,8 +38,7 @@ describe Hackney::PDF::IncomePreview do
       address_preamble: '',
       title: '',
       forename: 'Bloggs',
-      surname: 'Joe',
-      total_collectable_arrears_balance: '3506.90'
+      surname: 'Joe'
     }
   end
   let(:user) do
@@ -48,8 +50,16 @@ describe Hackney::PDF::IncomePreview do
 
   let(:translated_html) { File.open('spec/lib/hackney/pdf/translated_test_income_template.html').read }
 
+  before do
+    Hackney::Income::Models::CasePriority.create!(
+      tenancy_ref: test_tenancy_ref,
+      collectable_arrears: test_collectable_arrears
+    )
+  end
+
   it 'generates letter preview' do
     expect(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
+    expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
     expect(get_templates_gateway).to receive(:execute).and_return([test_template])
 
     preview = subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user)

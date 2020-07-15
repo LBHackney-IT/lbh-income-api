@@ -20,7 +20,7 @@ module Hackney
       end
 
       def collectable_arrears
-        attributes.fetch(:current_balance).to_f - attributes.fetch(:sum_of_transactions_in_week).to_f
+        attributes.fetch(:current_balance).to_f - attributes.fetch(:sum_of_transactions_in_week).to_f.abs
       end
 
       def weekly_rent

@@ -12,6 +12,8 @@ RSpec.describe 'Income Collection Letters', type: :request do
   let(:template) { 'income_collection_letter_1' }
   let(:user_group) { 'income-collection-group' }
   let(:current_balance) { BigDecimal('525.00') }
+  let(:collectable_arrears) { 486.90 }
+
   let(:name) { Faker::Name.name }
 
   let(:user) {
@@ -25,6 +27,10 @@ RSpec.describe 'Income Collection Letters', type: :request do
   before do
     mock_aws_client
     create_valid_uh_records_for_an_income_letter
+    Hackney::Income::Models::CasePriority.create!(
+      tenancy_ref: tenancy_ref,
+      collectable_arrears: collectable_arrears
+    )
   end
 
   describe 'POST /api/v1/messages/letters' do
@@ -59,7 +65,7 @@ RSpec.describe 'Income Collection Letters', type: :request do
             'forename' => 'Frank',
             'surname' => 'Enstein',
             'title' => 'Mr',
-            'total_collectable_arrears_balance' => current_balance.to_s
+            'total_collectable_arrears_balance' => collectable_arrears.to_s
           },
           'template' => {
             'path' => 'lib/hackney/pdf/templates/income/income_collection_letter_1.erb',
