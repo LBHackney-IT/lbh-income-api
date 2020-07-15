@@ -19,6 +19,8 @@ module Hackney
 
               return false if @criteria.nosp.valid?
 
+              return false if court_outcome_missing?
+
               unless @criteria.nosp.served?
                 return false unless @criteria.last_communication_action.in?(valid_actions_for_nosp_to_progress)
                 return false if last_communication_older_than?(3.months.ago)
