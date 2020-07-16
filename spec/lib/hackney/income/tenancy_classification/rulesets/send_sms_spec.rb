@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Send First SMS Rule examples' do
   base_example = {
     outcome: :send_first_SMS,
+    collectable_arrears: 5,
     balance: 5
   }
   examples = [
@@ -16,8 +17,9 @@ describe 'Send First SMS Rule examples' do
       }
     ),
     base_example.merge(
-      description: 'when the balance is less than £5',
+      description: 'when the collectable_arrears is less than £5',
       outcome: :no_action,
+      collectable_arrears: 1,
       balance: 1
     ),
     base_example.merge(

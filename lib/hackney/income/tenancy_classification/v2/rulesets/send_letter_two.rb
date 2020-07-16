@@ -12,7 +12,7 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.balance.blank?
+              return false if @criteria.collectable_arrears.blank?
               return false if @criteria.weekly_gross_rent.blank?
 
               return false if @criteria.active_agreement?

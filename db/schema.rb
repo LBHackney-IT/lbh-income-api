@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_102014) do
+
+ActiveRecord::Schema.define(version: 2020_07_15_104307) do
 
   create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_102014) do
     t.datetime "breach_agreement_date"
     t.decimal "expected_balance", precision: 10
     t.string "payment_ref"
+    t.decimal "collectable_arrears", precision: 10, scale: 2
     t.index ["assigned_user_id"], name: "index_case_priorities_on_assigned_user_id"
     t.index ["case_id"], name: "index_case_priorities_on_case_id"
     t.index ["tenancy_ref"], name: "index_case_priorities_on_tenancy_ref", unique: true

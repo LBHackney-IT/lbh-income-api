@@ -6,6 +6,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
     weekly_rent: 5,
     is_paused_until: nil,
     balance: 15.0, # 3 * weekly_rent
+    collectable_arrears: 15.0, # 3 * weekly_rent
     active_agreement: false,
     court_outcome: 'Jail',
     last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,

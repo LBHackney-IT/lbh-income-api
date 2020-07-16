@@ -19,6 +19,10 @@ module Hackney
         attributes.fetch(:current_balance).to_f
       end
 
+      def collectable_arrears
+        attributes.fetch(:current_balance).to_f - attributes.fetch(:sum_of_transactions_in_week).to_f.abs
+      end
+
       def weekly_rent
         attributes.fetch(:weekly_rent).to_f
       end
@@ -194,6 +198,15 @@ module Hackney
             ) a
           )
 
+          DECLARE @SumOfTransactionsInWeek NUMERIC(9,2) = (
+            SELECT total_amount_in_week FROM (
+              SELECT SUM(real_value) as total_amount_in_week
+              FROM [dbo].[rtrans] WITH (NOLOCK)
+              WHERE tag_ref = @TenancyRef
+              AND post_date >= '#{beginning_of_week}'
+            ) a
+          )
+
           DECLARE @LastCommunicationAction VARCHAR(60) = (
             #{build_last_communication_sql_query(column: 'action_code')}
           )
@@ -263,7 +276,8 @@ module Hackney
             @UCDirectPaymentReceived as uc_direct_payment_received,
             @MostRecentAgreementDate as most_recent_agreement_date,
             @MostRecentAgreementStatus as most_recent_agreement_status,
-            @TotalPaymentAmountInWeek as total_payment_amount_in_week
+            @TotalPaymentAmountInWeek as total_payment_amount_in_week,
+            @SumOfTransactionsInWeek as sum_of_transactions_in_week
           FROM [dbo].[tenagree] WITH (NOLOCK)
           LEFT OUTER JOIN [dbo].[property] WITH (NOLOCK) ON [dbo].[property].prop_ref = [dbo].[tenagree].prop_ref
           WHERE tag_ref = @TenancyRef
