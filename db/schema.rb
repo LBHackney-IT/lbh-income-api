@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_06_144853) do
+ActiveRecord::Schema.define(version: 2020_07_15_102014) do
 
   create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
@@ -78,6 +78,16 @@ ActiveRecord::Schema.define(version: 2020_07_06_144853) do
     t.string "tenancy_ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "court_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "agreement_id"
+    t.datetime "court_decision_date", null: false
+    t.text "court_outcome", null: false
+    t.decimal "balance_at_outcome_date", precision: 10, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agreement_id"], name: "index_court_details_on_agreement_id"
   end
 
   create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
