@@ -529,6 +529,14 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
           expect(subject).to eq(false)
         end
       end
+
+      context 'with a court date is nil' do
+        let(:courtdate) { nil }
+
+        it 'returns false' do
+          expect(subject).to eq(true)
+        end
+      end
     end
 
     context 'when there is a adjourned on terms outcome' do
