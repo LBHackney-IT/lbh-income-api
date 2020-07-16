@@ -15,7 +15,7 @@ module Hackney
               return false if @criteria.collectable_arrears.blank?
               return false if @criteria.weekly_gross_rent.blank?
 
-              return false if @criteria.active_agreement?
+              return false if active_agreement?
 
               return false if @criteria.nosp.valid?
               return false if court_warrant_active?

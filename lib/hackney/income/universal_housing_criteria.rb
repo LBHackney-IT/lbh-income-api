@@ -105,9 +105,19 @@ module Hackney
       end
 
       def most_recent_agreement
+        if attributes[:most_recent_agreement_status].present?
+          status = case attributes[:most_recent_agreement_status].squish
+                   when Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS
+                     :breached
+                   when Hackney::Income::ACTIVE_ARREARS_AGREEMENT_STATUS
+                     :active
+                   end
+        end
+
         {
           breached: !active_agreement?,
-          start_date: attributes[:most_recent_agreement_date]
+          start_date: attributes[:most_recent_agreement_date],
+          status: status
         }
       end
 

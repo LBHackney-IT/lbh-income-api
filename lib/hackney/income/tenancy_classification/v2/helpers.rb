@@ -22,7 +22,7 @@ module Hackney
               Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
               Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
             ])
-              return @criteria.courtdate > 6.years.ago
+              return @criteria.courtdate.blank? || @criteria.courtdate > 6.years.ago
             end
 
             false
@@ -55,6 +55,10 @@ module Hackney
           def last_communication_newer_than?(date)
             return false if @criteria.last_communication_date.blank?
             @criteria.last_communication_date > date.to_date
+          end
+
+          def active_agreement?
+            @criteria.active_agreement? || (@criteria.most_recent_agreement.present? && @criteria.most_recent_agreement[:status].in?(%i[active breached]))
           end
 
           def informal_breached_agreement?

@@ -529,6 +529,14 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
           expect(subject).to eq(false)
         end
       end
+
+      context 'with a court date is nil' do
+        let(:courtdate) { nil }
+
+        it 'returns false' do
+          expect(subject).to eq(true)
+        end
+      end
     end
 
     context 'when there is a adjourned on terms outcome' do
@@ -677,6 +685,34 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
         it 'returns false' do
           expect(subject).to eq(false)
         end
+      end
+    end
+  end
+
+  describe 'active_agreement' do
+    subject { helpers.active_agreement? }
+
+    context 'when there is no agreement' do
+      let(:most_recent_agreement) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an active non-breached agreement' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false, status: :active } }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when there is a breached agreement' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: true, status: :breached } }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
       end
     end
   end

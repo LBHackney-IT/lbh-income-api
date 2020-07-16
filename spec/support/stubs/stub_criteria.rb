@@ -77,7 +77,7 @@ module Stubs
     end
 
     def active_agreement?
-      attributes[:most_recent_agreement] || attributes[:active_agreement]
+      attributes[:most_recent_agreement].present? || attributes[:active_agreement].present?
     end
 
     def nosp
