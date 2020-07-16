@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe Hackney::Leasehold::SyncCaseAttributes do
+describe Hackney::Leasehold::SyncActionAttributes do
   subject {
     described_class.new(
       universal_housing_gateway: universal_housing_gateway,
-      stored_case_gateway: stored_case_gateway
+      stored_action_gateway: stored_action_gateway
     )
   }
 
@@ -12,8 +12,8 @@ describe Hackney::Leasehold::SyncCaseAttributes do
     double(Hackney::Leasehold::UniversalHousingGateway)
   }
 
-  let(:stored_case_gateway) {
-    double(Hackney::Leasehold::StoredCasesGateway)
+  let(:stored_action_gateway) {
+    double(Hackney::Leasehold::StoredActionGateway)
   }
 
   let(:case_attributes) { Stubs::StubLeaseholdCriteria.new }
@@ -23,7 +23,7 @@ describe Hackney::Leasehold::SyncCaseAttributes do
   it 'fetches case attributes form UH and saves it' do
     expect(universal_housing_gateway).to receive(:fetch).with(tenancy_ref).and_return(case_attributes)
 
-    expect(stored_case_gateway).to receive(:store_case).with(
+    expect(stored_action_gateway).to receive(:store_action).with(
       tenancy_ref: tenancy_ref, criteria: case_attributes
     )
 

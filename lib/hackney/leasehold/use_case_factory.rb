@@ -9,14 +9,14 @@ module Hackney
         Hackney::Leasehold::UniversalHousingGateway.new
       end
 
-      def stored_case_gateway
+      def stored_action_gateway
         Hackney::Leasehold::StoredActionGateway.new
       end
 
-      def sync_case_attributes
-        Hackney::Leasehold::SyncCaseAttributes.new(
+      def sync_action_attributes
+        Hackney::Leasehold::SyncActionAttributes.new(
           universal_housing_gateway: universal_housing_gateway,
-          stored_case_gateway: stored_case_gateway
+          stored_action_gateway: stored_action_gateway
         )
       end
     end

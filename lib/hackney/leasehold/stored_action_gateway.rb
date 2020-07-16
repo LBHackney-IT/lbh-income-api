@@ -27,7 +27,6 @@ module Hackney
 
             action.save! if action.changed?
           end
-          
         rescue ActiveRecord::RecordNotUnique
           Rails.logger.error("An action with tenancy_ref: '#{tenancy_ref}' was inserted during find_or_create_by create operation, retrying...")
           retry
