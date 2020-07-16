@@ -9,8 +9,8 @@ module Hackney
       def execute(tenancy_ref:)
         action_attributes = @universal_housing_gateway.fetch(tenancy_ref)
         @stored_action_gateway.store_action(
-          tenancy_ref: tenancy_ref,
-          criteria: action_attributes
+            tenancy_ref: tenancy_ref,
+            attributes: action_attributes
         )
       end
     end

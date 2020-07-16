@@ -8,8 +8,8 @@ describe Hackney::Leasehold::StoredActionGateway do
   context 'when storing a tenancy' do
     subject(:store_action) do
       gateway.store_action(
-        tenancy_ref: attributes.fetch(:tenancy_ref),
-        criteria: attributes.fetch(:criteria)
+          tenancy_ref: attributes.fetch(:tenancy_ref),
+          attributes: attributes.fetch(:criteria)
       )
     end
 
@@ -20,7 +20,7 @@ describe Hackney::Leasehold::StoredActionGateway do
       }
     end
 
-    let(:stubbed_criteria) { Stubs::StubLeaseholdCriteria.new }
+    let(:stubbed_criteria) { Stubs::StubLeaseholdAttributes.new }
 
     context 'when the tenancy does not already exist' do
       let(:created_action) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }

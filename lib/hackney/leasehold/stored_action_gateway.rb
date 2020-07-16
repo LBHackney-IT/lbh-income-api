@@ -4,24 +4,24 @@ module Hackney
       GatewayModel = Hackney::IncomeCollection::Action
       SERVICE_AREA = 'leasehold'.freeze
 
-      def store_action(tenancy_ref:, criteria:)
+      def store_action(tenancy_ref:, attributes:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
 
         begin
           gateway_model_instance.tap do |action|
             action.assign_attributes(
-              balance: criteria.balance,
-              payment_ref: criteria.payment_ref,
-              patch_code: criteria.patch_code,
-              action_type: criteria.tenure_type,
+              balance: attributes.balance,
+              payment_ref: attributes.payment_ref,
+              patch_code: attributes.patch_code,
+              action_type: attributes.tenure_type,
               service_area_type: SERVICE_AREA,
               metadata: {
-                property_address: criteria.property_address,
-                lessee: criteria.lessee,
-                tenure_type: criteria.tenure_type,
-                direct_debit_status: criteria.direct_debit_status,
-                latest_letter: criteria.latest_letter,
-                latest_letter_date: criteria.latest_letter_date
+                property_address: attributes.property_address,
+                lessee: attributes.lessee,
+                tenure_type: attributes.tenure_type,
+                direct_debit_status: attributes.direct_debit_status,
+                latest_letter: attributes.latest_letter,
+                latest_letter_date: attributes.latest_letter_date
               }
             )
 

@@ -185,7 +185,7 @@ describe Hackney::Leasehold::UniversalHousingCriteria, universal: true do
     end
 
     it 'has the same instance methods as the stub' do
-      expect(criteria.methods).to match_array(Stubs::StubLeaseholdCriteria.new.methods)
+      expect(criteria.methods).to match_array(Stubs::StubLeaseholdAttributes.new.methods)
     end
   end
 

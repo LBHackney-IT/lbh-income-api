@@ -9,11 +9,11 @@ module Hackney
           logger(">> About to start getting Criteria (overall time taken so far): #{Time.zone.now - overall_start_time}ms")
           criteria_start_time = Time.zone.now
 
-          case_attributes = Hackney::Leasehold::UniversalHousingCriteria.for_lease(database, tenancy_ref)
+          task_attributes = Hackney::Leasehold::UniversalHousingCriteria.for_lease(database, tenancy_ref)
 
           logger(">> Time taken for Criteria from UH: #{Time.zone.now - criteria_start_time}ms")
 
-          case_attributes
+          task_attributes
         end
 
         logger("> Overall time taken loading from UH: #{Time.zone.now - overall_start_time}ms")

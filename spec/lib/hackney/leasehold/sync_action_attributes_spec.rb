@@ -16,7 +16,7 @@ describe Hackney::Leasehold::SyncActionAttributes do
     double(Hackney::Leasehold::StoredActionGateway)
   }
 
-  let(:case_attributes) { Stubs::StubLeaseholdCriteria.new }
+  let(:case_attributes) { Stubs::StubLeaseholdAttributes.new }
 
   let(:tenancy_ref) { Faker::Lorem.characters(number: 8) }
 
@@ -24,7 +24,7 @@ describe Hackney::Leasehold::SyncActionAttributes do
     expect(universal_housing_gateway).to receive(:fetch).with(tenancy_ref).and_return(case_attributes)
 
     expect(stored_action_gateway).to receive(:store_action).with(
-      tenancy_ref: tenancy_ref, criteria: case_attributes
+      tenancy_ref: tenancy_ref, attributes: case_attributes
     )
 
     subject.execute(
