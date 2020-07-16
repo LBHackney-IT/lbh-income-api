@@ -15,6 +15,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   let(:last_communication_date) { nil }
   let(:eviction_date) { nil }
   let(:courtdate) { nil }
+  let(:court_outcome) { nil }
   let(:most_recent_agreement) { nil }
   let(:total_payment_amount_in_week) { 0 }
   let(:weekly_rent) { 0 }
@@ -23,6 +24,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     Stubs::StubCriteria.new(
       eviction_date: eviction_date,
       courtdate: courtdate,
+      court_outcome: court_outcome,
       last_communication_date: last_communication_date,
       most_recent_agreement: most_recent_agreement,
       total_payment_amount_in_week: total_payment_amount_in_week,
@@ -494,6 +496,187 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
         allow(helpers).to receive(:arrear_accumulation_by_number_weeks).and_return(15)
 
         expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'court_warrant_active' do
+    subject { helpers.court_warrant_active? }
+
+    context 'when there is no court outcome' do
+      let(:court_outcome) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is a adjourned on terms outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+      end
+
+      context 'with a court date 8 years ago' do
+        let(:courtdate) { 8.years.ago }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
+        end
+      end
+    end
+
+    context 'when there is a adjourned on terms outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+      end
+
+      context 'with a court date 8 years ago' do
+        let(:courtdate) { 8.years.ago }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
+        end
+      end
+    end
+
+    context 'when there is a adjourned (secondary) on terms outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS_SECONDARY }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+      end
+
+      context 'with a court date 8 years ago' do
+        let(:courtdate) { 8.years.ago }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
+        end
+      end
+    end
+
+    context 'when there is a suspended possession outcome outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+        context 'with a court date 8 years ago' do
+          let(:courtdate) { 8.years.ago }
+
+          it 'returns false' do
+            expect(subject).to eq(false)
+          end
+        end
+      end
+    end
+
+    context 'when there is a outright possession with date outcome outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+        context 'with a court date 8 years ago' do
+          let(:courtdate) { 8.years.ago }
+
+          it 'returns false' do
+            expect(subject).to eq(false)
+          end
+        end
+      end
+    end
+
+    context 'when there is a outright possession forthwith outcome outcome' do
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH }
+
+      context 'with a court date 2 years ago' do
+        let(:courtdate) { 2.years.ago }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+        context 'with a court date 8 years ago' do
+          let(:courtdate) { 8.years.ago }
+
+          it 'returns false' do
+            expect(subject).to eq(false)
+          end
+        end
+      end
+    end
+  end
+
+  describe 'court_outcome_missing?' do
+    subject { helpers.court_outcome_missing? }
+
+    context 'when there is no court date' do
+      let(:courtdate) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is a court date in the past' do
+      let(:courtdate) { 2.days.ago }
+
+      context 'when the court outcome is blank' do
+        let(:court_outcome) { nil }
+
+        it 'returns true' do
+          expect(subject).to eq(true)
+        end
+      end
+
+      context 'when the court outcome is not blank' do
+        let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
+        end
+      end
+    end
+
+    context 'when there is a court date in the future' do
+      let(:courtdate) { 2.days.ago }
+
+      context 'when the court outcome is blank' do
+        let(:court_outcome) { nil }
+
+        it 'returns false' do
+          expect(subject).to eq(true)
+        end
+      end
+
+      context 'when the court outcome is not blank' do
+        let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
+        end
       end
     end
   end
