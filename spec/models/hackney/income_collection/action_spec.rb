@@ -54,20 +54,21 @@ describe Hackney::IncomeCollection::Action do
   end
 
   context 'when there is metadata' do
-
     let(:tenancy_ref) { Faker::Internet.slug }
 
     let(:action_with_metadata) { described_class.create!(tenancy_ref: tenancy_ref, metadata: metadata) }
 
-    let(:metadata) { {
+    let(:metadata) {
+      {
         character: Faker::Movies::Ghostbusters.character,
         quote: Faker::Movies::Ghostbusters.quote
-    } }
+      }
+    }
 
     it 'saves metadata as json string and parses it when accessed' do
       allow(JSON).to receive(:parse)
-                        .with(metadata.to_json, symbolize_names: true)
-                        .and_call_original
+        .with(metadata.to_json, symbolize_names: true)
+        .and_call_original
 
       expect(action_with_metadata.metadata).to eq(metadata)
     end
