@@ -2,6 +2,13 @@ require 'rails_helper'
 
 describe Hackney::Income::Models::Agreement, type: :model do
   let(:user_name) { Faker::Name.name }
+  let(:agreement) do
+    described_class.create(
+      tenancy_ref: '123',
+      created_by: user_name,
+      agreement_type: :informal
+    )
+  end
 
   it 'includes the fields for a formal/informal agreement' do
     agreement = described_class.new
@@ -17,12 +24,12 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'created_at',
       'updated_at',
       'tenancy_ref',
+      'notes',
       'id'
     )
   end
 
   it 'can have an associated agreement_state' do
-    agreement = described_class.create(tenancy_ref: '123', created_by: user_name)
     Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'live')
 
     expect(described_class.first.agreement_states.first).to be_a Hackney::Income::Models::AgreementState
@@ -36,6 +43,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
       end
     end
 
+    it { is_expected.to validate_presence_of(:agreement_type) }
+
     it 'raises an error when agreement_type is invalid' do
       expect { described_class.new(agreement_type: 'invalid_type') }
         .to raise_error ArgumentError, "'invalid_type' is not a valid agreement_type"
@@ -44,7 +53,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
 
   describe 'frequency' do
     it 'only accepts :weekly/:monthly as frequency' do
-      %i[weekly monthly].each do |frequency|
+      ['weekly', 'monthly', 'fortnightly', '4 weekly'].each do |frequency|
         expect { described_class.new(frequency: frequency) }.not_to raise_error
       end
     end
@@ -56,8 +65,6 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   describe 'current_state' do
-    let(:agreement) { described_class.create(tenancy_ref: '123', created_by: user_name) }
-
     it 'returns nil if there are no associated agreement states' do
       expect(agreement.current_state).to be_nil
     end
@@ -71,8 +78,6 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   describe 'active?' do
-    let(:agreement) { described_class.create(tenancy_ref: '123', created_by: user_name) }
-
     it 'returns false if there are no associated agreement states' do
       expect(agreement.current_state).to be_falsey
     end
@@ -91,6 +96,41 @@ describe Hackney::Income::Models::Agreement, type: :model do
 
       expect(agreement.current_state).to eq(state)
       expect(agreement).not_to be_active
+    end
+  end
+
+  context 'when informal agreement' do
+    it 'cannot have associated court details' do
+      expect {
+        Hackney::Income::Models::CourtDetails.create!(
+          agreement_id: agreement.id,
+          court_decision_date: Faker::Date.backward(days: 23),
+          court_outcome: Faker::ChuckNorris.fact,
+          balance_at_outcome_date: Faker::Commerce.price(range: 10..1000.0)
+        )
+      }.to raise_error ActiveRecord::RecordInvalid, 'Validation failed: Agreement must exist'
+    end
+  end
+
+  context 'when formal agreement' do
+    let(:agreement) do
+      described_class.create(
+        tenancy_ref: '123',
+        created_by: user_name,
+        agreement_type: :formal
+      )
+    end
+
+    it 'can have associated court details' do
+      Hackney::Income::Models::CourtDetails.create!(
+        agreement_id: agreement.id,
+        court_decision_date: Faker::Date.backward(days: 23),
+        court_outcome: Faker::ChuckNorris.fact,
+        balance_at_outcome_date: Faker::Commerce.price(range: 10..1000.0)
+      )
+
+      expect(described_class.first.court_details).to be_a Hackney::Income::Models::CourtDetails
+      expect(Hackney::Income::Models::CourtDetails.first.agreement_id).to eq(agreement.id)
     end
   end
 end

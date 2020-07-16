@@ -1,6 +1,11 @@
 module Hackney
   module Income
     class CreateAgreement
+      def initialize(add_action_diary:, cancel_agreement:)
+        @add_action_diary = add_action_diary
+        @cancel_agreement = cancel_agreement
+      end
+
       def execute(new_agreement_params:)
         tenancy_ref = new_agreement_params[:tenancy_ref]
         case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref)
@@ -13,21 +18,27 @@ module Hackney
           start_date: new_agreement_params[:start_date],
           frequency: new_agreement_params[:frequency],
           created_by: new_agreement_params[:created_by],
-          current_state: 'live'
+          current_state: 'live',
+          notes: new_agreement_params[:notes]
         }
 
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
 
         if active_agreements.any?
-          cancel_agreement = Hackney::Income::CancelAgreement.new
-
           active_agreements.each do |agreement|
-            cancel_agreement.execute(agreement_id: agreement.id)
+            @cancel_agreement.execute(agreement_id: agreement.id)
           end
         end
 
         new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
         Hackney::Income::Models::AgreementState.create!(agreement_id: new_agreement.id, agreement_state: :live)
+
+        @add_action_diary.execute(
+          tenancy_ref: tenancy_ref,
+          action_code: 'AGR',
+          comment: "Informal Agreement created: #{new_agreement.notes}",
+          username: new_agreement.created_by
+        )
 
         new_agreement
       end

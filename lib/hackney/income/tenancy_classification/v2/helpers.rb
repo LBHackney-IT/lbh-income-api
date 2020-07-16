@@ -11,6 +11,23 @@ module Hackney
             @criteria.eviction_date.present?
           end
 
+          def court_warrant_active?
+            return false if @criteria.court_outcome.blank?
+
+            if @criteria.court_outcome.in?([
+              Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
+              Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+              Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS_SECONDARY,
+              Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
+              Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+              Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+            ])
+              return @criteria.courtdate.blank? || @criteria.courtdate > 6.years.ago
+            end
+
+            false
+          end
+
           def court_date_in_future?
             @criteria.courtdate.present? && @criteria.courtdate.future?
           end
@@ -23,6 +40,13 @@ module Hackney
             @criteria.courtdate.blank?
           end
 
+          def court_outcome_missing?
+            return false if court_date_in_future?
+            return false if no_court_date?
+
+            @criteria.court_outcome.blank?
+          end
+
           def last_communication_older_than?(date)
             return false if @criteria.last_communication_date.blank?
             @criteria.last_communication_date <= date.to_date
@@ -31,6 +55,10 @@ module Hackney
           def last_communication_newer_than?(date)
             return false if @criteria.last_communication_date.blank?
             @criteria.last_communication_date > date.to_date
+          end
+
+          def active_agreement?
+            @criteria.active_agreement? || (@criteria.most_recent_agreement.present? && @criteria.most_recent_agreement[:status].in?(%i[active breached]))
           end
 
           def informal_breached_agreement?

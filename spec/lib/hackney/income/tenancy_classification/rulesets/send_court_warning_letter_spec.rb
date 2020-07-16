@@ -9,6 +9,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: 1.day.ago.to_date,
       weekly_rent: 5,
       balance: 15.0, # 3 * weekly_rent
+      collectable_arrears: 15.0, # 3 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -20,6 +21,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: 1.day.ago.to_date,
       weekly_rent: 5,
       balance: 50.0, # 10 * weekly_rent
+      collectable_arrears: 50.0, # 10 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -31,6 +33,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
       balance: 15.0, # 3 * weekly_rent
+      collectable_arrears: 15.0, # 3 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -42,6 +45,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
+      collectable_arrears: 25.0, # 5 * weekly_rent
       is_paused_until: 1.month.from_now.to_date,
       active_agreement: false,
       last_communication_action: nil,
@@ -52,6 +56,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
+      collectable_arrears: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: true,
       last_communication_action: nil,
@@ -62,6 +67,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :apply_for_court_date,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -74,6 +80,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -85,6 +92,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
+      collectable_arrears: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -94,6 +102,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -105,6 +114,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :send_court_warning_letter,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -116,6 +126,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -129,6 +140,7 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       outcome: :send_letter_one,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       courtdate: nil
     }

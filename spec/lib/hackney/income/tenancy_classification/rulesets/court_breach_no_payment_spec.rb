@@ -5,6 +5,7 @@ describe '"Court Breach - No Payment" examples' do
     outcome: :court_breach_no_payment,
     weekly_rent: 5,
     is_paused_until: nil,
+    collectable_arrears: 15.0,
     balance: 15.0,
     nosp_served_date: 8.months.ago.to_date,
     courtdate: 14.days.ago.to_date,

@@ -12,13 +12,15 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.balance.blank?
+              return false if @criteria.collectable_arrears.blank?
               return false if @criteria.weekly_gross_rent.blank?
 
-              return false if @criteria.active_agreement?
+              return false if active_agreement?
 
               return false if @criteria.nosp.valid?
-              return false if @criteria.court_outcome.blank?
+              return false if court_warrant_active?
+
+              return false if court_outcome_missing?
 
               unless @criteria.nosp.served?
                 return false unless @criteria.last_communication_action.in?(valid_actions_for_nosp_to_progress)

@@ -4,6 +4,10 @@ module Stubs
       @attributes = attributes
     end
 
+    def tenancy_ref
+      'StubCriteria'
+    end
+
     def days_since_last_payment
       attributes[:days_since_last_payment]
     end
@@ -73,7 +77,7 @@ module Stubs
     end
 
     def active_agreement?
-      attributes[:most_recent_agreement] || attributes[:active_agreement]
+      attributes[:most_recent_agreement].present? || attributes[:active_agreement].present?
     end
 
     def nosp
@@ -102,6 +106,10 @@ module Stubs
 
     def most_recent_agreement
       attributes[:most_recent_agreement]
+    end
+
+    def collectable_arrears
+      attributes[:collectable_arrears]
     end
 
     def total_payment_amount_in_week

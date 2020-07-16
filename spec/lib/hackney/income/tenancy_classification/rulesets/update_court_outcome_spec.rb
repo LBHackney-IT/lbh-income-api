@@ -5,6 +5,7 @@ describe '"Update court outcome" examples' do
     outcome: :update_court_outcome_action,
     nosp_served_date: nil,
     weekly_rent: 10,
+    collectable_arrears: 6,
     balance: 6,
     is_paused_until: '',
     active_agreement: true,

@@ -1,6 +1,8 @@
 module Hackney
   module Income
     class UniversalHousingCriteria
+      attr_reader :tenancy_ref
+
       def self.for_tenancy(universal_housing_client, tenancy_ref)
         attributes = universal_housing_client[build_sql, tenancy_ref].first
         attributes ||= {}
@@ -15,6 +17,10 @@ module Hackney
 
       def balance
         attributes.fetch(:current_balance).to_f
+      end
+
+      def collectable_arrears
+        attributes.fetch(:current_balance).to_f - attributes.fetch(:sum_of_transactions_in_week).to_f.abs
       end
 
       def weekly_rent
@@ -99,9 +105,19 @@ module Hackney
       end
 
       def most_recent_agreement
+        if attributes[:most_recent_agreement_status].present?
+          status = case attributes[:most_recent_agreement_status].squish
+                   when Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS
+                     :breached
+                   when Hackney::Income::ACTIVE_ARREARS_AGREEMENT_STATUS
+                     :active
+                   end
+        end
+
         {
           breached: !active_agreement?,
-          start_date: attributes[:most_recent_agreement_date]
+          start_date: attributes[:most_recent_agreement_date],
+          status: status
         }
       end
 
@@ -182,6 +198,15 @@ module Hackney
             ) a
           )
 
+          DECLARE @SumOfTransactionsInWeek NUMERIC(9,2) = (
+            SELECT total_amount_in_week FROM (
+              SELECT SUM(real_value) as total_amount_in_week
+              FROM [dbo].[rtrans] WITH (NOLOCK)
+              WHERE tag_ref = @TenancyRef
+              AND post_date >= '#{beginning_of_week}'
+            ) a
+          )
+
           DECLARE @LastCommunicationAction VARCHAR(60) = (
             #{build_last_communication_sql_query(column: 'action_code')}
           )
@@ -251,7 +276,8 @@ module Hackney
             @UCDirectPaymentReceived as uc_direct_payment_received,
             @MostRecentAgreementDate as most_recent_agreement_date,
             @MostRecentAgreementStatus as most_recent_agreement_status,
-            @TotalPaymentAmountInWeek as total_payment_amount_in_week
+            @TotalPaymentAmountInWeek as total_payment_amount_in_week,
+            @SumOfTransactionsInWeek as sum_of_transactions_in_week
           FROM [dbo].[tenagree] WITH (NOLOCK)
           LEFT OUTER JOIN [dbo].[property] WITH (NOLOCK) ON [dbo].[property].prop_ref = [dbo].[tenagree].prop_ref
           WHERE tag_ref = @TenancyRef
@@ -264,7 +290,7 @@ module Hackney
 
       private
 
-      attr_reader :tenancy_ref, :attributes
+      attr_reader :attributes
 
       def day_difference(date_a, date_b)
         (date_a.to_date - date_b.to_date).to_i

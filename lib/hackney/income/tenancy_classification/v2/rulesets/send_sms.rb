@@ -12,7 +12,7 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.balance.blank?
+              return false if @criteria.collectable_arrears.blank?
               return false if @criteria.courtdate.present?
               return false if @criteria.nosp.served?
               return false if @criteria.active_agreement?
@@ -25,7 +25,7 @@ module Hackney
                                 last_communication_newer_than?(3.months.ago)
               end
 
-              @criteria.balance >= 5 && no_court_date?
+              @criteria.collectable_arrears >= 5 && no_court_date?
             end
 
             def blocking_communication_actions
