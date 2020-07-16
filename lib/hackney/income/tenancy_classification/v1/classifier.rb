@@ -145,7 +145,7 @@ module Hackney
           end
 
           def send_sms?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.courtdate.present?
             return false if @criteria.nosp.served?
             return false if @criteria.active_agreement?
@@ -158,11 +158,11 @@ module Hackney
                               last_communication_newer_than?(3.months.ago)
             end
 
-            @criteria.balance >= 5
+            @criteria.collectable_arrears >= 5
           end
 
           def send_letter_one?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
             return false if @criteria.nosp.served?
@@ -175,7 +175,7 @@ module Hackney
           end
 
           def send_letter_two?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
             return false if @criteria.active_agreement?
@@ -190,7 +190,7 @@ module Hackney
           end
 
           def send_nosp?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
             return false if @criteria.active_agreement?
@@ -207,7 +207,7 @@ module Hackney
           end
 
           def send_court_warning_letter?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.weekly_gross_rent.blank?
 
             return false if @criteria.active_agreement?
@@ -221,7 +221,7 @@ module Hackney
           end
 
           def apply_for_court_date?
-            return false if @criteria.balance.blank?
+            return false if @criteria.collectable_arrears.blank?
             return false if @criteria.weekly_gross_rent.blank?
             return false if @criteria.active_agreement?
 
@@ -254,7 +254,7 @@ module Hackney
           end
 
           def balance_with_1_week_grace
-            @criteria.balance - calculated_grace_amount
+            @criteria.collectable_arrears - calculated_grace_amount
           end
 
           def calculated_grace_amount

@@ -8,6 +8,7 @@ describe '"Apply for Court Date" examples' do
     nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
     weekly_rent: 5,
     balance: 25.0,
+    collectable_arrears: 25.0,
     last_communication_action: court_warning_letter_code,
     last_communication_date: 3.weeks.ago.to_date,
     courtdate: nil
@@ -40,7 +41,8 @@ describe '"Apply for Court Date" examples' do
       description: 'with arrears lower than four weeks rent',
       outcome: :no_action,
       weekly_rent: 5,
-      balance: 10
+      balance: 10,
+      collectable_arrears: 10
     ),
     base_example.merge(
       description: 'when paused',

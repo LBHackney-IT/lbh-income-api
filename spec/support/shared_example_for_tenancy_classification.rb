@@ -47,6 +47,7 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
   let(:attributes) do
     {
       balance: balance,
+      collectable_arrears: collectable_arrears,
       weekly_rent: weekly_rent,
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
@@ -69,6 +70,7 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
     context(options[:description] || build_context_message(options)) do
       let(:is_paused_until) { options[:is_paused_until] }
       let(:balance) { options[:balance] }
+      let(:collectable_arrears) { options[:collectable_arrears] }
       let(:weekly_rent) { options[:weekly_rent] }
       let(:last_communication_date) { options[:last_communication_date] }
       let(:last_communication_action) { options[:last_communication_action] }

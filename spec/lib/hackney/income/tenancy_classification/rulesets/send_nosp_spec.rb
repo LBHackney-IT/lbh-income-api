@@ -8,6 +8,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 14.months.ago.to_date,
       weekly_rent: 5,
       balance: 0,
+      collectable_arrears: 0,
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -20,6 +21,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 66.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
+      collectable_arrears: 50.0,
       is_paused_until: nil,
       active_agreement: false,
       last_communication_action: nil,
@@ -31,6 +33,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 66.weeks.ago.to_date,
       weekly_rent: 5,
       balance: 50.0,
+      collectable_arrears: 50.0,
       is_paused_until: nil,
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
@@ -41,6 +44,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :apply_for_court_date,
       nosp_served_date: 6.months.ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -54,6 +58,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 6.months.ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
+      collectable_arrears: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
@@ -66,6 +71,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: 1.week.ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -79,6 +85,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 14.months.ago.to_date,
       weekly_rent: 5,
       balance: 10.0, # 2 * weekly_rent
+      collectable_arrears: 10.0, # 2 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
@@ -91,6 +98,7 @@ describe 'Send NOSP Rule', type: :feature do
       nosp_served_date: 14.months.ago.to_date,
       weekly_rent: 5,
       balance: 25.0, # 5 * weekly_rent
+      collectable_arrears: 25.0, # 5 * weekly_rent
       is_paused_until: 1.month.from_now,
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
@@ -101,6 +109,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -113,6 +122,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -124,6 +134,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -135,6 +146,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -147,6 +159,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :no_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: true,
@@ -159,6 +172,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -171,6 +185,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -183,6 +198,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -195,6 +211,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: 17.months.ago.to_date,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -207,6 +224,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -219,6 +237,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -231,6 +250,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -243,6 +263,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -255,6 +276,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :update_court_outcome_action,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -268,6 +290,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
@@ -281,6 +304,7 @@ describe 'Send NOSP Rule', type: :feature do
       outcome: :send_NOSP,
       nosp_served_date: nil,
       weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       is_paused_until: nil,
       active_agreement: false,
