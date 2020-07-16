@@ -22,7 +22,7 @@ module Hackney
               Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
               Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
             ])
-              return @criteria.courtdate > 6.years.ago
+              return @criteria.courtdate.blank? || @criteria.courtdate > 6.years.ago
             end
 
             false
