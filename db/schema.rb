@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2020_07_15_104307) do
+ActiveRecord::Schema.define(version: 2020_07_16_150054) do
 
   create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "agreement_id"
@@ -33,6 +32,8 @@ ActiveRecord::Schema.define(version: 2020_07_15_104307) do
     t.string "tenancy_ref", null: false
     t.string "created_by", null: false
     t.text "notes"
+    t.bigint "court_case_id"
+    t.index ["court_case_id"], name: "index_agreements_on_court_case_id"
   end
 
   create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -82,14 +83,13 @@ ActiveRecord::Schema.define(version: 2020_07_15_104307) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "court_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "agreement_id"
-    t.datetime "court_decision_date", null: false
-    t.text "court_outcome", null: false
-    t.decimal "balance_at_outcome_date", precision: 10, null: false
+  create_table "court_cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.datetime "court_decision_date"
+    t.text "court_outcome"
+    t.decimal "balance_at_outcome_date", precision: 10
+    t.string "tenancy_ref", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agreement_id"], name: "index_court_details_on_agreement_id"
   end
 
   create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -134,5 +134,6 @@ ActiveRecord::Schema.define(version: 2020_07_15_104307) do
     t.integer "role", default: 0
   end
 
+  add_foreign_key "agreements", "court_cases"
   add_foreign_key "case_priorities", "users", column: "assigned_user_id"
 end
