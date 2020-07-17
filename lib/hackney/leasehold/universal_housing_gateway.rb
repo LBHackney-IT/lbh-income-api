@@ -9,7 +9,7 @@ module Hackney
           logger(">> About to start getting Criteria (overall time taken so far): #{Time.zone.now - overall_start_time}ms")
           criteria_start_time = Time.zone.now
 
-          task_attributes = Hackney::Leasehold::UniversalHousingCriteria.for_lease(database, tenancy_ref)
+          task_attributes = Hackney::Leasehold::UniversalHousingAttributes.for_lease(database, tenancy_ref)
 
           logger(">> Time taken for Criteria from UH: #{Time.zone.now - criteria_start_time}ms")
 
@@ -20,6 +20,28 @@ module Hackney
 
         response
       end
+
+      def tenancy_refs_in_arrears
+        Hackney::UniversalHousing::Client.with_connection do |database|
+          database.extension :identifier_mangling
+          database.identifier_input_method = database.identifier_output_method = nil
+
+          query = database[:tenagree]
+
+          query
+            .select(:tag_ref)
+            .exclude(tenure: FREEHOLD_TENURE_TYPE)
+            .where { cur_bal > 0 }
+            .where(rentgrp_ref: LEASE_RENT_GROUP)
+            .where(terminated: 0)
+            .where(agr_type: MASTER_ACCOUNT_TYPE)
+            .map { |item| item[:tag_ref].strip }
+        end
+      end
+
+      LEASE_RENT_GROUP = 'LSC'.freeze
+      FREEHOLD_TENURE_TYPE = 'FRE'.freeze
+      MASTER_ACCOUNT_TYPE = 'M'.freeze
 
       private
 

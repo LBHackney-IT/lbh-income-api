@@ -12,6 +12,10 @@
     class: TenancySync
     cron: '0 0 2 * * *' # 2am everyday
 
+  leasehold_sync:
+    class: LeaseholdSync
+    cron: '0 0 2 * * *' # 3am everyday
+
   request_all_precompiled_letter_states:
     class: RequestAllPrecompiledLetterStates
     cron: "0 0 10,15 * * *" # 10am and 3pm utc every day

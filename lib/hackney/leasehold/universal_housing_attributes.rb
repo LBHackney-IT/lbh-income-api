@@ -1,6 +1,6 @@
 module Hackney
   module Leasehold
-    class UniversalHousingCriteria
+    class UniversalHousingAttributes
       def self.for_lease(universal_housing_client, tenancy_ref)
         result_from_sql = universal_housing_client[build_sql, tenancy_ref].first
         result_from_sql ||= {}

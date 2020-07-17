@@ -8,8 +8,8 @@ describe Hackney::Leasehold::StoredActionGateway do
   context 'when storing a tenancy' do
     subject(:store_action) do
       gateway.store_action(
-          tenancy_ref: attributes.fetch(:tenancy_ref),
-          attributes: attributes.fetch(:criteria)
+        tenancy_ref: attributes.fetch(:tenancy_ref),
+        attributes: attributes.fetch(:criteria)
       )
     end
 
