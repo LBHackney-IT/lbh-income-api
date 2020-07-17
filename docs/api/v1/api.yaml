@@ -76,7 +76,54 @@ paths:
           description: Agreement not found
       tags:
         - agreements
-        
+  /court_cases/{tenancy_ref}:
+    get:
+      summary: 'Find agreements by tenancy id'
+      description: Returns court cases with specified tenancy id
+      operationId: getCourtCasesByTenancyId
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tenancy_ref
+        required: true
+        type: string
+        description: tenancy Id record to retrieve 
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/courtCasesList'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Court cases not found
+      tags:
+        - court_cases
+  /court_case/{tenancy_ref}:
+    post:
+      summary: 'Create a court case for the tenancy id'
+      description: Create court case with specified tenancy id
+      operationId: postCourtCaseForTenancy
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: tenancy_ref
+        required: true
+        type: string
+        description: Court case for tenancy
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/court_case'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Court case not found
+      tags:
+        - court_cases  
 definitions:
   agreementsList:
     type: object
@@ -118,6 +165,9 @@ definitions:
       createdAt:
         type: string
         format: date
+      courtCaseId:
+        type: integer
+        example: 12
       notes:
         type: string
         example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
@@ -134,5 +184,34 @@ definitions:
       date:
         type: string
         format: date
+  court_case:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 12
+      tenancyRef:
+        type: string
+        example: '1'
+      courtDecisionDate:
+        type: string
+        format: date
+        example: '10/11/2020'
+      courtOutcome:
+        type: string
+        example: 'something'
+      balanceAtOutcomeDate:
+        type: number
+        format: '50'
+      createdAt:
+        type: string
+        format: date
+  courtCasesList:
+    type: object
+    properties:
+      courtCases:
+        type: array
+        items: 
+          $ref: '#/definitions/court_case'
 schemes:
  - https
