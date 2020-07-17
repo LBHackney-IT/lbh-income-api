@@ -12,7 +12,7 @@ describe Hackney::Income::ViewAgreements do
   end
 
   context 'when there is an agreement for the tenancy' do
-    let(:agreement_type) { 'formal' }
+    let(:agreement_type) { 'informal' }
     let(:starting_balance) { Faker::Commerce.price(range: 10...1000) }
     let(:amount) { Faker::Commerce.price(range: 10...100) }
     let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
