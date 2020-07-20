@@ -31,6 +31,26 @@ describe 'Send Letter One Rule', type: :feature do
       eviction_date: '',
       courtdate: nil
     },
+    {
+      outcome: :send_informal_agreement_breach_letter,
+      description: 'with breached informal agreement',
+      nosp_served_date: nil,
+      weekly_rent: 10,
+      balance: 20.0,
+      collectable_arrears: 20.0,
+      total_payment_amount_in_week: 0,
+      is_paused_until: '',
+      active_agreement: false,
+      last_communication_date: 2.weeks.ago.to_date,
+      last_communication_action: '',
+      eviction_date: '',
+      courtdate: nil,
+      most_recent_agreement: {
+        start_date: 6.days.ago,
+        breached: true,
+        status: :breached
+      }
+    },
     # no previous communication, arrears not high enough
     {
       outcome: :no_action,
