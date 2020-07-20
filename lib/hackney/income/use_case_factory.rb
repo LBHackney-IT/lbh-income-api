@@ -212,6 +212,10 @@ module Hackney
         Hackney::Income::CancelAgreement.new
       end
 
+      def create_court_case
+        Hackney::Income::CreateCourtCase.new
+      end
+
       private
 
       def cloud_storage
