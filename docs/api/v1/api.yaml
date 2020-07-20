@@ -3,7 +3,7 @@ info:
   version: "1.1"
   title: 'LBH Income API'
   description: 'The Income API is the back-end of Hackney Income Collection Service'
-paths:        
+paths:
   /agreements/{tenancy_ref}:
     get:
       summary: 'Find agreements by tenancy id'
@@ -16,7 +16,7 @@ paths:
         name: tenancy_ref
         required: true
         type: string
-        description: tenancy Id record to retrieve 
+        description: tenancy Id record to retrieve
       responses:
         200:
           description: successful operation
@@ -78,7 +78,7 @@ paths:
         - agreements
   /court_cases/{tenancy_ref}:
     get:
-      summary: 'Find agreements by tenancy id'
+      summary: 'Find court cases by tenancy id'
       description: Returns court cases with specified tenancy id
       operationId: getCourtCasesByTenancyId
       produces:
@@ -88,7 +88,7 @@ paths:
         name: tenancy_ref
         required: true
         type: string
-        description: tenancy Id record to retrieve 
+        description: tenancy Id record to retrieve
       responses:
         200:
           description: successful operation
@@ -123,14 +123,14 @@ paths:
         404:
           description: Court case not found
       tags:
-        - court_cases  
+        - court_cases
 definitions:
   agreementsList:
     type: object
     properties:
       agreements:
         type: array
-        items: 
+        items:
           $ref: '#/definitions/agreement'
   agreement:
     type: object
@@ -173,12 +173,12 @@ definitions:
         example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
       history:
         type: array
-        items: 
+        items:
           $ref: '#/definitions/history'
-  history: 
+  history:
     type: object
     properties:
-      state: 
+      state:
         type: string
         example: 'breached'
       date:
@@ -211,7 +211,7 @@ definitions:
     properties:
       courtCases:
         type: array
-        items: 
+        items:
           $ref: '#/definitions/court_case'
 schemes:
  - https
