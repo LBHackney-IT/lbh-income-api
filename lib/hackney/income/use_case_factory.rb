@@ -216,6 +216,10 @@ module Hackney
         Hackney::Income::CreateCourtCase.new
       end
 
+      def view_court_cases
+        Hackney::Income::ViewCourtCases.new
+      end
+
       private
 
       def cloud_storage

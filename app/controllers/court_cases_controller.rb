@@ -1,6 +1,17 @@
 class CourtCasesController < ApplicationController
   include CourtCaseResponseHelper
 
+  def index
+    requested_cases = income_use_case_factory.view_court_cases.execute(tenancy_ref: params.fetch(:tenancy_ref))
+
+    cases = requested_cases.map do |c|
+      map_court_case_to_response(court_case: c)
+    end
+
+    response = { court_cases: cases }
+    render json: response
+  end
+
   def create
     court_case_params = {
       tenancy_ref: params.fetch(:tenancy_ref),
