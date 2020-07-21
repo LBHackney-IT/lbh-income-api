@@ -77,6 +77,19 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       courtdate: nil
     },
     {
+      outcome: :update_court_outcome_action,
+      nosp_served_date: '2019-11-11'.to_date,
+      weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
+      balance: 25.0, # 5 * weekly_rent
+      is_paused_until: nil,
+      active_agreement: false,
+      last_communication_action: 'VIM',
+      last_communication_date: '2020-05-15'.to_date,
+      eviction_date: nil,
+      courtdate: '2019-11-15'.to_date
+    },
+    {
       outcome: :no_action,
       nosp_served_date: (Hackney::Domain::Nosp::ACTIVE_TIME + 1.day).ago.to_date,
       weekly_rent: 5,

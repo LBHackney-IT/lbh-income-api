@@ -213,6 +213,7 @@ module Hackney
             return false if @criteria.active_agreement?
 
             return false if @criteria.last_communication_action.in?(after_court_warning_letter_actions)
+            return false if @criteria.courtdate&.past?
 
             return false unless @criteria.nosp.valid?
             return false unless @criteria.nosp.active?
