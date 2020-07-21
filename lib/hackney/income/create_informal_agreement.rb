@@ -1,20 +1,15 @@
 module Hackney
   module Income
-    class CreateInformalAgreement
-      def initialize(add_action_diary:, cancel_agreement:)
-        @add_action_diary = add_action_diary
-        @cancel_agreement = cancel_agreement
-      end
-
+    class CreateInformalAgreement < CreateAgreement
       def execute(new_agreement_params:)
         tenancy_ref = new_agreement_params[:tenancy_ref]
 
-        case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
+        case_details = find_case_details(tenancy_ref)
         return if case_details.nil?
 
         agreement_params = {
           tenancy_ref: tenancy_ref,
-          agreement_type: new_agreement_params[:agreement_type],
+          agreement_type: :informal,
           starting_balance: case_details[:balance],
           amount: new_agreement_params[:amount],
           start_date: new_agreement_params[:start_date],
@@ -24,22 +19,14 @@ module Hackney
           notes: new_agreement_params[:notes]
         }
 
-        active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
+        cancel_active_agreements(tenancy_ref)
 
-        if active_agreements.any?
-          active_agreements.each do |agreement|
-            @cancel_agreement.execute(agreement_id: agreement.id)
-          end
-        end
+        new_agreement = create_agreement(agreement_params)
 
-        new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
-        Hackney::Income::Models::AgreementState.create!(agreement_id: new_agreement.id, agreement_state: :live)
-
-        @add_action_diary.execute(
+        add_action_diary_entry(
           tenancy_ref: tenancy_ref,
-          action_code: 'AGR',
-          comment: "Informal agreement created: #{new_agreement.notes}",
-          username: new_agreement.created_by
+          comment: "Informal agreement created: #{agreement_params[:notes]}",
+          created_by: new_agreement.created_by
         )
 
         new_agreement
