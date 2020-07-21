@@ -1,6 +1,6 @@
 module Hackney
   module Income
-    class CreateAgreement
+    class CreateInformalAgreement
       def initialize(add_action_diary:, cancel_agreement:)
         @add_action_diary = add_action_diary
         @cancel_agreement = cancel_agreement
@@ -8,12 +8,14 @@ module Hackney
 
       def execute(new_agreement_params:)
         tenancy_ref = new_agreement_params[:tenancy_ref]
-        case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref)
+
+        case_details = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
+        return if case_details.nil?
 
         agreement_params = {
           tenancy_ref: tenancy_ref,
           agreement_type: new_agreement_params[:agreement_type],
-          starting_balance: case_details.first[:balance],
+          starting_balance: case_details[:balance],
           amount: new_agreement_params[:amount],
           start_date: new_agreement_params[:start_date],
           frequency: new_agreement_params[:frequency],
@@ -36,7 +38,7 @@ module Hackney
         @add_action_diary.execute(
           tenancy_ref: tenancy_ref,
           action_code: 'AGR',
-          comment: "Informal Agreement created: #{new_agreement.notes}",
+          comment: "Informal agreement created: #{new_agreement.notes}",
           username: new_agreement.created_by
         )
 

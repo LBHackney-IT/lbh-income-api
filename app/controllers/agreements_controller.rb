@@ -25,7 +25,7 @@ class AgreementsController < ApplicationController
       notes: params.fetch(:notes)
     }
 
-    created_agreement = income_use_case_factory.create_agreement.execute(new_agreement_params: agreement_params)
+    created_agreement = income_use_case_factory.create_informal_agreement.execute(new_agreement_params: agreement_params)
     response = map_agreement_to_response(agreement: created_agreement)
     render json: response
   end
