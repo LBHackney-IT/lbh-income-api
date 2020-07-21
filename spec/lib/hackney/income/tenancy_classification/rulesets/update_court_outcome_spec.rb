@@ -70,6 +70,15 @@ describe '"Update court outcome" examples' do
       court_outcome: 'Jail',
       eviction_date: 420.days.from_now.to_date,
       courtdate: 367.days.from_now.to_date
+    ),
+    base_example.merge(
+      description: 'with no court outcome and breached court agreement',
+      outcome: :send_court_agreement_breach_letter,
+      courtdate: 14.days.ago.to_date,
+      most_recent_agreement: {
+        start_date: 1.week.ago,
+        breached: true
+      }
     )
   ]
 
