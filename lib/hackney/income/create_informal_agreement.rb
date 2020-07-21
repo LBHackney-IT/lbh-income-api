@@ -1,6 +1,8 @@
 module Hackney
   module Income
     class CreateInformalAgreement < CreateAgreement
+      CreateAgreementError = Class.new(StandardError)
+
       def execute(new_agreement_params:)
         tenancy_ref = new_agreement_params[:tenancy_ref]
 
@@ -19,7 +21,13 @@ module Hackney
           notes: new_agreement_params[:notes]
         }
 
-        cancel_active_agreements(tenancy_ref)
+        active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
+
+        if active_agreements.any?
+          raise CreateAgreementError, 'There is an existing formal agreement for this tenancy' if active_agreements.any?(&:formal?)
+
+          cancel_active_agreements(active_agreements)
+        end
 
         new_agreement = create_agreement(agreement_params)
 

@@ -25,7 +25,9 @@ module Hackney
           court_case_id: court_case.id
         }
 
-        cancel_active_agreements(tenancy_ref)
+        active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
+
+        cancel_active_agreements(active_agreements) if active_agreements.any?
 
         new_agreement = create_agreement(formal_agreement_params)
 
