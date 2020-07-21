@@ -42,4 +42,42 @@ RSpec.describe 'CourtCases', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/court_cases/{tenancy_ref}' do
+    path '/court_cases/{tenancy_ref}' do
+      let(:view_court_cases_instance) { instance_double(Hackney::Income::ViewCourtCases) }
+      let(:court_cases_array) do
+        [
+          Hackney::Income::Models::CourtCase.create!(
+            tenancy_ref: tenancy_ref,
+            court_decision_date: court_decision_date,
+            court_outcome: court_outcome,
+            balance_at_outcome_date: balance_at_outcome_date
+          )
+        ]
+      end
+
+      before do
+        allow(Hackney::Income::ViewCourtCases).to receive(:new).and_return(view_court_cases_instance)
+        allow(view_court_cases_instance).to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
+          .and_return(court_cases_array)
+      end
+
+      it 'calls ViewCourtCases use-case and renders its response' do
+        get "/api/v1/court_cases/#{tenancy_ref}"
+
+        expect(response.status).to eq(200)
+
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response['court_cases'].count).to eq(1)
+        expect(parsed_response['court_cases'].first['tenancyRef']).to eq(tenancy_ref)
+        expect(parsed_response['court_cases'].first['courtDecisionDate']).to include(court_decision_date.to_s)
+        expect(parsed_response['court_cases'].first['balanceAtOutcomeDate']).to eq(balance_at_outcome_date)
+        expect(parsed_response['court_cases'].first['courtOutcome']).to eq(court_outcome)
+        expect(parsed_response['court_cases'].first['createdAt']).to eq(Date.today.to_s)
+      end
+    end
+  end
 end
