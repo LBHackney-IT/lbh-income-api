@@ -156,6 +156,16 @@ describe 'Send Court Warning Letter Rule', type: :feature do
       collectable_arrears: 25.0, # 5 * weekly_rent
       balance: 25.0, # 5 * weekly_rent
       courtdate: nil
+    },
+    {
+      description: 'with no court outcome and last communication was court warning letter, which was sent after the court date',
+      outcome: :update_court_outcome_action,
+      weekly_rent: 5,
+      collectable_arrears: 25.0, # 5 * weekly_rent
+      balance: 25.0, # 5 * weekly_rent
+      courtdate: '2020-02-07'.to_date,
+      last_communication_action: court_warning_letter_code,
+      last_communication_date: '2020-03-03'.to_date
     }
   ]
 
