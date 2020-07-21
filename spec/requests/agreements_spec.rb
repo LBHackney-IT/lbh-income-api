@@ -84,7 +84,7 @@ RSpec.describe 'Agreements', type: :request do
 
   describe 'POST /api/v1/agreement/{tenancy_ref}' do
     path '/agreement/{tenancy_ref}' do
-      let(:create_agreement_instance) { instance_double(Hackney::Income::CreateAgreement) }
+      let(:create_agreement_instance) { instance_double(Hackney::Income::CreateInformalAgreement) }
       let(:new_agreement_params) do
         {
           tenancy_ref: tenancy_ref,
@@ -105,7 +105,7 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       before do
-        allow(Hackney::Income::CreateAgreement).to receive(:new).and_return(create_agreement_instance)
+        allow(Hackney::Income::CreateInformalAgreement).to receive(:new).and_return(create_agreement_instance)
         allow(create_agreement_instance).to receive(:execute)
           .with(new_agreement_params: new_agreement_params)
           .and_return(created_agreement)
