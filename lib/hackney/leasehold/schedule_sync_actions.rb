@@ -18,15 +18,15 @@ module Hackney
           @background_job_gateway.schedule_case_priority_sync(tenancy_ref: tenancy_ref)
         end
 
-        delete_case_priorities_not_syncable(case_priorities: found_actions, tenancy_refs: tenancy_refs)
+        delete_actions_not_syncable(actions: found_actions, tenancy_refs: tenancy_refs)
       end
 
       private
 
-      def delete_case_priorities_not_syncable(case_priorities:, tenancy_refs:)
+      def delete_actions_not_syncable(actions:, tenancy_refs:)
         Rails.logger.info('Deleting case_priorities that are not to be synced')
-        case_refs_not_synced = case_priorities.pluck(:tenancy_ref) - tenancy_refs
-        @stored_actions_model.where(tenancy_ref: case_refs_not_synced).destroy_all if case_refs_not_synced.any?
+        action_refs_not_synced = actions.pluck(:tenancy_ref) - tenancy_refs
+        @stored_actions_model.where(tenancy_ref: action_refs_not_synced).destroy_all if action_refs_not_synced.any?
       end
     end
   end

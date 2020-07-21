@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Hackney::Leasehold::UniversalHousingGateway, universal: true do
   let(:gateway) { described_class.new }
 
-  context '#lease_in_arrears' do
+  context 'when testing #lease_in_arrears' do
     context 'when retrieving tenancy refs for cases in arrears' do
       subject { gateway.tenancy_refs_in_arrears }
 
