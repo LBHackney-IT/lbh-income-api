@@ -137,6 +137,20 @@ describe 'Send Letter Two Rule', type: :feature do
       last_communication_action: letter_1_in_arrears_sent_code,
       courtdate: nil
     },
+    {
+      description: 'with breached informal agreement',
+      outcome: :send_informal_agreement_breach_letter,
+      weekly_rent: 5,
+      collectable_arrears: 20.0,
+      balance: 20.0,
+      last_communication_date: 2.weeks.ago.to_date,
+      last_communication_action: letter_1_in_arrears_sent_code,
+      most_recent_agreement: {
+        start_date: 6.days.ago,
+        breached: true,
+        status: :breached
+      }
+    },
     # court date in past
     {
       outcome: :no_action,
