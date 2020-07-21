@@ -25,12 +25,32 @@ describe Hackney::Income::Jobs::SyncCasePriorityJob do
         .and_return(true)
     end
 
-    it 'runs the SyncCasePriority use case' do
-      expect_any_instance_of(Hackney::Income::SyncCasePriority)
-        .to receive(:execute)
-        .with(tenancy_ref: tenancy_ref)
+    context 'when leasehold is not set' do
+      it 'runs the rent SyncCasePriority use case' do
+        expect_any_instance_of(Hackney::Income::SyncCasePriority)
+          .to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
 
-      subject.perform_now(tenancy_ref: tenancy_ref)
+        expect_any_instance_of(Hackney::Leasehold::SyncActionAttributes)
+          .not_to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
+
+        subject.perform_now(tenancy_ref: tenancy_ref)
+      end
+    end
+
+    context 'when leasehold is set' do
+      it 'runs the leasehold SyncCaseAttributes use case' do
+        expect_any_instance_of(Hackney::Income::SyncCasePriority)
+          .not_to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
+
+        expect_any_instance_of(Hackney::Leasehold::SyncActionAttributes)
+          .to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
+
+        subject.perform_now(tenancy_ref: tenancy_ref, leasehold: true)
+      end
     end
 
     it 'is able to be scheduled' do

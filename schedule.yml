@@ -13,8 +13,8 @@
     cron: '0 0 2 * * *' # 2am everyday
 
   leasehold_sync:
-    class: LeaseholdSync
-    cron: '0 0 2 * * *' # 3am everyday
+    class: sLeaseholdSync
+    cron: '0 0 3 * * *' # 3am everyday
 
   request_all_precompiled_letter_states:
     class: RequestAllPrecompiledLetterStates

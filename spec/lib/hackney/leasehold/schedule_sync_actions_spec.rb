@@ -4,7 +4,7 @@ describe Hackney::Leasehold::ScheduleSyncActions do
   subject { sync_cases.execute }
 
   let(:universal_housing_gateway) { instance_double(Hackney::Leasehold::UniversalHousingGateway) }
-  let(:background_job_gateway) { instance_double(Hackney::Leasehold::BackgroundJobGateway) }
+  let(:background_job_gateway) { instance_double(Hackney::Income::BackgroundJobGateway) }
   let!(:removed_action) { create(:leasehold_action) }
 
   let(:sync_cases) do

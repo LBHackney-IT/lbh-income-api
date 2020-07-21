@@ -20,7 +20,7 @@ describe Hackney::Income::ScheduleSyncCases do
     let(:tenancy_refs) { [case_priorities.first.tenancy_ref, attributes_for(:case_priority)[:tenancy_ref]] }
 
     it 'deletes non priority cases them from the database' do
-      sync_cases.send(:delete_actions_not_syncable, case_priorities: case_priorities, tenancy_refs: tenancy_refs)
+      sync_cases.send(:delete_case_priorities_not_syncable, case_priorities: case_priorities, tenancy_refs: tenancy_refs)
       found = Hackney::Income::Models::CasePriority.where(tenancy_ref: case_priorities.pluck(:tenancy_ref))
       expect(found).to include(case_priorities.first)
       expect(found).not_to include(case_priorities.last)
@@ -39,7 +39,7 @@ describe Hackney::Income::ScheduleSyncCases do
     context 'when finding cases that are not to be synced' do
       it 'deletes those case_priorities' do
         expect(uh_tenancies_gateway).to receive(:tenancies_in_arrears).and_return([]).once
-        expect_any_instance_of(described_class).to receive(:delete_actions_not_syncable)
+        expect_any_instance_of(described_class).to receive(:delete_case_priorities_not_syncable)
           .with(case_priorities: [removed_case_priority], tenancy_refs: [])
 
         subject
