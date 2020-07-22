@@ -24,6 +24,14 @@ describe Hackney::Income::CreateInformalAgreement do
   let(:amount) { Faker::Commerce.price(range: 10...100) }
   let(:agreement_type) { 'informal' }
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
+  let(:court_case) do
+    Hackney::Income::Models::CourtCase.create!(
+      tenancy_ref: tenancy_ref,
+      balance_at_outcome_date: Faker::Commerce.price(range: 10...1000),
+      court_decision_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
+      court_outcome: Faker::ChuckNorris.fact
+    )
+  end
 
   it_behaves_like 'CreateAgreement'
 
@@ -52,15 +60,6 @@ describe Hackney::Income::CreateInformalAgreement do
   end
 
   context 'when there is an existing formal agreement for the tenancy' do
-    let(:court_case) do
-      Hackney::Income::Models::CourtCase.create!(
-        tenancy_ref: tenancy_ref,
-        balance_at_outcome_date: Faker::Commerce.price(range: 10...1000),
-        court_decision_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
-        court_outcome: Faker::ChuckNorris.fact
-      )
-    end
-
     before do
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
 
@@ -80,6 +79,17 @@ describe Hackney::Income::CreateInformalAgreement do
     it 'does not allow create a new informal agreement' do
       expect { subject.execute(new_agreement_params: new_agreement_params) }
         .to raise_error Hackney::Income::CreateInformalAgreement::CreateAgreementError, 'There is an existing formal agreement for this tenancy'
+    end
+
+    context 'when the formal agreement is completed' do
+      before do
+        existing_agreement = Hackney::Income::Models::Agreement.first
+        Hackney::Income::Models::AgreementState.create!(agreement_id: existing_agreement.id, agreement_state: :completed)
+      end
+
+      it 'allows to create a new informal agreement' do
+        expect(subject.execute(new_agreement_params: new_agreement_params)).to be_truthy
+      end
     end
   end
 end
