@@ -25,6 +25,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'updated_at',
       'tenancy_ref',
       'notes',
+      'court_case_id',
       'id'
     )
   end
@@ -99,19 +100,6 @@ describe Hackney::Income::Models::Agreement, type: :model do
     end
   end
 
-  context 'when informal agreement' do
-    it 'cannot have associated court details' do
-      expect {
-        Hackney::Income::Models::CourtDetails.create!(
-          agreement_id: agreement.id,
-          court_decision_date: Faker::Date.backward(days: 23),
-          court_outcome: Faker::ChuckNorris.fact,
-          balance_at_outcome_date: Faker::Commerce.price(range: 10..1000.0)
-        )
-      }.to raise_error ActiveRecord::RecordInvalid, 'Validation failed: Agreement must exist'
-    end
-  end
-
   context 'when formal agreement' do
     let(:agreement) do
       described_class.create(
@@ -121,16 +109,14 @@ describe Hackney::Income::Models::Agreement, type: :model do
       )
     end
 
-    it 'can have associated court details' do
-      Hackney::Income::Models::CourtDetails.create!(
-        agreement_id: agreement.id,
-        court_decision_date: Faker::Date.backward(days: 23),
-        court_outcome: Faker::ChuckNorris.fact,
-        balance_at_outcome_date: Faker::Commerce.price(range: 10..1000.0)
-      )
-
-      expect(described_class.first.court_details).to be_a Hackney::Income::Models::CourtDetails
-      expect(Hackney::Income::Models::CourtDetails.first.agreement_id).to eq(agreement.id)
+    it 'validates the presence of court case' do
+      expect {
+        described_class.create!(
+          tenancy_ref: '123',
+          created_by: user_name,
+          agreement_type: :formal
+        )
+      }.to raise_error ActiveRecord::RecordInvalid, "Validation failed: Court case can't be blank"
     end
   end
 end

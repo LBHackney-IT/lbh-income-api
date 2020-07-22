@@ -26,8 +26,8 @@ module Hackney
             wanted_action ||= :send_court_agreement_breach_letter if court_agreement_letter_action?
 
             wanted_action ||= :send_court_warning_letter if send_court_warning_letter?
-            wanted_action ||= :apply_for_court_date if apply_for_court_date?
             wanted_action ||= :update_court_outcome_action if update_court_outcome_action?
+            wanted_action ||= :apply_for_court_date if apply_for_court_date?
 
             wanted_action ||= :send_informal_agreement_breach_letter if informal_agreement_breach_letter?
             wanted_action ||= :informal_breached_after_letter if informal_breached_after_letter?
@@ -213,6 +213,7 @@ module Hackney
             return false if @criteria.active_agreement?
 
             return false if @criteria.last_communication_action.in?(after_court_warning_letter_actions)
+            return false if @criteria.courtdate&.past?
 
             return false unless @criteria.nosp.valid?
             return false unless @criteria.nosp.active?

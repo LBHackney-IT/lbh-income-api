@@ -16,6 +16,7 @@ module Hackney
               return false if @criteria.courtdate.present?
               return false if @criteria.nosp.served?
               return false if @criteria.active_agreement?
+              return false if breached_agreement? && !court_breach_agreement?
 
               if @criteria.last_communication_action.present?
                 return false if @criteria.last_communication_action.in?(blocking_communication_actions) &&

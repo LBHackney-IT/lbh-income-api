@@ -23,6 +23,16 @@ describe 'Send First SMS Rule examples' do
       balance: 1
     ),
     base_example.merge(
+      description: 'with breached informal agreement',
+      outcome: :send_informal_agreement_breach_letter,
+      court_outcome: nil,
+      most_recent_agreement: {
+        start_date: 6.days.ago,
+        breached: true,
+        status: :breached
+      }
+    ),
+    base_example.merge(
       description: 'when there is a nosp',
       outcome: :no_action,
       nosp_served_date: 1.week.ago

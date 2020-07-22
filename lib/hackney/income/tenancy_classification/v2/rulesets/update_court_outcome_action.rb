@@ -14,6 +14,7 @@ module Hackney
               return false if should_prevent_action?
               return false if @criteria.courtdate.blank?
               return false if @criteria.courtdate.future?
+              return false if court_breach_agreement?
 
               @criteria.court_outcome.blank?
             end
