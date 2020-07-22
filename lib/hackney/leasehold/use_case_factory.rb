@@ -12,8 +12,12 @@ module Hackney
       def schedule_sync_actions
         Hackney::Leasehold::ScheduleSyncActions.new(
           universal_housing_gateway: universal_housing_gateway,
-          background_job_gateway: background_job_gateway
+          background_job_gateway: income_background_job_gateway
         )
+      end
+
+      def income_background_job_gateway
+        Hackney::Income::BackgroundJobGateway.new
       end
 
       def sync_action_attributes
