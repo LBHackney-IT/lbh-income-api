@@ -8,10 +8,22 @@ describe Hackney::Income::BackgroundJobGateway do
 
     let(:tenancy_ref) { Faker::IDNumber.valid }
 
-    it 'enqueues the job to run as soon as possible' do
-      expect { subject }.to have_enqueued_job(Hackney::Income::Jobs::SyncCasePriorityJob).with(
-        tenancy_ref: tenancy_ref
-      )
+    context 'when scheduling rents' do
+      it 'enqueues the job to run as soon as possible with leasehold variable as false' do
+        expect { subject }.to have_enqueued_job(Hackney::Income::Jobs::SyncCasePriorityJob).with(
+          tenancy_ref: tenancy_ref, leasehold: false
+        )
+      end
+    end
+
+    context 'when scheduling leasehold' do
+      subject { described_class.new.schedule_case_priority_sync(tenancy_ref: tenancy_ref, leasehold: true) }
+
+      it 'enqueues the job to run as soon as possible' do
+        expect { subject }.to have_enqueued_job(Hackney::Income::Jobs::SyncCasePriorityJob).with(
+          tenancy_ref: tenancy_ref, leasehold: true
+        )
+      end
     end
   end
 

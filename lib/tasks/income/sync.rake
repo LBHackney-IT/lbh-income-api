@@ -22,15 +22,23 @@ namespace :income do
   end
 
   namespace :leasehold do
-    desc 'manually runs the leasehold sync'
-    task :sync do
-      use_case_factory = Hackney::Leasehold::UseCaseFactory.new
+    namespace :sync do
+      desc 'manually runs the leasehold sync'
+      task :manual do
+        use_case_factory = Hackney::Leasehold::UseCaseFactory.new
 
-      tenancy_refs = use_case_factory.uh_lease_gateway.lease_in_arrears
+        tenancy_refs = use_case_factory.universal_housing_gateway.tenancy_refs_in_arrears
 
-      tenancy_refs.each do |tenancy_ref|
-        p '- - - - - - - - -'
-        pp use_case_factory.prioritisation_gateway.priorities_for_lease(tenancy_ref)
+        tenancy_refs.each_with_index do |tenancy_ref, i|
+          p "Syncing #{i + 1} out of #{tenancy_refs.length}"
+          p use_case_factory.sync_action_attributes.execute(tenancy_ref: tenancy_ref)
+        end
+      end
+
+      desc 'enqueues workers leasehold sync'
+      task :enqueue do
+        use_case_factory = Hackney::Leasehold::UseCaseFactory.new
+        use_case_factory.schedule_sync_actions.execute
       end
     end
   end
