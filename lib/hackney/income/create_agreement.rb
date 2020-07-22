@@ -26,11 +26,7 @@ module Hackney
         )
       end
 
-      def cancel_active_agreements(tenancy_ref)
-        active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
-
-        return unless active_agreements.any?
-
+      def cancel_active_agreements(active_agreements)
         active_agreements.each do |agreement|
           @cancel_agreement.execute(agreement_id: agreement.id)
         end
