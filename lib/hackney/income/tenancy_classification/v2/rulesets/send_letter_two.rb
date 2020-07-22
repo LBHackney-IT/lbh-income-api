@@ -16,6 +16,7 @@ module Hackney
               return false if @criteria.weekly_gross_rent.blank?
 
               return false if @criteria.active_agreement?
+              return false if breached_agreement? && !court_breach_agreement?
               return false if @criteria.nosp.served?
 
               return false unless @criteria.last_communication_action.in?(valid_actions_for_letter_two_to_progress)
