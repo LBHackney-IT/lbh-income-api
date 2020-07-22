@@ -13,6 +13,7 @@ then
 
   # Setup the database - safe if it is already configured
   rails db:setup
+  rake db:migrate
 
   if [ "$RAILS_ENV" = "development" ]
   then
