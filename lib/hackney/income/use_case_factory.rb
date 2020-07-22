@@ -201,8 +201,8 @@ module Hackney
         Hackney::Income::ViewAgreements.new
       end
 
-      def create_agreement
-        Hackney::Income::CreateAgreement.new(
+      def create_informal_agreement
+        Hackney::Income::CreateInformalAgreement.new(
           add_action_diary: add_action_diary,
           cancel_agreement: cancel_agreement
         )
@@ -210,6 +210,14 @@ module Hackney
 
       def cancel_agreement
         Hackney::Income::CancelAgreement.new
+      end
+
+      def create_court_case
+        Hackney::Income::CreateCourtCase.new
+      end
+
+      def view_court_cases
+        Hackney::Income::ViewCourtCases.new
       end
 
       private

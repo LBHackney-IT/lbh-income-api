@@ -1,20 +1,24 @@
-require 'rails_helper'
-
-describe Hackney::Income::CreateAgreement do
+RSpec.shared_examples 'CreateAgreement' do
   subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
-  let(:agreement_type) { 'informal' }
   let(:amount) { Faker::Commerce.price(range: 10...100) }
   let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
   let(:frequency) { 'weekly' }
   let(:created_by) { Faker::Name.name }
   let(:notes) { Faker::ChuckNorris.fact }
+  let(:court_case) do
+    Hackney::Income::Models::CourtCase.create!(
+      tenancy_ref: tenancy_ref,
+      balance_at_outcome_date: Faker::Commerce.price(range: 10...1000),
+      court_decision_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
+      court_outcome: Faker::ChuckNorris.fact
+    )
+  end
 
   let(:existing_agreement_params) do
     {
       tenancy_ref: tenancy_ref,
-      agreement_type: 'informal',
       amount: Faker::Commerce.price(range: 10...100),
       start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
       frequency: frequency,
@@ -31,6 +35,7 @@ describe Hackney::Income::CreateAgreement do
       start_date: start_date,
       frequency: frequency,
       created_by: created_by,
+      court_case_id: court_case.id,
       notes: notes
     }
   end
@@ -40,14 +45,21 @@ describe Hackney::Income::CreateAgreement do
 
   it 'calls the add_action_diary when a new agreement is created' do
     Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
+
     subject.execute(new_agreement_params: new_agreement_params)
 
     expect(add_action_diary).to have_received(:execute).with(
       tenancy_ref: tenancy_ref,
-      comment: "Informal Agreement created: #{notes}",
+      comment: expected_action_diray_note,
       username: created_by,
       action_code: 'AGR'
     )
+  end
+
+  context 'when the case priority does not exist' do
+    it 'returns nil' do
+      expect(subject.execute(new_agreement_params: new_agreement_params)).to be_nil
+    end
   end
 
   context 'when there are no previous agreements for the tenancy' do
@@ -71,44 +83,25 @@ describe Hackney::Income::CreateAgreement do
     end
   end
 
-  context 'when there is a previous live agreement for the tenancy' do
-    it 'creates and returns a new live agreement and cancelles the previous live agreement' do
+  context 'when there is an existing live informal agreement for the tenancy' do
+    before do
       Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
 
-      existing_agreement = subject.execute(new_agreement_params: existing_agreement_params)
+      existing_agreement_params[:agreement_type] = 'informal'
+
+      existing_agreement = Hackney::Income::Models::Agreement.create!(existing_agreement_params)
+      Hackney::Income::Models::AgreementState.create!(agreement_id: existing_agreement.id, agreement_state: :live)
+    end
+
+    it 'creates and returns a new live agreement and cancelles the previous agreement' do
       new_agreement = subject.execute(new_agreement_params: new_agreement_params)
 
       agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
 
       expect(agreements.count).to eq(2)
 
-      expect(agreements.first.tenancy_ref).to eq(existing_agreement.tenancy_ref)
-      expect(agreements.second.tenancy_ref).to eq(new_agreement.tenancy_ref)
+      expect(agreements.last.tenancy_ref).to eq(new_agreement.tenancy_ref)
       expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
-    end
-  end
-
-  context 'when there is a previous breached agreement for the tenancy' do
-    before do
-      breached_agreement = Hackney::Income::Models::Agreement.create(
-        tenancy_ref: tenancy_ref,
-        current_state: 'breached',
-        created_by: created_by,
-        agreement_type: 'informal'
-      )
-      Hackney::Income::Models::AgreementState.create(agreement_id: breached_agreement.id, agreement_state: 'breached')
-      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
-    end
-
-    it 'cancelles the existing breached agreement and creates a new live agreement' do
-      subject.execute(new_agreement_params: new_agreement_params)
-
-      agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
-
-      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
-
-      expect(agreements.count).to eq(2)
-      expect(agreements.second.current_state).to eq('live')
     end
   end
 end
