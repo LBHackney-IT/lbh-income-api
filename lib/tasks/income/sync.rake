@@ -29,7 +29,7 @@ namespace :income do
 
         tenancy_refs = use_case_factory.universal_housing_gateway.tenancy_refs_in_arrears
 
-        tenancy_refs[1..10].each_with_index do |tenancy_ref, i|
+        tenancy_refs.each_with_index do |tenancy_ref, i|
           p "Syncing #{i + 1} out of #{tenancy_refs.length}"
           p use_case_factory.sync_action_attributes.execute(tenancy_ref: tenancy_ref)
         end
