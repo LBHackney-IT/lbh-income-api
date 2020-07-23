@@ -24,12 +24,6 @@ end
 # Alternatively, see any file that uses the Shared Example and see what they are supplying.
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
-  describe Hackney::Income::TenancyClassification::V1::Classifier do
-    v1_conditions = condition_matrix.reject { |matrix| matrix[:skip_v1_test] == true }
-
-    it_behaves_like 'TenancyClassification Internal', v1_conditions
-  end
-
   describe Hackney::Income::TenancyClassification::V2::Classifier do
     it_behaves_like 'TenancyClassification Internal', condition_matrix
   end
