@@ -364,6 +364,30 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
 
         it { is_expected.to be(false) }
       end
+
+      context 'when the tenant has a suspended arrears agreement' do
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '400',
+            agreement_start_date: Time.zone.now
+          )
+        end
+
+        it { is_expected.to be(false) }
+      end
+
+      context 'when the tenant has a cancelled arrears agreement' do
+        before do
+          create_uh_arrears_agreement(
+            tenancy_ref: tenancy_ref,
+            status: '500',
+            agreement_start_date: Time.zone.now
+          )
+        end
+
+        it { is_expected.to be(false) }
+      end
     end
 
     describe 'nosp_served?' do

@@ -87,8 +87,13 @@ module Hackney
 
       def active_agreement?
         return false if attributes[:most_recent_agreement_status].blank?
+        inactive_agreement_statuses = [
+          Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS,
+          Hackney::Income::SUSPENDED_ARREARS_AGREEMENT_STATUS,
+          Hackney::Income::CANCELLED_ARREARS_AGREEMENT_STATUS
+        ]
 
-        attributes[:most_recent_agreement_status].squish != Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS
+        inactive_agreement_statuses.exclude? attributes[:most_recent_agreement_status].squish
       end
 
       # FIXME: implementation needs confirming, will return to later
@@ -115,7 +120,7 @@ module Hackney
         end
 
         {
-          breached: !active_agreement?,
+          breached: attributes[:most_recent_agreement_status]&.squish == Hackney::Income::BREACHED_ARREARS_AGREEMENT_STATUS,
           start_date: attributes[:most_recent_agreement_date],
           status: status
         }
