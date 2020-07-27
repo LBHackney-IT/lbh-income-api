@@ -2,10 +2,11 @@ module Hackney
   module Income
     module TenancyClassification
       class Classifier
-        def initialize(case_priority, criteria, documents)
+        def initialize(case_priority, criteria, documents, contact_numbers)
           @case_priority = case_priority
           @criteria = criteria
           @documents = documents
+          @contact_numbers = contact_numbers
 
           @version1_classifier = Hackney::Income::TenancyClassification::V1::Classifier.new(
             case_priority,
@@ -15,7 +16,8 @@ module Hackney
           @version2_classifier = Hackney::Income::TenancyClassification::V2::Classifier.new(
             case_priority,
             criteria,
-            documents
+            documents,
+            contact_numbers
           )
         end
 
