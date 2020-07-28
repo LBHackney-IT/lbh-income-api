@@ -252,7 +252,9 @@ module Hackney
       end
 
       def stored_tenancies_gateway
-        Hackney::Income::StoredTenanciesGateway.new
+        Hackney::Income::StoredTenanciesGateway.new(
+          contacts_gateway: contacts_gateway
+        )
       end
 
       def tenancy_api_gateway

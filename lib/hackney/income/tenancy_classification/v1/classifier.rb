@@ -3,7 +3,7 @@ module Hackney
     module TenancyClassification
       module V1
         class Classifier
-          def initialize(case_priority, criteria, documents)
+          def initialize(case_priority, criteria, documents, phone_number = nil)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents

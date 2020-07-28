@@ -75,6 +75,10 @@ describe 'manually sending a letter causes case priority to sync', type: :reques
       }
 
       before do
+        allow_any_instance_of(Hackney::Tenancy::Gateway::ContactsGateway)
+          .to receive(:get_responsible_contacts)
+          .and_return([])
+
         generate_and_store_income_collection_letter
         income_use_case_factory.sync_case_priority.execute(tenancy_ref: tenancy_ref)
 

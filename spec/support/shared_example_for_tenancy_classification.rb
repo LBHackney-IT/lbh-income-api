@@ -25,7 +25,9 @@ end
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
   describe Hackney::Income::TenancyClassification::V1::Classifier do
-    it_behaves_like 'TenancyClassification Internal', condition_matrix
+    v1_conditions = condition_matrix.reject { |matrix| matrix[:skip_v1_test] == true }
+
+    it_behaves_like 'TenancyClassification Internal', v1_conditions
   end
 
   describe Hackney::Income::TenancyClassification::V2::Classifier do
@@ -38,9 +40,10 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
 
   let(:assign_classification) {
     described_class.new(
-      case_priority, criteria, []
+      case_priority, criteria, [], phone_numbers
     )
   }
+
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
   let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
 
@@ -86,6 +89,8 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       let(:most_recent_agreement) { options[:most_recent_agreement] }
       let(:days_since_last_payment) { options[:days_since_last_payment] }
       let(:total_payment_amount_in_week) { options[:total_payment_amount_in_week] }
+
+      let(:phone_numbers) { options[:phone_numbers] || [] }
 
       it "returns `#{options[:outcome]}`" do
         expect(subject).to eq(options[:outcome])

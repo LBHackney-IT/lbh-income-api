@@ -28,6 +28,10 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
     )
     mock_gov_notify_client
 
+    allow_any_instance_of(Hackney::Tenancy::Gateway::ContactsGateway)
+      .to receive(:get_responsible_contacts)
+      .and_return([])
+
     ENV['CAN_AUTOMATE_LETTERS'] = 'true'
     ENV['AUTOMATE_INCOME_COLLECTION_LETTER_ONE'] = 'true'
     ENV['PATCH_CODES_FOR_LETTER_AUTOMATION'] = 'W02'

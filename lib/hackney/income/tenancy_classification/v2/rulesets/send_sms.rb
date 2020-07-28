@@ -13,6 +13,7 @@ module Hackney
             def action_valid
               return false if should_prevent_action?
               return false if @criteria.collectable_arrears.blank?
+              return false if invalid_phone_number?
               return false if @criteria.courtdate.present?
               return false if @criteria.nosp.served?
               return false if @criteria.active_agreement?
@@ -37,6 +38,17 @@ module Hackney
                 Hackney::Tenancy::ActionCodes::MANUAL_AMBER_SMS_ACTION_CODE,
                 Hackney::Tenancy::ActionCodes::TEXT_MESSAGE_SENT
               ]
+            end
+
+            def invalid_phone_number?
+              return true if @contact_numbers.empty?
+
+              phone_number_valid = @contact_numbers.map do |phone_number|
+                phone = Phonelib.parse(phone_number)
+                phone.invalid? || phone.types.include?(:fixed_line)
+              end
+
+              return true if phone_number_valid.include?(true)
             end
           end
         end
