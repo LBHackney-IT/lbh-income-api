@@ -41,12 +41,14 @@ module Hackney
             end
 
             def invalid_phone_number?
+              return true if @contact_numbers.empty?
+
               phone_number_valid = @contact_numbers.map do |phone_number|
                 phone = Phonelib.parse(phone_number)
-                phone.valid?
+                phone.invalid? || phone.types.include?(:fixed_line)
               end
 
-              return if phone_number_valid.include?(false)
+              return true if phone_number_valid.include?(true)
             end
           end
         end
