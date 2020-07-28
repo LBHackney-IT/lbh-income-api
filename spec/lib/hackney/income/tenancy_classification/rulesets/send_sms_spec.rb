@@ -24,6 +24,12 @@ describe 'Send First SMS Rule examples' do
       balance: 1
     ),
     base_example.merge(
+      description: 'when the collectable_arrears is more than £10',
+      outcome: :send_letter_one,
+      collectable_arrears: 11,
+      balance: 11
+    ),
+    base_example.merge(
       description: 'when the collectable_arrears is more than £5, but there is no phone number on the case',
       outcome: :no_action,
       phone_numbers: [],
