@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe Hackney::Income::StoredTenanciesGateway do
-  let(:gateway) { described_class.new }
+  let(:contacts_gateway) { double(Hackney::Tenancy::Gateway::ContactsGateway) }
+  let(:gateway) { described_class.new(contacts_gateway: contacts_gateway) }
 
   let(:tenancy_model) { Hackney::Income::Models::CasePriority }
   let(:document_model) { Hackney::Cloud::Document }
@@ -30,8 +31,10 @@ describe Hackney::Income::StoredTenanciesGateway do
 
       expect(document_model).to receive(:by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
 
+      allow(contacts_gateway).to receive(:get_responsible_contacts).and_return([])
+
       expect(Hackney::Income::TenancyClassification::Classifier).to receive(:new)
-        .with(instance_of(tenancy_model), stubbed_criteria, [])
+        .with(instance_of(tenancy_model), stubbed_criteria, [], [])
         .and_return(tenancy_classification_stub)
     end
 
