@@ -90,6 +90,8 @@ $ rspec path/to/spec
 
 The above is useful because you can TDD your change and manually test through the browser without having to restart anything.
 
+If you find that when running tests, UH simulator keeps dying, it might be because you need to [assign more memory to Docker](https://docs.docker.com/docker-for-mac/#preferences) (this link is specifically for macs, but other operating systems might be similar).
+
 #### Linting
 
 "Linters" run static analysis on code to ensure it meets style standards. We use [Rubocop][rubocop] on this project with a permissive configuration.
