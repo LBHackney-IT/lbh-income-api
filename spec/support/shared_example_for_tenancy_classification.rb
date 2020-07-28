@@ -25,7 +25,7 @@ end
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
   describe Hackney::Income::TenancyClassification::V1::Classifier do
-    v1_conditions = condition_matrix.select {|matrix| matrix[:skip_v1_test] != true }
+    v1_conditions = condition_matrix.reject { |matrix| matrix[:skip_v1_test] == true }
 
     it_behaves_like 'TenancyClassification Internal', v1_conditions
   end

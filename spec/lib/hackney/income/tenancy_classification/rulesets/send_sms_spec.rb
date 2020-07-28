@@ -24,23 +24,22 @@ describe 'Send First SMS Rule examples' do
       balance: 1
     ),
     base_example.merge(
-        description: 'when the collectable_arrears is more than £5, but there is no phone number on the case',
-        outcome: :no_action,
-        phone_numbers: [],
-        skip_v1_test: true
+      description: 'when the collectable_arrears is more than £5, but there is no phone number on the case',
+      outcome: :no_action,
+      phone_numbers: [],
+      skip_v1_test: true
     ),
     base_example.merge(
-        description: 'when the collectable_arrears is more than £5, but phone number on case is not valid',
-        outcome: :no_action,
-        phone_numbers: ['not a real number'],
-        skip_v1_test: true
+      description: 'when the collectable_arrears is more than £5, but phone number on case is not valid',
+      outcome: :no_action,
+      phone_numbers: ['not a real number'],
+      skip_v1_test: true
     ),
     base_example.merge(
-        description: 'when the collectable_arrears is more than £5, but phone number on case is to a not mobile',
-        outcome: :no_action,
-        phone_numbers: ['02083563000'],
-        skip_v1_test: true
-
+      description: 'when the collectable_arrears is more than £5, but phone number on case is to a not mobile',
+      outcome: :no_action,
+      phone_numbers: ['02083563000'],
+      skip_v1_test: true
     ),
     base_example.merge(
       description: 'with breached informal agreement',
