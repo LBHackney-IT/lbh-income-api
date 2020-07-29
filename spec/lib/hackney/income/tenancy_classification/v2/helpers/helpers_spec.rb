@@ -20,6 +20,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   let(:total_payment_amount_in_week) { 0 }
   let(:weekly_rent) { 0 }
   let(:balance) { 0 }
+  let(:collectable_arrears) { 0 }
   let(:criteria) {
     Stubs::StubCriteria.new(
       eviction_date: eviction_date,
@@ -29,7 +30,8 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       most_recent_agreement: most_recent_agreement,
       total_payment_amount_in_week: total_payment_amount_in_week,
       weekly_rent: weekly_rent,
-      balance: balance
+      balance: balance,
+      collectable_arrears: collectable_arrears
     )
   }
 
@@ -392,12 +394,13 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
   describe 'balance_with_1_week_grace' do
     subject { helpers.balance_with_1_week_grace }
 
-    context 'when total payment amount not being above the weekly rent' do
-      let(:balance) { 15 }
+    context 'when balance and collectable arrears are different' do
+      let(:balance) { 635.02 }
+      let(:collectable_arrears) { 590.0 }
 
-      it 'return the difference between balance and grace amount' do
-        allow(helpers).to receive(:calculated_grace_amount).and_return(5)
-        expect(subject).to eq(10)
+      it 'returns the difference between collectable arrears and grace amount' do
+        allow(helpers).to receive(:calculated_grace_amount).and_return(45.02)
+        expect(subject).to eq(544.98)
       end
     end
   end

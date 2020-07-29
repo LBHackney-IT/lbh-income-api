@@ -95,7 +95,7 @@ module Hackney
           end
 
           def balance_with_1_week_grace
-            @criteria.balance - calculated_grace_amount
+            @criteria.collectable_arrears - calculated_grace_amount
           end
 
           def calculated_grace_amount
