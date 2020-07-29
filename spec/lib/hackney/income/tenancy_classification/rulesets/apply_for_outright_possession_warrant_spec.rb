@@ -43,7 +43,8 @@ describe 'Apply for Outright Possession Warrant Rule examples' do
     ),
     base_example.merge(
       description: 'when they have already applied for a warrent of possession',
-      outcome: :no_action,
+      outcome: nil,
+      outcome_not: :apply_for_outright_possession_warrant,
       last_communication_action: Hackney::Tenancy::ActionCodes::WARRANT_OF_POSSESSION
     )
   ]
