@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_16_150054) do
+ActiveRecord::Schema.define(version: 2020_07_29_112644) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -107,6 +107,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_150054) do
     t.string "tenancy_ref", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "strike_out_date", null: false
+    t.string "created_by", null: false
   end
 
   create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

@@ -15,16 +15,20 @@ describe Hackney::Income::ViewCourtCases do
     let(:balance_at_outcome_date) { Faker::Commerce.price(range: 10...1000) }
     let(:court_decision_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     let(:court_outcome) { Faker::ChuckNorris.fact }
+    let(:strike_out_date) { Faker::Date.forward(days: 365) }
+    let(:created_by) { Faker::Name.name }
     let(:court_cases_param) do
       {
         tenancy_ref: tenancy_ref,
         balance_at_outcome_date: balance_at_outcome_date,
         court_decision_date: court_decision_date,
-        court_outcome: court_outcome
+        court_outcome: court_outcome,
+        strike_out_date: strike_out_date,
+        created_by: created_by
       }
     end
 
-    let!(:expected_court_case) { Hackney::Income::Models::CourtCase.create!(court_cases_param) }
+    let!(:expected_court_case) { create(:court_case, court_cases_param) }
 
     it 'returns an array of court cases for the given tenancy_ref' do
       response = subject
@@ -35,6 +39,8 @@ describe Hackney::Income::ViewCourtCases do
       expect(response.first.balance_at_outcome_date).to eq(balance_at_outcome_date)
       expect(response.first.court_decision_date).to eq(court_decision_date)
       expect(response.first.court_outcome).to eq(court_outcome)
+      expect(response.first.strike_out_date).to eq(strike_out_date)
+      expect(response.first.created_by).to eq(created_by)
       expect(response.first.agreements).to eq([])
     end
 
