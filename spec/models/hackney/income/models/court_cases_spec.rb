@@ -15,6 +15,8 @@ describe Hackney::Income::Models::CourtCase, type: :model do
   it { is_expected.to validate_presence_of(:court_decision_date) }
   it { is_expected.to validate_presence_of(:court_outcome) }
   it { is_expected.to validate_presence_of(:balance_at_outcome_date) }
+  it { is_expected.to validate_presence_of(:strike_out_date) }
+  it { is_expected.to validate_presence_of(:created_by) }
   it { is_expected.to have_many(:agreements) }
 
   it 'can have associated formal agreements' do
@@ -24,7 +26,9 @@ describe Hackney::Income::Models::CourtCase, type: :model do
       tenancy_ref: tenancy_ref,
       court_decision_date: Faker::Date.between(from: 10.days.ago, to: 3.days.ago),
       court_outcome: Faker::ChuckNorris.fact,
-      balance_at_outcome_date: Faker::Commerce.price(range: 10...100)
+      balance_at_outcome_date: Faker::Commerce.price(range: 10...100),
+      strike_out_date: Faker::Date.forward(days: 365),
+      created_by: Faker::Name.name
     )
 
     Hackney::Income::Models::Agreement.create!(

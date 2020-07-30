@@ -17,7 +17,9 @@ class CourtCasesController < ApplicationController
       tenancy_ref: params.fetch(:tenancy_ref),
       court_decision_date: params.fetch(:court_decision_date),
       court_outcome: params.fetch(:court_outcome),
-      balance_at_outcome_date: params.fetch(:balance_at_outcome_date)
+      balance_at_outcome_date: params.fetch(:balance_at_outcome_date),
+      strike_out_date: params.fetch(:strike_out_date),
+      created_by: params.fetch(:created_by)
     }
 
     new_court_case = income_use_case_factory.create_court_case.execute(court_case_params: court_case_params)
