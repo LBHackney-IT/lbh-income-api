@@ -34,17 +34,7 @@ describe Hackney::Income::DetectBreach do
   end
 
   context 'when the agreement has an inactive state' do
-    let(:agreement) do
-      Hackney::Income::Models::Agreement.new(
-        tenancy_ref: tenancy_ref,
-        agreement_type: :informal,
-        start_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
-        frequency: :weekly,
-        amount: Faker::Commerce.price(range: 10...100),
-        current_state: %i[completed cancelled].sample,
-        created_by: Faker::Name.name
-      )
-    end
+    let(:agreement) { build_stubbed(:agreement) }
 
     it 'returns false' do
       expect(subject.execute(agreement: agreement)).to be_falsy
@@ -211,24 +201,21 @@ describe Hackney::Income::DetectBreach do
   end
 
   def stub_informal_agreement(start_date:, frequency:, amount:, starting_balance:)
-    Hackney::Income::Models::CasePriority.create!(
-      tenancy_ref: tenancy_ref,
-      balance: starting_balance
-    )
+    create(:case_priority,
+           tenancy_ref: tenancy_ref,
+           balance: starting_balance)
 
-    agreement = Hackney::Income::Models::Agreement.create!(
-      tenancy_ref: tenancy_ref,
-      agreement_type: :informal,
-      start_date: start_date,
-      frequency: frequency,
-      amount: amount,
-      created_by: Faker::Name.name,
-      starting_balance: starting_balance
-    )
-    Hackney::Income::Models::AgreementState.create(
-      agreement_id: agreement.id,
-      agreement_state: :live
-    )
+    agreement = create(:agreement,
+                       tenancy_ref: tenancy_ref,
+                       start_date: start_date,
+                       frequency: frequency,
+                       amount: amount,
+                       starting_balance: starting_balance)
+
+    create(:agreement_state,
+           :live,
+           agreement: agreement)
+
     agreement
   end
 

@@ -21,14 +21,13 @@ describe Hackney::Income::CancelAgreement do
     }
   end
 
-  let!(:agreement) { Hackney::Income::Models::Agreement.create!(agreement_params) }
+  let!(:agreement) { create(:agreement, agreement_params) }
   let(:active_state) { %w[live breached].sample }
 
   before do
-    Hackney::Income::Models::AgreementState.create(
-      agreement_id: agreement.id,
-      agreement_state: active_state
-    )
+    create(:agreement_state,
+           agreement_id: agreement.id,
+           agreement_state: active_state)
   end
 
   it 'cancelles an active agreement' do
@@ -49,7 +48,9 @@ describe Hackney::Income::CancelAgreement do
 
   context 'when an agreement is completed' do
     before do
-      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'completed')
+      create(:agreement_state,
+             :completed,
+             agreement_id: agreement.id)
     end
 
     it 'returns the initial agreement' do
@@ -66,7 +67,9 @@ describe Hackney::Income::CancelAgreement do
 
   context 'when an agreement is already cancelled' do
     before do
-      Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'cancelled')
+      create(:agreement_state,
+             :cancelled,
+             agreement_id: agreement.id)
     end
 
     it 'returns the initial agreement' do
