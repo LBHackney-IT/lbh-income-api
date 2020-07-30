@@ -77,8 +77,7 @@ describe 'Send NOSP Rule', type: :feature do
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-      eviction_date: nil,
-      court_outcome: 'Trail'
+      eviction_date: nil
     },
     {
       outcome: :no_action,
@@ -90,8 +89,7 @@ describe 'Send NOSP Rule', type: :feature do
       active_agreement: false,
       last_communication_date: 2.months.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-      eviction_date: nil,
-      court_outcome: 'Hail'
+      eviction_date: nil
     },
     {
       outcome: :no_action,
@@ -115,8 +113,7 @@ describe 'Send NOSP Rule', type: :feature do
       active_agreement: false,
       last_communication_date: 5.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-      eviction_date: nil,
-      court_outcome: 'Pale'
+      eviction_date: nil
     },
     {
       outcome: :no_action,
@@ -165,8 +162,7 @@ describe 'Send NOSP Rule', type: :feature do
       active_agreement: true,
       last_communication_date: 8.days.ago.to_date,
       last_communication_action: Hackney::Tenancy::ActionCodes::INCOME_COLLECTION_LETTER_2,
-      eviction_date: nil,
-      court_outcome: 'Tail'
+      eviction_date: nil
     },
     {
       outcome: :send_NOSP,

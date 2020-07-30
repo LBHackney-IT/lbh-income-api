@@ -30,9 +30,10 @@ describe 'Apply for Outright Possession Warrant Rule examples' do
     base_example.merge(
       desription: 'when the court date does not exist',
       active_agreement: false,
-      outcome: :no_action,
+      outcome: :check_data,
       courtdate: nil,
-      court_outcome: 'OUT'
+      court_outcome: 'OUT',
+      skip_v1_test: true
     ),
     base_example.merge(
       desription: 'when there is an active agreement in place after outright possession order',

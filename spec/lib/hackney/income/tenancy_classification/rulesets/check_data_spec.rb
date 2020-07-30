@@ -32,6 +32,12 @@ describe 'Check Data examples' do
       desription: 'No action when there is an not an active court warrant',
       outcome: :no_action,
       courtdate: nil
+    ),
+    base_example.merge(
+      description: 'Check Data when case has court outcome but no court date',
+      outcome: :check_data,
+      courtdate: nil,
+      court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
     )
   ]
   it_behaves_like 'TenancyClassification', examples

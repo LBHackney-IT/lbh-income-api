@@ -14,6 +14,9 @@ module Hackney
               # Cases should be paused if they have been to court but have no agreement
               return true if !case_paused? && court_warrant_active? && !active_agreement?
 
+              # Cases with court outcomes must have court dates recorded
+              return true if !case_paused? && no_court_date? && @criteria.court_outcome.present?
+
               false
             end
           end
