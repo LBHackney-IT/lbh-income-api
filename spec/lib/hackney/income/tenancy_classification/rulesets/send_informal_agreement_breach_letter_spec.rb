@@ -17,9 +17,14 @@ describe 'Various "Send informal breach letter" examples (new)' do
       most_recent_agreement: { breached: false }
     ),
     base_example.deep_merge(
-      description: 'with a NOSP',
-      outcome: :no_action,
-      most_recent_agreement: { breached: false }
+      description: 'with an valid NOSP',
+      nosp_served_date: 1.months.ago,
+      outcome: :no_action
+    ),
+    base_example.deep_merge(
+      description: 'with an invalid NOSP',
+      nosp_served_date: 5.years.ago,
+      skip_v1_test: true
     ),
     base_example.deep_merge(
       description: 'with an undated agreement',

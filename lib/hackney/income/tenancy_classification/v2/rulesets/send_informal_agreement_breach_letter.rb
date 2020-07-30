@@ -12,7 +12,7 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.nosp.served?
+              return false if @criteria.nosp.served? && @criteria.nosp.valid?
               return false if @criteria.last_communication_action.in?([
                 Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT,
                 Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
