@@ -134,8 +134,7 @@ describe 'Send Letter One Rule', type: :feature do
       last_communication_date: 2.weeks.ago.to_date,
       last_communication_action: '',
       eviction_date: '',
-      courtdate: nil,
-      phone_numbers: ['07654321098']
+      courtdate: nil
     },
     # last action was send letter two, falls back into send letter one and no action is carried out for  over 3 months
     {

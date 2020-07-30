@@ -66,9 +66,6 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   end
 
   def when_the_sync_runs(document_count_changes_by:, case_priority_count_changes_by:)
-    allow_any_instance_of(Hackney::Tenancy::Gateway::ContactsGateway)
-      .to receive(:get_responsible_contacts)
-      .and_return([])
     expect {
       expect {
         perform_enqueued_jobs(only: allowed_jobs) do

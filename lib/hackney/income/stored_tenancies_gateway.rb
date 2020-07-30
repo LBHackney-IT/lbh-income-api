@@ -4,22 +4,15 @@ module Hackney
       GatewayModel = Hackney::Income::Models::CasePriority
       DocumentModel = Hackney::Cloud::Document
 
-      def initialize(contacts_gateway:)
-        @contacts_gateway = contacts_gateway
-      end
-
       def store_tenancy(tenancy_ref:, criteria:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
-
-        contact_numbers = @contacts_gateway.get_responsible_contacts(tenancy_ref: criteria.tenancy_ref).map(&:phone_numbers).flatten.uniq.compact
 
         documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
 
         classification_usecase = Hackney::Income::TenancyClassification::Classifier.new(
           gateway_model_instance,
           criteria,
-          documents,
-          contact_numbers
+          documents
         )
 
         begin
