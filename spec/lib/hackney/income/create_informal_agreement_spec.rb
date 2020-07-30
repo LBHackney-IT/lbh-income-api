@@ -30,14 +30,13 @@ describe Hackney::Income::CreateInformalAgreement do
 
   context 'when there is a previous breached agreement for the tenancy' do
     before do
-      breached_agreement = Hackney::Income::Models::Agreement.create(
-        tenancy_ref: tenancy_ref,
-        current_state: 'breached',
-        created_by: created_by,
-        agreement_type: 'informal'
-      )
-      Hackney::Income::Models::AgreementState.create(agreement_id: breached_agreement.id, agreement_state: 'breached')
-      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
+      breached_agreement = create(:agreement,
+                                  tenancy_ref: tenancy_ref,
+                                  current_state: 'breached',
+                                  created_by: created_by,
+                                  agreement_type: 'informal')
+      create(:agreement_state, :breached, agreement_id: breached_agreement.id)
+      create(:case_priority, tenancy_ref: tenancy_ref, balance: 200)
     end
 
     it 'cancelles the existing breached agreement and creates a new live agreement' do
@@ -54,19 +53,18 @@ describe Hackney::Income::CreateInformalAgreement do
 
   context 'when there is an existing formal agreement for the tenancy' do
     before do
-      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
+      create(:case_priority, tenancy_ref: tenancy_ref, balance: 200)
 
-      existing_agreement = Hackney::Income::Models::Agreement.create!(
-        tenancy_ref: tenancy_ref,
-        amount: Faker::Commerce.price(range: 10...100),
-        start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
-        frequency: frequency,
-        created_by: created_by,
-        agreement_type: 'formal',
-        court_case_id: court_case.id,
-        notes: notes
-      )
-      Hackney::Income::Models::AgreementState.create!(agreement_id: existing_agreement.id, agreement_state: :live)
+      existing_agreement = create(:agreement,
+                                  tenancy_ref: tenancy_ref,
+                                  amount: Faker::Commerce.price(range: 10...100),
+                                  start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
+                                  frequency: frequency,
+                                  created_by: created_by,
+                                  agreement_type: 'formal',
+                                  court_case_id: court_case.id,
+                                  notes: notes)
+      create(:agreement_state, :live, agreement_id: existing_agreement.id)
     end
 
     it 'does not allow create a new informal agreement' do
@@ -77,7 +75,7 @@ describe Hackney::Income::CreateInformalAgreement do
     context 'when the formal agreement is completed' do
       before do
         existing_agreement = Hackney::Income::Models::Agreement.first
-        Hackney::Income::Models::AgreementState.create!(agreement_id: existing_agreement.id, agreement_state: :completed)
+        create(:agreement_state, :completed, agreement_id: existing_agreement.id)
       end
 
       it 'allows to create a new informal agreement' do

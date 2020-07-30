@@ -7,22 +7,11 @@ RSpec.shared_examples 'CreateAgreement' do
   let(:frequency) { 'weekly' }
   let(:created_by) { Faker::Name.name }
   let(:notes) { Faker::ChuckNorris.fact }
-  let(:court_case) do
-    Hackney::Income::Models::CourtCase.create!(
-      tenancy_ref: tenancy_ref,
-      balance_at_outcome_date: Faker::Commerce.price(range: 10...1000),
-      court_decision_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
-      court_outcome: Faker::ChuckNorris.fact,
-      strike_out_date: Faker::Date.forward(days: 365),
-      created_by: Faker::Name.name
-    )
-  end
+  let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
 
   let(:existing_agreement_params) do
     {
       tenancy_ref: tenancy_ref,
-      amount: Faker::Commerce.price(range: 10...100),
-      start_date: Faker::Date.between(from: 4.days.ago, to: Date.today),
       frequency: frequency,
       created_by: created_by,
       notes: notes
@@ -46,7 +35,7 @@ RSpec.shared_examples 'CreateAgreement' do
   let(:cancel_agreement) { spy }
 
   it 'calls the add_action_diary when a new agreement is created' do
-    Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
+    create(:case_priority, tenancy_ref: tenancy_ref, balance: 100)
 
     subject.execute(new_agreement_params: new_agreement_params)
 
@@ -66,7 +55,7 @@ RSpec.shared_examples 'CreateAgreement' do
 
   context 'when there are no previous agreements for the tenancy' do
     it 'creates and returns a new live agreement' do
-      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 100)
+      create(:case_priority, tenancy_ref: tenancy_ref, balance: 100)
 
       created_agreement = subject.execute(new_agreement_params: new_agreement_params)
 
@@ -87,12 +76,12 @@ RSpec.shared_examples 'CreateAgreement' do
 
   context 'when there is an existing live informal agreement for the tenancy' do
     before do
-      Hackney::Income::Models::CasePriority.create!(tenancy_ref: tenancy_ref, balance: 200)
+      create(:case_priority, tenancy_ref: tenancy_ref, balance: 200)
 
       existing_agreement_params[:agreement_type] = 'informal'
 
-      existing_agreement = Hackney::Income::Models::Agreement.create!(existing_agreement_params)
-      Hackney::Income::Models::AgreementState.create!(agreement_id: existing_agreement.id, agreement_state: :live)
+      existing_agreement = create(:agreement, existing_agreement_params)
+      create(:agreement_state, :live, agreement_id: existing_agreement.id)
     end
 
     it 'creates and returns a new live agreement and cancelles the previous agreement' do
