@@ -12,7 +12,10 @@ describe Hackney::Income::Models::AgreementState, type: :model do
       'agreement_state',
       'created_at',
       'id',
-      'updated_at'
+      'updated_at',
+      'checked_balance',
+      'expected_balance',
+      'description'
     )
   end
 
