@@ -22,6 +22,26 @@ module Hackney
         def formal?
           agreement_type == 'formal'
         end
+
+        def last_checked
+          Hackney::Income::Models::AgreementState.where(agreement_id: id).last&.updated_at
+        end
+
+        def breached?
+          current_state == 'breached'
+        end
+
+        def live?
+          current_state == 'live'
+        end
+
+        def cancelled?
+          current_state == 'cancelled'
+        end
+
+        def completed?
+          current_state == 'completed'
+        end
       end
     end
   end

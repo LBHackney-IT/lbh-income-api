@@ -42,17 +42,46 @@ describe Hackney::Income::DetectBreach do
   end
 
   context 'when the agreement is not breached' do
-    it 'returns false' do
-      agreement = stub_informal_agreement(
+    let!(:agreement) do
+      stub_informal_agreement(
         start_date: start_date,
         frequency: :monthly,
-        amount: 500,
-        starting_balance: 1000
+        amount: 20,
+        starting_balance: 100
       )
+    end
 
-      Timecop.freeze(start_date) do
-        expect(subject.execute(agreement: agreement)).to be_falsy
+    it 'updates the last_checked date when the status has not changed' do
+      create(:agreement_state,
+             :live,
+             agreement: agreement,
+             expected_balance: 80,
+             current_balance: 80)
+
+      check_date = start_date + days_before_check.days
+
+      Timecop.freeze(check_date) do
+        set_current_balance(80)
+
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(2)
         expect(agreement.current_state).to eq('live')
+        expect(agreement.last_checked).to eq(check_date)
+      end
+    end
+
+    it 'add a new status when the status has changed' do
+      check_date = start_date + 2.months
+
+      Timecop.freeze(check_date) do
+        set_current_balance(60)
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(2)
+        expect(agreement.agreement_states.last.expected_balance).to eq(60)
+        expect(agreement.agreement_states.last.current_balance).to eq(60)
+        expect(agreement.agreement_states.last.description).to eq('Checked by the system')
+        expect(agreement.current_state).to eq('live')
+        expect(agreement.last_checked).to eq(check_date)
       end
     end
   end
@@ -165,6 +194,70 @@ describe Hackney::Income::DetectBreach do
         subject.execute(agreement: agreement)
 
         expect(agreement.current_state).to eq('breached')
+      end
+    end
+  end
+
+  context 'when the agreement is already breached' do
+    let(:agreement) do
+      stub_informal_agreement(
+        start_date: start_date,
+        frequency: :monthly,
+        amount: 500,
+        starting_balance: 1000
+      )
+    end
+
+    before do
+      create(:agreement_state,
+             :breached,
+             agreement: agreement,
+             expected_balance: 500,
+             current_balance: 1000)
+    end
+
+    it 'resets the agreement state to live if no longer in breach' do
+      Timecop.freeze(start_date + days_before_check.days) do
+        set_current_balance(500)
+        subject.execute(agreement: agreement)
+        expect(agreement.current_state).to eq('live')
+      end
+    end
+
+    it 'updates the last_checked date when the status has not changed' do
+      check_date = start_date + 1.month
+
+      Timecop.freeze(check_date) do
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(2)
+        expect(agreement.current_state).to eq('breached')
+        expect(agreement.last_checked).to eq(check_date)
+      end
+    end
+
+    it 'add a new status when the status has changed' do
+      check_date = start_date + 2.months
+
+      Timecop.freeze(check_date) do
+        set_current_balance(500)
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(3)
+        expect(agreement.agreement_states.last.expected_balance).to eq(0)
+        expect(agreement.agreement_states.last.current_balance).to eq(500)
+        expect(agreement.agreement_states.last.description).to eq('Breached by £500.0')
+        expect(agreement.current_state).to eq('breached')
+        expect(agreement.last_checked).to eq(check_date)
+      end
+
+      Timecop.freeze(check_date + 3.months) do
+        set_current_balance(200.55)
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(4)
+        expect(agreement.agreement_states.last.expected_balance).to eq(0)
+        expect(agreement.agreement_states.last.current_balance).to eq(200.55)
+        expect(agreement.agreement_states.last.description).to eq('Breached by £200.55')
+        expect(agreement.current_state).to eq('breached')
+        expect(agreement.last_checked).to eq(check_date + 3.months)
       end
     end
   end
