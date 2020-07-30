@@ -31,13 +31,12 @@ describe Hackney::Income::Models::CourtCase, type: :model do
       created_by: Faker::Name.name
     )
 
-    Hackney::Income::Models::Agreement.create!(
-      tenancy_ref: tenancy_ref,
-      current_state: :live,
-      created_by: Faker::Name.name,
-      agreement_type: :formal,
-      court_case_id: court_case.id
-    )
+    create(:agreement,
+           tenancy_ref: tenancy_ref,
+           current_state: :live,
+           created_by: Faker::Name.name,
+           agreement_type: :formal,
+           court_case_id: court_case.id)
 
     expect(described_class.first.agreements.first).to be_a Hackney::Income::Models::Agreement
     expect(Hackney::Income::Models::Agreement.first.court_case).to eq(court_case)

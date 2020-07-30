@@ -32,7 +32,7 @@ describe Hackney::Income::ViewAgreements do
       }
     end
 
-    let!(:expected_agreement) { Hackney::Income::Models::Agreement.create!(agreement_params) }
+    let!(:expected_agreement) { create(:agreement, agreement_params) }
 
     it 'returns all agreements with the given tenancy_ref' do
       response = subject

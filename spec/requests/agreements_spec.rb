@@ -16,17 +16,16 @@ RSpec.describe 'Agreements', type: :request do
       let(:view_agreements_instance) { instance_double(Hackney::Income::ViewAgreements) }
       let(:agreements_array) do
         [
-          Hackney::Income::Models::Agreement.create!(
-            tenancy_ref: tenancy_ref,
-            agreement_type: agreement_type,
-            starting_balance: starting_balance,
-            amount: amount,
-            start_date: start_date,
-            frequency: frequency,
-            current_state: current_state,
-            created_by: created_by,
-            notes: notes
-          )
+          create(:agreement,
+                 tenancy_ref: tenancy_ref,
+                 agreement_type: agreement_type,
+                 starting_balance: starting_balance,
+                 amount: amount,
+                 start_date: start_date,
+                 frequency: frequency,
+                 current_state: current_state,
+                 created_by: created_by,
+                 notes: notes)
         ]
       end
 
@@ -59,8 +58,8 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       it 'correctly maps all agreement_states in history' do
-        first_state = Hackney::Income::Models::AgreementState.create!(agreement_id: agreements_array.first.id, agreement_state: 'live')
-        second_state = Hackney::Income::Models::AgreementState.create!(agreement_id: agreements_array.first.id, agreement_state: 'breached')
+        first_state = create(:agreement_state, :live, agreement_id: agreements_array.first.id)
+        second_state = create(:agreement_state, :breached, agreement_id: agreements_array.first.id)
 
         get "/api/v1/agreements/#{tenancy_ref}"
 
@@ -98,10 +97,9 @@ RSpec.describe 'Agreements', type: :request do
       end
 
       let(:created_agreement) do
-        Hackney::Income::Models::Agreement.create(
-          starting_balance: starting_balance,
-          **new_agreement_params
-        )
+        create(:agreement,
+               starting_balance: starting_balance,
+               **new_agreement_params)
       end
 
       before do
@@ -145,10 +143,10 @@ RSpec.describe 'Agreements', type: :request do
           starting_balance: starting_balance
         }
       end
-      let(:agreement) { Hackney::Income::Models::Agreement.create(agreement_params) }
+      let(:agreement) { create(:agreement, agreement_params) }
 
       before do
-        Hackney::Income::Models::AgreementState.create(agreement_id: agreement.id, agreement_state: 'cancelled')
+        create(:agreement_state, :cancelled, agreement_id: agreement.id)
 
         allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
         allow(cancel_agreement_instance).to receive(:execute)

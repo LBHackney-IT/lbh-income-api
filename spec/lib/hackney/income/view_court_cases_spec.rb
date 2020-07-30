@@ -52,7 +52,7 @@ describe Hackney::Income::ViewCourtCases do
           created_by: Faker::Name.name,
           court_case_id: expected_court_case.id
         }
-      agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
+      agreement = create(:agreement, agreement_params)
       response = subject
 
       expect(response.first.agreements).to eq([agreement])
