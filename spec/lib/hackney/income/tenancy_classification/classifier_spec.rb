@@ -6,9 +6,8 @@ describe Hackney::Income::TenancyClassification::Classifier do
   let(:case_priority) { build(:case_priority) }
   let(:criteria) { Stubs::StubCriteria.new }
   let(:documents_related_to_case) { [] }
-  let(:contact_numbers) { [] }
 
-  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case, contact_numbers) }
+  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case) }
 
   context 'when v1 does not match v2' do
     let(:v1_classifier) { instance_double(Hackney::Income::TenancyClassification::V1::Classifier) }
@@ -43,9 +42,7 @@ shared_examples 'TenancyClassification Contract' do
 
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
   let(:documents_related_to_case) { [] }
-  let(:contact_numbers) { [] }
-
-  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case, contact_numbers) }
+  let(:assign_classification) { described_class.new(case_priority, criteria, documents_related_to_case) }
 
   let(:attributes) do
     {

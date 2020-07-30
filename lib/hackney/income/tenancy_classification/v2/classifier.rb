@@ -5,11 +5,10 @@ module Hackney
         class Classifier
           include Helpers
 
-          def initialize(case_priority, criteria, documents, contact_numbers)
+          def initialize(case_priority, criteria, documents)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents
-            @contact_numbers = contact_numbers
           end
 
           def execute
@@ -30,18 +29,22 @@ module Hackney
               Rulesets::ApplyForCourtDate
             ]
 
-            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents, @contact_numbers).execute }
+            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
 
             actions.compact!
 
             actions << :no_action if actions.none?
 
             if actions.length > 1
-              Rails.logger.error(
-                'CLASSIFIER: Multiple recommended actions from V2' \
-                "Actions: #{actions} " \
-                "tenancy_ref: #{@criteria.tenancy_ref}"
-              )
+              if actions == %i[send_first_SMS send_letter_one]
+                actions = %i[send_letter_one]
+              else
+                Rails.logger.error(
+                  'CLASSIFIER: Multiple recommended actions from V2' \
+              "Actions: #{actions} " \
+              "tenancy_ref: #{@criteria.tenancy_ref}"
+                )
+              end
             end
 
             validate_wanted_action(actions.first)

@@ -40,7 +40,7 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
 
   let(:assign_classification) {
     described_class.new(
-      case_priority, criteria, [], phone_numbers
+      case_priority, criteria, []
     )
   }
 
@@ -89,8 +89,6 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       let(:most_recent_agreement) { options[:most_recent_agreement] }
       let(:days_since_last_payment) { options[:days_since_last_payment] }
       let(:total_payment_amount_in_week) { options[:total_payment_amount_in_week] }
-
-      let(:phone_numbers) { options[:phone_numbers] || [] }
 
       it "returns `#{options[:outcome]}`" do
         expect(subject).to eq(options[:outcome])
