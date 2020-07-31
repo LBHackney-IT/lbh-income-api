@@ -26,7 +26,8 @@ module Hackney
               Rulesets::InformalBreachedAfterLetter,
               Rulesets::SendCourtAgreementBreachLetter, # TODO(AO): Possible missing test for this classification
               Rulesets::SendCourtWarningLetter,
-              Rulesets::ApplyForCourtDate
+              Rulesets::ApplyForCourtDate,
+              Rulesets::CheckData
             ]
 
             actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }

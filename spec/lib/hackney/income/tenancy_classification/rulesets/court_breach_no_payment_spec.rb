@@ -45,7 +45,8 @@ describe '"Court Breach - No Payment" examples' do
     ),
     base_example.deep_merge(
       description: 'when there is no courtdate',
-      outcome: :no_action,
+      outcome: :check_data,
+      skip_v1_test: true,
       courtdate: nil
     ),
     base_example.deep_merge(

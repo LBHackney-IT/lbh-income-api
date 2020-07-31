@@ -90,8 +90,16 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       let(:days_since_last_payment) { options[:days_since_last_payment] }
       let(:total_payment_amount_in_week) { options[:total_payment_amount_in_week] }
 
-      it "returns `#{options[:outcome]}`" do
-        expect(subject).to eq(options[:outcome])
+      if options[:outcome]
+        it "returns `#{options[:outcome]}`" do
+          expect(subject).to eq(options[:outcome])
+        end
+      elsif options[:outcome_not]
+        it "does not return `#{options[:outcome_not]}`" do
+          expect(subject).not_to eq(options[:outcome_not])
+        end
+      else
+        raise 'outcome or outcome_not as an option'
       end
     end
   end

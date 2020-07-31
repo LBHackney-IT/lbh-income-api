@@ -7,7 +7,7 @@ module Hackney
           apply_for_court_date: 6, send_court_warning_letter: 7, update_court_outcome_action: 8,
           send_court_agreement_breach_letter: 9, send_informal_agreement_breach_letter: 10,
           court_breach_visit: 11, court_breach_no_payment: 12, review_failed_letter: 13,
-          apply_for_outright_possession_warrant: 14, informal_breached_after_letter: 15
+          apply_for_outright_possession_warrant: 14, informal_breached_after_letter: 15, check_data: 16
         }
 
         validates :case_id, presence: true, uniqueness: true
