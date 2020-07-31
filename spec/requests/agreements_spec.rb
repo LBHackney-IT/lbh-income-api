@@ -55,11 +55,16 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['createdBy']).to eq(created_by)
         expect(parsed_response['agreements'].first['notes']).to eq(notes)
         expect(parsed_response['agreements'].first['history']).to eq([])
+        expect(parsed_response['agreements'].first['lastChecked']).to eq('')
       end
 
       it 'correctly maps all agreement_states in history' do
-        first_state = create(:agreement_state, :live, agreement_id: agreements_array.first.id)
-        second_state = create(:agreement_state, :breached, agreement_id: agreements_array.first.id)
+        first_state = create(:agreement_state, :live,
+                             agreement: agreements_array.first, expected_balance: 400,
+                             checked_balance: 400, description: 'Agreement created')
+        second_state = create(:agreement_state, :breached,
+                              agreement: agreements_array.first, expected_balance: 300,
+                              checked_balance: 400, description: 'Breached by £100')
 
         get "/api/v1/agreements/#{tenancy_ref}"
 
@@ -70,13 +75,23 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['history']).to match([
           {
             'state' => first_state.agreement_state,
-            'date' => first_state.created_at.as_json
+            'date' => first_state.created_at.as_json,
+            'checkedBalance' => first_state.checked_balance.as_json,
+            'expectedBalance' => first_state.expected_balance.as_json,
+            'description' => first_state.description
           },
           {
             'state' => second_state.agreement_state,
-            'date' => second_state.created_at.as_json
+            'date' => second_state.created_at.as_json,
+            'checkedBalance' => second_state.checked_balance.as_json,
+            'expectedBalance' => second_state.expected_balance.as_json,
+            'description' => second_state.description
           }
         ])
+
+        expect(parsed_response['agreements'].first['lastChecked']).to eq(
+          second_state.updated_at.as_json
+        )
       end
     end
   end

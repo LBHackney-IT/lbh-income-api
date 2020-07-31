@@ -12,6 +12,7 @@ module AgreementResponseHelper
       createdAt: agreement.created_at.strftime('%F'),
       createdBy: agreement.created_by,
       notes: agreement.notes,
+      lastChecked: agreement.last_checked || '',
       history: map_agreement_state_history(agreement.agreement_states)
     }
   end
@@ -20,7 +21,10 @@ module AgreementResponseHelper
     agreement_states.map do |state|
       {
         state: state.agreement_state,
-        date: state.created_at
+        date: state.created_at,
+        checkedBalance: state.checked_balance,
+        expectedBalance: state.expected_balance,
+        description: state.description
       }
     end
   end
