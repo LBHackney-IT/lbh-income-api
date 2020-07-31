@@ -262,6 +262,30 @@ describe Hackney::Income::DetectBreach do
     end
   end
 
+  context 'when all arrears has been recovered' do
+    it 'updates the state of the agreement to completed' do
+      agreement = stub_informal_agreement(
+        start_date: start_date,
+        frequency: '4 weekly',
+        amount: 20,
+        starting_balance: 100
+      )
+      set_current_balance(0)
+
+      next_check_date = start_date + days_before_check.days
+
+      Timecop.freeze(next_check_date) do
+        subject.execute(agreement: agreement)
+        expect(agreement.agreement_states.count).to eq(2)
+        expect(agreement.agreement_states.last.expected_balance).to eq(80)
+        expect(agreement.agreement_states.last.checked_balance).to eq(0)
+        expect(agreement.agreement_states.last.description).to eq('Checked by the system')
+        expect(agreement.current_state).to eq('completed')
+        expect(agreement.last_checked).to eq(next_check_date)
+      end
+    end
+  end
+
   describe '#full_months_since' do
     it 'can calculate the exact number of months since start date' do
       [
