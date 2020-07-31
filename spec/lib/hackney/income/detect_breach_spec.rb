@@ -56,7 +56,7 @@ describe Hackney::Income::DetectBreach do
              :live,
              agreement: agreement,
              expected_balance: 80,
-             current_balance: 80)
+             checked_balance: 80)
 
       check_date = start_date + days_before_check.days
 
@@ -78,7 +78,7 @@ describe Hackney::Income::DetectBreach do
         subject.execute(agreement: agreement)
         expect(agreement.agreement_states.count).to eq(2)
         expect(agreement.agreement_states.last.expected_balance).to eq(60)
-        expect(agreement.agreement_states.last.current_balance).to eq(60)
+        expect(agreement.agreement_states.last.checked_balance).to eq(60)
         expect(agreement.agreement_states.last.description).to eq('Checked by the system')
         expect(agreement.current_state).to eq('live')
         expect(agreement.last_checked).to eq(check_date)
@@ -213,7 +213,7 @@ describe Hackney::Income::DetectBreach do
              :breached,
              agreement: agreement,
              expected_balance: 500,
-             current_balance: 1000)
+             checked_balance: 1000)
     end
 
     it 'resets the agreement state to live if no longer in breach' do
@@ -243,7 +243,7 @@ describe Hackney::Income::DetectBreach do
         subject.execute(agreement: agreement)
         expect(agreement.agreement_states.count).to eq(3)
         expect(agreement.agreement_states.last.expected_balance).to eq(0)
-        expect(agreement.agreement_states.last.current_balance).to eq(500)
+        expect(agreement.agreement_states.last.checked_balance).to eq(500)
         expect(agreement.agreement_states.last.description).to eq('Breached by £500.0')
         expect(agreement.current_state).to eq('breached')
         expect(agreement.last_checked).to eq(check_date)
@@ -254,7 +254,7 @@ describe Hackney::Income::DetectBreach do
         subject.execute(agreement: agreement)
         expect(agreement.agreement_states.count).to eq(4)
         expect(agreement.agreement_states.last.expected_balance).to eq(0)
-        expect(agreement.agreement_states.last.current_balance).to eq(200.55)
+        expect(agreement.agreement_states.last.checked_balance).to eq(200.55)
         expect(agreement.agreement_states.last.description).to eq('Breached by £200.55')
         expect(agreement.current_state).to eq('breached')
         expect(agreement.last_checked).to eq(check_date + 3.months)

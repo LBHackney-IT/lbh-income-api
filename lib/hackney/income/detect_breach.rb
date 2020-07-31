@@ -80,14 +80,14 @@ module Hackney
           agreement_id: agreement.id,
           agreement_state: new_state,
           expected_balance: expected_balance,
-          current_balance: current_balance,
+          checked_balance: current_balance,
           description: description
         )
       end
 
       def state_has_not_changed?(agreement, expected_balance, current_balance)
         current_state = agreement.agreement_states.last
-        current_state.expected_balance == expected_balance && current_state.current_balance == current_balance
+        current_state.expected_balance == expected_balance && current_state.checked_balance == current_balance
       end
     end
   end
