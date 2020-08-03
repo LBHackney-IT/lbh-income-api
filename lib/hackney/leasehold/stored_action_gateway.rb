@@ -32,6 +32,24 @@ module Hackney
           retry
         end
       end
+
+      def number_of_pages(number_of_pages:, filters: {})
+        byebug
+        (GatewayModel.all.count.to_f / number_per_page).ceil
+      end
+
+      def get_actions(page_number: nil, number_per_page: nil, filters: {})
+        query = GatewayModel
+
+        query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
+
+        # order_options   = 'eviction_date' if filters[:upcoming_evictions].present?
+        # order_options   = 'courtdate' if filters[:upcoming_court_dates].present?
+        # order_options   = 'is_paused_until' if filters[:is_paused]
+        order_options ||= by_balance
+
+        query.order(order_options)
+      end
     end
   end
 end
