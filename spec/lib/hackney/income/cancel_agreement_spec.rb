@@ -38,6 +38,16 @@ describe Hackney::Income::CancelAgreement do
     expect(cancelled_agreement.current_state).to eq('cancelled')
   end
 
+  it 'creates a new live state with expected balance and description' do
+    cancelled_agreement = subject.execute(agreement_id: agreement.id)
+
+    new_state = cancelled_agreement.agreement_states.last
+    expect(new_state.agreement_state).to eq('cancelled')
+    expect(new_state.expected_balance).to eq(nil)
+    expect(new_state.checked_balance).to eq(nil)
+    expect(new_state.description).to eq(Date.today.strftime('Cancelled on %m/%d/%Y'))
+  end
+
   context 'when the agreement does not exist' do
     it 'returns nil' do
       non_existent_agreement_id = Faker::Number.number(digits: 10)

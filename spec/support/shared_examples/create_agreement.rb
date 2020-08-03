@@ -34,9 +34,11 @@ RSpec.shared_examples 'CreateAgreement' do
   let(:add_action_diary) { spy }
   let(:cancel_agreement) { spy }
 
-  it 'calls the add_action_diary when a new agreement is created' do
+  before do
     create(:case_priority, tenancy_ref: tenancy_ref, balance: 100)
+  end
 
+  it 'calls the add_action_diary when a new agreement is created' do
     subject.execute(new_agreement_params: new_agreement_params)
 
     expect(add_action_diary).to have_received(:execute).with(
@@ -47,16 +49,27 @@ RSpec.shared_examples 'CreateAgreement' do
     )
   end
 
+  it 'creates a new live state with expected balance and description' do
+    subject.execute(new_agreement_params: new_agreement_params)
+
+    created_agreement = subject.execute(new_agreement_params: new_agreement_params)
+
+    new_state = created_agreement.agreement_states.first
+    expect(new_state.agreement_state).to eq('live')
+    expect(new_state.expected_balance).to eq(100)
+    expect(new_state.checked_balance).to eq(100)
+    expect(new_state.description).to eq('Agreement created')
+  end
+
   context 'when the case priority does not exist' do
     it 'returns nil' do
+      new_agreement_params[:tenancy_ref] = 'NOTEXST'
       expect(subject.execute(new_agreement_params: new_agreement_params)).to be_nil
     end
   end
 
   context 'when there are no previous agreements for the tenancy' do
     it 'creates and returns a new live agreement' do
-      create(:case_priority, tenancy_ref: tenancy_ref, balance: 100)
-
       created_agreement = subject.execute(new_agreement_params: new_agreement_params)
 
       latest_agreement_id = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).first.id
@@ -76,8 +89,6 @@ RSpec.shared_examples 'CreateAgreement' do
 
   context 'when there is an existing live informal agreement for the tenancy' do
     before do
-      create(:case_priority, tenancy_ref: tenancy_ref, balance: 200)
-
       existing_agreement_params[:agreement_type] = 'informal'
 
       existing_agreement = create(:agreement, existing_agreement_params)

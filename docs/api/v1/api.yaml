@@ -165,9 +165,9 @@ definitions:
       createdAt:
         type: string
         format: date
-      courtCaseId:
-        type: integer
-        example: 12
+      lastChecked:
+        type: string
+        format: date
       notes:
         type: string
         example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
@@ -180,10 +180,19 @@ definitions:
     properties:
       state:
         type: string
-        example: 'breached'
+        example: 'live'
       date:
         type: string
         format: date
+      checkedBalance:
+        type: number
+        example: '1000'
+      expectedBalance:
+        type: number
+        example: '1000'
+      description:
+        type: string
+        example: 'Agreement created'
   court_case:
     type: object
     properties:

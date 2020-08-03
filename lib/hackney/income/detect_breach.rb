@@ -82,6 +82,8 @@ module Hackney
       def add_new_state(agreement, new_state, expected_balance, current_balance)
         description = if new_state == :breached
                         "Breached by £#{current_balance - expected_balance}"
+                      elsif new_state == :completed
+                        Date.today.strftime('Completed on %m/%d/%Y')
                       else
                         'Checked by the system'
                       end

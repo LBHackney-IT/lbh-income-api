@@ -279,7 +279,7 @@ describe Hackney::Income::DetectBreach do
         expect(agreement.agreement_states.count).to eq(2)
         expect(agreement.agreement_states.last.expected_balance).to eq(80)
         expect(agreement.agreement_states.last.checked_balance).to eq(0)
-        expect(agreement.agreement_states.last.description).to eq('Checked by the system')
+        expect(agreement.agreement_states.last.description).to eq(next_check_date.strftime('Completed on %m/%d/%Y'))
         expect(agreement.current_state).to eq('completed')
         expect(agreement.last_checked).to eq(next_check_date)
       end
