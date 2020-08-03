@@ -11,7 +11,7 @@ module Hackney
       def fetch_actions
         Hackney::Income::FetchActions.new(
           tenancy_api_gateway: tenancy_api_gateway,
-          fetch_actions_gateway: fetch_actions_gateway
+          stored_actions_gateway: fetch_actions_gateway
         )
       end
 

@@ -3,15 +3,15 @@ module Hackney
     class FetchActionsGateway
       GatewayModel = Hackney::IncomeCollection::Action
 
-      def number_of_pages(number_per_page:, filters: {})
-        (GatewayModel.all.count.to_f / number_per_page).ceil
+      def number_of_pages(number_per_page:, filters: {}, service_area_type:)
+        (GatewayModel.where(service_area_type: service_area_type).count.to_f / number_per_page).ceil
+        # byebug
       end
 
-      def get_actions(page_number: nil, number_per_page: nil, filters: {})
-        query = GatewayModel
+      def get_actions(page_number: nil, number_per_page: nil, filters: {}, service_area_type:)
+        query = GatewayModel.where(service_area_type: service_area_type)
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
-        byebug
         # order_options   = 'eviction_date' if filters[:upcoming_evictions].present?
         # order_options   = 'courtdate' if filters[:upcoming_court_dates].present?
         # order_options   = 'is_paused_until' if filters[:is_paused]

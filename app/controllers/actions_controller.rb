@@ -1,11 +1,11 @@
 class ActionsController < ApplicationController
-  REQUIRED_INDEX_PARAMS = %i[service_area].freeze
+  REQUIRED_INDEX_PARAMS = %i[service_area_type].freeze
 
   def index
     response = income_use_case_factory.fetch_actions.execute(
       page_number: cases_params[:page_number],
       number_per_page: cases_params[:number_per_page],
-      service_area: cases_params[:service_area],
+      service_area_type: cases_params[:service_area_type],
       filters: {
         is_paused: cases_params[:is_paused],
         pause_reason: cases_params[:pause_reason],

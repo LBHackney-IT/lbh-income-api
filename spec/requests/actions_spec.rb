@@ -3,23 +3,32 @@ require 'swagger_helper'
 RSpec.describe 'Actions', type: :request do
 
   describe 'GET /api/v1/actions' do
-    # post "/api/v1/court_case/#{tenancy_ref}", params: new_court_case_params
     path '/actions/' do
-      let!(:leasehold_action_array) { create_list(:leasehold_action, 2)}
 
-      # before do
-      #   create_list(:leasehold_action, 2)
-      # end
+      context 'when fetching leasehold' do
+        let!(:leasehold_action) { create(:leasehold_action) }
 
-      it 'calls view actions use-case and renders its response' do
-        get "/api/v1/actions?service_area=reasons"
+        before do
+          create(:leasehold_action, service_area_type: :rent)
+        end
 
-        expect(response.status).to eq(200)
+        it 'calls view actions use-case and renders its response' do
+          get "/api/v1/actions?service_area_type=leasehold"
 
-        parsed_response = JSON.parse(response.body)
+          expect(response.status).to eq(200)
 
-        expect(parsed_response['actions']).to eq(leasehold_action_array.to_json)
+          parsed_body = JSON.parse(response.body)
+
+          expect(parsed_body['actions'].count).to eq(1)
+
+          expect(response.body).to eq({
+                                          actions: leasehold_action,
+                                          number_of_pages: 1
+                                      }.to_json)
+
+        end
       end
     end
   end
 end
+
