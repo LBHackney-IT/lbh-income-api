@@ -8,6 +8,17 @@ module Hackney
         )
       end
 
+      def fetch_actions
+        Hackney::Income::FetchActions.new(
+          tenancy_api_gateway: tenancy_api_gateway,
+          stored_actions_gateway: stored_actions_gateway
+        )
+      end
+
+      def stored_actions_gateway
+        Hackney::Income::StoredActionsGateway.new
+      end
+
       def schedule_sync_cases
         Hackney::Income::ScheduleSyncCases.new(
           uh_tenancies_gateway: uh_tenancies_gateway,

@@ -4,6 +4,29 @@ info:
   title: 'LBH Income API'
   description: 'The Income API is the back-end of Hackney Income Collection Service'
 paths:
+  /actions:
+    get:
+      summary: 'Retrieve a list of actions'
+      description: Returns a filtered list of actions for a worktray
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: service_area
+          schema:
+            type: string
+          description: This is a required parameter that detemines whenever you get leasehold actions or rent actions
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/actionList'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Agreement not found
+      tags:
+        - agreements
   /agreements/{tenancy_ref}:
     get:
       summary: 'Find agreements by tenancy id'
@@ -21,11 +44,11 @@ paths:
         200:
           description: successful operation
           schema:
-            $ref: '#/definitions/agreementsList'
+            $ref: '#/definitions/actionsList'
         400:
           description: Invalid search parameter
         404:
-          description: Agreement not found
+          description: Action list not found
       tags:
         - agreements
   /agreement/{tenancy_ref}:
@@ -213,5 +236,71 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/court_case'
+
+  action:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 12
+      tenancyRef:
+        type: string
+        example: '123456/01'
+      paymentRef:
+        type: string
+        example: '1234567890'
+      balance:
+        type: number
+        example: '123.53'
+      patchCode:
+        type: string
+        example: 'W02'
+      classification:
+        type: string
+        example: 'send_letter_one'
+      pauseReason:
+        type: string
+        example: '"Waiting for payment"'
+      pauseComment:
+        type: string
+        example: '"Spoke to customer, they have agreed make a payment next week"'
+      pauseUntil:
+        format: date
+        example: '10/11/2020'
+      actionType:
+        type: string
+        example: 'Freehold'
+      serviceAreaType:
+        type: string
+        example: 'Leasehold'
+      metadata:
+        type: object
+          properties:
+            property_address:
+              type: string
+              example: '1 Hillman St, Hackney, London E8 1DY'
+            lessee:
+              type: string
+              example: 'John Davis'
+            tenure_type:
+              type: string
+              example: 'Freehold'
+            direct_debit_status:
+              type: string
+              example: 'Live'
+            latest_letter:
+              type: string
+              example: 'LF1'
+            latest_letter_date:
+              type: string
+              example: '03/08/2020'
+
+  actionList:
+    type: object
+    properties:
+      courtCases:
+        type: array
+        items:
+          $ref: '#/definitions/action'
 schemes:
  - https

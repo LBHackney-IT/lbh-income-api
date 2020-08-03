@@ -33,5 +33,7 @@ Rails.application.routes.draw do
 
     get '/court_cases/:tenancy_ref', to: 'court_cases#index'
     post '/court_case/:tenancy_ref', to: 'court_cases#create'
+
+    get 'actions', to: 'actions#index'
   end
 end
