@@ -113,6 +113,27 @@ paths:
         required: true
         type: string
         description: Court case for tenancy
+      - in: body
+        name: court_case
+        description: Court case to create
+        schema:
+          type: object
+          required:
+            - dateOfCourtDecision
+            - courtOutcome
+            - balanceOnCourtOutcomeDate
+            - createdBy
+          properties:
+            dateOfCourtDecision:
+              type: string
+            courtOutcome:
+              type: string
+            balanceOnCourtOutcomeDate:
+              type: number
+            strikeOutDate:
+              type: string
+            createdBy:
+              type: string
       responses:
         200:
           description: successful operation
@@ -193,19 +214,26 @@ definitions:
       tenancyRef:
         type: string
         example: '1'
-      courtDecisionDate:
+      dateOfCourtDecision:
         type: string
         format: date
         example: '10/11/2020'
       courtOutcome:
         type: string
         example: 'something'
-      balanceAtOutcomeDate:
+      balanceOnCourtOutcomeDate:
         type: number
         format: '50'
+      strikeOutDate:
+        type: string
+        format: date
+        example: '27/01/2025'
       createdAt:
         type: string
         format: date
+      createdBy:
+        type: string
+        example: 'Tom Nooks'
   courtCasesList:
     type: object
     properties:
