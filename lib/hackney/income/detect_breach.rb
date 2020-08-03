@@ -7,23 +7,36 @@ module Hackney
 
       def execute(agreement:)
         return false unless agreement.active?
-        return false unless breached?(agreement)
+        return false if date_of_first_check(agreement).future?
 
-        Hackney::Income::Models::AgreementState.create!(agreement_id: agreement.id, agreement_state: :breached)
+        update_status(agreement)
       end
 
       private
 
-      def breached?(agreement)
-        date_of_first_check = agreement.start_date + @tolerance_days.days
+      def update_status(agreement)
+        expected_balance = expected_balance(agreement)
+        current_balance = Hackney::Income::Models::CasePriority.where(tenancy_ref: agreement.tenancy_ref).first.balance
 
-        return false if date_of_first_check.future?
+        return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
+        new_state = if current_balance <= 0
+                      :completed
+                    elsif expected_balance < current_balance
+                      :breached
+                    else
+                      :live
+                    end
+
+        add_new_state(agreement, new_state, expected_balance, current_balance)
+      end
+
+      def expected_balance(agreement)
+        date_of_first_check = date_of_first_check(agreement)
         number_of_instalments = number_of_instalments(date_of_first_check, agreement.frequency)
         expected_balance = agreement.starting_balance - (number_of_instalments * agreement.amount)
-        current_balance = Hackney::Income::Models::CasePriority.where(tenancy_ref: agreement.tenancy_ref).first.balance.to_f
 
-        expected_balance < current_balance
+        prevent_negative(expected_balance)
       end
 
       def number_of_instalments(date, frequency)
@@ -56,6 +69,35 @@ module Hackney
 
       def prevent_negative(number)
         [number, 0].max
+      end
+
+      def date_of_first_check(agreement)
+        agreement.start_date + @tolerance_days.days
+      end
+
+      def update_last_checked_date(agreement)
+        Hackney::Income::Models::AgreementState.where(agreement_id: agreement.id).last&.touch
+      end
+
+      def add_new_state(agreement, new_state, expected_balance, current_balance)
+        description = if new_state == :breached
+                        "Breached by £#{current_balance - expected_balance}"
+                      else
+                        'Checked by the system'
+                      end
+
+        Hackney::Income::Models::AgreementState.create!(
+          agreement_id: agreement.id,
+          agreement_state: new_state,
+          expected_balance: expected_balance,
+          checked_balance: current_balance,
+          description: description
+        )
+      end
+
+      def state_has_not_changed?(agreement, expected_balance, current_balance)
+        current_state = agreement.agreement_states.last
+        current_state.expected_balance == expected_balance && current_state.checked_balance == current_balance
       end
     end
   end

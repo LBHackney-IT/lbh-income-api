@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_112644) do
+ActiveRecord::Schema.define(version: 2020_07_30_185956) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -34,13 +34,16 @@ ActiveRecord::Schema.define(version: 2020_07_29_112644) do
     t.string "agreement_state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "checked_balance", precision: 10, scale: 2
+    t.decimal "expected_balance", precision: 10, scale: 2
+    t.string "description"
     t.index ["agreement_id"], name: "index_agreement_states_on_agreement_id"
   end
 
   create_table "agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "agreement_type"
-    t.decimal "starting_balance", precision: 10
-    t.decimal "amount", precision: 10
+    t.decimal "starting_balance", precision: 10, scale: 2
+    t.decimal "amount", precision: 10, scale: 2
     t.datetime "start_date"
     t.integer "frequency"
     t.string "current_state"
@@ -86,7 +89,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_112644) do
     t.datetime "uc_direct_payment_received"
     t.datetime "latest_active_agreement_date"
     t.datetime "breach_agreement_date"
-    t.decimal "expected_balance", precision: 10
+    t.decimal "expected_balance", precision: 10, scale: 2
     t.string "payment_ref"
     t.decimal "collectable_arrears", precision: 10, scale: 2
     t.index ["assigned_user_id"], name: "index_case_priorities_on_assigned_user_id"
@@ -103,7 +106,7 @@ ActiveRecord::Schema.define(version: 2020_07_29_112644) do
   create_table "court_cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "court_decision_date"
     t.text "court_outcome"
-    t.decimal "balance_at_outcome_date", precision: 10
+    t.decimal "balance_at_outcome_date", precision: 10, scale: 2
     t.string "tenancy_ref", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

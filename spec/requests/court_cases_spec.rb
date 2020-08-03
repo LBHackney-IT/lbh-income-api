@@ -39,7 +39,7 @@ RSpec.describe 'CourtCases', type: :request do
         expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
         expect(parsed_response['courtDecisionDate']).to include(court_decision_date)
         expect(parsed_response['courtOutcome']).to eq(court_outcome)
-        expect(parsed_response['balanceAtOutcomeDate']).to eq(balance_at_outcome_date)
+        expect(parsed_response['balanceAtOutcomeDate']).to eq(balance_at_outcome_date.to_s)
         expect(parsed_response['createdAt']).to include(Date.today.to_s)
         expect(parsed_response['strikeOutDate']).to include(strike_out_date)
         expect(parsed_response['createdBy']).to include(created_by)
