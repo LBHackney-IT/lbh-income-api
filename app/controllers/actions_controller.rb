@@ -12,8 +12,6 @@ class ActionsController < ApplicationController
         classification: cases_params[:recommended_actions],
         patch: cases_params[:patch],
         full_patch: cases_params[:full_patch],
-        upcoming_evictions: cases_params[:upcoming_evictions],
-        upcoming_court_dates: cases_params[:upcoming_court_dates]
       }
     )
 

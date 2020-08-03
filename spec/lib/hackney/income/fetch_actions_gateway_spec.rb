@@ -5,8 +5,8 @@ describe Hackney::Income::FetchActionsGateway do
 
   let(:action_model) { Hackney::IncomeCollection::Action }
 
-  context 'when retrieving actions' do
-    subject { gateway.get_actions }
+  context 'when retrieving leasehold actions' do
+    subject { gateway.get_actions(service_area_type: :leasehold) }
 
     before do
       create(:leasehold_action)
@@ -21,7 +21,7 @@ describe Hackney::Income::FetchActionsGateway do
     end
 
     context 'with page number set to one and number per page set to two' do
-      subject { gateway.get_actions(page_number: 1, number_per_page: 2) }
+      subject { gateway.get_actions(page_number: 1, number_per_page: 2, service_area_type: :leasehold) }
 
       before do
         create_list(:leasehold_action, 4)

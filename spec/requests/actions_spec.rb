@@ -22,7 +22,7 @@ RSpec.describe 'Actions', type: :request do
           expect(parsed_body['actions'].count).to eq(1)
 
           expect(response.body).to eq({
-                                          actions: leasehold_action,
+                                          actions: [leasehold_action],
                                           number_of_pages: 1
                                       }.to_json)
 
