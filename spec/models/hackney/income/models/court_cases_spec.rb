@@ -5,14 +5,14 @@ describe Hackney::Income::Models::CourtCase, type: :model do
     court_details = described_class.new
     expect(court_details.attributes).to include(
       'tenancy_ref',
-      'date_of_court_decision',
+      'court_date',
       'court_outcome',
       'balance_on_court_outcome_date'
     )
   end
 
   it { is_expected.to validate_presence_of(:tenancy_ref) }
-  it { is_expected.to validate_presence_of(:date_of_court_decision) }
+  it { is_expected.to validate_presence_of(:court_date) }
   it { is_expected.to validate_presence_of(:court_outcome) }
   it { is_expected.to validate_presence_of(:balance_on_court_outcome_date) }
   it { is_expected.to validate_presence_of(:strike_out_date) }
@@ -24,7 +24,7 @@ describe Hackney::Income::Models::CourtCase, type: :model do
 
     court_case = described_class.create!(
       tenancy_ref: tenancy_ref,
-      date_of_court_decision: Faker::Date.between(from: 10.days.ago, to: 3.days.ago),
+      court_date: Faker::Date.between(from: 10.days.ago, to: 3.days.ago),
       court_outcome: Faker::ChuckNorris.fact,
       balance_on_court_outcome_date: Faker::Commerce.price(range: 10...100),
       strike_out_date: Faker::Date.forward(days: 365),

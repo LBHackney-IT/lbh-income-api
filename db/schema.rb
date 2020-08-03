@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_03_102320) do
+ActiveRecord::Schema.define(version: 2020_08_03_165658) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -104,13 +104,13 @@ ActiveRecord::Schema.define(version: 2020_08_03_102320) do
   end
 
   create_table "court_cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.datetime "date_of_court_decision"
+    t.datetime "court_date", null: false
     t.text "court_outcome"
     t.decimal "balance_on_court_outcome_date", precision: 10, scale: 2
     t.string "tenancy_ref", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "strike_out_date", null: false
+    t.datetime "strike_out_date"
     t.string "created_by", null: false
   end
 

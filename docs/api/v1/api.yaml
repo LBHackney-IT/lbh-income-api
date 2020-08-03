@@ -119,12 +119,12 @@ paths:
         schema:
           type: object
           required:
-            - dateOfCourtDecision
+            - courtDate
             - courtOutcome
             - balanceOnCourtOutcomeDate
             - createdBy
           properties:
-            dateOfCourtDecision:
+            courtDate:
               type: string
             courtOutcome:
               type: string
@@ -214,7 +214,7 @@ definitions:
       tenancyRef:
         type: string
         example: '1'
-      dateOfCourtDecision:
+      courtDate:
         type: string
         format: date
         example: '10/11/2020'

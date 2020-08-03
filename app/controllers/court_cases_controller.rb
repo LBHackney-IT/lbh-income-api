@@ -15,7 +15,7 @@ class CourtCasesController < ApplicationController
   def create
     court_case_params = {
       tenancy_ref: params.fetch(:tenancy_ref),
-      date_of_court_decision: params.fetch(:date_of_court_decision),
+      court_date: params.fetch(:court_date),
       court_outcome: params.fetch(:court_outcome),
       balance_on_court_outcome_date: params.fetch(:balance_on_court_outcome_date),
       strike_out_date: params.fetch(:strike_out_date),

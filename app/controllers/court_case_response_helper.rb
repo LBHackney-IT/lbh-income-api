@@ -3,7 +3,7 @@ module CourtCaseResponseHelper
     {
       id: court_case.id,
       tenancyRef: court_case.tenancy_ref,
-      dateOfCourtDecision: court_case.date_of_court_decision,
+      courtDate: court_case.court_date,
       courtOutcome: court_case.court_outcome,
       balanceOnCourtOutcomeDate: court_case.balance_on_court_outcome_date,
       createdAt: court_case.created_at.strftime('%F'),

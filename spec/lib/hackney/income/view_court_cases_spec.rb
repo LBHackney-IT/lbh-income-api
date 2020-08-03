@@ -13,7 +13,7 @@ describe Hackney::Income::ViewCourtCases do
 
   context 'when there is a court case for the tenancy' do
     let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...1000) }
-    let(:date_of_court_decision) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
+    let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     let(:court_outcome) { Faker::ChuckNorris.fact }
     let(:strike_out_date) { Faker::Date.forward(days: 365) }
     let(:created_by) { Faker::Name.name }
@@ -21,7 +21,7 @@ describe Hackney::Income::ViewCourtCases do
       {
         tenancy_ref: tenancy_ref,
         balance_on_court_outcome_date: balance_on_court_outcome_date,
-        date_of_court_decision: date_of_court_decision,
+        court_date: court_date,
         court_outcome: court_outcome,
         strike_out_date: strike_out_date,
         created_by: created_by
@@ -37,7 +37,7 @@ describe Hackney::Income::ViewCourtCases do
       expect(response.first.id).to eq(expected_court_case.id)
       expect(response.first.tenancy_ref).to eq(tenancy_ref)
       expect(response.first.balance_on_court_outcome_date).to eq(balance_on_court_outcome_date)
-      expect(response.first.date_of_court_decision).to eq(date_of_court_decision)
+      expect(response.first.court_date).to eq(court_date)
       expect(response.first.court_outcome).to eq(court_outcome)
       expect(response.first.strike_out_date).to eq(strike_out_date)
       expect(response.first.created_by).to eq(created_by)
