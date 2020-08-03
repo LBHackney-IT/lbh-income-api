@@ -7,7 +7,11 @@ module Hackney
         return if agreement.nil?
         return agreement unless agreement.active?
 
-        Hackney::Income::Models::AgreementState.create!(agreement_id: agreement_id, agreement_state: :cancelled)
+        Hackney::Income::Models::AgreementState.create!(
+          agreement: agreement,
+          agreement_state: :cancelled,
+          description: Date.today.strftime('Cancelled on %m/%d/%Y')
+        )
 
         agreement
       end
