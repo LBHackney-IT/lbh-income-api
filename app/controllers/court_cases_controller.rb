@@ -18,7 +18,7 @@ class CourtCasesController < ApplicationController
       court_date: params.fetch(:court_date),
       court_outcome: params.fetch(:court_outcome),
       balance_on_court_outcome_date: params.fetch(:balance_on_court_outcome_date),
-      strike_out_date: params.fetch(:strike_out_date),
+      strike_out_date: params.fetch(:strike_out_date)
     }
 
     new_court_case = income_use_case_factory.create_court_case.execute(court_case_params: court_case_params)

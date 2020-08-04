@@ -15,7 +15,7 @@ describe Hackney::Income::CreateCourtCase do
       court_date: court_date,
       court_outcome: court_outcome,
       balance_on_court_outcome_date: balance_on_court_outcome_date,
-      strike_out_date: strike_out_date,
+      strike_out_date: strike_out_date
     }
   end
 

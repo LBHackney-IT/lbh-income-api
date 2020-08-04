@@ -18,7 +18,6 @@ describe Hackney::Income::Models::CourtCase, type: :model do
   tenancy_ref = Faker::Number.number(digits: 2).to_s
 
   it 'can have associated formal agreements' do
-
     court_case = described_class.create!(
       tenancy_ref: tenancy_ref,
       court_date: Faker::Date.between(from: 10.days.ago, to: 3.days.ago),
@@ -42,7 +41,7 @@ describe Hackney::Income::Models::CourtCase, type: :model do
     it 'is still a valid court case' do
       court_case = described_class.create!(
         tenancy_ref: tenancy_ref,
-        court_date: Faker::Date.forward(days: 30),
+        court_date: Faker::Date.forward(days: 30)
       )
 
       expect(court_case).to be_a Hackney::Income::Models::CourtCase
