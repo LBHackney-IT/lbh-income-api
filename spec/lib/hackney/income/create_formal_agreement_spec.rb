@@ -24,7 +24,6 @@ describe Hackney::Income::CreateFormalAgreement do
       court_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
       court_outcome: Faker::ChuckNorris.fact,
       strike_out_date: Faker::Date.forward(days: 365),
-      created_by: Faker::Name.name
     )
   end
   let(:expected_action_diray_note) { "Formal agreement created: #{notes}" }

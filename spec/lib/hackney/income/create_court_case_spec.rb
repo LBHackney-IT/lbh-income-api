@@ -8,7 +8,6 @@ describe Hackney::Income::CreateCourtCase do
   let(:court_outcome) { Faker::ChuckNorris.fact }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365) }
-  let(:created_by) { Faker::Name.name }
 
   let(:new_court_case_params) do
     {
@@ -17,7 +16,6 @@ describe Hackney::Income::CreateCourtCase do
       court_outcome: court_outcome,
       balance_on_court_outcome_date: balance_on_court_outcome_date,
       strike_out_date: strike_out_date,
-      created_by: created_by
     }
   end
 
@@ -32,6 +30,5 @@ describe Hackney::Income::CreateCourtCase do
     expect(court_case.court_outcome).to eq(court_outcome)
     expect(court_case.balance_on_court_outcome_date).to eq(balance_on_court_outcome_date)
     expect(court_case.strike_out_date).to eq(strike_out_date)
-    expect(court_case.created_by).to eq(created_by)
   end
 end

@@ -5,6 +5,5 @@ FactoryBot.define do
     court_outcome { Faker::ChuckNorris.fact }
     balance_on_court_outcome_date { Faker::Commerce.price(range: 10...100) }
     strike_out_date { Faker::Date.forward(days: 365) }
-    created_by { Faker::Name.name }
   end
 end

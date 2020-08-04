@@ -16,7 +16,6 @@ describe Hackney::Income::ViewCourtCases do
     let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     let(:court_outcome) { Faker::ChuckNorris.fact }
     let(:strike_out_date) { Faker::Date.forward(days: 365) }
-    let(:created_by) { Faker::Name.name }
     let(:court_cases_param) do
       {
         tenancy_ref: tenancy_ref,
@@ -24,7 +23,6 @@ describe Hackney::Income::ViewCourtCases do
         court_date: court_date,
         court_outcome: court_outcome,
         strike_out_date: strike_out_date,
-        created_by: created_by
       }
     end
 
@@ -40,7 +38,6 @@ describe Hackney::Income::ViewCourtCases do
       expect(response.first.court_date).to eq(court_date)
       expect(response.first.court_outcome).to eq(court_outcome)
       expect(response.first.strike_out_date).to eq(strike_out_date)
-      expect(response.first.created_by).to eq(created_by)
       expect(response.first.agreements).to eq([])
     end
 

@@ -6,7 +6,6 @@ RSpec.describe 'CourtCases', type: :request do
   let(:court_outcome) { Faker::ChuckNorris.fact }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365).to_s }
-  let(:created_by) { Faker::Name.name }
 
   describe 'POST /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{tenancy_ref}' do
@@ -18,7 +17,6 @@ RSpec.describe 'CourtCases', type: :request do
           court_outcome: court_outcome,
           balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
           strike_out_date: strike_out_date,
-          created_by: created_by
         }
       end
 
@@ -42,7 +40,6 @@ RSpec.describe 'CourtCases', type: :request do
         expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
         expect(parsed_response['createdAt']).to include(Date.today.to_s)
         expect(parsed_response['strikeOutDate']).to include(strike_out_date)
-        expect(parsed_response['createdBy']).to include(created_by)
       end
     end
   end
