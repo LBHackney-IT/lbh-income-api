@@ -120,20 +120,24 @@ paths:
           type: object
           required:
             - courtDate
-            - courtOutcome
-            - balanceOnCourtOutcomeDate
             - createdBy
           properties:
             courtDate:
               type: string
+              example: '01/08/2020'
             courtOutcome:
               type: string
+              example: 'Stay of execution'
             balanceOnCourtOutcomeDate:
               type: number
+              example: '50'
             strikeOutDate:
               type: string
+              format: date
+              example: '01/08/2026'
             createdBy:
               type: string
+              example: 'Tom Nook'
       responses:
         200:
           description: successful operation
@@ -217,7 +221,7 @@ definitions:
       courtDate:
         type: string
         format: date
-        example: '10/11/2020'
+        example: '01/08/2020'
       courtOutcome:
         type: string
         example: 'something'
@@ -227,13 +231,24 @@ definitions:
       strikeOutDate:
         type: string
         format: date
-        example: '27/01/2025'
-      createdAt:
+        example: '01/08/2026'
+      courtCaseHistory:
+        type: array
+        items:
+          $ref: '#/definitions/courtCaseHistory'
+  courtCaseHistory:
+    type: object
+    properties:
+      description:
+        type: string
+        example: 'court date added'
+      date:
         type: string
         format: date
+        example: '01/07/2020'
       createdBy:
         type: string
-        example: 'Tom Nooks'
+        example: 'Tom Nook'
   courtCasesList:
     type: object
     properties:
