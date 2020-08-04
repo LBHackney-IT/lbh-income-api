@@ -187,6 +187,18 @@ module Hackney
         )
       end
 
+      def update_agreement_state
+        Hackney::Income::UpdateAgreementState.new(
+          tolerance_days: ENV['AGREEMENT_BREACH_TOLERANCE_DAYS']&.to_i || 5
+        )
+      end
+
+      def update_all_agreement_states
+        Hackney::Income::UpdateAllAgreementState.new(
+          update_agreement_state: update_agreement_state
+        )
+      end
+
       # intended to only be used for rake task please delete when no longer required
       def show_send_sms_tenancies
         Hackney::Income::ShowSendSMSTenancies.new(

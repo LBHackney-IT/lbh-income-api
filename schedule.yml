@@ -15,6 +15,10 @@
   leasehold_sync:
     class: LeaseholdSync
     cron: '0 0 3 * * *' # 3am everyday
+  
+  update_all_agreement_state:
+    class: UpdateAllAgreementState
+    cron: '0 0 4 * * *' # 4am everyday
 
   request_all_precompiled_letter_states:
     class: RequestAllPrecompiledLetterStates
