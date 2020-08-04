@@ -1,6 +1,6 @@
 module Hackney
   module Income
-    class DetectBreach
+    class UpdateAgreementState
       def initialize(tolerance_days:)
         @tolerance_days = tolerance_days
       end
