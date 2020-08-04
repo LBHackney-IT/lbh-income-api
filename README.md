@@ -210,6 +210,14 @@ This will usually be the most recent, i.e. the one with the greatest tag number.
 
 **IMPORTANT: IF YOU UPDATE THE TASK DEFINITION BY CHANGING ANY OF THE ABOVE YOU NEED TO REDEPLOY IN ORDER FOR THE NEW INSTANCE TO USE THE NEW TASK DEFINITION**
 
+## Automation of agreement state checks
+The scheduled agreement state check runs every night at 4.00 am, see `schedule.yml`.
+
+There is a number of days of tolerance before an agreement can be breached, to allow payments to go through.
+The default value is 5 days, which can be overwritten by defining the environment variable on AWS:
+- Define the number of days of tolerance before breach - **AWS ENV VARIABLE** `AGREEMENT_BREACH_TOLERANCE_DAYS`
+
+
 ### Re-running Sync
 
 1. You first need to SSH onto the ECS instance
