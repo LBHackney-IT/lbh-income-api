@@ -11,7 +11,7 @@ class ActionsController < ApplicationController
         pause_reason: cases_params[:pause_reason],
         classification: cases_params[:recommended_actions],
         patch: cases_params[:patch],
-        full_patch: cases_params[:full_patch],
+        full_patch: cases_params[:full_patch]
       }
     )
 

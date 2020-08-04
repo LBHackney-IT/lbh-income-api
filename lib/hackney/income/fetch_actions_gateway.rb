@@ -12,7 +12,7 @@ module Hackney
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
 
-        order_options   = 'is_paused_until' if filters[:is_paused]
+        order_options   = 'pause_until' if filters[:is_paused]
         order_options ||= by_balance
 
         query.order(order_options)
@@ -21,8 +21,7 @@ module Hackney
       private
 
       def actions_filtered_for(service_area_type, filters)
-        query = GatewayModel.where(service_area_type: service_area_type).where('balance > ?', 0)
-
+        query = GatewayModel.where(service_area_type: service_area_type)
         if filters[:patch].present?
           if filters[:patch] == 'unassigned'
             query = query.where(patch_code: nil)
@@ -42,7 +41,7 @@ module Hackney
         return query if filters[:is_paused].nil?
 
         if filters[:is_paused]
-          query = query.where('is_paused_until > ?', Time.zone.now.beginning_of_day)
+          query = query.where('pause_until > ?', Time.zone.now.beginning_of_day)
         else
           query = query.not_paused
         end
@@ -50,7 +49,7 @@ module Hackney
       end
 
       def only_show_immediate_actions?(filters)
-        filters_that_return_all_actions = [filters[:is_paused], filters[:full_patch], filters[:upcoming_evictions], filters[:upcoming_court_dates]]
+        filters_that_return_all_actions = [filters[:is_paused], filters[:full_patch]]
         filters_that_return_all_actions.all? { |filter| filter == false || filter.nil? }
       end
 
