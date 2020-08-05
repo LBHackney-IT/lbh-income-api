@@ -19,6 +19,16 @@ describe Hackney::Income::Models::AgreementState, type: :model do
     )
   end
 
+  it 'updates the current_state of the agreement on creation' do
+    agreement = create(:agreement, current_state: :live)
+
+    expect(agreement.current_state).to eq('live')
+
+    described_class.create(agreement: agreement, agreement_state: :completed)
+
+    expect(agreement.current_state).to eq('completed')
+  end
+
   describe 'agreement_state' do
     it 'only accepts valid agreement_states' do
       %w[live breached cancelled completed].each do |agreement_state|

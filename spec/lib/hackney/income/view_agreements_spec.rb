@@ -46,7 +46,7 @@ describe Hackney::Income::ViewAgreements do
       expect(response.first.start_date).to eq(start_date)
       expect(response.first.frequency).to eq(frequency)
       expect(response.first.created_by).to eq(created_by)
-      expect(response.first.current_state).to eq(nil)
+      expect(response.first.current_state).to eq(current_state)
     end
   end
 end

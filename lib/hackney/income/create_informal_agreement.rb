@@ -17,7 +17,6 @@ module Hackney
           start_date: new_agreement_params[:start_date],
           frequency: new_agreement_params[:frequency],
           created_by: new_agreement_params[:created_by],
-          current_state: 'live',
           notes: new_agreement_params[:notes]
         }
 

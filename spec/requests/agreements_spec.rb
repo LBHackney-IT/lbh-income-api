@@ -50,7 +50,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['amount']).to eq(amount.to_s)
         expect(parsed_response['agreements'].first['startDate']).to include(start_date.to_s)
         expect(parsed_response['agreements'].first['frequency']).to eq(frequency)
-        expect(parsed_response['agreements'].first['currentState']).to eq(nil)
+        expect(parsed_response['agreements'].first['currentState']).to eq(current_state)
         expect(parsed_response['agreements'].first['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['agreements'].first['createdBy']).to eq(created_by)
         expect(parsed_response['agreements'].first['notes']).to eq(notes)
@@ -114,6 +114,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:created_agreement) do
         create(:agreement,
                starting_balance: starting_balance,
+               current_state: :live,
                **new_agreement_params)
       end
 
@@ -135,7 +136,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['amount']).to eq(amount.to_s)
         expect(parsed_response['startDate']).to include(start_date.to_s)
         expect(parsed_response['frequency']).to eq(frequency)
-        expect(parsed_response['currentState']).to eq(nil)
+        expect(parsed_response['currentState']).to eq('live')
         expect(parsed_response['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['createdBy']).to eq(created_by)
         expect(parsed_response['notes']).to eq(notes)
@@ -161,7 +162,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:agreement) { create(:agreement, agreement_params) }
 
       before do
-        create(:agreement_state, :cancelled, agreement_id: agreement.id)
+        create(:agreement_state, :cancelled, agreement: agreement)
 
         allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
         allow(cancel_agreement_instance).to receive(:execute)

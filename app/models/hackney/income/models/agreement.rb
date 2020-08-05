@@ -11,10 +11,6 @@ module Hackney
         enum agreement_type: { informal: 'informal', formal: 'formal' }
         enum frequency: { weekly: 0, monthly: 1, fortnightly: 2, '4 weekly': 3 }
 
-        def current_state
-          Hackney::Income::Models::AgreementState.where(agreement_id: id).last&.agreement_state
-        end
-
         def active?
           ACTIVE_STATES.include?(current_state)
         end
