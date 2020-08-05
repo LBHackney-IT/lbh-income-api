@@ -15,7 +15,7 @@ describe Hackney::Income::FetchActionsGateway do
         create(:leasehold_action, service_area_type: :rent)
       end
 
-      it 'retrieves the action' do
+      it 'only retrieves the action for the requested service_area_type' do
         expect(subject.count).to eq(1)
       end
 
@@ -76,8 +76,6 @@ describe Hackney::Income::FetchActionsGateway do
             }
           )
         end
-
-        let(:is_paused) { nil }
 
         it 'returns all actions' do
           expect(subject.count).to eq(num_paused_cases + num_active_cases)
