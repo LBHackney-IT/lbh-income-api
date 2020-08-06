@@ -135,6 +135,31 @@ paths:
           required: true
           type: string
           description: Court case for tenancy
+        - in: body
+          name: court_case
+          description: Court case to create
+          schema:
+            type: object
+            required:
+              - courtDate
+              - createdBy
+            properties:
+              courtDate:
+                type: string
+                example: '01/08/2020'
+              courtOutcome:
+                type: string
+                example: 'Stay of execution'
+              balanceOnCourtOutcomeDate:
+                type: number
+                example: '50'
+              strikeOutDate:
+                type: string
+                format: date
+                example: '01/08/2026'
+              createdBy:
+                type: string
+                example: 'Tom Nook'
       responses:
         200:
           description: successful operation
@@ -224,19 +249,37 @@ definitions:
       tenancyRef:
         type: string
         example: '1'
-      courtDecisionDate:
+      courtDate:
         type: string
         format: date
-        example: '10/11/2020'
+        example: '01/08/2020'
       courtOutcome:
         type: string
         example: 'something'
-      balanceAtOutcomeDate:
+      balanceOnCourtOutcomeDate:
         type: number
         format: '50'
-      createdAt:
+      strikeOutDate:
         type: string
         format: date
+        example: '01/08/2026'
+      courtCaseHistory:
+        type: array
+        items:
+          $ref: '#/definitions/courtCaseHistory'
+  courtCaseHistory:
+    type: object
+    properties:
+      description:
+        type: string
+        example: 'court date added'
+      date:
+        type: string
+        format: date
+        example: '01/07/2020'
+      createdBy:
+        type: string
+        example: 'Tom Nook'
   courtCasesList:
     type: object
     properties:

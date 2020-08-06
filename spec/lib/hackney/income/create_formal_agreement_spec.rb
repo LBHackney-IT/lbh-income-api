@@ -20,11 +20,10 @@ describe Hackney::Income::CreateFormalAgreement do
   let(:court_case) do
     Hackney::Income::Models::CourtCase.create!(
       tenancy_ref: tenancy_ref,
-      balance_at_outcome_date: Faker::Commerce.price(range: 10...1000),
-      court_decision_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
+      balance_on_court_outcome_date: Faker::Commerce.price(range: 10...1000),
+      court_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
       court_outcome: Faker::ChuckNorris.fact,
-      strike_out_date: Faker::Date.forward(days: 365),
-      created_by: Faker::Name.name
+      strike_out_date: Faker::Date.forward(days: 365)
     )
   end
   let(:expected_action_diray_note) { "Formal agreement created: #{notes}" }
