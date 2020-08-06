@@ -12,7 +12,13 @@ module Hackney
 
       def create_agreement(agreement_params)
         new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
-        Hackney::Income::Models::AgreementState.create!(agreement_id: new_agreement.id, agreement_state: :live)
+        Hackney::Income::Models::AgreementState.create!(
+          agreement: new_agreement,
+          agreement_state: :live,
+          expected_balance: agreement_params[:starting_balance],
+          checked_balance: agreement_params[:starting_balance],
+          description: 'Agreement created'
+        )
 
         new_agreement
       end

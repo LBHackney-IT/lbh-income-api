@@ -26,7 +26,7 @@ describe Hackney::Income::CancelAgreement do
 
   before do
     create(:agreement_state,
-           agreement_id: agreement.id,
+           agreement: agreement,
            agreement_state: active_state)
   end
 
@@ -36,6 +36,16 @@ describe Hackney::Income::CancelAgreement do
     expect(cancelled_agreement.id).to eq(agreement.id)
     expect(cancelled_agreement.tenancy_ref).to eq(tenancy_ref)
     expect(cancelled_agreement.current_state).to eq('cancelled')
+  end
+
+  it 'creates a new live state with expected balance and description' do
+    cancelled_agreement = subject.execute(agreement_id: agreement.id)
+
+    new_state = cancelled_agreement.agreement_states.last
+    expect(new_state.agreement_state).to eq('cancelled')
+    expect(new_state.expected_balance).to eq(nil)
+    expect(new_state.checked_balance).to eq(nil)
+    expect(new_state.description).to eq(Date.today.strftime('Cancelled on %m/%d/%Y'))
   end
 
   context 'when the agreement does not exist' do
@@ -50,7 +60,7 @@ describe Hackney::Income::CancelAgreement do
     before do
       create(:agreement_state,
              :completed,
-             agreement_id: agreement.id)
+             agreement: agreement)
     end
 
     it 'returns the initial agreement' do
@@ -69,7 +79,7 @@ describe Hackney::Income::CancelAgreement do
     before do
       create(:agreement_state,
              :cancelled,
-             agreement_id: agreement.id)
+             agreement: agreement)
     end
 
     it 'returns the initial agreement' do

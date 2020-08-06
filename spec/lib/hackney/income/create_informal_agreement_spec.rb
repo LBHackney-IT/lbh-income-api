@@ -35,7 +35,7 @@ describe Hackney::Income::CreateInformalAgreement do
                                   current_state: 'breached',
                                   created_by: created_by,
                                   agreement_type: 'informal')
-      create(:agreement_state, :breached, agreement_id: breached_agreement.id)
+      create(:agreement_state, :breached, agreement: breached_agreement)
       create(:case_priority, tenancy_ref: tenancy_ref, balance: 200)
     end
 
@@ -64,7 +64,7 @@ describe Hackney::Income::CreateInformalAgreement do
                                   agreement_type: 'formal',
                                   court_case_id: court_case.id,
                                   notes: notes)
-      create(:agreement_state, :live, agreement_id: existing_agreement.id)
+      create(:agreement_state, :live, agreement: existing_agreement)
     end
 
     it 'does not allow create a new informal agreement' do
@@ -75,7 +75,7 @@ describe Hackney::Income::CreateInformalAgreement do
     context 'when the formal agreement is completed' do
       before do
         existing_agreement = Hackney::Income::Models::Agreement.first
-        create(:agreement_state, :completed, agreement_id: existing_agreement.id)
+        create(:agreement_state, :completed, agreement: existing_agreement)
       end
 
       it 'allows to create a new informal agreement' do

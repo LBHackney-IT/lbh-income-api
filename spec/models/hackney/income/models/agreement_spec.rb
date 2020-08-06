@@ -31,7 +31,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   it 'can have an associated agreement_state' do
-    create(:agreement_state, :live, agreement_id: agreement.id)
+    create(:agreement_state, :live, agreement: agreement)
 
     expect(described_class.first.agreement_states.first).to be_a Hackney::Income::Models::AgreementState
     expect(Hackney::Income::Models::AgreementState.first.agreement_id).to eq(agreement.id)
@@ -71,8 +71,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
     end
 
     it 'returns the latest agreement state' do
-      create(:agreement_state, :live, agreement_id: agreement.id)
-      create(:agreement_state, :breached, agreement_id: agreement.id)
+      create(:agreement_state, :live, agreement: agreement)
+      create(:agreement_state, :breached, agreement: agreement)
 
       expect(agreement.current_state).to eq('breached')
     end
@@ -85,7 +85,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
 
     it 'returns true if agreement state is an active state' do
       state = %w[live breached].sample
-      create(:agreement_state, agreement_state: state, agreement_id: agreement.id)
+      create(:agreement_state, agreement_state: state, agreement: agreement)
 
       expect(agreement.current_state).to eq(state)
       expect(agreement).to be_active
@@ -93,7 +93,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
 
     it 'returns false if agreement is inactive' do
       state = %w[cancelled completed].sample
-      create(:agreement_state, agreement_state: state, agreement_id: agreement.id)
+      create(:agreement_state, agreement_state: state, agreement: agreement)
 
       expect(agreement.current_state).to eq(state)
       expect(agreement).not_to be_active

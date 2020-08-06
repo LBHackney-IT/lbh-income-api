@@ -50,16 +50,21 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['amount']).to eq(amount.to_s)
         expect(parsed_response['agreements'].first['startDate']).to include(start_date.to_s)
         expect(parsed_response['agreements'].first['frequency']).to eq(frequency)
-        expect(parsed_response['agreements'].first['currentState']).to eq(nil)
+        expect(parsed_response['agreements'].first['currentState']).to eq(current_state)
         expect(parsed_response['agreements'].first['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['agreements'].first['createdBy']).to eq(created_by)
         expect(parsed_response['agreements'].first['notes']).to eq(notes)
         expect(parsed_response['agreements'].first['history']).to eq([])
+        expect(parsed_response['agreements'].first['lastChecked']).to eq('')
       end
 
       it 'correctly maps all agreement_states in history' do
-        first_state = create(:agreement_state, :live, agreement_id: agreements_array.first.id)
-        second_state = create(:agreement_state, :breached, agreement_id: agreements_array.first.id)
+        first_state = create(:agreement_state, :live,
+                             agreement: agreements_array.first, expected_balance: 400,
+                             checked_balance: 400, description: 'Agreement created')
+        second_state = create(:agreement_state, :breached,
+                              agreement: agreements_array.first, expected_balance: 300,
+                              checked_balance: 400, description: 'Breached by £100')
 
         get "/api/v1/agreements/#{tenancy_ref}"
 
@@ -70,13 +75,23 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['history']).to match([
           {
             'state' => first_state.agreement_state,
-            'date' => first_state.created_at.as_json
+            'date' => first_state.created_at.as_json,
+            'checkedBalance' => first_state.checked_balance.as_json,
+            'expectedBalance' => first_state.expected_balance.as_json,
+            'description' => first_state.description
           },
           {
             'state' => second_state.agreement_state,
-            'date' => second_state.created_at.as_json
+            'date' => second_state.created_at.as_json,
+            'checkedBalance' => second_state.checked_balance.as_json,
+            'expectedBalance' => second_state.expected_balance.as_json,
+            'description' => second_state.description
           }
         ])
+
+        expect(parsed_response['agreements'].first['lastChecked']).to eq(
+          second_state.updated_at.as_json
+        )
       end
     end
   end
@@ -99,6 +114,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:created_agreement) do
         create(:agreement,
                starting_balance: starting_balance,
+               current_state: :live,
                **new_agreement_params)
       end
 
@@ -120,7 +136,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['amount']).to eq(amount.to_s)
         expect(parsed_response['startDate']).to include(start_date.to_s)
         expect(parsed_response['frequency']).to eq(frequency)
-        expect(parsed_response['currentState']).to eq(nil)
+        expect(parsed_response['currentState']).to eq('live')
         expect(parsed_response['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['createdBy']).to eq(created_by)
         expect(parsed_response['notes']).to eq(notes)
@@ -146,7 +162,7 @@ RSpec.describe 'Agreements', type: :request do
       let(:agreement) { create(:agreement, agreement_params) }
 
       before do
-        create(:agreement_state, :cancelled, agreement_id: agreement.id)
+        create(:agreement_state, :cancelled, agreement: agreement)
 
         allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
         allow(cancel_agreement_instance).to receive(:execute)
