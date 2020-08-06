@@ -26,7 +26,7 @@ describe Hackney::Income::CancelAgreement do
 
   before do
     create(:agreement_state,
-           agreement_id: agreement.id,
+           agreement: agreement,
            agreement_state: active_state)
   end
 
@@ -60,7 +60,7 @@ describe Hackney::Income::CancelAgreement do
     before do
       create(:agreement_state,
              :completed,
-             agreement_id: agreement.id)
+             agreement: agreement)
     end
 
     it 'returns the initial agreement' do
@@ -79,7 +79,7 @@ describe Hackney::Income::CancelAgreement do
     before do
       create(:agreement_state,
              :cancelled,
-             agreement_id: agreement.id)
+             agreement: agreement)
     end
 
     it 'returns the initial agreement' do

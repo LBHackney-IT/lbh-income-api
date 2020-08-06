@@ -92,7 +92,7 @@ RSpec.shared_examples 'CreateAgreement' do
       existing_agreement_params[:agreement_type] = 'informal'
 
       existing_agreement = create(:agreement, existing_agreement_params)
-      create(:agreement_state, :live, agreement_id: existing_agreement.id)
+      create(:agreement_state, :live, agreement: existing_agreement)
     end
 
     it 'creates and returns a new live agreement and cancelles the previous agreement' do

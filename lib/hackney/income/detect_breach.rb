@@ -89,7 +89,7 @@ module Hackney
                       end
 
         Hackney::Income::Models::AgreementState.create!(
-          agreement_id: agreement.id,
+          agreement: agreement,
           agreement_state: new_state,
           expected_balance: expected_balance,
           checked_balance: current_balance,
