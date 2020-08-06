@@ -7,14 +7,14 @@ module Hackney
 
       def execute
         all_active_agreements =
-          Hackney::Income::Models::Agreement.where(current_state: :live)
-                                            .or(Hackney::Income::Models::Agreement.where(current_state: :breached))
+          Hackney::Income::Models::Agreement.where('current_state =? OR current_state =?', 'live', 'breached')
 
         all_active_agreements.each do |agreement|
           @update_agreement_state.execute(agreement: agreement)
         rescue StandardError => e
           puts "[#{Time.now}] Failed to update agreement state " \
-               "for agreement: #{agreement.id} on tenancy: #{agreement.tenancy_ref}, with error: #{e.inspect}."
+               "for agreement: #{agreement.id} of tenancy: #{agreement.tenancy_ref}, with error: #{e.inspect}."
+          Raven.capture_exception(e)
         end
       end
     end
