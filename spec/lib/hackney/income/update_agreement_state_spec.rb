@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::Income::DetectBreach do
+describe Hackney::Income::UpdateAgreementState do
   subject { described_class.new(tolerance_days: days_before_check) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
