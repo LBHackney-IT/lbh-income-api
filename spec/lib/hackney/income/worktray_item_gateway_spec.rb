@@ -4,36 +4,20 @@ describe Hackney::Income::WorktrayItemGateway do
   let(:gateway) { described_class.new }
 
   let(:tenancy_model) { Hackney::Income::Models::CasePriority }
-  let(:document_model) { Hackney::Cloud::Document }
 
   context 'when storing a tenancy' do
-    subject(:store_worktray_item) do
-      gateway.store_worktray_item(
-        tenancy_ref: attributes.fetch(:tenancy_ref),
-        criteria: attributes.fetch(:criteria)
-      )
-    end
+    subject(:store_worktray_item) { gateway.store_worktray_item(attributes) }
 
     let(:attributes) do
       {
         tenancy_ref: Faker::Internet.slug,
-        criteria: stubbed_criteria
+        criteria: stubbed_criteria,
+        classification: classification
       }
     end
 
     let(:stubbed_criteria) { Stubs::StubCriteria.new }
-    let(:tenancy_classification_stub) { double('Classifier') }
     let(:classification) { 'no_action' }
-
-    before do
-      expect(tenancy_classification_stub).to receive(:execute).and_return(classification)
-
-      expect(document_model).to receive(:by_payment_ref).with(stubbed_criteria.payment_ref).and_return([])
-
-      expect(Hackney::Income::TenancyClassification::Classifier).to receive(:new)
-        .with(instance_of(tenancy_model), stubbed_criteria, [])
-        .and_return(tenancy_classification_stub)
-    end
 
     context 'when the tenancy does not already exist' do
       let(:created_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }

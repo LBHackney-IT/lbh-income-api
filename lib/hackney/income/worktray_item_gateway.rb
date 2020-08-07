@@ -2,18 +2,9 @@ module Hackney
   module Income
     class WorktrayItemGateway
       GatewayModel = Hackney::Income::Models::CasePriority
-      DocumentModel = Hackney::Cloud::Document
 
-      def store_worktray_item(tenancy_ref:, criteria:)
+      def store_worktray_item(tenancy_ref:, criteria:, classification:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
-
-        documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
-
-        classification_usecase = Hackney::Income::TenancyClassification::Classifier.new(
-          gateway_model_instance,
-          criteria,
-          documents
-        )
 
         begin
           gateway_model_instance.tap do |tenancy|
@@ -29,7 +20,7 @@ module Hackney
               last_communication_action: criteria.last_communication_action,
               last_communication_date: criteria.last_communication_date,
               active_nosp: criteria.active_nosp?,
-              classification: classification_usecase.execute,
+              classification: classification,
               patch_code: criteria.patch_code,
               courtdate: criteria.courtdate,
               court_outcome: criteria.court_outcome,

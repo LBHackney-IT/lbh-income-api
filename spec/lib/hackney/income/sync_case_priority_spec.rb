@@ -5,7 +5,9 @@ describe Hackney::Income::SyncCasePriority do
 
   let(:stub_tenancy_object) { double }
   let(:stored_worktray_item_gateway) { double(store_worktray_item: stub_tenancy_object) }
+  let(:document_model) { Hackney::Cloud::Document }
   let(:criteria) { Stubs::StubCriteria.new }
+  let(:tenancy_classification_stub) { double('Classifier') }
 
   let(:prioritisation_gateway) do
     PrioritisationGatewayDouble.new(
@@ -23,6 +25,16 @@ describe Hackney::Income::SyncCasePriority do
       prioritisation_gateway: prioritisation_gateway,
       stored_worktray_item_gateway: stored_worktray_item_gateway
     )
+  end
+
+  before do
+    expect(tenancy_classification_stub).to receive(:execute).once
+
+    expect(document_model).to receive(:by_payment_ref).with(criteria.payment_ref).and_return([])
+
+    expect(Hackney::Income::TenancyClassification::Classifier).to receive(:new)
+      .with(instance_of(Hackney::Income::Models::CasePriority), criteria, [])
+      .and_return(tenancy_classification_stub)
   end
 
   context 'when given a case priority' do
