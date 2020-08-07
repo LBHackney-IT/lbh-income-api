@@ -3,19 +3,19 @@ module Hackney
     class ViewCases
       Response = Struct.new(:cases, :number_of_pages)
 
-      def initialize(tenancy_api_gateway:, stored_tenancies_gateway:)
+      def initialize(tenancy_api_gateway:, stored_worktray_item_gateway:)
         @tenancy_api_gateway = tenancy_api_gateway
-        @stored_tenancies_gateway = stored_tenancies_gateway
+        @stored_worktray_item_gateway = stored_worktray_item_gateway
       end
 
       def execute(page_number:, number_per_page:, filters: {})
-        number_of_pages = @stored_tenancies_gateway.number_of_pages(
+        number_of_pages = @stored_worktray_item_gateway.number_of_pages(
           number_per_page: number_per_page,
           filters: filters
         )
         return Response.new([], 0) if number_of_pages.zero?
 
-        tenancies = @stored_tenancies_gateway.get_tenancies(
+        tenancies = @stored_worktray_item_gateway.get_tenancies(
           page_number: page_number,
           number_per_page: number_per_page,
           filters: filters

@@ -4,7 +4,7 @@ module Hackney
       def view_cases
         Hackney::Income::ViewCases.new(
           tenancy_api_gateway: tenancy_api_gateway,
-          stored_tenancies_gateway: stored_tenancies_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway
         )
       end
 
@@ -183,7 +183,7 @@ module Hackney
         Hackney::Income::SyncCasePriority.new(
           automate_sending_letters: automate_sending_letters,
           prioritisation_gateway: prioritisation_gateway,
-          stored_tenancies_gateway: stored_tenancies_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway
         )
       end
 
@@ -273,8 +273,8 @@ module Hackney
         Hackney::Income::SqlPauseTenancyGateway.new
       end
 
-      def stored_tenancies_gateway
-        Hackney::Income::StoredTenanciesGateway.new
+      def stored_worktray_item_gateway
+        Hackney::Income::WorktrayItemGateway.new
       end
 
       def tenancy_api_gateway
