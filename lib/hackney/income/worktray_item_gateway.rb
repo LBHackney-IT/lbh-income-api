@@ -1,10 +1,10 @@
 module Hackney
   module Income
-    class StoredTenanciesGateway
+    class WorktrayItemGateway
       GatewayModel = Hackney::Income::Models::CasePriority
       DocumentModel = Hackney::Cloud::Document
 
-      def store_tenancy(tenancy_ref:, criteria:)
+      def store_worktray_item(tenancy_ref:, criteria:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
 
         documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)

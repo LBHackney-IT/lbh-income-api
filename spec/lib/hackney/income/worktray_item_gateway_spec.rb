@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-describe Hackney::Income::StoredTenanciesGateway do
+describe Hackney::Income::WorktrayItemGateway do
   let(:gateway) { described_class.new }
 
   let(:tenancy_model) { Hackney::Income::Models::CasePriority }
   let(:document_model) { Hackney::Cloud::Document }
 
   context 'when storing a tenancy' do
-    subject(:store_tenancy) do
-      gateway.store_tenancy(
+    subject(:store_worktray_item) do
+      gateway.store_worktray_item(
         tenancy_ref: attributes.fetch(:tenancy_ref),
         criteria: attributes.fetch(:criteria)
       )
@@ -39,13 +39,13 @@ describe Hackney::Income::StoredTenanciesGateway do
       let(:created_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'creates the tenancy' do
-        store_tenancy
+        store_worktray_item
         expect(created_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
       end
 
       # FIXME: shouldn't return AR models from gateways
       it 'returns the tenancy' do
-        expect(store_tenancy).to eq(created_tenancy)
+        expect(store_worktray_item).to eq(created_tenancy)
       end
     end
 
@@ -76,18 +76,18 @@ describe Hackney::Income::StoredTenanciesGateway do
       let(:stored_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'updates the tenancy' do
-        store_tenancy
+        store_worktray_item
         expect(stored_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
       end
 
       it 'does not create a new tenancy' do
-        store_tenancy
+        store_worktray_item
         expect(tenancy_model.count).to eq(1)
       end
 
       # FIXME: shouldn't return AR models from gateways
       it 'returns the tenancy' do
-        expect(store_tenancy).to eq(pre_existing_tenancy)
+        expect(store_worktray_item).to eq(pre_existing_tenancy)
       end
     end
   end

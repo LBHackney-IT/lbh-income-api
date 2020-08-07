@@ -4,7 +4,7 @@ describe Hackney::Income::SyncCasePriority do
   subject { sync_case.execute(tenancy_ref: tenancy_ref) }
 
   let(:stub_tenancy_object) { double }
-  let(:stored_tenancies_gateway) { double(store_tenancy: stub_tenancy_object) }
+  let(:stored_worktray_item_gateway) { double(store_worktray_item: stub_tenancy_object) }
   let(:criteria) { Stubs::StubCriteria.new }
 
   let(:prioritisation_gateway) do
@@ -21,7 +21,7 @@ describe Hackney::Income::SyncCasePriority do
     described_class.new(
       automate_sending_letters: automate_sending_letters,
       prioritisation_gateway: prioritisation_gateway,
-      stored_tenancies_gateway: stored_tenancies_gateway
+      stored_worktray_item_gateway: stored_worktray_item_gateway
     )
   end
 
@@ -36,7 +36,7 @@ describe Hackney::Income::SyncCasePriority do
     }
 
     it 'calls the automate_sending_letters usecase' do
-      expect(stored_tenancies_gateway).to receive(:store_tenancy).and_return(case_priority)
+      expect(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(case_priority)
 
       expect(automate_sending_letters).to receive(:execute).with(case_priority: case_priority)
       subject
@@ -55,7 +55,7 @@ describe Hackney::Income::SyncCasePriority do
     }
 
     it 'automate_sending_letters usecase is not called' do
-      expect(stored_tenancies_gateway).to receive(:store_tenancy).and_return(case_priority)
+      expect(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(case_priority)
 
       expect(automate_sending_letters).not_to receive(:execute).with(case_priority: case_priority)
       subject
