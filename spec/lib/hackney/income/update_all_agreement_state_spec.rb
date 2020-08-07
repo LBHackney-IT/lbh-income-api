@@ -20,10 +20,8 @@ describe Hackney::Income::UpdateAllAgreementState do
 
   context 'when there are 3 live, 2 breached, 1 completed and 1 cancelled agreements' do
     before do
-      create_list(:agreement_state, 3, :live)
-      create_list(:agreement_state, 2, :breached)
-      create(:agreement_state, :completed)
-      create(:agreement_state, :cancelled)
+      3.times { create_agreement(:live) }
+      2.times { create_agreement(:breached) }
     end
 
     it 'calls update agreement status 5 times' do
@@ -31,5 +29,16 @@ describe Hackney::Income::UpdateAllAgreementState do
 
       subject
     end
+  end
+
+  def create_agreement(state)
+    tenancy_ref = Faker::Lorem.characters(number: 8)
+    create(:case_priority, tenancy_ref: tenancy_ref)
+    agreement = create(:agreement,
+                       tenancy_ref: tenancy_ref,
+                       start_date: Date.today - 10.days,
+                       frequency: :weekly)
+    create(:agreement_state, state, agreement: agreement)
+    agreement
   end
 end
