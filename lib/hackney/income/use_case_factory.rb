@@ -183,7 +183,8 @@ module Hackney
         Hackney::Income::SyncCasePriority.new(
           automate_sending_letters: automate_sending_letters,
           prioritisation_gateway: prioritisation_gateway,
-          stored_worktray_item_gateway: stored_worktray_item_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway,
+          update_agreement_state: update_agreement_state
         )
       end
 
