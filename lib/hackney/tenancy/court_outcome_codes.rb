@@ -8,6 +8,8 @@ module Hackney
       ADJOURNED_ON_TERMS = 'ADT'.freeze
       ADJOURNED_ON_TERMS_SECONDARY = 'AOT'.freeze
 
+      POSTPONED_POSSESSION = 'PPO'.freeze
+
       SUSPENDED_POSSESSION = 'SUP'.freeze
     end
   end

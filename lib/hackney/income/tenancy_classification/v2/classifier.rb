@@ -62,9 +62,9 @@ module Hackney
 
           def active_agreement_court_outcomes
             [
-              Hackney::Tenancy::ActionCodes::ADJOURNED_ON_TERMS_COURT_OUTCOME,
-              Hackney::Tenancy::ActionCodes::POSTPONED_POSSESSIOON_COURT_OUTCOME,
-              Hackney::Tenancy::ActionCodes::SUSPENDED_POSSESSION_COURT_OUTCOME
+              Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+              Hackney::Tenancy::CourtOutcomeCodes::POSTPONED_POSSESSION,
+              Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
             ]
           end
         end
