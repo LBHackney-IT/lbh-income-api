@@ -3,7 +3,7 @@ require 'swagger_helper'
 RSpec.describe 'CourtCases', type: :request do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today).to_s }
-  let(:court_outcome) { Faker::ChuckNorris.fact }
+  let(:court_outcome) { 'MAA' }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365).to_s }
 
