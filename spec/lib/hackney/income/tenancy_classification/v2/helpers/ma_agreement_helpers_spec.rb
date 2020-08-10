@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers do
-  class HelperClass
+  class DummyAgreementHelperClass
     include Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
 
     def initialize(case_priority, criteria, documents)
@@ -14,7 +14,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
   let(:court_case_model) { Hackney::Income::Models::CourtCase }
   let(:case_priority) { build(:case_priority, is_paused_until: nil) }
   let(:criteria) { Stubs::StubCriteria.new }
-  let(:helpers) { HelperClass.new(case_priority, criteria, nil) }
+  let(:helpers) { DummyAgreementHelperClass.new(case_priority, criteria, nil) }
   let(:most_recent_agreement) { nil }
 
   before do
