@@ -6,8 +6,7 @@ module CourtCaseResponseHelper
       courtDate: court_case.court_date,
       courtOutcome: court_case.court_outcome,
       balanceOnCourtOutcomeDate: court_case.balance_on_court_outcome_date,
-      createdAt: court_case.created_at.strftime('%F'),
-      strikeOutDate: court_case.strike_out_date.strftime('%F')
+      strikeOutDate: court_case.strike_out_date&.strftime('%F')
     }
   end
 end
