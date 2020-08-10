@@ -1,14 +1,16 @@
 require 'rails_helper'
 
 describe Hackney::Income::Models::CourtCase, type: :model do
-  it 'includes the fields for a court ordered agreement' do
+  it 'includes the fields for a court case' do
     court_case = described_class.new
     expect(court_case.attributes).to include(
       'tenancy_ref',
       'court_date',
       'court_outcome',
       'balance_on_court_outcome_date',
-      'strike_out_date'
+      'strike_out_date',
+      'terms',
+      'disrepair_counter_claim'
     )
   end
 
@@ -57,5 +59,12 @@ describe Hackney::Income::Models::CourtCase, type: :model do
 
       expect(court_case).to be_a Hackney::Income::Models::CourtCase
     end
+  end
+
+  context 'when the court outcome is adjourned' do
+    before { allow(subject).to receive(:adjourned?).and_return(true) }
+
+    it { is_expected.to validate_presence_of(:terms) }
+    it { is_expected.to validate_presence_of(:disrepair_counter_claim) }
   end
 end
