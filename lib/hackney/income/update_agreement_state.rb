@@ -5,18 +5,18 @@ module Hackney
         @tolerance_days = tolerance_days
       end
 
-      def execute(agreement:)
+      def execute(agreement:, current_balance:)
         return false unless agreement.active?
         return false if date_of_first_check(agreement).future?
 
-        update_status(agreement)
+        update_status(agreement, current_balance)
       end
 
       private
 
-      def update_status(agreement)
+      def update_status(agreement, current_balance)
         expected_balance = expected_balance(agreement)
-        current_balance = Hackney::Income::Models::CasePriority.where(tenancy_ref: agreement.tenancy_ref).first.balance
+        current_balance = current_balance
 
         return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
