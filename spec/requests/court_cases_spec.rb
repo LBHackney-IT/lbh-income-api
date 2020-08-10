@@ -1,6 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'CourtCases', type: :request do
+  let(:id) { Faker::Number.number(digits: 3).to_s }
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today).to_s }
   let(:court_outcome) { 'MAA' }
@@ -9,14 +10,12 @@ RSpec.describe 'CourtCases', type: :request do
 
   describe 'POST /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{tenancy_ref}' do
+      context 'when creating a new court case by adding a court date'
       let(:create_court_case_instance) { instance_double(Hackney::Income::CreateCourtCase) }
       let(:new_court_case_params) do
         {
           tenancy_ref: tenancy_ref,
-          court_date: court_date,
-          court_outcome: court_outcome,
-          balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
-          strike_out_date: strike_out_date
+          court_date: court_date
         }
       end
 
@@ -36,10 +35,6 @@ RSpec.describe 'CourtCases', type: :request do
 
         expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
         expect(parsed_response['courtDate']).to include(court_date)
-        expect(parsed_response['courtOutcome']).to eq(court_outcome)
-        expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
-        expect(parsed_response['createdAt']).to include(Date.today.to_s)
-        expect(parsed_response['strikeOutDate']).to include(strike_out_date)
       end
     end
   end
@@ -67,6 +62,44 @@ RSpec.describe 'CourtCases', type: :request do
         parsed_response['court_cases'].each do |court_case|
           expect(court_case['tenancyRef']).to eq(tenancy_ref)
         end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/court_case/{tenancy_ref}' do
+    path '/court_case/{court_case_id}/update' do
+      context 'when adding a (not adjourned) court outcome'
+      let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+
+      let(:update_court_case_params) do
+        {
+          id: id,
+          tenancy_ref: tenancy_ref,
+          court_date: court_date,
+          court_outcome: court_outcome,
+          balance_on_court_outcome_date: balance_on_court_outcome_date.to_s
+        }
+      end
+
+      let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
+      let(:updated_court_case) { create(:court_case, update_court_case_params) }
+
+      before do
+        allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+        allow(update_court_case_instance).to receive(:execute)
+          .with(court_case_params: update_court_case_params)
+          .and_return(updated_court_case)
+      end
+
+      it 'updates the court case' do
+        patch "/api/v1/court_case/#{id}/update", params: update_court_case_params
+
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+        expect(parsed_response['courtDate']).to include(court_date)
+        expect(parsed_response['courtOutcome']).to eq(court_outcome)
+        expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
       end
     end
   end
