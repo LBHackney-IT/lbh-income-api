@@ -271,105 +271,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
-  describe 'breached_agreement?' do
-    subject { helpers.breached_agreement? }
-
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
-
-      it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when a case doesnt have a recent agreement' do
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the most recent agreement does not have a start date' do
-      let(:most_recent_agreement) { { start_date: nil, breached: true } }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when there is an agreement and it has been breached' do
-      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: true } }
-
-      it 'returns true' do
-        expect(subject).to eq(true)
-      end
-    end
-
-    context 'when there is an agreement and it has not been breached' do
-      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-  end
-
-  describe 'court_breach_agreement?' do
-    subject { helpers.court_breach_agreement? }
-
-    let(:most_recent_agreement) { { start_date: start_date, breached: breached } }
-    let(:start_date) { 1.week.ago.to_date }
-    let(:breached) { false }
-
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when an agreement has not been breached' do
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when there is no courtdate' do
-      let(:breached) { true }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the agreement start date is ahead of the courtdate' do
-      let(:courtdate) { 2.weeks.ago }
-      let(:breached) { true }
-
-      it 'returns true' do
-        expect(subject).to eq(true)
-      end
-    end
-
-    context 'when the agreement start date is before the courtdate' do
-      let(:courtdate) { 6.days.ago }
-      let(:breached) { true }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the agreement start date is the same as the courtdate' do
-      let(:courtdate) { 1.week.ago.to_date }
-      let(:breached) { true }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-  end
-
   describe 'calculated_grace_amount' do
     subject { helpers.calculated_grace_amount }
 
@@ -401,42 +302,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       it 'returns the difference between collectable arrears and grace amount' do
         allow(helpers).to receive(:calculated_grace_amount).and_return(45.02)
         expect(subject).to eq(544.98)
-      end
-    end
-  end
-
-  describe 'informal_breached_agreement?' do
-    subject { helpers.informal_breached_agreement? }
-
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      it 'return false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when there is an agreement and it has not been breached' do
-      it 'returns false' do
-        allow(helpers).to receive(:breached_agreement?).and_return(false)
-
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when there is an agreement is court ordered' do
-      it 'returns false' do
-        allow(helpers).to receive(:court_breach_agreement?).and_return(true)
-
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when agreemnt is not court ordered and it breached' do
-      it 'returns false' do
-        allow(helpers).to receive(:court_breach_agreement?).and_return(false)
-        allow(helpers).to receive(:breached_agreement?).and_return(true)
-
-        expect(subject).to eq(true)
       end
     end
   end
@@ -692,6 +557,139 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
+  # Remove these tests when enabling MA agreements
+  describe 'breached_agreement?' do
+    subject { helpers.breached_agreement? }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when a case doesnt have a recent agreement' do
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the most recent agreement does not have a start date' do
+      let(:most_recent_agreement) { { start_date: nil, breached: true } }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement and it has been breached' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: true } }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when there is an agreement and it has not been breached' do
+      let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'court_breach_agreement?' do
+    subject { helpers.court_breach_agreement? }
+
+    let(:most_recent_agreement) { { start_date: start_date, breached: breached } }
+    let(:start_date) { 1.week.ago.to_date }
+    let(:breached) { false }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when an agreement has not been breached' do
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is no courtdate' do
+      let(:breached) { true }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the agreement start date is ahead of the courtdate' do
+      let(:courtdate) { 2.weeks.ago }
+      let(:breached) { true }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when the agreement start date is before the courtdate' do
+      let(:courtdate) { 6.days.ago }
+      let(:breached) { true }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the agreement start date is the same as the courtdate' do
+      let(:courtdate) { 1.week.ago.to_date }
+      let(:breached) { true }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'informal_breached_agreement?' do
+    subject { helpers.informal_breached_agreement? }
+
+    context 'when a case is either paused, has an eviction date or has a future court date' do
+      it 'return false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement and it has not been breached' do
+      it 'returns false' do
+        allow(helpers).to receive(:breached_agreement?).and_return(false)
+
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when there is an agreement is court ordered' do
+      it 'returns false' do
+        allow(helpers).to receive(:court_breach_agreement?).and_return(true)
+
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when agreemnt is not court ordered and it breached' do
+      it 'returns false' do
+        allow(helpers).to receive(:court_breach_agreement?).and_return(false)
+        allow(helpers).to receive(:breached_agreement?).and_return(true)
+
+        expect(subject).to eq(true)
+      end
+    end
+  end
+
   describe 'active_agreement' do
     subject { helpers.active_agreement? }
 
@@ -719,4 +717,5 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
   end
+  ## End of remove
 end
