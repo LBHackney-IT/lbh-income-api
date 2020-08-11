@@ -1,6 +1,7 @@
 class CourtCasesController < ApplicationController
   include CourtCaseResponseHelper
-
+  REQUIRED_PARAMS = %i[id tenancy_ref court_date court_outcome balance_on_court_outcome_date].freeze
+  OPTIONAL_PARAMS = %i[strike_out_date terms disrepair_counter_claim].freeze
   def index
     requested_cases = income_use_case_factory.view_court_cases.execute(tenancy_ref: params.fetch(:tenancy_ref))
 
@@ -26,11 +27,14 @@ class CourtCasesController < ApplicationController
 
   def update
     court_case_params = {
-      id: params.require(:id),
-      tenancy_ref: params.require(:tenancy_ref),
-      court_date: params.require(:court_date),
-      court_outcome: params.require(:court_outcome),
-      balance_on_court_outcome_date: params.require(:balance_on_court_outcome_date)
+      id: update_court_case_params[:id],
+      tenancy_ref: update_court_case_params[:tenancy_ref],
+      court_date: update_court_case_params[:court_date],
+      court_outcome: update_court_case_params[:court_outcome],
+      balance_on_court_outcome_date: update_court_case_params[:balance_on_court_outcome_date],
+      strike_out_date: update_court_case_params[:strike_out_date],
+      terms: update_court_case_params[:terms],
+      disrepair_counter_claim: update_court_case_params[:disrepair_counter_claim]
     }
 
     updated_court_case = income_use_case_factory.update_court_case.execute(court_case_params: court_case_params)
@@ -38,4 +42,10 @@ class CourtCasesController < ApplicationController
 
     render json: response
   end
+
+  def update_court_case_params
+    params.require(REQUIRED_PARAMS)
+    allowed_params = params.permit(REQUIRED_PARAMS + OPTIONAL_PARAMS)
+  end
+
 end

@@ -77,7 +77,10 @@ RSpec.describe 'CourtCases', type: :request do
             tenancy_ref: tenancy_ref,
             court_date: court_date,
             court_outcome: court_outcome,
-            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s
+            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
+            strike_out_date: nil,
+            terms: nil,
+            disrepair_counter_claim: nil
           }
         end
 
@@ -100,6 +103,50 @@ RSpec.describe 'CourtCases', type: :request do
           expect(parsed_response['courtDate']).to include(court_date)
           expect(parsed_response['courtOutcome']).to eq(court_outcome)
           expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
+        end
+      end
+
+      context 'when adding an adjourned court outcome with all required fields' do
+        let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+        let(:court_outcome) { 'AAH' }
+        let(:terms) { false }
+        let(:disrepair_counter_claim) { false }
+
+        let(:update_court_case_params) do
+          {
+            id: id,
+            tenancy_ref: tenancy_ref,
+            court_date: court_date,
+            court_outcome: court_outcome,
+            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
+            strike_out_date: strike_out_date,
+            terms: terms.to_s,
+            disrepair_counter_claim: disrepair_counter_claim.to_s
+          }
+        end
+
+        let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
+        let(:updated_court_case) { build(:court_case, update_court_case_params) }
+
+        before do
+          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+          allow(update_court_case_instance).to receive(:execute)
+            .with(court_case_params: update_court_case_params)
+            .and_return(updated_court_case)
+        end
+
+        it 'updates the court case' do
+          patch "/api/v1/court_case/#{id}/update", params: update_court_case_params
+
+          parsed_response = JSON.parse(response.body)
+
+          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+          expect(parsed_response['courtDate']).to include(court_date)
+          expect(parsed_response['courtOutcome']).to eq(court_outcome)
+          expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
+          expect(parsed_response['strikeOutDate']).to include(strike_out_date)
+          expect(parsed_response['terms']).to eq(terms)
+          expect(parsed_response['disrepairCounterClaim']).to eq(disrepair_counter_claim)
         end
       end
     end
