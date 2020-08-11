@@ -312,7 +312,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
-# Remove these tests when enabling MA agreements
+  # Remove these tests when enabling MA agreements
   describe 'court_date_in_future' do
     subject { helpers.court_date_in_future? }
 

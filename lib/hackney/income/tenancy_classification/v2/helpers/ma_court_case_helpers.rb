@@ -4,6 +4,8 @@ module Hackney
       module V2
         module Helpers
           module MACourtCaseHelpers
+            include HelpersBase
+
             def court_warrant_active?
               return false if most_recent_court_case.blank?
               return false if most_recent_court_case.court_outcome.blank?
@@ -36,10 +38,6 @@ module Hackney
               return false if no_court_date?
 
               most_recent_court_case.court_outcome.blank?
-            end
-
-            def most_recent_court_case
-              @most_recent_court_case ||= Hackney::Income::Models::CourtCase.where(tenancy_ref: @criteria.tenancy_ref).last
             end
           end
         end
