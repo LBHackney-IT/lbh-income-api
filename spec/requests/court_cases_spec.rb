@@ -7,6 +7,8 @@ RSpec.describe 'CourtCases', type: :request do
   let(:court_outcome) { 'MAA' }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365).to_s }
+  let(:terms) { false }
+  let(:disrepair_counter_claim) { false }
 
   describe 'POST /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{tenancy_ref}' do
@@ -68,9 +70,10 @@ RSpec.describe 'CourtCases', type: :request do
 
   describe 'PATCH /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{court_case_id}/update' do
-      context 'when adding a (not adjourned) court outcome' do
-        let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+      let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+      let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
 
+      context 'when adding a (not adjourned) court outcome' do
         let(:update_court_case_params) do
           {
             id: id,
@@ -84,7 +87,6 @@ RSpec.describe 'CourtCases', type: :request do
           }
         end
 
-        let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
         let(:updated_court_case) { create(:court_case, update_court_case_params) }
 
         before do
@@ -106,12 +108,8 @@ RSpec.describe 'CourtCases', type: :request do
         end
       end
 
-      context 'when adding an adjourned court outcome with all required fields' do
-        let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+      context 'when adding an adjourned court outcome' do
         let(:court_outcome) { 'AAH' }
-        let(:terms) { false }
-        let(:disrepair_counter_claim) { false }
-
         let(:update_court_case_params) do
           {
             id: id,
@@ -125,7 +123,6 @@ RSpec.describe 'CourtCases', type: :request do
           }
         end
 
-        let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
         let(:updated_court_case) { build(:court_case, update_court_case_params) }
 
         before do
@@ -147,6 +144,36 @@ RSpec.describe 'CourtCases', type: :request do
           expect(parsed_response['strikeOutDate']).to include(strike_out_date)
           expect(parsed_response['terms']).to eq(terms)
           expect(parsed_response['disrepairCounterClaim']).to eq(disrepair_counter_claim)
+        end
+      end
+
+      context 'when the court case does not exist' do
+        let(:non_existent_id) { '0' }
+        let(:update_court_case_params) do
+          {
+            id: non_existent_id,
+            tenancy_ref: tenancy_ref,
+            court_date: court_date,
+            court_outcome: court_outcome,
+            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
+            strike_out_date: nil,
+            terms: nil,
+            disrepair_counter_claim: nil
+          }
+        end
+
+        before do
+          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+          allow(update_court_case_instance).to receive(:execute)
+            .with(court_case_params: update_court_case_params)
+            .and_return(nil)
+        end
+
+        it 'returns 404' do
+          patch "/api/v1/court_case/#{non_existent_id}/update", params: update_court_case_params
+
+          expect(response).to have_http_status(:not_found)
+          expect(JSON.parse(response.body)['error']).to eq('court case not found')
         end
       end
     end

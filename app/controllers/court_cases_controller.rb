@@ -1,7 +1,8 @@
 class CourtCasesController < ApplicationController
   include CourtCaseResponseHelper
-  REQUIRED_PARAMS = %i[id tenancy_ref court_date court_outcome balance_on_court_outcome_date].freeze
-  OPTIONAL_PARAMS = %i[strike_out_date terms disrepair_counter_claim].freeze
+  REQUIRED_UPDATE_PARAMS = %i[id tenancy_ref court_date court_outcome balance_on_court_outcome_date].freeze
+  OPTIONAL_UPDATE_PARAMS = %i[strike_out_date terms disrepair_counter_claim].freeze
+
   def index
     requested_cases = income_use_case_factory.view_court_cases.execute(tenancy_ref: params.fetch(:tenancy_ref))
 
@@ -38,14 +39,17 @@ class CourtCasesController < ApplicationController
     }
 
     updated_court_case = income_use_case_factory.update_court_case.execute(court_case_params: court_case_params)
-    response = map_court_case_to_response(court_case: updated_court_case)
 
-    render json: response
+    if updated_court_case
+      response = map_court_case_to_response(court_case: updated_court_case)
+      render json: response
+    else
+      render json: { error: 'court case not found' }, status: :not_found
+    end
   end
 
   def update_court_case_params
-    params.require(REQUIRED_PARAMS)
-    allowed_params = params.permit(REQUIRED_PARAMS + OPTIONAL_PARAMS)
+    params.require(REQUIRED_UPDATE_PARAMS)
+    params.permit(REQUIRED_UPDATE_PARAMS + OPTIONAL_UPDATE_PARAMS)
   end
-
 end
