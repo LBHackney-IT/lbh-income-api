@@ -565,7 +565,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       let(:most_recent_agreement) { { start_date: 1.week.ago, breached: false } }
 
       it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
         expect(subject).to eq(false)
       end
     end
@@ -610,7 +609,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
     context 'when a case is either paused, has an eviction date or has a future court date' do
       it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
         expect(subject).to eq(false)
       end
     end
@@ -662,7 +660,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
     context 'when a case is either paused, has an eviction date or has a future court date' do
       it 'return false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
         expect(subject).to eq(false)
       end
     end

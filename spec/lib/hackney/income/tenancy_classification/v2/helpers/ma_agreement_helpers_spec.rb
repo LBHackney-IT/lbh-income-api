@@ -30,20 +30,10 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
   describe 'breached_agreement?' do
     subject { helpers.breached_agreement? }
 
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      let(:most_recent_agreement) { { start_date: 1.week.ago, state: :live } }
-
-      it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
-      end
-    end
-
     context 'when a case doesnt have a recent agreement' do
       let(:most_recent_agreement) { nil }
 
       it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(false)
         expect(subject).to eq(false)
       end
     end
@@ -52,7 +42,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
       let(:most_recent_agreement) { { start_date: 1.week.ago, state: :breached } }
 
       it 'returns true' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(false)
         expect(subject).to eq(true)
       end
     end
@@ -61,7 +50,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
       let(:most_recent_agreement) { { start_date: 1.week.ago, state: :live } }
 
       it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(false)
         expect(subject).to eq(false)
       end
     end
@@ -81,13 +69,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
         court_case = build(:court_case, tenancy_ref: criteria.tenancy_ref,
                                         court_date: court_date)
         allow(court_case_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([court_case])
-      end
-    end
-
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      it 'returns false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
       end
     end
 
@@ -136,13 +117,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
 
   describe 'informal_breached_agreement?' do
     subject { helpers.informal_breached_agreement? }
-
-    context 'when a case is either paused, has an eviction date or has a future court date' do
-      it 'return false' do
-        allow(helpers).to receive(:should_prevent_action?).and_return(true)
-        expect(subject).to eq(false)
-      end
-    end
 
     context 'when there is an agreement and it has not been breached' do
       it 'returns false' do
