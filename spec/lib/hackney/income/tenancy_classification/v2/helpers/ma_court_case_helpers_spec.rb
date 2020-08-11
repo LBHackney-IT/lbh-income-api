@@ -111,8 +111,17 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
       end
     end
 
-    context 'when there is a adjourned on terms outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY }
+    context 'when there is a court outcome' do
+      let(:court_outcome) {
+        [
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+        ].sample
+      }
       let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
 
       context 'with a court date 2 years ago' do
@@ -136,108 +145,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
 
         it 'returns false' do
           expect(subject).to eq(true)
-        end
-      end
-    end
-
-    context 'when there is a adjourned on terms outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS }
-      let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-
-      context 'with a court date 2 years ago' do
-        let(:court_date) { 2.years.ago }
-
-        it 'returns true' do
-          expect(subject).to eq(true)
-        end
-      end
-
-      context 'with a court date 8 years ago' do
-        let(:court_date) { 8.years.ago }
-
-        it 'returns false' do
-          expect(subject).to eq(false)
-        end
-      end
-    end
-
-    context 'when there is a adjourned (secondary) on terms outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS_SECONDARY }
-      let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-
-      context 'with a court date 2 years ago' do
-        let(:court_date) { 2.years.ago }
-
-        it 'returns true' do
-          expect(subject).to eq(true)
-        end
-      end
-
-      context 'with a court date 8 years ago' do
-        let(:court_date) { 8.years.ago }
-
-        it 'returns false' do
-          expect(subject).to eq(false)
-        end
-      end
-    end
-
-    context 'when there is a suspended possession outcome outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION }
-      let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-
-      context 'with a court date 2 years ago' do
-        let(:court_date) { 2.years.ago }
-
-        it 'returns true' do
-          expect(subject).to eq(true)
-        end
-        context 'with a court date 8 years ago' do
-          let(:court_date) { 8.years.ago }
-
-          it 'returns false' do
-            expect(subject).to eq(false)
-          end
-        end
-      end
-    end
-
-    context 'when there is a outright possession with date outcome outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
-      let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-
-      context 'with a court date 2 years ago' do
-        let(:court_date) { 2.years.ago }
-
-        it 'returns true' do
-          expect(subject).to eq(true)
-        end
-        context 'with a court date 8 years ago' do
-          let(:court_date) { 8.years.ago }
-
-          it 'returns false' do
-            expect(subject).to eq(false)
-          end
-        end
-      end
-    end
-
-    context 'when there is a outright possession forthwith outcome outcome' do
-      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH }
-      let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-
-      context 'with a court date 2 years ago' do
-        let(:court_date) { 2.years.ago }
-
-        it 'returns true' do
-          expect(subject).to eq(true)
-        end
-        context 'with a court date 8 years ago' do
-          let(:court_date) { 8.years.ago }
-
-          it 'returns false' do
-            expect(subject).to eq(false)
-          end
         end
       end
     end

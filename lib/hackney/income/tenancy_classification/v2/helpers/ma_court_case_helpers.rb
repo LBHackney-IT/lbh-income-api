@@ -11,12 +11,12 @@ module Hackney
               return false if most_recent_court_case.court_outcome.blank?
 
               if most_recent_court_case.court_outcome.in?([
-                Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
-                Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
-                Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS_SECONDARY,
-                Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
-                Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-                Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+                Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
               ])
                 return most_recent_court_case.court_date.blank? || most_recent_court_case.court_date > 6.years.ago
               end
