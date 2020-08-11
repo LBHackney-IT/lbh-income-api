@@ -68,38 +68,39 @@ RSpec.describe 'CourtCases', type: :request do
 
   describe 'PATCH /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{court_case_id}/update' do
-      context 'when adding a (not adjourned) court outcome'
-      let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+      context 'when adding a (not adjourned) court outcome' do
+        let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
 
-      let(:update_court_case_params) do
-        {
-          id: id,
-          tenancy_ref: tenancy_ref,
-          court_date: court_date,
-          court_outcome: court_outcome,
-          balance_on_court_outcome_date: balance_on_court_outcome_date.to_s
-        }
-      end
+        let(:update_court_case_params) do
+          {
+            id: id,
+            tenancy_ref: tenancy_ref,
+            court_date: court_date,
+            court_outcome: court_outcome,
+            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s
+          }
+        end
 
-      let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
-      let(:updated_court_case) { create(:court_case, update_court_case_params) }
+        let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
+        let(:updated_court_case) { create(:court_case, update_court_case_params) }
 
-      before do
-        allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
-        allow(update_court_case_instance).to receive(:execute)
-          .with(court_case_params: update_court_case_params)
-          .and_return(updated_court_case)
-      end
+        before do
+          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+          allow(update_court_case_instance).to receive(:execute)
+            .with(court_case_params: update_court_case_params)
+            .and_return(updated_court_case)
+        end
 
-      it 'updates the court case' do
-        patch "/api/v1/court_case/#{id}/update", params: update_court_case_params
+        it 'updates the court case' do
+          patch "/api/v1/court_case/#{id}/update", params: update_court_case_params
 
-        parsed_response = JSON.parse(response.body)
+          parsed_response = JSON.parse(response.body)
 
-        expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
-        expect(parsed_response['courtDate']).to include(court_date)
-        expect(parsed_response['courtOutcome']).to eq(court_outcome)
-        expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
+          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+          expect(parsed_response['courtDate']).to include(court_date)
+          expect(parsed_response['courtOutcome']).to eq(court_outcome)
+          expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
+        end
       end
     end
   end
