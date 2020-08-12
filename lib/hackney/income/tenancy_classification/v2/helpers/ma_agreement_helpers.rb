@@ -4,6 +4,8 @@ module Hackney
       module V2
         module Helpers
           module MAAgreementHelpers
+            include HelpersBase
+
             def active_agreement?
               most_recent_agreement.present? && most_recent_agreement.active?
             end
@@ -23,14 +25,6 @@ module Hackney
               return false unless most_recent_agreement.formal?
 
               most_recent_agreement.start_date > most_recent_court_case.court_date
-            end
-
-            def most_recent_agreement
-              @most_recent_agreement ||= Hackney::Income::Models::Agreement.where(tenancy_ref: @criteria.tenancy_ref).last
-            end
-
-            def most_recent_court_case
-              @most_recent_court_case ||= Hackney::Income::Models::CourtCase.where(tenancy_ref: @criteria.tenancy_ref).last
             end
           end
         end

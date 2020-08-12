@@ -85,34 +85,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
-  describe 'court_date_in_future' do
-    subject { helpers.court_date_in_future? }
-
-    context 'when the criteria has a future court date' do
-      let(:courtdate) { 6.days.from_now }
-
-      it 'returns true' do
-        expect(subject).to eq(true)
-      end
-    end
-
-    context 'when the criteria has a past court date' do
-      let(:courtdate) { 6.days.ago }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the criteria does not have a court date' do
-      let(:courtdate) { nil }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-  end
-
   describe 'should_prevent_action?' do
     subject { helpers.should_prevent_action? }
 
@@ -144,34 +116,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
 
     context 'when the case is paused' do
       let(:case_priority) { build(:case_priority, is_paused_until: 7.days.from_now) }
-
-      it 'returns true' do
-        expect(subject).to eq(true)
-      end
-    end
-  end
-
-  describe 'no_court_date?' do
-    subject { helpers.no_court_date? }
-
-    context 'when the criteria has a future court date' do
-      let(:courtdate) { 6.days.from_now }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the criteria has a past court date' do
-      let(:courtdate) { 6.days.ago }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-
-    context 'when the criteria does not have a court date' do
-      let(:courtdate) { nil }
 
       it 'returns true' do
         expect(subject).to eq(true)
@@ -368,6 +312,63 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
+  # Remove these tests when enabling MA agreements
+  describe 'court_date_in_future' do
+    subject { helpers.court_date_in_future? }
+
+    context 'when the criteria has a future court date' do
+      let(:courtdate) { 6.days.from_now }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'when the criteria has a past court date' do
+      let(:courtdate) { 6.days.ago }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the criteria does not have a court date' do
+      let(:courtdate) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe 'no_court_date?' do
+    subject { helpers.no_court_date? }
+
+    context 'when the criteria has a future court date' do
+      let(:courtdate) { 6.days.from_now }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the criteria has a past court date' do
+      let(:courtdate) { 6.days.ago }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the criteria does not have a court date' do
+      let(:courtdate) { nil }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+  end
+
   describe 'court_warrant_active' do
     subject { helpers.court_warrant_active? }
 
@@ -402,7 +403,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
         let(:courtdate) { nil }
 
         it 'returns false' do
-          expect(subject).to eq(true)
+          expect(subject).to eq(false)
         end
       end
     end
@@ -516,6 +517,14 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
       end
     end
 
+    context 'when the court date is in future' do
+      let(:courtdate) { 2.weeks.from_now }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
     context 'when there is a court date in the past' do
       let(:courtdate) { 2.days.ago }
 
@@ -537,13 +546,13 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
 
     context 'when there is a court date in the future' do
-      let(:courtdate) { 2.days.ago }
+      let(:courtdate) { 2.days.from_now }
 
       context 'when the court outcome is blank' do
         let(:court_outcome) { nil }
 
         it 'returns false' do
-          expect(subject).to eq(true)
+          expect(subject).to eq(false)
         end
       end
 
@@ -557,7 +566,6 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
     end
   end
 
-  # Remove these tests when enabling MA agreements
   describe 'breached_agreement?' do
     subject { helpers.breached_agreement? }
 
