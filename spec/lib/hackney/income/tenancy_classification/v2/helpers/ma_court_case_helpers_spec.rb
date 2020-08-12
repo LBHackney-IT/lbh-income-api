@@ -160,7 +160,17 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
     end
 
     context 'when there is no court date' do
-      let(:most_recent_court_case) { { court_date: nil } }
+      let(:most_recent_court_case) { { court_date: court_date } }
+      let(:court_date) { nil }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+
+    context 'when the court date is in future' do
+      let(:most_recent_court_case) { { court_date: court_date } }
+      let(:court_date) { 2.weeks.from_now }
 
       it 'returns false' do
         expect(subject).to eq(false)
@@ -190,13 +200,13 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
 
     context 'when there is a court date in the future' do
       let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }
-      let(:court_date) { 2.days.ago }
+      let(:court_date) { 2.days.from_now }
 
       context 'when the court outcome is blank' do
         let(:court_outcome) { nil }
 
         it 'returns false' do
-          expect(subject).to eq(true)
+          expect(subject).to eq(false)
         end
       end
 
