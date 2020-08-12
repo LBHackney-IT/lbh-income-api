@@ -1,8 +1,5 @@
 class CourtCasesController < ApplicationController
   include CourtCaseResponseHelper
-  REQUIRED_UPDATE_PARAMS = %i[id tenancy_ref court_date court_outcome balance_on_court_outcome_date].freeze
-  OPTIONAL_UPDATE_PARAMS = %i[strike_out_date terms disrepair_counter_claim].freeze
-
   def index
     requested_cases = income_use_case_factory.view_court_cases.execute(tenancy_ref: params.fetch(:tenancy_ref))
 
@@ -15,9 +12,18 @@ class CourtCasesController < ApplicationController
   end
 
   def create
+    parameters = %i[tenancy_ref court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim].freeze
+
+    create_court_case_params = params.permit(parameters)
+
     court_case_params = {
-      tenancy_ref: params.require(:tenancy_ref),
-      court_date: params.require(:court_date)
+      tenancy_ref: create_court_case_params[:tenancy_ref],
+      court_date: create_court_case_params[:court_date],
+      court_outcome: create_court_case_params[:court_outcome],
+      balance_on_court_outcome_date: create_court_case_params[:balance_on_court_outcome_date],
+      strike_out_date: create_court_case_params[:strike_out_date],
+      terms: create_court_case_params[:terms],
+      disrepair_counter_claim: create_court_case_params[:disrepair_counter_claim]
     }
 
     new_court_case = income_use_case_factory.create_court_case.execute(court_case_params: court_case_params)
@@ -27,9 +33,12 @@ class CourtCasesController < ApplicationController
   end
 
   def update
+    parameters = %i[id court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim].freeze
+
+    update_court_case_params = params.permit(parameters)
+
     court_case_params = {
       id: update_court_case_params[:id],
-      tenancy_ref: update_court_case_params[:tenancy_ref],
       court_date: update_court_case_params[:court_date],
       court_outcome: update_court_case_params[:court_outcome],
       balance_on_court_outcome_date: update_court_case_params[:balance_on_court_outcome_date],
@@ -46,10 +55,5 @@ class CourtCasesController < ApplicationController
     else
       render json: { error: 'court case not found' }, status: :not_found
     end
-  end
-
-  def update_court_case_params
-    params.require(REQUIRED_UPDATE_PARAMS)
-    params.permit(REQUIRED_UPDATE_PARAMS + OPTIONAL_UPDATE_PARAMS)
   end
 end

@@ -17,7 +17,12 @@ RSpec.describe 'CourtCases', type: :request do
       let(:new_court_case_params) do
         {
           tenancy_ref: tenancy_ref,
-          court_date: court_date
+          court_date: court_date,
+          court_outcome: nil,
+          balance_on_court_outcome_date: nil,
+          strike_out_date: nil,
+          terms: nil,
+          disrepair_counter_claim: nil
         }
       end
 
@@ -77,7 +82,6 @@ RSpec.describe 'CourtCases', type: :request do
         let(:update_court_case_params) do
           {
             id: id,
-            tenancy_ref: tenancy_ref,
             court_date: court_date,
             court_outcome: court_outcome,
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
@@ -101,7 +105,6 @@ RSpec.describe 'CourtCases', type: :request do
 
           parsed_response = JSON.parse(response.body)
 
-          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
           expect(parsed_response['courtDate']).to include(court_date)
           expect(parsed_response['courtOutcome']).to eq(court_outcome)
           expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
@@ -113,7 +116,6 @@ RSpec.describe 'CourtCases', type: :request do
         let(:update_court_case_params) do
           {
             id: id,
-            tenancy_ref: tenancy_ref,
             court_date: court_date,
             court_outcome: court_outcome,
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
@@ -137,7 +139,6 @@ RSpec.describe 'CourtCases', type: :request do
 
           parsed_response = JSON.parse(response.body)
 
-          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
           expect(parsed_response['courtDate']).to include(court_date)
           expect(parsed_response['courtOutcome']).to eq(court_outcome)
           expect(parsed_response['balanceOnCourtOutcomeDate']).to eq(balance_on_court_outcome_date.to_s)
@@ -152,7 +153,6 @@ RSpec.describe 'CourtCases', type: :request do
         let(:update_court_case_params) do
           {
             id: non_existent_id,
-            tenancy_ref: tenancy_ref,
             court_date: court_date,
             court_outcome: court_outcome,
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,

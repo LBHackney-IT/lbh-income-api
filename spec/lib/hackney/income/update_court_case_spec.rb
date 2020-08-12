@@ -61,6 +61,17 @@ describe Hackney::Income::UpdateCourtCase do
     end
   end
 
+  context 'when the court date of the existing court case does not match' do
+    it 'updates the court date of the existing court case and returns it' do
+      new_court_date = Faker::Date.between(from: 20.days.ago, to: 11.days.ago)
+      court_case_params[:court_date] = new_court_date
+      court_case = subject.execute(court_case_params: court_case_params)
+
+      expect(court_case.id).to eq(id)
+      expect(court_case.court_date).to eq(new_court_date)
+    end
+  end
+
   context 'when the court case does not exist' do
     it 'returns nil' do
       court_case_params[:id] = Faker::Number.number(digits: 6)
@@ -69,19 +80,13 @@ describe Hackney::Income::UpdateCourtCase do
     end
   end
 
-  context 'when the court date of the existing court case does not match' do
-    it 'returns nil' do
-      court_case_params[:court_date] = Faker::Date.between(from: 20.days.ago, to: 11.days.ago)
+  context 'when adding a court outcome without a court date to an existing court case' do
+    it 'updates and returns the court case' do
+      court_case = subject.execute(court_case_params: { id: id, court_date: nil, court_outcome: 'SOT' })
 
-      expect(subject.execute(court_case_params: court_case_params)).to be_nil
-    end
-  end
-
-  context 'when the tenancy ref of the existing court case does not match' do
-    it 'returns nil' do
-      court_case_params[:tenancy_ref] = Faker::Number.number(digits: 2).to_s
-
-      expect(subject.execute(court_case_params: court_case_params)).to be_nil
+      expect(court_case.id).to eq(id)
+      expect(court_case.court_date).not_to be_nil
+      expect(court_case.court_outcome).to eq('SOT')
     end
   end
 end
