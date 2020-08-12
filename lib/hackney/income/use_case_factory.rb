@@ -243,6 +243,10 @@ module Hackney
         Hackney::Income::ViewCourtCases.new
       end
 
+      def update_court_case
+        Hackney::Income::UpdateCourtCase.new
+      end
+
       private
 
       def cloud_storage
