@@ -144,7 +144,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
         let(:court_date) { nil }
 
         it 'returns false' do
-          expect(subject).to eq(true)
+          expect(subject).to eq(false)
         end
       end
     end

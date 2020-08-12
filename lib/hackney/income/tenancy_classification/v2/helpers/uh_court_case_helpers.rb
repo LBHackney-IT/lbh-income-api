@@ -5,6 +5,7 @@ module Hackney
         module Helpers
           module UHCourtCaseHelpers
             def court_warrant_active?
+              return false if @criteria.courtdate.blank?
               return false if @criteria.court_outcome.blank?
 
               if @criteria.court_outcome.in?([
@@ -15,7 +16,7 @@ module Hackney
                 Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
                 Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
               ])
-                return @criteria.courtdate.blank? || @criteria.courtdate > 6.years.ago
+                return @criteria.courtdate > 6.years.ago
               end
 
               false

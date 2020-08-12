@@ -8,6 +8,7 @@ module Hackney
 
             def court_warrant_active?
               return false if most_recent_court_case.blank?
+              return false if most_recent_court_case.court_date.blank?
               return false if most_recent_court_case.court_outcome.blank?
 
               if most_recent_court_case.court_outcome.in?([
@@ -18,7 +19,7 @@ module Hackney
                 Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
                 Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
               ])
-                return most_recent_court_case.court_date.blank? || most_recent_court_case.court_date > 6.years.ago
+                return most_recent_court_case.court_date > 6.years.ago
               end
 
               false

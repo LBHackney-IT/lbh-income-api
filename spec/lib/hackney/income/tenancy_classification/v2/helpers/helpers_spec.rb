@@ -403,7 +403,7 @@ describe Hackney::Income::TenancyClassification::V2::Helpers do
         let(:courtdate) { nil }
 
         it 'returns false' do
-          expect(subject).to eq(true)
+          expect(subject).to eq(false)
         end
       end
     end
