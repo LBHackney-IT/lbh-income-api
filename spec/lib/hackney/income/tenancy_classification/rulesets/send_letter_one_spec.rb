@@ -309,5 +309,6 @@ describe 'Send Letter One Rule', type: :feature do
     }
   ]
 
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', send_letter_one_condition_matrix
   it_behaves_like 'TenancyClassification', send_letter_one_condition_matrix
 end

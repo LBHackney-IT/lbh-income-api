@@ -313,4 +313,5 @@ describe 'Send NOSP Rule', type: :feature do
   ]
 
   it_behaves_like 'TenancyClassification', send_nosp_condition_matrix
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', send_nosp_condition_matrix
 end

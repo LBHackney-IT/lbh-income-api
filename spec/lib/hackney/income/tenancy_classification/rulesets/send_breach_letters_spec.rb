@@ -47,5 +47,6 @@ describe 'Various "Send breach letter" examples (new)' do
     )
   ]
 
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
   include_examples 'TenancyClassification', examples
 end

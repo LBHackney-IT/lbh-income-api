@@ -41,4 +41,5 @@ describe 'Check Data examples' do
     )
   ]
   it_behaves_like 'TenancyClassification', examples
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
 end

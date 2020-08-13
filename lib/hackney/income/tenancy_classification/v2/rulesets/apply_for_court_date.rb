@@ -14,7 +14,7 @@ module Hackney
               return false if should_prevent_action?
               return false if @criteria.collectable_arrears.blank?
               return false if @criteria.weekly_gross_rent.blank?
-              return false if @criteria.active_agreement?
+              return false if active_agreement?
 
               return false unless @criteria.nosp.served?
 
@@ -23,7 +23,7 @@ module Hackney
 
               return false unless @criteria.nosp.active?
 
-              return false if @criteria.courtdate.present? && @criteria.courtdate > @criteria.last_communication_date
+              return false if court_date.present? && court_date > @criteria.last_communication_date
 
               balance_is_in_arrears_by_number_of_weeks?(4)
             end

@@ -41,4 +41,5 @@ describe 'Informal Breach after letter' do
   ]
 
   include_examples 'TenancyClassification', examples
+  include_examples 'TenancyClassificationWithAgreementsInMA', examples
 end

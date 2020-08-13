@@ -169,5 +169,6 @@ describe 'Send Court Warning Letter Rule', type: :feature do
     }
   ]
 
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', send_court_warning_letter_condition_matrix
   it_behaves_like 'TenancyClassification', send_court_warning_letter_condition_matrix
 end
