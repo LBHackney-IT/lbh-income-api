@@ -7,7 +7,7 @@ class CourtCasesController < ApplicationController
       map_court_case_to_response(court_case: c)
     end
 
-    response = { court_cases: cases }
+    response = { courtCases: cases }
     render json: response
   end
 
