@@ -59,9 +59,6 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       courtdate: courtdate,
       eviction_date: eviction_date,
       court_outcome: court_outcome,
-      latest_active_agreement_date: latest_active_agreement_date,
-      breach_agreement_date: breach_agreement_date,
-      number_of_broken_agreements: number_of_broken_agreements,
       expected_balance: expected_balance,
       most_recent_agreement: most_recent_agreement,
       days_since_last_payment: days_since_last_payment,
@@ -82,9 +79,6 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       let(:court_outcome) { options[:court_outcome] }
       let(:courtdate) { options[:courtdate] }
       let(:eviction_date) { options[:eviction_date] || '' }
-      let(:latest_active_agreement_date) { options[:latest_active_agreement_date] }
-      let(:breach_agreement_date) { options[:breach_agreement_date] }
-      let(:number_of_broken_agreements) { options[:number_of_broken_agreements] }
       let(:expected_balance) { options[:expected_balance] }
       let(:most_recent_agreement) { options[:most_recent_agreement] }
       let(:days_since_last_payment) { options[:days_since_last_payment] }
