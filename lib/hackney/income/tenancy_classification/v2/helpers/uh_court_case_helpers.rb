@@ -4,7 +4,7 @@ module Hackney
       module V2
         module Helpers
           module UHCourtCaseHelpers
-            def court_warrant_active?
+            def court_warrant_active_uh?
               return false if @criteria.courtdate.blank?
               return false if @criteria.court_outcome.blank?
 
@@ -22,19 +22,27 @@ module Hackney
               false
             end
 
-            def court_date_in_future?
+            def court_date_in_future_uh?
               @criteria.courtdate.present? && @criteria.courtdate.future?
             end
 
-            def no_court_date?
+            def no_court_date_uh?
               @criteria.courtdate.blank?
             end
 
-            def court_outcome_missing?
-              return false if court_date_in_future?
-              return false if no_court_date?
+            def court_outcome_missing_uh?
+              return false if court_date_in_future_uh?
+              return false if no_court_date_uh?
 
               @criteria.court_outcome.blank?
+            end
+
+            def court_date_uh
+              @criteria.courtdate
+            end
+
+            def court_outcome_uh
+              @criteria.court_outcome
             end
           end
         end

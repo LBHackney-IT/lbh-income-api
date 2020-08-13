@@ -2,12 +2,13 @@ require 'rails_helper'
 
 describe Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers do
   class DummyCourtCaseHelperClass
-    include Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
+    include Hackney::Income::TenancyClassification::V2::Helpers::HelpersProxy
 
     def initialize(case_priority, criteria, documents)
       @case_priority = case_priority
       @criteria = criteria
       @documents = documents
+      @use_ma_data = true # This will call MACourtCaseHelpers trough the HelpersProxy class
     end
   end
 
