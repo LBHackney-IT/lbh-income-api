@@ -62,4 +62,5 @@ describe '"Court Breach - No Payment" examples' do
   ]
 
   include_examples 'TenancyClassification', examples
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
 end

@@ -3,12 +3,7 @@ module Hackney
     module TenancyClassification
       module V2
         module Helpers
-          # Replace these with:
-          # include Hackney::Income::TenancyClassification::V2::Helpers::MAAgreementHelpers
-          # include Hackney::Income::TenancyClassification::V2::Helpers::MACourtCaseHelpers
-          # when agreements synced from UH
-          include Hackney::Income::TenancyClassification::V2::Helpers::UHAgreementHelpers
-          include Hackney::Income::TenancyClassification::V2::Helpers::UHCourtCaseHelpers
+          include Hackney::Income::TenancyClassification::V2::Helpers::HelpersProxy
 
           def case_paused?
             @case_priority.paused?

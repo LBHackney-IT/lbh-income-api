@@ -50,4 +50,5 @@ describe 'Apply for Outright Possession Warrant Rule examples' do
     )
   ]
   it_behaves_like 'TenancyClassification', examples
+  include_examples 'TenancyClassificationWithAgreementsInMA', examples
 end

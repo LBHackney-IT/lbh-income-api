@@ -5,10 +5,11 @@ module Hackney
         class Classifier
           include Helpers
 
-          def initialize(case_priority, criteria, documents)
+          def initialize(case_priority, criteria, documents, use_ma_data = false)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents
+            @use_ma_data = use_ma_data
           end
 
           def execute
@@ -30,7 +31,7 @@ module Hackney
               Rulesets::CheckData
             ]
 
-            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
+            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents, @use_ma_data).execute }
 
             actions.compact!
 

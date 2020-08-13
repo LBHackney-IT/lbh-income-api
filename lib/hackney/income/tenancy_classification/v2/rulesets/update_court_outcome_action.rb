@@ -12,11 +12,11 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.courtdate.blank?
-              return false if @criteria.courtdate.future?
+              return false if court_date.blank?
+              return false if court_date.future?
               return false if court_breach_agreement?
 
-              @criteria.court_outcome.blank?
+              court_outcome.blank?
             end
           end
         end

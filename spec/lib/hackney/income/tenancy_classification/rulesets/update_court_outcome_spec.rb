@@ -84,4 +84,5 @@ describe '"Update court outcome" examples' do
   ]
 
   include_examples 'TenancyClassification', examples
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
 end
