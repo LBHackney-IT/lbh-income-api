@@ -65,8 +65,8 @@ RSpec.describe 'CourtCases', type: :request do
 
         parsed_response = JSON.parse(response.body)
 
-        expect(parsed_response['court_cases'].count).to eq(3)
-        parsed_response['court_cases'].each do |court_case|
+        expect(parsed_response['courtCases'].count).to eq(3)
+        parsed_response['courtCases'].each do |court_case|
           expect(court_case['tenancyRef']).to eq(tenancy_ref)
         end
       end
