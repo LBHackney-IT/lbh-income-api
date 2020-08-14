@@ -74,9 +74,30 @@ RSpec.describe 'CourtCases', type: :request do
   end
 
   describe 'PATCH /api/v1/court_case/{tenancy_ref}' do
-    path '/court_case/{court_case_id}/update' do
+    path '/court_case/{id}/update' do
       let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
       let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
+
+      before do
+        allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+      end
+
+      it 'passes the request body and court case id to update court case use-case' do
+        request_body =
+          {
+            court_date: court_date,
+            court_outcome: court_outcome,
+            balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
+            strike_out_date: nil,
+            terms: nil,
+            disrepair_counter_claim: nil
+          }
+
+        expect(update_court_case_instance).to receive(:execute)
+          .with(court_case_params: request_body.merge(id: id))
+
+        patch "/api/v1/court_case/#{id}/update", params: request_body
+      end
 
       context 'when adding a (not adjourned) court outcome' do
         let(:update_court_case_params) do
@@ -94,7 +115,6 @@ RSpec.describe 'CourtCases', type: :request do
         let(:updated_court_case) { create(:court_case, update_court_case_params) }
 
         before do
-          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
           allow(update_court_case_instance).to receive(:execute)
             .with(court_case_params: update_court_case_params)
             .and_return(updated_court_case)
@@ -128,7 +148,6 @@ RSpec.describe 'CourtCases', type: :request do
         let(:updated_court_case) { build(:court_case, update_court_case_params) }
 
         before do
-          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
           allow(update_court_case_instance).to receive(:execute)
             .with(court_case_params: update_court_case_params)
             .and_return(updated_court_case)
@@ -163,7 +182,6 @@ RSpec.describe 'CourtCases', type: :request do
         end
 
         before do
-          allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
           allow(update_court_case_instance).to receive(:execute)
             .with(court_case_params: update_court_case_params)
             .and_return(nil)
