@@ -231,6 +231,13 @@ module Hackney
         )
       end
 
+      def create_formal_agreement
+        Hackney::Income::CreateFormalAgreement.new(
+          add_action_diary: add_action_diary,
+          cancel_agreement: cancel_agreement
+        )
+      end
+
       def cancel_agreement
         Hackney::Income::CancelAgreement.new
       end
