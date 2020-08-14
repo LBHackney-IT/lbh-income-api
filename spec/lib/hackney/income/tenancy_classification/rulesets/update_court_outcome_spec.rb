@@ -56,7 +56,6 @@ describe '"Update court outcome" examples' do
       description: 'with no court date set and a court outcome has been reached',
       outcome: :check_data,
       court_outcome: 'Outcome reached',
-      skip_v1_test: true,
       courtdate: nil
     ),
     base_example.merge(

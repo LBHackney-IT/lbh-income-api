@@ -23,8 +23,7 @@ describe 'Various "Send informal breach letter" examples (new)' do
     ),
     base_example.deep_merge(
       description: 'with an invalid NOSP',
-      nosp_served_date: 5.years.ago,
-      skip_v1_test: true
+      nosp_served_date: 5.years.ago
     ),
     base_example.deep_merge(
       description: 'with an undated agreement',
