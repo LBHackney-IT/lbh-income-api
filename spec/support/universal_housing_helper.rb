@@ -56,11 +56,13 @@ module UniversalHousingHelper
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def create_uh_agreement(tenancy_ref:, startdate:)
+  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:)
     Hackney::UniversalHousing::Client.connection[:arag].insert(
-      tag_ref: tenancy_ref,
-      arag_startdate: startdate.to_date,
-      arag_breached: false
+      tag_ref: tag_ref,
+      arag_startdate: arag_startdate.to_date,
+      arag_breached: arag_breached,
+      arag_startbal: arag_startbal,
+      arag_comment: arag_comment
     )
   end
 
