@@ -98,7 +98,8 @@ RSpec.describe 'Agreements', type: :request do
 
   describe 'POST /api/v1/agreement/{tenancy_ref}' do
     path '/agreement/{tenancy_ref}' do
-      let(:create_agreement_instance) { instance_double(Hackney::Income::CreateInformalAgreement) }
+      let(:create_informal_agreement_instance) { instance_double(Hackney::Income::CreateInformalAgreement) }
+      let(:create_formal_agreement_instance) { instance_double(Hackney::Income::CreateFormalAgreement) }
       let(:new_agreement_params) do
         {
           tenancy_ref: tenancy_ref,
@@ -107,7 +108,8 @@ RSpec.describe 'Agreements', type: :request do
           start_date: start_date.to_s,
           frequency: frequency,
           created_by: created_by,
-          notes: notes
+          notes: notes,
+          court_case_id: nil
         }
       end
 
@@ -118,29 +120,62 @@ RSpec.describe 'Agreements', type: :request do
                **new_agreement_params)
       end
 
-      before do
-        allow(Hackney::Income::CreateInformalAgreement).to receive(:new).and_return(create_agreement_instance)
-        allow(create_agreement_instance).to receive(:execute)
-          .with(new_agreement_params: new_agreement_params)
-          .and_return(created_agreement)
+      context 'when its an informal agreement' do
+        before do
+          allow(Hackney::Income::CreateInformalAgreement).to receive(:new).and_return(create_informal_agreement_instance)
+          allow(create_informal_agreement_instance).to receive(:execute)
+            .with(new_agreement_params: new_agreement_params)
+            .and_return(created_agreement)
+        end
+
+        it 'creates a new active agreement for the given tenancy_ref' do
+          post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
+
+          parsed_response = JSON.parse(response.body)
+
+          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+          expect(parsed_response['agreementType']).to eq(agreement_type)
+          expect(parsed_response['startingBalance']).to eq(starting_balance.to_s)
+          expect(parsed_response['amount']).to eq(amount.to_s)
+          expect(parsed_response['startDate']).to include(start_date.to_s)
+          expect(parsed_response['frequency']).to eq(frequency)
+          expect(parsed_response['currentState']).to eq('live')
+          expect(parsed_response['createdAt']).to eq(Date.today.to_s)
+          expect(parsed_response['createdBy']).to eq(created_by)
+          expect(parsed_response['notes']).to eq(notes)
+          expect(parsed_response['history']).to eq([])
+        end
       end
 
-      it 'creates a new active agreement for the given tenancy_ref' do
-        post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
+      context 'when its a formal agreement' do
+        before do
+          court_case = create(:court_case)
+          new_agreement_params[:agreement_type] = 'formal'
+          new_agreement_params[:court_case_id] = court_case.id.to_s
 
-        parsed_response = JSON.parse(response.body)
+          allow(Hackney::Income::CreateFormalAgreement).to receive(:new).and_return(create_formal_agreement_instance)
+          allow(create_formal_agreement_instance).to receive(:execute)
+            .with(new_agreement_params: new_agreement_params)
+            .and_return(created_agreement)
+        end
 
-        expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
-        expect(parsed_response['agreementType']).to eq(agreement_type)
-        expect(parsed_response['startingBalance']).to eq(starting_balance.to_s)
-        expect(parsed_response['amount']).to eq(amount.to_s)
-        expect(parsed_response['startDate']).to include(start_date.to_s)
-        expect(parsed_response['frequency']).to eq(frequency)
-        expect(parsed_response['currentState']).to eq('live')
-        expect(parsed_response['createdAt']).to eq(Date.today.to_s)
-        expect(parsed_response['createdBy']).to eq(created_by)
-        expect(parsed_response['notes']).to eq(notes)
-        expect(parsed_response['history']).to eq([])
+        it 'creates a new formal agreement for the given tenancy_ref' do
+          post "/api/v1/agreement/#{tenancy_ref}", params: new_agreement_params
+
+          parsed_response = JSON.parse(response.body)
+
+          expect(parsed_response['tenancyRef']).to eq(tenancy_ref)
+          expect(parsed_response['agreementType']).to eq('formal')
+          expect(parsed_response['startingBalance']).to eq(starting_balance.to_s)
+          expect(parsed_response['amount']).to eq(amount.to_s)
+          expect(parsed_response['startDate']).to include(start_date.to_s)
+          expect(parsed_response['frequency']).to eq(frequency)
+          expect(parsed_response['currentState']).to eq('live')
+          expect(parsed_response['createdAt']).to eq(Date.today.to_s)
+          expect(parsed_response['createdBy']).to eq(created_by)
+          expect(parsed_response['notes']).to eq(notes)
+          expect(parsed_response['history']).to eq([])
+        end
       end
     end
   end
