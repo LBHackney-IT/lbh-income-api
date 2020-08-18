@@ -10,7 +10,7 @@ module Hackney
       def execute(tenancy_ref:, template_id:, user:, agreement: nil)
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
-        agreement_info = get_agreement_info(agreement)
+        agreement_info = get_agreement_info(tenancy_ref, agreement)
         letter_params = income_info.merge(agreement_info)
 
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
@@ -43,11 +43,13 @@ module Hackney
         templates[templates.index { |temp| temp[:id] == template_id }]
       end
 
-      def get_agreement_info(agreement)
+      def get_agreement_info(tenancy_ref, agreement)
+        return { } if agreement.nil? # Placeholder - remove once informal agreement letter can be generated
+
         case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
 
         {
-          rent: case_priority.weekly_rent
+          rent: case_priority.weekly_rent,
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
           date_of_first_payment: agreement.start_date

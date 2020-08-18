@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe Hackney::IncomeCollection::Letter::InformalAgreement do
   let(:tenancy_ref)   {Faker::Number.number(digits: 2).to_s }
+  let(:frequency) { 'weekly' }
+  let(:amount) { 30 }
+  let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
+  let(:weekly_rent) { 10.to_f }
   let(:letter_params) {
     {
       tenancy_ref: tenancy_ref,
@@ -13,15 +17,13 @@ describe Hackney::IncomeCollection::Letter::InformalAgreement do
       correspondence_postcode: Faker::Address.zip_code,
       property_address: Faker::Address.street_address,
       total_collectable_arrears_balance: Faker::Number.number(digits: 3),
+      rent: weekly_rent,
+      agreement_frequency: frequency,
+      amount: amount,
+      date_of_first_payment: start_date
     }
   }
 
-  let(:frequency) { 'weekly' }
-  let(:amount) { 30 }
-  let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
-  let!(:agreement) { create(:agreement, tenancy_ref: tenancy_ref, frequency: frequency, amount: amount, start_date: start_date) }
-  let(:weekly_rent) { 10 }
-  let!(:case_priority) { create(:case_priority, tenancy_ref: tenancy_ref,  weekly_rent: weekly_rent) }
   let!(:letter) { described_class.new(letter_params) }
 
   context 'when the letter is being generated' do
@@ -33,22 +35,6 @@ describe Hackney::IncomeCollection::Letter::InformalAgreement do
       end
     end
   end
-
-  context 'when a case exists' do
-    it 'is able to return the cases weekly rent' do
-      expect(letter.rent).to eq(case_priority.weekly_rent)
-    end
-  end
-
- context 'when an informal agreement exists' do
-   it 'returns the correct agreement' do
-   expect(letter.agreement.tenancy_ref).to eq(agreement.tenancy_ref)
-   end
-
-   it 'returns the correct start date' do
-     expect(letter.date_of_first_payment).to eq(start_date.strftime('%d %B %Y'))
-   end
- end
 
  describe '#calculate rent' do
   context 'when the frequency is monthly' do

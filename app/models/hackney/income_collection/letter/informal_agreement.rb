@@ -38,7 +38,7 @@ module Hackney
           else
             rent
           end
-          BigDecimal(rent.to_s)
+         BigDecimal(rent.to_s)
         end
 
         def calculate_total_amount_payable(rent, instalment_amount)
