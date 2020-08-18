@@ -10,6 +10,9 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
       create_uh_agreement(
         tag_ref: tenancy_ref,
         arag_startdate: startdate,
+        arag_lastcheckbal: lastcheckbal,
+        arag_lastcheckdate: lastcheckdate,
+        arag_lastexpectedbal: lastexpectedbal,
         arag_breached: breached,
         arag_startbal: startbal,
         arag_comment: comment,
@@ -29,11 +32,17 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
     let(:aragdet_comment) { 'Subsequent comment made when agreement was updated' }
     let(:amount) { 10.42 }
     let(:frequency) { 5 }
+    let(:lastcheckbal) { 1200.45 }
+    let(:lastcheckdate) { DateTime.now.midnight }
+    let(:lastexpectedbal) { 1200.45 }
 
     it 'returns a single UH agreement in a dataset' do
       expect(subject.count).to eq(1)
       agreement = subject[0]
       expect(agreement[:start_date]).to eq(aragdet_startdate)
+      expect(agreement[:last_check_balance]).to eq(lastcheckbal)
+      expect(agreement[:last_check_date]).to eq(lastcheckdate)
+      expect(agreement[:last_check_expected_balance]).to eq(lastexpectedbal)
       expect(agreement[:breached]).to eq(breached)
       expect(agreement[:starting_balance]).to eq(startbal)
       expect(agreement[:comment]).to eq(aragdet_comment)
@@ -44,13 +53,9 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
 
   context 'when provided a tenancy ref with two agreements (separate arags)' do
     before do
-      create_uh_agreement(
-        agreement_one.symbolize_keys
-      )
+      create_uh_agreement(agreement_one)
 
-      create_uh_agreement(
-        agreement_two.symbolize_keys
-      )
+      create_uh_agreement(agreement_two)
     end
 
     let(:tenancy_ref) { '012345/01' }
@@ -65,7 +70,10 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
         arag_comment: nil,
         aragdet_comment: 'First agreement here',
         aragdet_amount: 100.40,
-        aragdet_frequency: 5
+        aragdet_frequency: 5,
+        arag_lastcheckbal: 1200.45,
+        arag_lastcheckdate: DateTime.now.midnight,
+        arag_lastexpectedbal: 1200.45
       }
     }
 
@@ -79,7 +87,10 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
         arag_comment: nil,
         aragdet_comment: 'Replaces previous agreement to reduce payments',
         aragdet_amount: 50.20,
-        aragdet_frequency: 5
+        aragdet_frequency: 5,
+        arag_lastcheckbal: 1200.45,
+        arag_lastcheckdate: DateTime.now.midnight,
+        arag_lastexpectedbal: 1200.45
       }
     }
 
@@ -128,7 +139,10 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
         arag_comment: nil,
         aragdet_comment: 'First agreement here',
         aragdet_amount: 100.40,
-        aragdet_frequency: 5
+        aragdet_frequency: 5,
+        arag_lastcheckbal: 1200.45,
+        arag_lastcheckdate: DateTime.now.midnight,
+        arag_lastexpectedbal: 1200.45
       }
     }
 

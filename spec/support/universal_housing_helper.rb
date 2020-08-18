@@ -57,6 +57,9 @@ module UniversalHousingHelper
 
   def create_uh_agreement(tag_ref:,
                           arag_startdate:,
+                          arag_lastcheckbal:,
+                          arag_lastcheckdate:,
+                          arag_lastexpectedbal:,
                           arag_breached:,
                           arag_startbal:,
                           arag_comment:,
@@ -72,6 +75,9 @@ module UniversalHousingHelper
       tag_ref: tag_ref,
       arag_startdate: arag_startdate&.to_date,
       arag_breached: arag_breached,
+      arag_lastcheckbal: arag_lastcheckbal,
+      arag_lastcheckdate: arag_lastcheckdate&.to_date,
+      arag_lastexpectedbal: arag_lastexpectedbal,
       arag_startbal: arag_startbal,
       arag_comment: arag_comment
     )

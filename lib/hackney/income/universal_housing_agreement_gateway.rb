@@ -19,6 +19,9 @@ module Hackney
           {
             start_date: agreement[:aragdet_startdate],
             breached: agreement[:arag_breached],
+            last_check_balance: agreement[:arag_lastcheckbal],
+            last_check_date: agreement[:arag_lastcheckdate],
+            last_check_expected_balance: agreement[:arag_lastexpectedbal],
             starting_balance: agreement[:arag_startbal],
             comment: agreement[:aragdet_comment],
             amount: agreement[:aragdet_amount],
