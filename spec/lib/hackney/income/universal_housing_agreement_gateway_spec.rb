@@ -1,64 +1,53 @@
 require 'rails_helper'
 
 describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
-  subject(:criteria) { described_class.new(universal_housing_client).for_tenancy(tenancy_ref: tenancy_ref) }
+  subject(:agreements) { described_class.new(universal_housing_client).for_tenancy(tenancy_ref: tenancy_ref) }
 
   let(:universal_housing_client) { Hackney::UniversalHousing::Client.connection }
+  let(:tenancy_ref) { '012345/01' }
 
   context 'when provided a tenancy ref with a single agreement' do
     before do
-      create_uh_agreement(
-        tag_ref: tenancy_ref,
-        arag_startdate: startdate,
-        arag_lastcheckbal: lastcheckbal,
-        arag_lastcheckdate: lastcheckdate,
-        arag_lastexpectedbal: lastexpectedbal,
-        arag_breached: breached,
-        arag_startbal: startbal,
-        arag_comment: comment,
-        aragdet_amount: amount,
-        aragdet_comment: aragdet_comment,
-        aragdet_startdate: aragdet_startdate,
-        aragdet_frequency: frequency
-      )
+      create_uh_agreement(agreement)
     end
 
-    let(:tenancy_ref) { '012345/01' }
-    let(:startdate) { DateTime.now.midnight - 7.days }
-    let(:aragdet_startdate) { DateTime.now.midnight + 5.days }
-    let(:breached) { false }
-    let(:startbal) { 1230.45 }
-    let(:comment) { 'Initial comment made when agreement was created' }
-    let(:aragdet_comment) { 'Subsequent comment made when agreement was updated' }
-    let(:amount) { 10.42 }
-    let(:frequency) { 5 }
-    let(:lastcheckbal) { 1200.45 }
-    let(:lastcheckdate) { DateTime.now.midnight }
-    let(:lastexpectedbal) { 1200.45 }
+    let(:agreement) {
+      {
+        tag_ref: tenancy_ref,
+        arag_startdate: DateTime.now.midnight - 7.days,
+        arag_lastcheckbal: 1200.45,
+        arag_lastcheckdate: DateTime.now.midnight,
+        arag_lastexpectedbal: 1200.45,
+        arag_breached: false,
+        arag_startbal: 1230.45,
+        arag_comment: 'Initial comment made when agreement was created',
+        aragdet_amount: 1230.45,
+        aragdet_comment: 'Subsequent comment made when agreement was updated',
+        aragdet_startdate: DateTime.now.midnight,
+        aragdet_frequency: 5
+      }
+    }
 
     it 'returns a single UH agreement in a dataset' do
       expect(subject.count).to eq(1)
-      agreement = subject[0]
-      expect(agreement[:start_date]).to eq(aragdet_startdate)
-      expect(agreement[:last_check_balance]).to eq(lastcheckbal)
-      expect(agreement[:last_check_date]).to eq(lastcheckdate)
-      expect(agreement[:last_check_expected_balance]).to eq(lastexpectedbal)
-      expect(agreement[:breached]).to eq(breached)
-      expect(agreement[:starting_balance]).to eq(startbal)
-      expect(agreement[:comment]).to eq(aragdet_comment)
-      expect(agreement[:amount]).to eq(amount)
-      expect(agreement[:frequency]).to eq(frequency)
+
+      expect(subject[0][:start_date]).to eq(agreement[:aragdet_startdate])
+      expect(subject[0][:last_check_balance]).to eq(agreement[:arag_lastcheckbal])
+      expect(subject[0][:last_check_date]).to eq(agreement[:arag_lastcheckdate])
+      expect(subject[0][:last_check_expected_balance]).to eq(agreement[:arag_lastexpectedbal])
+      expect(subject[0][:breached]).to eq(agreement[:arag_breached])
+      expect(subject[0][:starting_balance]).to eq(agreement[:arag_startbal])
+      expect(subject[0][:comment]).to eq(agreement[:aragdet_comment])
+      expect(subject[0][:amount]).to eq(agreement[:aragdet_amount])
+      expect(subject[0][:frequency]).to eq(agreement[:aragdet_frequency])
     end
   end
 
   context 'when provided a tenancy ref with two agreements (separate arags)' do
     before do
       create_uh_agreement(agreement_one)
-
       create_uh_agreement(agreement_two)
     end
-
-    let(:tenancy_ref) { '012345/01' }
 
     let(:agreement_one) {
       {
@@ -96,40 +85,34 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
 
     it 'returns two UH agreements in an array' do
       expect(subject.count).to eq(2)
-      agreement = subject[0]
-      expect(agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
-      expect(agreement[:breached]).to eq(agreement_one[:arag_breached])
-      expect(agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
-      expect(agreement[:comment]).to eq(agreement_one[:aragdet_comment])
-      expect(agreement[:amount]).to eq(agreement_one[:aragdet_amount])
-      expect(agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
 
-      agreement = subject[1]
-      expect(agreement[:start_date]).to eq(agreement_two[:aragdet_startdate])
-      expect(agreement[:breached]).to eq(agreement_two[:arag_breached])
-      expect(agreement[:starting_balance]).to eq(agreement_two[:arag_startbal])
-      expect(agreement[:comment]).to eq(agreement_two[:aragdet_comment])
-      expect(agreement[:amount]).to eq(agreement_two[:aragdet_amount])
-      expect(agreement[:frequency]).to eq(agreement_two[:aragdet_frequency])
+      first_agreement = subject[0]
+      second_agreement = subject[1]
+
+      expect(first_agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
+      expect(first_agreement[:breached]).to eq(agreement_one[:arag_breached])
+      expect(first_agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
+      expect(first_agreement[:comment]).to eq(agreement_one[:aragdet_comment])
+      expect(first_agreement[:amount]).to eq(agreement_one[:aragdet_amount])
+      expect(first_agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
+
+      expect(second_agreement[:start_date]).to eq(agreement_two[:aragdet_startdate])
+      expect(second_agreement[:breached]).to eq(agreement_two[:arag_breached])
+      expect(second_agreement[:starting_balance]).to eq(agreement_two[:arag_startbal])
+      expect(second_agreement[:comment]).to eq(agreement_two[:aragdet_comment])
+      expect(second_agreement[:amount]).to eq(agreement_two[:aragdet_amount])
+      expect(second_agreement[:frequency]).to eq(agreement_two[:aragdet_frequency])
     end
   end
 
   context 'when provided a tenancy ref with two agreements (same arag)' do
     before do
-      create_uh_agreement(
-        agreement_one.symbolize_keys
-      )
+      create_uh_agreement(agreement)
 
-      update_uh_agreement(
-        tag_ref: tenancy_ref,
-        aragdet_comment: updated_agreement[:aragdet_comment],
-        aragdet_amount: updated_agreement[:aragdet_amount]
-      )
+      update_uh_agreement(updated_agreement)
     end
 
-    let(:tenancy_ref) { '012345/01' }
-
-    let(:agreement_one) {
+    let(:agreement) {
       {
         tag_ref: tenancy_ref,
         arag_startdate: nil,
@@ -148,6 +131,7 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
 
     let(:updated_agreement) {
       {
+        tag_ref: tenancy_ref,
         aragdet_comment: 'Replaces previous agreement to reduce payments',
         aragdet_amount: 50.20
       }
@@ -155,21 +139,23 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
 
     it 'returns two UH agreements in an array' do
       expect(subject.count).to eq(2)
-      agreement = subject[0]
-      expect(agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
-      expect(agreement[:breached]).to eq(agreement_one[:arag_breached])
-      expect(agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
-      expect(agreement[:comment]).to eq(agreement_one[:aragdet_comment])
-      expect(agreement[:amount]).to eq(agreement_one[:aragdet_amount])
-      expect(agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
 
-      agreement = subject[1]
-      expect(agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
-      expect(agreement[:breached]).to eq(agreement_one[:arag_breached])
-      expect(agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
-      expect(agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
-      expect(agreement[:comment]).to eq(updated_agreement[:aragdet_comment])
-      expect(agreement[:amount]).to eq(updated_agreement[:aragdet_amount])
+      first_agreement = subject[0]
+      second_agreement = subject[1]
+
+      expect(first_agreement[:start_date]).to eq(agreement[:aragdet_startdate])
+      expect(first_agreement[:breached]).to eq(agreement[:arag_breached])
+      expect(first_agreement[:starting_balance]).to eq(agreement[:arag_startbal])
+      expect(first_agreement[:comment]).to eq(agreement[:aragdet_comment])
+      expect(first_agreement[:amount]).to eq(agreement[:aragdet_amount])
+      expect(first_agreement[:frequency]).to eq(agreement[:aragdet_frequency])
+
+      expect(second_agreement[:start_date]).to eq(agreement[:aragdet_startdate])
+      expect(second_agreement[:breached]).to eq(agreement[:arag_breached])
+      expect(second_agreement[:starting_balance]).to eq(agreement[:arag_startbal])
+      expect(second_agreement[:frequency]).to eq(agreement[:aragdet_frequency])
+      expect(second_agreement[:comment]).to eq(updated_agreement[:aragdet_comment])
+      expect(second_agreement[:amount]).to eq(updated_agreement[:aragdet_amount])
     end
   end
 end
