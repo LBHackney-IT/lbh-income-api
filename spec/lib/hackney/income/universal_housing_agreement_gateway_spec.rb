@@ -15,7 +15,8 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
         arag_comment: comment,
         aragdet_amount: amount,
         aragdet_comment: aragdet_comment,
-        aragdet_startdate: aragdet_startdate
+        aragdet_startdate: aragdet_startdate,
+        aragdet_frequency: frequency
       )
     end
 
@@ -27,6 +28,7 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
     let(:comment) { 'Initial comment made when agreement was created' }
     let(:aragdet_comment) { 'Subsequent comment made when agreement was updated' }
     let(:amount) { 10.42 }
+    let(:frequency) { 5 }
 
     it 'returns a single UH agreement in a dataset' do
       expect(subject.count).to eq(1)
@@ -36,6 +38,7 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
       expect(agreement[:starting_balance]).to eq(startbal)
       expect(agreement[:comment]).to eq(aragdet_comment)
       expect(agreement[:amount]).to eq(amount)
+      expect(agreement[:frequency]).to eq(frequency)
     end
   end
 end

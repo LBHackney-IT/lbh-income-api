@@ -21,7 +21,8 @@ module Hackney
             breached: agreement[:arag_breached],
             starting_balance: agreement[:arag_startbal],
             comment: agreement[:aragdet_comment],
-            amount: agreement[:aragdet_amount]
+            amount: agreement[:aragdet_amount],
+            frequency: agreement[:aragdet_frequency].to_i
           }
         end
       end
