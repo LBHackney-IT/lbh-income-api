@@ -70,7 +70,7 @@ module UniversalHousingHelper
       arag_ref: arag_sid,
       arag_sid: arag_sid,
       tag_ref: tag_ref,
-      arag_startdate: arag_startdate.to_date,
+      arag_startdate: arag_startdate&.to_date,
       arag_breached: arag_breached,
       arag_startbal: arag_startbal,
       arag_comment: arag_comment
