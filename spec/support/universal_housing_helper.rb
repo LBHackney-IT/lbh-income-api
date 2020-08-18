@@ -56,7 +56,7 @@ module UniversalHousingHelper
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:, aragdet_amount:)
+  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:, aragdet_amount:, aragdet_comment:)
     arag_sid = Hackney::UniversalHousing::Client.connection[:arag].count
 
     Hackney::UniversalHousing::Client.connection[:arag].insert(
@@ -76,7 +76,7 @@ module UniversalHousingHelper
       aragdet_frequency: 1,
       aragdet_startdate: DateTime.now.to_date,
       aragdet_enddate: DateTime.now.to_date,
-      aragdet_comment: ''
+      aragdet_comment: aragdet_comment
     )
   end
 

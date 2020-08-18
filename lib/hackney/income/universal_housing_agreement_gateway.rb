@@ -20,7 +20,7 @@ module Hackney
             start_date: agreement[:arag_startdate],
             breached: agreement[:arag_breached],
             starting_balance: agreement[:arag_startbal],
-            comment: agreement[:arag_comment],
+            comment: agreement[:aragdet_comment],
             amount: agreement[:aragdet_amount]
           }
         end
