@@ -71,5 +71,23 @@ describe Hackney::IncomeCollection::Letter do
         expect(parts.size).to eq(4)
       end
     end
+
+    context 'when generating an informal agreement letter' do
+      it 'generates an informal agreement confirmation letter' do
+        expect(Hackney::IncomeCollection::Letter::InformalAgreement).to receive(:new).with(letter_params).and_call_original
+
+        letter = described_class.build(
+          letter_params: letter_params,
+          template_path: Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS.sample
+        )
+
+        expect(letter.errors).to eq [
+          { message: 'missing mandatory field', name: 'rent_charge' },
+          { message: 'missing mandatory field', name: 'instalment_amount' },
+          { message: 'missing mandatory field', name: 'date_of_first_payment' },
+          { message: 'missing mandatory field', name: 'total_amount_payable' }
+        ]
+      end
+    end
   end
 end

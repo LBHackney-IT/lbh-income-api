@@ -8,12 +8,18 @@ module Hackney
       attr_reader :tenancy_ref, :address_line1, :address_line2,
                   :address_line3, :address_line4, :address_post_code,
                   :payment_ref, :total_collectable_arrears_balance,
-                  :title, :forename, :surname, :errors, :tenant_address
+                  :title, :forename, :surname, :errors, :tenant_address, :rent,
+                  :agreement, :rent_charge, :total_amount_payable, :date_of_first_payment
 
       # Following the pattern used in Letter.rb
       # We don't need template_path at the moment.
       def self.build(letter_params:, template_path:)
+        case template_path
+        when *Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS
+          Letter::InformalAgreement.new(letter_params)
+        else
         new(letter_params)
+        end
       end
 
       def initialize(params)

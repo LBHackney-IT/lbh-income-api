@@ -15,10 +15,10 @@
   </p>
 
   <ul class = "no-bullets">
-    <li>Weekly/Monthly Rent: </li>
-    <li>Amount towards the arrears: </li>
-    <li>Total amount payable </li>
-    <li>Date of first payment: </li>
+    <li>Weekly/Monthly Rent: <%= @letter.rent_charge %> </li>
+    <li>Amount towards the arrears: <%= @letter.instalment_amount %> </li>
+    <li>Total amount payable: <%= @letter.total_amount_payable %> </li>
+    <li>Date of first payment: <%= @letter.date_of_first_payment %> </li>
   </ul>
 
   <p>
