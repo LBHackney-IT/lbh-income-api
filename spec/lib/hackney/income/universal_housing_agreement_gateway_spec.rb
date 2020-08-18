@@ -102,4 +102,60 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
       expect(agreement[:frequency]).to eq(agreement_two[:aragdet_frequency])
     end
   end
+
+  context 'when provided a tenancy ref with two agreements (same arag)' do
+    before do
+      create_uh_agreement(
+        agreement_one.symbolize_keys
+      )
+
+      update_uh_agreement(
+        tag_ref: tenancy_ref,
+        aragdet_comment: updated_agreement[:aragdet_comment],
+        aragdet_amount: updated_agreement[:aragdet_amount]
+      )
+    end
+
+    let(:tenancy_ref) { '012345/01' }
+
+    let(:agreement_one) {
+      {
+        tag_ref: tenancy_ref,
+        arag_startdate: nil,
+        aragdet_startdate: DateTime.now.midnight - 14.days,
+        arag_breached: false,
+        arag_startbal: 5000.00,
+        arag_comment: nil,
+        aragdet_comment: 'First agreement here',
+        aragdet_amount: 100.40,
+        aragdet_frequency: 5
+      }
+    }
+
+    let(:updated_agreement) {
+      {
+        aragdet_comment: 'Replaces previous agreement to reduce payments',
+        aragdet_amount: 50.20
+      }
+    }
+
+    it 'returns two UH agreements in an array' do
+      expect(subject.count).to eq(2)
+      agreement = subject[0]
+      expect(agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
+      expect(agreement[:breached]).to eq(agreement_one[:arag_breached])
+      expect(agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
+      expect(agreement[:comment]).to eq(agreement_one[:aragdet_comment])
+      expect(agreement[:amount]).to eq(agreement_one[:aragdet_amount])
+      expect(agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
+
+      agreement = subject[1]
+      expect(agreement[:start_date]).to eq(agreement_one[:aragdet_startdate])
+      expect(agreement[:breached]).to eq(agreement_one[:arag_breached])
+      expect(agreement[:starting_balance]).to eq(agreement_one[:arag_startbal])
+      expect(agreement[:frequency]).to eq(agreement_one[:aragdet_frequency])
+      expect(agreement[:comment]).to eq(updated_agreement[:aragdet_comment])
+      expect(agreement[:amount]).to eq(updated_agreement[:aragdet_amount])
+    end
+  end
 end

@@ -89,6 +89,17 @@ module UniversalHousingHelper
 
   # rubocop:enable Metrics/ParameterLists
 
+  def update_uh_agreement(tag_ref:, aragdet_comment:, aragdet_amount:)
+    arag = Hackney::UniversalHousing::Client.connection[:arag].where(tag_ref: tag_ref).first
+    aragdet = Hackney::UniversalHousing::Client.connection[:aragdet].where(arag_sid: arag[:arag_sid]).first
+
+    aragdet[:aragdet_sid] += 1000
+    aragdet[:aragdet_comment] = aragdet_comment
+    aragdet[:aragdet_amount] = aragdet_amount
+
+    Hackney::UniversalHousing::Client.connection[:aragdet].insert(aragdet)
+  end
+
   def create_valid_uh_records_for_an_income_letter(
     property_ref:, house_ref:, postcode:, leasedate:
   )
