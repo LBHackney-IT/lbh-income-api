@@ -17,7 +17,7 @@ module Hackney
 
         results.map do |agreement|
           {
-            start_date: agreement[:arag_startdate],
+            start_date: agreement[:aragdet_startdate],
             breached: agreement[:arag_breached],
             starting_balance: agreement[:arag_startbal],
             comment: agreement[:aragdet_comment],

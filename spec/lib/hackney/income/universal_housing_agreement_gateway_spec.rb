@@ -14,12 +14,14 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
         arag_startbal: startbal,
         arag_comment: comment,
         aragdet_amount: amount,
-        aragdet_comment: aragdet_comment
+        aragdet_comment: aragdet_comment,
+        aragdet_startdate: aragdet_startdate
       )
     end
 
     let(:tenancy_ref) { '012345/01' }
     let(:startdate) { DateTime.now.midnight - 7.days }
+    let(:aragdet_startdate) { DateTime.now.midnight + 5.days }
     let(:breached) { false }
     let(:startbal) { 1230.45 }
     let(:comment) { 'Initial comment made when agreement was created' }
@@ -29,7 +31,7 @@ describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
     it 'returns a single UH agreement in a dataset' do
       expect(subject.count).to eq(1)
       agreement = subject[0]
-      expect(agreement[:start_date]).to eq(startdate)
+      expect(agreement[:start_date]).to eq(aragdet_startdate)
       expect(agreement[:breached]).to eq(breached)
       expect(agreement[:starting_balance]).to eq(startbal)
       expect(agreement[:comment]).to eq(aragdet_comment)

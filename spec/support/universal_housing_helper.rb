@@ -54,9 +54,8 @@ module UniversalHousingHelper
       agr_type: agreement_type
     )
   end
-  # rubocop:enable Metrics/ParameterLists
 
-  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:, aragdet_amount:, aragdet_comment:)
+  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:, aragdet_startdate:, aragdet_amount:, aragdet_comment:)
     arag_sid = Hackney::UniversalHousing::Client.connection[:arag].count
 
     Hackney::UniversalHousing::Client.connection[:arag].insert(
@@ -74,11 +73,13 @@ module UniversalHousingHelper
       aragdet_sid: arag_sid,
       aragdet_amount: aragdet_amount,
       aragdet_frequency: 1,
-      aragdet_startdate: DateTime.now.to_date,
+      aragdet_startdate: aragdet_startdate,
       aragdet_enddate: DateTime.now.to_date,
       aragdet_comment: aragdet_comment
     )
   end
+
+  # rubocop:enable Metrics/ParameterLists
 
   def create_valid_uh_records_for_an_income_letter(
     property_ref:, house_ref:, postcode:, leasedate:
