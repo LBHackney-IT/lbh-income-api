@@ -25,7 +25,7 @@ module Hackney
               Rulesets::CourtBreachNoPayment,
               Rulesets::SendInformalAgreementBreachLetter,
               Rulesets::InformalBreachedAfterLetter,
-              Rulesets::SendCourtAgreementBreachLetter, # TODO(AO): Possible missing test for this classification
+              Rulesets::AddressCourtAgreementBreach, # TODO(AO): Possible missing test for this classification
               Rulesets::SendCourtWarningLetter,
               Rulesets::ApplyForCourtDate,
               Rulesets::CheckData

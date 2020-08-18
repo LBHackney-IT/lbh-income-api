@@ -73,7 +73,7 @@ describe '"Update court outcome" examples' do
     ),
     base_example.merge(
       description: 'with no court outcome and breached court agreement',
-      outcome: :send_court_agreement_breach_letter,
+      outcome: :address_court_agreement_breach,
       courtdate: 14.days.ago.to_date,
       most_recent_agreement: {
         start_date: 1.week.ago,
