@@ -9,6 +9,7 @@ module Hackney
         sql = <<~SQL
           SELECT *
           FROM arag
+          JOIN aragdet on arag.arag_sid = aragdet.arag_sid
           WHERE arag.tag_ref = ?
         SQL
 
@@ -19,7 +20,8 @@ module Hackney
             start_date: agreement[:arag_startdate],
             breached: agreement[:arag_breached],
             starting_balance: agreement[:arag_startbal],
-            comment: agreement[:arag_comment]
+            comment: agreement[:arag_comment],
+            amount: agreement[:aragdet_amount]
           }
         end
       end

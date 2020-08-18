@@ -56,13 +56,27 @@ module UniversalHousingHelper
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:)
+  def create_uh_agreement(tag_ref:, arag_startdate:, arag_breached:, arag_startbal:, arag_comment:, aragdet_amount:)
+    arag_sid = Hackney::UniversalHousing::Client.connection[:arag].count
+
     Hackney::UniversalHousing::Client.connection[:arag].insert(
+      arag_ref: arag_sid,
+      arag_sid: arag_sid,
       tag_ref: tag_ref,
       arag_startdate: arag_startdate.to_date,
       arag_breached: arag_breached,
       arag_startbal: arag_startbal,
       arag_comment: arag_comment
+    )
+
+    Hackney::UniversalHousing::Client.connection[:aragdet].insert(
+      arag_sid: arag_sid,
+      aragdet_sid: arag_sid,
+      aragdet_amount: aragdet_amount,
+      aragdet_frequency: 1,
+      aragdet_startdate: DateTime.now.to_date,
+      aragdet_enddate: DateTime.now.to_date,
+      aragdet_comment: ''
     )
   end
 
@@ -399,6 +413,7 @@ module UniversalHousingHelper
     Hackney::UniversalHousing::Client.connection[:tenagree].truncate
     Hackney::UniversalHousing::Client.connection[:rtrans].truncate
     Hackney::UniversalHousing::Client.connection[:arag].truncate
+    Hackney::UniversalHousing::Client.connection[:aragdet].truncate
     Hackney::UniversalHousing::Client.connection[:araction].truncate
     Hackney::UniversalHousing::Client.connection[:property].truncate
     Hackney::UniversalHousing::Client.connection[:househ].truncate
