@@ -28,7 +28,7 @@ describe '"Court Breach - No Payment" examples' do
     ),
     base_example.deep_merge(
       description: 'when the last_communication_action NOT a visit_made_action_code',
-      outcome: :send_court_agreement_breach_letter,
+      outcome: :address_court_agreement_breach,
       last_communication_action: Hackney::Tenancy::ActionCodes::COURT_WARNING_LETTER_SENT
     ),
     base_example.deep_merge(
