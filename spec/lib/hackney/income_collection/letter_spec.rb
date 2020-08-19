@@ -13,9 +13,17 @@ describe Hackney::IncomeCollection::Letter do
       address_line2: 'Address 2',
       address_line3: address_line3,
       address_line4: address_line4,
-      address_post_code: 'E1 1YE'
+      address_post_code: 'E1 1YE',
+      rent: rent,
+      agreement_frequency: frequency,
+      amount: amount,
+      date_of_first_payment: date_of_first_payment
     }
   end
+  let(:rent) { nil }
+  let(:amount) { nil }
+  let(:frequency) { nil }
+  let(:date_of_first_payment) { nil }
   let(:address_line3) { nil }
   let(:address_line4) { nil }
 
@@ -82,10 +90,13 @@ describe Hackney::IncomeCollection::Letter do
         )
 
         expect(letter.errors).to eq [
+          { message: 'missing mandatory field', name: 'rent' },
+          { message: 'missing mandatory field', name: 'agreement_frequency' },
+          { message: 'missing mandatory field', name: 'amount' },
           { message: 'missing mandatory field', name: 'rent_charge' },
           { message: 'missing mandatory field', name: 'instalment_amount' },
-          { message: 'missing mandatory field', name: 'date_of_first_payment' },
-          { message: 'missing mandatory field', name: 'total_amount_payable' }
+          { message: 'missing mandatory field', name: 'total_amount_payable' },
+          { message: 'missing mandatory field', name: 'date_of_first_payment' }
         ]
       end
     end
