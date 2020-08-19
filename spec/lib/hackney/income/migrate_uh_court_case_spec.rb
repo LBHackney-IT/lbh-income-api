@@ -101,5 +101,19 @@ describe Hackney::Income::MigrateUhCourtCase do
         subject
       end
     end
+
+    context 'when provided a criteria with a court date but no outcome' do
+      let(:criteria_attributes) {
+        {
+            court_outcome: nil,
+            court_date: DateTime.now.midnight
+        }
+      }
+
+      it 'does not update the court case' do
+        expect(update_court_case).not_to receive(:execute)
+        subject
+      end
+    end
   end
 end
