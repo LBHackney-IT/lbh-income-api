@@ -124,7 +124,7 @@ RSpec.describe 'Agreements', type: :request do
         before do
           allow(Hackney::Income::CreateInformalAgreement).to receive(:new).and_return(create_informal_agreement_instance)
           allow(create_informal_agreement_instance).to receive(:execute)
-            .with(new_agreement_params: new_agreement_params)
+            .with(new_agreement_params: new_agreement_params.merge(frequency: frequency.to_sym))
             .and_return(created_agreement)
         end
 
@@ -155,7 +155,7 @@ RSpec.describe 'Agreements', type: :request do
 
           allow(Hackney::Income::CreateFormalAgreement).to receive(:new).and_return(create_formal_agreement_instance)
           allow(create_formal_agreement_instance).to receive(:execute)
-            .with(new_agreement_params: new_agreement_params)
+            .with(new_agreement_params: new_agreement_params.merge(frequency: frequency.to_sym))
             .and_return(created_agreement)
         end
 

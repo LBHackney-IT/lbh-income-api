@@ -7,11 +7,16 @@ module Hackney
         @tenancy_case_gateway = tenancy_case_gateway
       end
 
-      def execute(tenancy_ref:, template_id:, user:, agreement: {})
+      def execute(tenancy_ref:, template_id:, user:, agreement: nil)
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
-        agreement_info = get_agreement_info(tenancy_ref, agreement)
-        letter_params = income_info.merge(agreement_info)
+
+        if agreement
+          agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
+          letter_params = income_info.merge(agreement_info)
+        else
+          letter_params = income_info
+        end
 
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
           template_path: template[:path]
@@ -44,8 +49,6 @@ module Hackney
       end
 
       def get_agreement_info(tenancy_ref, agreement)
-        return {} if agreement.nil? # Placeholder - remove once informal agreement letter can be generated
-
         case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
 
         {
