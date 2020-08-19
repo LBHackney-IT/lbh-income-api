@@ -54,7 +54,59 @@ module UniversalHousingHelper
       agr_type: agreement_type
     )
   end
+
+  def create_uh_agreement(tag_ref:,
+                          arag_status:,
+                          arag_startdate:,
+                          arag_lastcheckbal:,
+                          arag_lastcheckdate:,
+                          arag_lastexpectedbal:,
+                          arag_breached:,
+                          arag_startbal:,
+                          arag_comment:,
+                          aragdet_startdate:,
+                          aragdet_amount:,
+                          aragdet_comment:,
+                          aragdet_frequency:)
+    arag_sid = Hackney::UniversalHousing::Client.connection[:arag].count
+
+    Hackney::UniversalHousing::Client.connection[:arag].insert(
+      arag_ref: arag_sid,
+      arag_sid: arag_sid,
+      tag_ref: tag_ref,
+      arag_status: arag_status,
+      arag_startdate: arag_startdate&.to_date,
+      arag_breached: arag_breached,
+      arag_lastcheckbal: arag_lastcheckbal,
+      arag_lastcheckdate: arag_lastcheckdate&.to_date,
+      arag_lastexpectedbal: arag_lastexpectedbal,
+      arag_startbal: arag_startbal,
+      arag_comment: arag_comment
+    )
+
+    Hackney::UniversalHousing::Client.connection[:aragdet].insert(
+      arag_sid: arag_sid,
+      aragdet_sid: arag_sid,
+      aragdet_amount: aragdet_amount,
+      aragdet_frequency: aragdet_frequency,
+      aragdet_startdate: aragdet_startdate,
+      aragdet_enddate: DateTime.now.to_date,
+      aragdet_comment: aragdet_comment
+    )
+  end
+
   # rubocop:enable Metrics/ParameterLists
+
+  def update_uh_agreement(tag_ref:, aragdet_comment:, aragdet_amount:)
+    arag = Hackney::UniversalHousing::Client.connection[:arag].where(tag_ref: tag_ref).first
+    aragdet = Hackney::UniversalHousing::Client.connection[:aragdet].where(arag_sid: arag[:arag_sid]).first
+
+    aragdet[:aragdet_sid] += 1000
+    aragdet[:aragdet_comment] = aragdet_comment
+    aragdet[:aragdet_amount] = aragdet_amount
+
+    Hackney::UniversalHousing::Client.connection[:aragdet].insert(aragdet)
+  end
 
   def create_valid_uh_records_for_an_income_letter(
     property_ref:, house_ref:, postcode:, leasedate:
@@ -389,6 +441,7 @@ module UniversalHousingHelper
     Hackney::UniversalHousing::Client.connection[:tenagree].truncate
     Hackney::UniversalHousing::Client.connection[:rtrans].truncate
     Hackney::UniversalHousing::Client.connection[:arag].truncate
+    Hackney::UniversalHousing::Client.connection[:aragdet].truncate
     Hackney::UniversalHousing::Client.connection[:araction].truncate
     Hackney::UniversalHousing::Client.connection[:property].truncate
     Hackney::UniversalHousing::Client.connection[:househ].truncate

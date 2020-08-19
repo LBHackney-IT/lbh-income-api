@@ -1,7 +1,6 @@
 require 'rails_helper'
-base_example = {
-  skip_v1_test: true
-}
+base_example = {}
+
 describe 'Check Data examples' do
   examples = [
     base_example.merge(
@@ -41,4 +40,5 @@ describe 'Check Data examples' do
     )
   ]
   it_behaves_like 'TenancyClassification', examples
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
 end

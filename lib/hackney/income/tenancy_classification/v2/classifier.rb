@@ -5,10 +5,11 @@ module Hackney
         class Classifier
           include Helpers
 
-          def initialize(case_priority, criteria, documents)
+          def initialize(case_priority, criteria, documents, use_ma_data = false)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents
+            @use_ma_data = use_ma_data
           end
 
           def execute
@@ -24,13 +25,13 @@ module Hackney
               Rulesets::CourtBreachNoPayment,
               Rulesets::SendInformalAgreementBreachLetter,
               Rulesets::InformalBreachedAfterLetter,
-              Rulesets::SendCourtAgreementBreachLetter, # TODO(AO): Possible missing test for this classification
+              Rulesets::AddressCourtAgreementBreach, # TODO(AO): Possible missing test for this classification
               Rulesets::SendCourtWarningLetter,
               Rulesets::ApplyForCourtDate,
               Rulesets::CheckData
             ]
 
-            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents).execute }
+            actions = rulesets.map { |ruleset| ruleset.new(@case_priority, @criteria, @documents, @use_ma_data).execute }
 
             actions.compact!
 
@@ -62,9 +63,9 @@ module Hackney
 
           def active_agreement_court_outcomes
             [
-              Hackney::Tenancy::ActionCodes::ADJOURNED_ON_TERMS_COURT_OUTCOME,
-              Hackney::Tenancy::ActionCodes::POSTPONED_POSSESSIOON_COURT_OUTCOME,
-              Hackney::Tenancy::ActionCodes::SUSPENDED_POSSESSION_COURT_OUTCOME
+              Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+              Hackney::Tenancy::CourtOutcomeCodes::POSTPONED_POSSESSION,
+              Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
             ]
           end
         end

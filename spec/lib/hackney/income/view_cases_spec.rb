@@ -6,12 +6,12 @@ describe Hackney::Income::ViewCases do
   let(:page_number) { Faker::Number.number(digits: 2).to_i }
   let(:number_per_page) { Faker::Number.number(digits: 2).to_i }
   let(:tenancy_api_gateway) { Hackney::Income::TenancyApiGatewayStub.new({}) }
-  let(:stored_tenancies_gateway) { Hackney::Income::StoredTenancyGatewayStub.new({}) }
+  let(:stored_worktray_item_gateway) { Hackney::Income::StoredTenancyGatewayStub.new({}) }
 
   let(:view_cases) do
     described_class.new(
       tenancy_api_gateway: tenancy_api_gateway,
-      stored_tenancies_gateway: stored_tenancies_gateway
+      stored_worktray_item_gateway: stored_worktray_item_gateway
     )
   end
 
@@ -22,11 +22,11 @@ describe Hackney::Income::ViewCases do
   end
 
   it 'does not do further queries if the page number returned is 0' do
-    expect(stored_tenancies_gateway)
+    expect(stored_worktray_item_gateway)
       .to receive(:number_of_pages)
       .and_call_original
 
-    expect(stored_tenancies_gateway).not_to receive(:get_tenancies)
+    expect(stored_worktray_item_gateway).not_to receive(:get_tenancies)
 
     expect(subject.cases).to eq([])
     expect(subject.number_of_pages).to eq(0)
@@ -49,10 +49,10 @@ describe Hackney::Income::ViewCases do
       }
     end
 
-    let(:stored_tenancies_gateway) { Hackney::Income::StoredTenancyGatewayStub.new(tenancy_list) }
+    let(:stored_worktray_item_gateway) { Hackney::Income::StoredTenancyGatewayStub.new(tenancy_list) }
 
     it 'passes the correct page number and number per page into the stored tenancy gateway' do
-      expect(stored_tenancies_gateway)
+      expect(stored_worktray_item_gateway)
         .to receive(:get_tenancies)
         .with(a_hash_including(page_number: page_number, number_per_page: number_per_page))
         .and_call_original
@@ -131,7 +131,7 @@ describe Hackney::Income::ViewCases do
         }
 
         it 'returns only paused cases' do
-          expect(stored_tenancies_gateway)
+          expect(stored_worktray_item_gateway)
             .to receive(:get_tenancies)
             .with(a_hash_including(
                     page_number: page_number,
@@ -142,7 +142,7 @@ describe Hackney::Income::ViewCases do
                   ))
             .and_call_original
 
-          expect(stored_tenancies_gateway)
+          expect(stored_worktray_item_gateway)
             .to receive(:number_of_pages)
             .with(a_hash_including(
                     number_per_page: number_per_page,
@@ -170,7 +170,7 @@ describe Hackney::Income::ViewCases do
           let(:pause_reason) { Faker::Lorem.word }
 
           it 'returns only paused cases filtered by pause reason' do
-            expect(stored_tenancies_gateway)
+            expect(stored_worktray_item_gateway)
               .to receive(:get_tenancies)
               .with(a_hash_including(
                       page_number: page_number,
@@ -182,7 +182,7 @@ describe Hackney::Income::ViewCases do
                     ))
               .and_call_original
 
-            expect(stored_tenancies_gateway)
+            expect(stored_worktray_item_gateway)
               .to receive(:number_of_pages)
               .with(a_hash_including(
                       number_per_page: number_per_page,
@@ -212,7 +212,7 @@ describe Hackney::Income::ViewCases do
         let(:patch) { Faker::Lorem.characters(number: 3) }
 
         it 'asks the gateway for cases filtered by patch' do
-          expect(stored_tenancies_gateway)
+          expect(stored_worktray_item_gateway)
             .to receive(:get_tenancies)
             .with(a_hash_including(
                     page_number: page_number,
@@ -222,7 +222,7 @@ describe Hackney::Income::ViewCases do
                     }
                   )).and_call_original
 
-          expect(stored_tenancies_gateway)
+          expect(stored_worktray_item_gateway)
             .to receive(:number_of_pages)
             .with(a_hash_including(
                     number_per_page: number_per_page,
@@ -241,7 +241,7 @@ describe Hackney::Income::ViewCases do
     let(:number_of_pages) { Faker::Number.number(digits: 3).to_i }
 
     it 'consults the stored tenancies gateway' do
-      expect(stored_tenancies_gateway).to receive(:number_of_pages).with(
+      expect(stored_worktray_item_gateway).to receive(:number_of_pages).with(
         number_per_page: number_per_page,
         filters: {}
       ).and_call_original
@@ -249,7 +249,7 @@ describe Hackney::Income::ViewCases do
     end
 
     it 'returns what the stored tenancies gateway does' do
-      allow(stored_tenancies_gateway).to receive(:number_of_pages).and_return(number_of_pages)
+      allow(stored_worktray_item_gateway).to receive(:number_of_pages).and_return(number_of_pages)
       expect(subject.number_of_pages).to eq(number_of_pages)
     end
   end

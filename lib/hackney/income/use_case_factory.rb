@@ -4,7 +4,7 @@ module Hackney
       def view_cases
         Hackney::Income::ViewCases.new(
           tenancy_api_gateway: tenancy_api_gateway,
-          stored_tenancies_gateway: stored_tenancies_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway
         )
       end
 
@@ -183,7 +183,8 @@ module Hackney
         Hackney::Income::SyncCasePriority.new(
           automate_sending_letters: automate_sending_letters,
           prioritisation_gateway: prioritisation_gateway,
-          stored_tenancies_gateway: stored_tenancies_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway,
+          update_agreement_state: update_agreement_state
         )
       end
 
@@ -230,6 +231,13 @@ module Hackney
         )
       end
 
+      def create_formal_agreement
+        Hackney::Income::CreateFormalAgreement.new(
+          add_action_diary: add_action_diary,
+          cancel_agreement: cancel_agreement
+        )
+      end
+
       def cancel_agreement
         Hackney::Income::CancelAgreement.new
       end
@@ -240,6 +248,10 @@ module Hackney
 
       def view_court_cases
         Hackney::Income::ViewCourtCases.new
+      end
+
+      def update_court_case
+        Hackney::Income::UpdateCourtCase.new
       end
 
       private
@@ -273,8 +285,8 @@ module Hackney
         Hackney::Income::SqlPauseTenancyGateway.new
       end
 
-      def stored_tenancies_gateway
-        Hackney::Income::StoredTenanciesGateway.new
+      def stored_worktray_item_gateway
+        Hackney::Income::WorktrayItemGateway.new
       end
 
       def tenancy_api_gateway
