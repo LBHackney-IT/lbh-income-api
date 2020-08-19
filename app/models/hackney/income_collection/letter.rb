@@ -15,7 +15,7 @@ module Hackney
         when *Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS
           Letter::InformalAgreement.new(letter_params)
         else
-        new(letter_params)
+          new(letter_params)
         end
       end
 

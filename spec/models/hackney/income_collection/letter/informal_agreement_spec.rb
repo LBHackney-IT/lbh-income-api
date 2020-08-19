@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::IncomeCollection::Letter::InformalAgreement do
-  let(:tenancy_ref)   {Faker::Number.number(digits: 2).to_s }
+  let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:frequency) { 'weekly' }
   let(:amount) { 30 }
   let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
@@ -36,38 +36,41 @@ describe Hackney::IncomeCollection::Letter::InformalAgreement do
     end
   end
 
- describe '#calculate rent' do
-  context 'when the frequency is monthly' do
-    let(:frequency) { 'monthly' }
-    it "calculates the correct rent" do
-      expect(letter.rent_charge).to eq("43.33")
+  describe '#calculate rent' do
+    context 'when the frequency is monthly' do
+      let(:frequency) { 'monthly' }
+
+      it 'calculates the correct rent' do
+        expect(letter.rent_charge).to eq('43.33')
+      end
+    end
+
+    context 'when the frequency is fortnightly' do
+      let(:frequency) { 'fortnightly' }
+
+      it 'calculates the correct rent' do
+        expect(letter.rent_charge).to eq('20.00')
+      end
+    end
+
+    context 'when the frequency is four weekly' do
+      let(:frequency) { '4 weekly' }
+
+      it 'calculates the correct rent' do
+        expect(letter.rent_charge).to eq('40.00')
+      end
+    end
+
+    context 'when the frequency is weekly' do
+      it 'calculates the correct rent' do
+        expect(letter.rent_charge).to eq('10.00')
+      end
     end
   end
 
-  context 'when the frequency is fortnightly' do
-    let(:frequency) { 'fortnightly' }
-    it "calculates the correct rent" do
-      expect(letter.rent_charge).to eq("20.00")
+  describe '#calculate_total_amount_payable' do
+    it 'calculates the correct total amount payable' do
+      expect(letter.total_amount_payable).to eq('40.00')
     end
   end
-
-  context 'when the frequency is four weekly' do
-    let(:frequency) { '4 weekly' }
-    it "calculates the correct rent" do
-      expect(letter.rent_charge).to eq("40.00")
-    end
-  end
-
-  context 'when the frequency is weekly' do
-    it "calculates the correct rent" do
-      expect(letter.rent_charge).to eq("10.00")
-    end
-  end
- end
-
- describe '#calculate_total_amount_payable' do
-   it "calculates the correct total amount payable" do
-     expect(letter.total_amount_payable).to eq("40.00")
-   end
- end
 end

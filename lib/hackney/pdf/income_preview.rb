@@ -44,7 +44,7 @@ module Hackney
       end
 
       def get_agreement_info(tenancy_ref, agreement)
-        return { } if agreement.nil? # Placeholder - remove once informal agreement letter can be generated
+        return {} if agreement.nil? # Placeholder - remove once informal agreement letter can be generated
 
         case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
 
