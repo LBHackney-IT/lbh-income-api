@@ -4,6 +4,8 @@ describe Hackney::Income::MigrateUhCourtCase do
   subject(:migrator) { described_class.new(create_court_case: create_court_case).migrate(criteria) }
 
   let(:create_court_case) { double(Hackney::Income::CreateCourtCase) }
+  let(:view_court_cases) { double(Hackney::Income::ViewCourtCases) }
+  let(:update_court_case) { double(Hackney::Income::UpdateCourtCase) }
 
   let(:criteria) { Stubs::StubCriteria.new(criteria_attributes) }
 
@@ -73,6 +75,29 @@ describe Hackney::Income::MigrateUhCourtCase do
             court_outcome: criteria_attributes[:court_outcome]
           )
         )
+        subject
+      end
+    end
+  end
+
+  context 'when a partial court case already exists with a court date but no outcome' do
+    before do
+      allow(view_court_cases).to(receive(:execute).and_return([{
+        court_date: DateTime.now.midnight - 7.days,
+        court_outcome: nil
+      }]))
+    end
+
+    context 'when provided a criteria without a court date or outcome' do
+      let(:criteria_attributes) {
+        {
+          court_outcome: nil,
+          courtdate: nil
+        }
+      }
+
+      it 'does not update the court case' do
+        expect(update_court_case).not_to receive(:execute)
         subject
       end
     end
