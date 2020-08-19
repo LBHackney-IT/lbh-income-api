@@ -125,4 +125,8 @@ describe Hackney::PDF::IncomePreview do
       )
     end
   end
+
+  context 'when sending an agreement letter' do
+    
+  end
 end
