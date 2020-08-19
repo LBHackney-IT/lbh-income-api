@@ -7,7 +7,7 @@ module Hackney
         @tenancy_case_gateway = tenancy_case_gateway
       end
 
-      def execute(tenancy_ref:, template_id:, user:, agreement: nil)
+      def execute(tenancy_ref:, template_id:, user:, agreement: {})
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
         agreement_info = get_agreement_info(agreement)
@@ -47,7 +47,7 @@ module Hackney
         case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
 
         {
-          rent: case_priority.weekly_rent
+          rent: case_priority.weekly_rent,
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
           date_of_first_payment: agreement.start_date
