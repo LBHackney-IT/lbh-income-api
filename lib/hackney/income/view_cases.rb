@@ -3,9 +3,10 @@ module Hackney
     class ViewCases
       Response = Struct.new(:cases, :number_of_pages)
 
-      def initialize(tenancy_api_gateway:, stored_worktray_item_gateway:)
+      def initialize(tenancy_api_gateway:, stored_worktray_item_gateway:, view_agreements:)
         @tenancy_api_gateway = tenancy_api_gateway
         @stored_worktray_item_gateway = stored_worktray_item_gateway
+        @view_agreements = view_agreements
       end
 
       def execute(page_number:, number_per_page:, filters: {})
@@ -25,10 +26,11 @@ module Hackney
         full_tenancies = @tenancy_api_gateway.get_tenancies_by_refs(case_priority_refs)
 
         cases = tenancies.map do |case_priority|
+          latest_agreement = @view_agreements.execute(tenancy_ref: case_priority.fetch(:tenancy_ref)).last
           tenancy = full_tenancies.find { |t| t.fetch(:ref) == case_priority.fetch(:tenancy_ref) }
           next if tenancy.nil?
 
-          build_tenancy_list_item(tenancy, case_priority)
+          build_tenancy_list_item(tenancy, case_priority, latest_agreement)
         end.compact
 
         Response.new(cases, number_of_pages)
@@ -36,11 +38,11 @@ module Hackney
 
       private
 
-      def build_tenancy_list_item(tenancy, case_priority)
+      def build_tenancy_list_item(tenancy, case_priority, agreement)
         {
           ref: tenancy.fetch(:ref),
           current_balance: tenancy.fetch(:current_balance),
-          current_arrears_agreement_status: tenancy.fetch(:current_arrears_agreement_status),
+          current_arrears_agreement_status: agreement&.current_state,
           latest_action: {
             code: tenancy.dig(:latest_action, :code),
             date: tenancy.dig(:latest_action, :date)

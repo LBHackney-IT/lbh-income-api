@@ -4,7 +4,8 @@ module Hackney
       def view_cases
         Hackney::Income::ViewCases.new(
           tenancy_api_gateway: tenancy_api_gateway,
-          stored_worktray_item_gateway: stored_worktray_item_gateway
+          stored_worktray_item_gateway: stored_worktray_item_gateway,
+          view_agreements: view_agreements
         )
       end
 
