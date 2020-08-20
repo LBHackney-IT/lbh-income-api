@@ -13,9 +13,17 @@ describe Hackney::IncomeCollection::Letter do
       address_line2: 'Address 2',
       address_line3: address_line3,
       address_line4: address_line4,
-      address_post_code: 'E1 1YE'
+      address_post_code: 'E1 1YE',
+      rent: rent,
+      agreement_frequency: frequency,
+      amount: amount,
+      date_of_first_payment: date_of_first_payment
     }
   end
+  let(:rent) { nil }
+  let(:amount) { nil }
+  let(:frequency) { nil }
+  let(:date_of_first_payment) { nil }
   let(:address_line3) { nil }
   let(:address_line4) { nil }
 
@@ -69,6 +77,27 @@ describe Hackney::IncomeCollection::Letter do
         parts.select! { |part| part.include?('<br>') }
 
         expect(parts.size).to eq(4)
+      end
+    end
+
+    context 'when generating an informal agreement letter' do
+      it 'generates an informal agreement confirmation letter' do
+        expect(Hackney::IncomeCollection::Letter::InformalAgreement).to receive(:new).with(letter_params).and_call_original
+
+        letter = described_class.build(
+          letter_params: letter_params,
+          template_path: Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS.sample
+        )
+
+        expect(letter.errors).to eq [
+          { message: 'missing mandatory field', name: 'rent' },
+          { message: 'missing mandatory field', name: 'agreement_frequency' },
+          { message: 'missing mandatory field', name: 'amount' },
+          { message: 'missing mandatory field', name: 'rent_charge' },
+          { message: 'missing mandatory field', name: 'instalment_amount' },
+          { message: 'missing mandatory field', name: 'total_amount_payable' },
+          { message: 'missing mandatory field', name: 'date_of_first_payment' }
+        ]
       end
     end
   end

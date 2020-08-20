@@ -20,7 +20,7 @@ class AgreementsController < ApplicationController
       agreement_type: params.fetch(:agreement_type),
       amount: params.fetch(:amount),
       start_date: params.fetch(:start_date),
-      frequency: params.fetch(:frequency),
+      frequency: params.fetch(:frequency).to_sym,
       created_by: params.fetch(:created_by),
       notes: params.fetch(:notes),
       court_case_id: params.dig(:court_case_id)

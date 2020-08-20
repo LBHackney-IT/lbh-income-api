@@ -1,0 +1,58 @@
+<%= @logo %>
+<div class="top_space"></div>
+<%= @hackney_address %>
+
+<%= @tenant_address %>
+
+<div>
+  <div class="blue_box">
+    <strong>Rent Account Balance: </strong> <br>
+    <strong>Account Number: </strong>
+  </div>
+
+  <p>
+    <strong> Thank you for contacting me about your rent arrears, and this letter confirms the agreement you have made to clear your arrears.</strong>
+  </p>
+
+  <ul class = "no_bullets">
+    <li>Weekly/Monthly Rent: <%= @letter.rent_charge %> </li>
+    <li>Amount towards the arrears: <%= @letter.instalment_amount %> </li>
+    <li>Total amount payable: <%= @letter.total_amount_payable %> </li>
+    <li>Date of first payment: <%= @letter.date_of_first_payment %> </li>
+  </ul>
+
+  <p>
+    You can make payments higher than this amount and also ahead of time. However if you pay less than the amount agreed, you will be considered to be in breach of this arrangement.
+  </p>
+
+  <p>
+    A copy of this letter may be presented in court to form the basis of a Court Order Order against you in the event the Council commences legal proceedings against you.  Please also be aware that if we do proceed to court you may incur additional charges in the form of court costs.
+  </p>
+
+  <p>
+    This letter does not alter the legal status of the Council or the tenants and is only intended to set out the level of repayment of arrears of rent.
+  </p>
+
+  <p>
+    <strong>If your financial circumstances change or if you are unable to pay the agreed amounts you should contact this office immediately. </strong>
+  </p>
+
+  <p>
+    You can do so:
+    <ul>
+      <li>By telephone on 020 8356 3100</li>
+      <li>By email at income.services@hackney.gov.uk</li>
+      <li>In person at 1 Hillman Street, E8 1FB</li>
+      <li>Through a third party such as a family member, friend, carer, or an advice agency such as the Citizens Advice Bureau. To ensure confidentiality, we will ask for proof that you have given them permission to discuss your account with us.</li>
+    </ul>
+  </p>
+
+  <p>
+  Yours sincerely,
+  </p>
+  <p>
+  <%= @username %>
+  </p>
+</div>
+
+<%= @payment_options %>
