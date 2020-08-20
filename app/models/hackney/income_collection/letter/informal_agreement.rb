@@ -2,6 +2,8 @@ module Hackney
   module IncomeCollection
     class Letter
       class InformalAgreement < Hackney::IncomeCollection::Letter
+        include LetterDateHelper
+
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/income/informal_agreement_confirmation_letter.erb'
         ].freeze
@@ -24,10 +26,6 @@ module Hackney
         end
 
         private
-
-        def format_date(date)
-          date.strftime('%d %B %Y')
-        end
 
         def calculate_rent(rent, frequency)
           case frequency

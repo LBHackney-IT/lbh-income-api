@@ -2,6 +2,8 @@ module Hackney
   module Leasehold
     class Letter
       class BeforeAction < Hackney::Leasehold::Letter
+        include LetterDateHelper
+
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/leasehold/letter_before_action.erb'
         ].freeze
@@ -37,12 +39,6 @@ module Hackney
             money_judgement = 0
           end
           BigDecimal(arrears_balance.to_s) - BigDecimal(money_judgement.to_s)
-        end
-
-        def format_date(date)
-          return nil if date.nil?
-
-          date.strftime('%d %B %Y')
         end
 
         def validate_lba_balance_exists?
