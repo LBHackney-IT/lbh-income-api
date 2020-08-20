@@ -282,6 +282,26 @@ describe Hackney::Income::UpdateAgreementState do
     end
   end
 
+  context 'when its a formal agreement' do
+    it 'changes the formal agreement into informal on strikeout date' do
+      next_check_date = start_date + days_before_check.days
+
+      court_case = create(:court_case, tenancy_ref: tenancy_ref, strike_out_date: next_check_date)
+      agreement = create(:agreement, agreement_type: :formal,
+                                     start_date: start_date,
+                                     tenancy_ref: tenancy_ref,
+                                     court_case_id: court_case.id)
+      create(:agreement_state, :live, agreement: agreement)
+
+      current_balance = 50
+
+      Timecop.freeze(next_check_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+        expect(agreement.agreement_type).to eq('informal')
+      end
+    end
+  end
+
   describe '#full_months_since' do
     it 'can calculate the exact number of months since start date' do
       [

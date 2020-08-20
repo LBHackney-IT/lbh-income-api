@@ -18,6 +18,7 @@ module Hackney
         expected_balance = expected_balance(agreement)
         current_balance = current_balance
 
+        strike_out(agreement) if agreement.formal? && agreement.court_case.strike_out_date <= Date.today
         return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
         new_state = if current_balance <= 0
@@ -100,6 +101,10 @@ module Hackney
       def state_has_not_changed?(agreement, expected_balance, current_balance)
         current_state = agreement.agreement_states.last
         current_state.expected_balance == expected_balance && current_state.checked_balance == current_balance
+      end
+
+      def strike_out(agreement)
+        agreement.update!(agreement_type: :informal)
       end
     end
   end
