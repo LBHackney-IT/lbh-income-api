@@ -106,7 +106,7 @@ RSpec.describe 'Agreements', type: :request do
           agreement_type: agreement_type,
           amount: amount.to_s,
           start_date: start_date.to_s,
-          frequency: frequency,
+          frequency: frequency.to_sym,
           created_by: created_by,
           notes: notes,
           court_case_id: nil
