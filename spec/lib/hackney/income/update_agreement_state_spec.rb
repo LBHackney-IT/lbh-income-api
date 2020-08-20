@@ -300,6 +300,69 @@ describe Hackney::Income::UpdateAgreementState do
         expect(agreement.agreement_type).to eq('informal')
       end
     end
+
+    context 'when the court outcome is suspended on terms' do
+      let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS }
+      let(:next_check_date) { start_date + days_before_check.days }
+      let(:court_case) do
+        create(:court_case,
+               tenancy_ref: tenancy_ref,
+               court_outcome: court_outcome,
+               court_date: court_date)
+      end
+      let(:agreement) do
+        create(:agreement, agreement_type: :formal,
+                           start_date: start_date,
+                           tenancy_ref: tenancy_ref,
+                           court_case_id: court_case.id)
+      end
+
+      context 'when its 6 years after the court hearing date' do
+        let(:court_date) { next_check_date - 6.years }
+
+        it 'completes the agreement' do
+          create(:agreement_state, :live, agreement: agreement)
+          next_check_date = start_date + days_before_check.days
+
+          current_balance = 1000
+
+          Timecop.freeze(next_check_date) do
+            subject.execute(agreement: agreement, current_balance: current_balance)
+            expect(agreement.current_state).to eq('completed')
+            expect(agreement.last_checked).to eq(next_check_date)
+            expect(agreement.agreement_states.last.description).to eq(next_check_date.strftime('Completed on %m/%d/%Y'))
+          end
+        end
+      end
+
+      context 'when its withing the 6 years lifecycle' do
+        let(:court_date) { next_check_date - 5.years }
+
+        it 'breaches the agreement when its in arrears' do
+          create(:agreement_state, :live, agreement: agreement)
+          next_check_date = start_date + days_before_check.days
+
+          current_balance = 1000
+
+          Timecop.freeze(next_check_date) do
+            subject.execute(agreement: agreement, current_balance: current_balance)
+            expect(agreement.current_state).to eq('breached')
+          end
+        end
+
+        it 'completes when its not longer in arrears ' do
+          create(:agreement_state, :live, agreement: agreement)
+          next_check_date = start_date + days_before_check.days
+
+          current_balance = 0
+
+          Timecop.freeze(next_check_date) do
+            subject.execute(agreement: agreement, current_balance: current_balance)
+            expect(agreement.current_state).to eq('completed')
+          end
+        end
+      end
+    end
   end
 
   describe '#full_months_since' do
