@@ -15,9 +15,8 @@ module Hackney
       def execute(tenancy_ref:)
         criteria = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref).fetch(:criteria)
         documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
-        agreement = AgreementModel.where(tenancy_ref: tenancy_ref).select(&:active?).last
 
-        @update_agreement_state.execute(agreement: agreement, current_balance: criteria.balance) unless agreement.nil?
+        detect_agreement_breaches(tenancy_ref: tenancy_ref, current_balance: criteria.balance)
 
         classification = Hackney::Income::TenancyClassification::Classifier.new(
           WorktrayItemModel.find_or_initialize_by(tenancy_ref: tenancy_ref),
@@ -34,6 +33,14 @@ module Hackney
         @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
 
         nil
+      end
+
+      private
+
+      def detect_agreement_breaches(tenancy_ref:, current_balance:)
+        agreement = AgreementModel.where(tenancy_ref: tenancy_ref).select(&:active?).last
+
+        @update_agreement_state.execute(agreement: agreement, current_balance: current_balance) unless agreement.nil?
       end
     end
   end
