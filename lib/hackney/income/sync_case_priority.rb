@@ -17,7 +17,9 @@ module Hackney
 
         detect_agreement_breaches(tenancy_ref: tenancy_ref, current_balance: criteria.balance)
 
-        case_priority = determine_next_recommended_action(criteria: criteria)
+        action = determine_next_recommended_action(criteria: criteria)
+
+        case_priority = persist_worktray_item(criteria: criteria, action: action)
 
         @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
 
@@ -40,11 +42,13 @@ module Hackney
           criteria,
           documents
         ).execute
+      end
 
+      def persist_worktray_item(criteria:, action:)
         @stored_worktray_item_gateway.store_worktray_item(
-          tenancy_ref: tenancy_ref,
+          tenancy_ref: criteria.tenancy_ref,
           criteria: criteria,
-          classification: classification
+          classification: action
         )
       end
     end
