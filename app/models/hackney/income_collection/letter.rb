@@ -10,10 +10,13 @@ module Hackney
                   :payment_ref, :total_collectable_arrears_balance,
                   :title, :forename, :surname, :errors, :tenant_address
 
-      # Following the pattern used in Letter.rb
-      # We don't need template_path at the moment.
       def self.build(letter_params:, template_path:)
-        new(letter_params)
+        case template_path
+        when *Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS
+          Letter::InformalAgreement.new(letter_params)
+        else
+          new(letter_params)
+        end
       end
 
       def initialize(params)

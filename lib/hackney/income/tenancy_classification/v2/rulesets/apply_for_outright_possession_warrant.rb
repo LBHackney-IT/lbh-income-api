@@ -12,13 +12,13 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.active_agreement?
-              return false if @criteria.courtdate.blank?
-              return false if @criteria.courtdate.future?
-              return false if @criteria.courtdate < 3.months.ago
+              return false if active_agreement?
+              return false if court_date.blank?
+              return false if court_date.future?
+              return false if court_date < 3.months.ago
               return false if @criteria.last_communication_action.in?(blocking_communication_actions)
 
-              @criteria.court_outcome.in?(prerequisite_court_outcomes_for_action)
+              court_outcome.in?(prerequisite_court_outcomes_for_action)
             end
 
             def prerequisite_court_outcomes_for_action

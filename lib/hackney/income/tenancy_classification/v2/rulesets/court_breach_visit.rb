@@ -12,7 +12,7 @@ module Hackney
 
             def action_valid
               return false if should_prevent_action?
-              return false if @criteria.courtdate.blank?
+              return false if court_date.blank?
               return false unless court_breach_agreement?
 
               @criteria.last_communication_action.in?(court_breach_letter_actions) &&

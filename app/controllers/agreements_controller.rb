@@ -20,12 +20,18 @@ class AgreementsController < ApplicationController
       agreement_type: params.fetch(:agreement_type),
       amount: params.fetch(:amount),
       start_date: params.fetch(:start_date),
-      frequency: params.fetch(:frequency),
+      frequency: params.fetch(:frequency).to_sym,
       created_by: params.fetch(:created_by),
-      notes: params.fetch(:notes)
+      notes: params.fetch(:notes),
+      court_case_id: params.dig(:court_case_id)
     }
 
-    created_agreement = income_use_case_factory.create_informal_agreement.execute(new_agreement_params: agreement_params)
+    if formal_agreement?(agreement_params)
+      created_agreement = income_use_case_factory.create_formal_agreement.execute(new_agreement_params: agreement_params)
+    else
+      created_agreement = income_use_case_factory.create_informal_agreement.execute(new_agreement_params: agreement_params)
+    end
+
     response = map_agreement_to_response(agreement: created_agreement)
     render json: response
   end
@@ -42,5 +48,9 @@ class AgreementsController < ApplicationController
 
   def agreements_params
     params.permit([:tenancy_ref])
+  end
+
+  def formal_agreement?(params)
+    params[:agreement_type] == 'formal' && params[:court_case_id].present?
   end
 end

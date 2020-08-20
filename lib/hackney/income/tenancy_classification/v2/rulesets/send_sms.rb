@@ -13,9 +13,9 @@ module Hackney
             def action_valid
               return false if should_prevent_action?
               return false if @criteria.collectable_arrears.blank?
-              return false if @criteria.courtdate.present?
+              return false if court_date.present?
               return false if @criteria.nosp.served?
-              return false if @criteria.active_agreement?
+              return false if active_agreement?
               return false if breached_agreement? && !court_breach_agreement?
               return false if @criteria.collectable_arrears >= 10
 

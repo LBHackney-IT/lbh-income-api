@@ -81,4 +81,5 @@ describe '"Apply for Court Date" examples' do
   ]
 
   include_examples 'TenancyClassification', examples
+  include_examples 'TenancyClassificationWithAgreementsInMA', examples
 end

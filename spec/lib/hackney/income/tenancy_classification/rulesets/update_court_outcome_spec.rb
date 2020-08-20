@@ -56,7 +56,6 @@ describe '"Update court outcome" examples' do
       description: 'with no court date set and a court outcome has been reached',
       outcome: :check_data,
       court_outcome: 'Outcome reached',
-      skip_v1_test: true,
       courtdate: nil
     ),
     base_example.merge(
@@ -74,7 +73,7 @@ describe '"Update court outcome" examples' do
     ),
     base_example.merge(
       description: 'with no court outcome and breached court agreement',
-      outcome: :send_court_agreement_breach_letter,
+      outcome: :address_court_agreement_breach,
       courtdate: 14.days.ago.to_date,
       most_recent_agreement: {
         start_date: 1.week.ago,
@@ -84,4 +83,5 @@ describe '"Update court outcome" examples' do
   ]
 
   include_examples 'TenancyClassification', examples
+  it_behaves_like 'TenancyClassificationWithAgreementsInMA', examples
 end

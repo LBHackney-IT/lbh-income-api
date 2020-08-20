@@ -177,3 +177,7 @@ vertical-align:top;
 .payment_table_right {
   text-align: right;
 }
+
+.no_bullets {
+  list-style-type: none;
+}

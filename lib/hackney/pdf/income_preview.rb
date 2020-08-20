@@ -7,13 +7,20 @@ module Hackney
         @tenancy_case_gateway = tenancy_case_gateway
       end
 
-      def execute(tenancy_ref:, template_id:, user:)
+      def execute(tenancy_ref:, template_id:, user:, agreement: nil)
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
 
+        if agreement
+          agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
+          letter_params = income_info.merge(agreement_info)
+        else
+          letter_params = income_info
+        end
+
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
           template_path: template[:path]
-        ).execute(letter_params: income_info, username: user.name)
+        ).execute(letter_params: letter_params, username: user.name)
 
         uuid = SecureRandom.uuid
 
@@ -39,6 +46,17 @@ module Hackney
       def get_template_by_id(template_id, user)
         templates = @get_templates_gateway.execute(user: user)
         templates[templates.index { |temp| temp[:id] == template_id }]
+      end
+
+      def get_agreement_info(tenancy_ref, agreement)
+        case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
+
+        {
+          rent: case_priority.weekly_rent,
+          agreement_frequency: agreement.frequency,
+          amount: agreement.amount,
+          date_of_first_payment: agreement.start_date
+        }
       end
     end
   end

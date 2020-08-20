@@ -32,8 +32,7 @@ describe 'Apply for Outright Possession Warrant Rule examples' do
       active_agreement: false,
       outcome: :check_data,
       courtdate: nil,
-      court_outcome: 'OUT',
-      skip_v1_test: true
+      court_outcome: 'OUT'
     ),
     base_example.merge(
       desription: 'when there is an active agreement in place after outright possession order',
@@ -50,4 +49,5 @@ describe 'Apply for Outright Possession Warrant Rule examples' do
     )
   ]
   it_behaves_like 'TenancyClassification', examples
+  include_examples 'TenancyClassificationWithAgreementsInMA', examples
 end

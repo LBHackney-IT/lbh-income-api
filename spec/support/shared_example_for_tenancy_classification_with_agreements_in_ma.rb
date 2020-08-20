@@ -23,23 +23,25 @@ end
 #
 # Alternatively, see any file that uses the Shared Example and see what they are supplying.
 #
-shared_examples 'TenancyClassification' do |condition_matrix|
+shared_examples 'TenancyClassificationWithAgreementsInMA' do |condition_matrix|
   describe Hackney::Income::TenancyClassification::V2::Classifier do
-    it_behaves_like 'TenancyClassification Internal', condition_matrix
+    it_behaves_like 'TenancyClassification examples', condition_matrix
   end
 end
 
-shared_examples 'TenancyClassification Internal' do |condition_matrix|
+shared_examples 'TenancyClassification examples' do |condition_matrix|
   subject { assign_classification.execute }
 
   let(:assign_classification) {
     described_class.new(
-      case_priority, criteria, []
+      case_priority, criteria, [], true
     )
   }
 
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
   let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
+  let(:agreement_model) { Hackney::Income::Models::Agreement }
+  let(:court_case_model) { Hackney::Income::Models::CourtCase }
 
   let(:attributes) do
     {
@@ -48,13 +50,9 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       weekly_rent: weekly_rent,
       last_communication_date: last_communication_date,
       last_communication_action: last_communication_action,
-      active_agreement: active_agreement,
       nosp_served_date: nosp_served_date,
-      courtdate: courtdate,
       eviction_date: eviction_date,
-      court_outcome: court_outcome,
       expected_balance: expected_balance,
-      most_recent_agreement: most_recent_agreement,
       days_since_last_payment: days_since_last_payment,
       total_payment_amount_in_week: total_payment_amount_in_week
     }
@@ -68,15 +66,47 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
       let(:weekly_rent) { options[:weekly_rent] }
       let(:last_communication_date) { options[:last_communication_date] }
       let(:last_communication_action) { options[:last_communication_action] }
-      let(:active_agreement) { options[:active_agreement] }
       let(:nosp_served_date) { options[:nosp_served_date] }
-      let(:court_outcome) { options[:court_outcome] }
-      let(:courtdate) { options[:courtdate] }
       let(:eviction_date) { options[:eviction_date] || '' }
       let(:expected_balance) { options[:expected_balance] }
-      let(:most_recent_agreement) { options[:most_recent_agreement] }
       let(:days_since_last_payment) { options[:days_since_last_payment] }
       let(:total_payment_amount_in_week) { options[:total_payment_amount_in_week] }
+      let(:active_agreement) { options[:active_agreement] }
+      let(:most_recent_agreement) { options[:most_recent_agreement] }
+      let(:court_outcome) { options[:court_outcome] }
+      let(:courtdate) { options[:courtdate] }
+
+      before do
+        if courtdate.present? || court_outcome.present?
+          if court_outcome.present? && court_outcome == 'AGE'
+            # We should update these on the examples once UH examples are decommissioned so we won't need this mapping
+            disrepair_counter_claim = true
+            terms = true
+            outcome = Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+          end
+          court_case = build_stubbed(:court_case, tenancy_ref: criteria.tenancy_ref,
+                                                  court_date: courtdate,
+                                                  court_outcome: outcome || court_outcome,
+                                                  disrepair_counter_claim: disrepair_counter_claim,
+                                                  terms: terms)
+        end
+
+        if most_recent_agreement.present?
+          agreement_type = court_case.present? ? :formal : :informal
+          state = most_recent_agreement[:breached] == true ? :breached : :live
+          agreement = build_stubbed(:agreement,
+                                    agreement_type: agreement_type,
+                                    tenancy_ref: criteria.tenancy_ref,
+                                    start_date: most_recent_agreement[:start_date],
+                                    court_case_id: court_case&.id,
+                                    current_state: state)
+        elsif active_agreement == true
+          agreement = build_stubbed(:agreement, tenancy_ref: criteria.tenancy_ref, current_state: :live)
+        end
+
+        allow(court_case_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([court_case])
+        allow(agreement_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([agreement])
+      end
 
       if options[:outcome]
         it "returns `#{options[:outcome]}`" do
