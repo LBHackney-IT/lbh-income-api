@@ -13,20 +13,23 @@ describe Hackney::Income::MigrateUhCourtCase do
   let(:view_court_cases) { double(Hackney::Income::ViewCourtCases) }
   let(:update_court_case) { double(Hackney::Income::UpdateCourtCase) }
 
+  let(:criteria) { Stubs::StubCriteria.new(criteria_attributes) }
+  let(:existing_court_cases) { [] }
+
   before do
     allow(view_court_cases).to receive(:execute).and_return(existing_court_cases)
     allow(update_court_case).to receive(:execute).and_return([])
   end
 
-  let(:criteria) { Stubs::StubCriteria.new(criteria_attributes) }
-  let(:existing_court_cases) { [] }
+  UH_NIL_COURT_OUTCOME = '   '.freeze
+  UH_NIL_DATE = DateTime.parse('1900-01-01 00:00:00')
 
   context 'when there is no existing court case' do
     context 'when provided a criteria without a court date or court outcome' do
       let(:criteria_attributes) {
         {
-          court_outcome: nil,
-          courtdate: nil
+          court_outcome: UH_NIL_COURT_OUTCOME,
+          courtdate: UH_NIL_DATE
         }
       }
 
@@ -39,7 +42,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court date but without a court outcome' do
       let(:criteria_attributes) {
         {
-          court_outcome: nil,
+          court_outcome: UH_NIL_COURT_OUTCOME,
           courtdate: DateTime.now.midnight - 7.days
         }
       }
@@ -59,7 +62,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       let(:criteria_attributes) {
         {
           court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
-          courtdate: nil
+          courtdate: UH_NIL_DATE
         }
       }
 
@@ -155,8 +158,8 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria without a court date or outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: nil,
-            courtdate: nil
+            court_outcome: UH_NIL_COURT_OUTCOME,
+            courtdate: UH_NIL_DATE
           }
         }
 
@@ -170,7 +173,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with a court date but no outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: nil,
+            court_outcome: UH_NIL_COURT_OUTCOME,
             courtdate: DateTime.now.midnight
           }
         }
@@ -212,8 +215,8 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria without a court date or outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: nil,
-            courtdate: nil
+            court_outcome: UH_NIL_COURT_OUTCOME,
+            courtdate: UH_NIL_DATE
           }
         }
 
@@ -227,7 +230,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with a court date but no outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: nil,
+            court_outcome: UH_NIL_COURT_OUTCOME,
             courtdate: DateTime.now.midnight
           }
         }
@@ -265,7 +268,7 @@ describe Hackney::Income::MigrateUhCourtCase do
         let(:criteria_attributes) {
           {
             court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
-            courtdate: nil
+            courtdate: UH_NIL_DATE
           }
         }
 

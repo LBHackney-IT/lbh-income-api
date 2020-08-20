@@ -8,7 +8,6 @@ module Hackney
       end
 
       def migrate(criteria)
-
         Rails.logger.debug { "Starting migration for UH court case for tenancy ref #{criteria.tenancy_ref}" }
 
         unless criteria_contains_court_data(criteria)
@@ -41,7 +40,7 @@ module Hackney
         court_case_params[:court_outcome] = nil if existing_court_case.court_outcome.present?
 
         if court_case_params.compact.keys.empty?
-          Rails.logger.debug { "UH Criteria does not contain any new information" }
+          Rails.logger.debug { 'UH Criteria does not contain any new information' }
           return
         end
 
@@ -55,14 +54,26 @@ module Hackney
       end
 
       def criteria_contains_court_data(criteria)
-        criteria.courtdate.present? || criteria.court_outcome.present?
+        !get_courtdate(criteria.courtdate).nil? || !map_court_outcome(criteria.court_outcome).nil?
       end
 
       def map_criteria_to_court_case_params(criteria)
         {
-          court_date: criteria.courtdate,
-          court_outcome: criteria.court_outcome
+          court_date: get_courtdate(criteria.courtdate),
+          court_outcome: map_court_outcome(criteria.court_outcome)
         }
+      end
+
+      def get_courtdate(courtdate)
+        return nil if courtdate == DateTime.parse('1900-01-01 00:00:00')
+
+        courtdate
+      end
+
+      def map_court_outcome(outcome)
+        return nil if outcome.strip.empty?
+
+        outcome.strip
       end
     end
   end
