@@ -61,7 +61,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court outcome but without a court date' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
           courtdate: UH_NIL_DATE
         }
       }
@@ -80,7 +80,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court date and a court outcome' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
           courtdate: DateTime.now.midnight - 7.days
         }
       }
@@ -95,6 +95,71 @@ describe Hackney::Income::MigrateUhCourtCase do
         )
         subject
       end
+    end
+
+    context 'when setting the court outcome it maps old UH outcomes to the new MA outcomes' do
+      examples = [
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
+        },
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::POSTPONED_POSSESSION,
+          expected: nil
+        },
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+        },
+        {
+          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
+        },
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+        },
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+        },
+        {
+          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
+        },
+        {
+          input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+        },
+        {
+          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+        },
+        {
+          input: 'SOME_OTHER_COURT_OUTCOME_CODE',
+          expected: nil
+        }
+      ]
+
+      shared_examples 'mapping court outcomes' do |example|
+        let(:criteria_attributes) {
+          {
+            courtdate: DateTime.now.midnight - 7.days,
+            court_outcome: example[:input]
+          }
+        }
+
+        it "maps the court outcome #{example[:input]} to #{example[:expected]}" do
+          expect(create_court_case).to receive(:execute).with(
+            hash_including(
+              court_outcome: example[:expected]
+            )
+          )
+          subject
+        end
+      end
+
+      examples.each { |example| it_behaves_like 'mapping court outcomes', example }
     end
   end
 
@@ -188,7 +253,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with a court date and an outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
+            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
             courtdate: DateTime.now.midnight
           }
         }

@@ -73,7 +73,24 @@ module Hackney
       def map_court_outcome(outcome)
         return nil if outcome.strip.empty?
 
-        outcome.strip
+        case outcome.strip
+        when Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
+        when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
+        when Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+          Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+        when Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+          Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
+        when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+        end
       end
     end
   end
