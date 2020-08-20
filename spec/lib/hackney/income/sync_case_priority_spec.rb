@@ -77,16 +77,11 @@ describe Hackney::Income::SyncCasePriority do
 
   context 'when there is an existing agreement' do
     let(:agreement) { build(:agreement, tenancy_ref: tenancy_ref, current_state: :live) }
-    let(:case_priority) {
-      build(:case_priority,
-            tenancy_ref: tenancy_ref,
-            classification: :send_letter_one,
-            patch_code: Faker::Number.number(digits: 4),
-            is_paused_until: Date.today + 2.days)
-    }
 
     it 'updates the agreement state' do
-      expect(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(case_priority)
+      allow(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(
+        build(:case_priority, tenancy_ref: tenancy_ref)
+      )
       expect(agreement_model).to receive(:where).with(tenancy_ref: tenancy_ref).and_return([agreement])
       expect(update_agreement_state)
         .to receive(:execute)
@@ -96,13 +91,6 @@ describe Hackney::Income::SyncCasePriority do
   end
 
   context 'when there are multiple agreements' do
-    let(:case_priority) {
-      build(:case_priority,
-            tenancy_ref: tenancy_ref,
-            classification: :send_letter_one,
-            patch_code: Faker::Number.number(digits: 4),
-            is_paused_until: Date.today + 2.days)
-    }
     let(:active_agreement) { create(:agreement, tenancy_ref: tenancy_ref) }
 
     before do
@@ -114,7 +102,9 @@ describe Hackney::Income::SyncCasePriority do
     end
 
     it 'updates the latest active agreement' do
-      expect(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(case_priority)
+      allow(stored_worktray_item_gateway).to receive(:store_worktray_item).and_return(
+        build(:case_priority, tenancy_ref: tenancy_ref)
+      )
       expect(update_agreement_state)
         .to receive(:execute)
         .with(agreement: active_agreement, current_balance: balance)
