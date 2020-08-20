@@ -15,7 +15,7 @@ module Hackney
       def execute(tenancy_ref:)
         criteria = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref).fetch(:criteria)
         documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
-        agreement = AgreementModel.find_by(tenancy_ref: tenancy_ref)
+        agreement = AgreementModel.where(tenancy_ref: tenancy_ref).select(&:active?).last
 
         @update_agreement_state.execute(agreement: agreement, current_balance: criteria.balance) unless agreement.nil?
 
