@@ -21,7 +21,7 @@ module Hackney
 
         case_priority = persist_worktray_item(criteria: criteria, action: action)
 
-        @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
+        send_automated_letters(case_priority: case_priority)
 
         nil
       end
@@ -50,6 +50,10 @@ module Hackney
           criteria: criteria,
           classification: action
         )
+      end
+
+      def send_automated_letters(case_priority:)
+        @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
       end
     end
   end
