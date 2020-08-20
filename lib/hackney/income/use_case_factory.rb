@@ -254,6 +254,10 @@ module Hackney
         Hackney::Income::UpdateCourtCase.new
       end
 
+      def migrate_uh_court_case
+        Hackney::Income::MigrateUhCourtCase.new(create_court_case: create_court_case)
+      end
+
       private
 
       def cloud_storage
