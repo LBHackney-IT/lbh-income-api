@@ -13,11 +13,10 @@ module Hackney
 
         if agreement
           agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
-          income_info = income_info.merge(agreement_info)
+          letter_params = income_info.merge(agreement_info)
         else
           letter_params = income_info
         end
-
 
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
           template_path: template[:path]
