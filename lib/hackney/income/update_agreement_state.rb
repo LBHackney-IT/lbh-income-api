@@ -22,7 +22,6 @@ module Hackney
         end
 
         expected_balance = expected_balance(agreement)
-        current_balance = current_balance
 
         return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
