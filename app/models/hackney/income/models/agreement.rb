@@ -19,6 +19,10 @@ module Hackney
           agreement_type == 'formal'
         end
 
+        def informal?
+          !formal?
+        end
+
         def last_checked
           Hackney::Income::Models::AgreementState.where(agreement_id: id).last&.updated_at
         end

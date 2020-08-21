@@ -15,12 +15,17 @@ module Hackney
       private
 
       def update_status(agreement, current_balance)
+        if agreement.formal?
+          strike_out(agreement)
+
+          return add_new_state(agreement, :completed, nil, nil) if end_of_lifecycle?(agreement)
+        end
+
         expected_balance = expected_balance(agreement)
-        current_balance = current_balance
 
         return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
-        new_state = if current_balance <= 0
+        new_state = if current_balance <= 0 && strike_out_date_blank?(agreement)
                       :completed
                     elsif expected_balance < current_balance
                       :breached
@@ -100,6 +105,24 @@ module Hackney
       def state_has_not_changed?(agreement, expected_balance, current_balance)
         current_state = agreement.agreement_states.last
         current_state.expected_balance == expected_balance && current_state.checked_balance == current_balance
+      end
+
+      def strike_out(agreement)
+        return unless agreement.court_case.strike_out_date.present?
+        return unless agreement.court_case.strike_out_date <= Date.today
+
+        agreement.update!(agreement_type: :informal)
+      end
+
+      def end_of_lifecycle?(agreement)
+        return false unless agreement.court_case.court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
+        return false unless agreement.court_case.court_date + 6.years <= Date.today
+        true
+      end
+
+      def strike_out_date_blank?(agreement)
+        return true if agreement.informal?
+        agreement.court_case.strike_out_date.blank?
       end
     end
   end
