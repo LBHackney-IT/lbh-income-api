@@ -99,6 +99,22 @@ describe Hackney::IncomeCollection::Letter do
           { message: 'missing mandatory field', name: 'date_of_first_payment' }
         ]
       end
+
+      it 'generates an informal agreement breach letter' do
+        expect(Hackney::IncomeCollection::Letter::InformalAgreementBreach).to receive(:new).with(letter_params).and_call_original
+
+        letter = described_class.build(
+          letter_params: letter_params,
+          template_path: Hackney::IncomeCollection::Letter::InformalAgreementBreach::TEMPLATE_PATHS.sample
+        )
+
+        expect(letter.errors).to eq [
+          { message: 'missing mandatory field', name: 'created_date' },
+          { message: 'missing mandatory field', name: 'expected_balance' },
+          { message: 'missing mandatory field', name: 'checked_balance' },
+          { message: 'missing mandatory field', name: 'shortfall_amount' }
+        ]
+      end
     end
   end
 end

@@ -12,7 +12,11 @@ module Hackney
         income_info = get_income_info(tenancy_ref)
 
         if agreement
-          agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
+          if agreement.breached?
+            agreement_info = get_breached_agreement_info(agreement) if agreement
+          else
+            agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
+          end
           letter_params = income_info.merge(agreement_info)
         else
           letter_params = income_info
@@ -56,6 +60,17 @@ module Hackney
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
           date_of_first_payment: agreement.start_date
+
+        }
+      end
+
+      def get_breached_agreement_info(agreement)
+        state = agreement.agreement_states.last
+
+        {
+          created_date: agreement.created_at,
+          expected_balance: state.expected_balance,
+          checked_balance: state.checked_balance
         }
       end
     end
