@@ -132,8 +132,8 @@ describe Hackney::Income::MigrateUhCourtCase do
           expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
         },
         {
-          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
         },
         {
           input: 'SOME_OTHER_COURT_OUTCOME_CODE',

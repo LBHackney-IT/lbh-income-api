@@ -5,7 +5,6 @@ module Hackney
       ADJOURNED_TO_NEXT_OPEN_DATE = 'AND'.freeze
       ADJOURNED_TO_ANOTHER_HEARING_DATE = 'AAH'.freeze
       ADJOURNED_FOR_DIRECTIONS_HEARING = 'ADH'.freeze
-      ADJOURNED_FOR_ANOTHER_HEARING_DATE = 'AHD'.freeze
 
       SUSPENSION_ON_TERMS = 'SOT'.freeze
       STRUCK_OUT = 'STO'.freeze

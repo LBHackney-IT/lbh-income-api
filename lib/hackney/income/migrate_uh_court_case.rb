@@ -88,8 +88,8 @@ module Hackney
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
         when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
-        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
         end
       end
     end
