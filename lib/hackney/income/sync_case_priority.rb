@@ -37,7 +37,7 @@ module Hackney
       def determine_next_recommended_action(criteria:)
         documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
 
-        classification = Hackney::Income::TenancyClassification::Classifier.new(
+        Hackney::Income::TenancyClassification::Classifier.new(
           WorktrayItemModel.find_or_initialize_by(tenancy_ref: criteria.tenancy_ref),
           criteria,
           documents
