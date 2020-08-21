@@ -14,26 +14,46 @@ module Hackney
 
       def execute(tenancy_ref:)
         criteria = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref).fetch(:criteria)
-        documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
+
+        detect_agreement_breaches(tenancy_ref: tenancy_ref, current_balance: criteria.balance)
+
+        action = determine_next_recommended_action(criteria: criteria)
+
+        case_priority = persist_worktray_item(criteria: criteria, action: action)
+
+        send_automated_letters(case_priority: case_priority)
+
+        nil
+      end
+
+      private
+
+      def detect_agreement_breaches(tenancy_ref:, current_balance:)
         agreement = AgreementModel.where(tenancy_ref: tenancy_ref).select(&:active?).last
 
-        @update_agreement_state.execute(agreement: agreement, current_balance: criteria.balance) unless agreement.nil?
+        @update_agreement_state.execute(agreement: agreement, current_balance: current_balance) unless agreement.nil?
+      end
 
-        classification = Hackney::Income::TenancyClassification::Classifier.new(
-          WorktrayItemModel.find_or_initialize_by(tenancy_ref: tenancy_ref),
+      def determine_next_recommended_action(criteria:)
+        documents = DocumentModel.exclude_uploaded.by_payment_ref(criteria.payment_ref)
+
+        Hackney::Income::TenancyClassification::Classifier.new(
+          WorktrayItemModel.find_or_initialize_by(tenancy_ref: criteria.tenancy_ref),
           criteria,
           documents
         ).execute
+      end
 
-        case_priority = @stored_worktray_item_gateway.store_worktray_item(
-          tenancy_ref: tenancy_ref,
+      def persist_worktray_item(criteria:, action:)
+        @stored_worktray_item_gateway.store_worktray_item(
+          tenancy_ref: criteria.tenancy_ref,
           criteria: criteria,
-          classification: classification
+          classification: action
         )
+      end
 
+      def send_automated_letters(case_priority:)
         @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
-
-        nil
       end
     end
   end
