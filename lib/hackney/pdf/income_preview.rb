@@ -13,9 +13,9 @@ module Hackney
 
         if agreement
           if agreement.breached?
-            agreement_info = get_breached_agreement_info(agreement) if agreement
+            agreement_info = get_breached_agreement_info(agreement)
           else
-            agreement_info = get_agreement_info(tenancy_ref, agreement) if agreement
+            agreement_info = get_agreement_info(tenancy_ref, agreement)
           end
           letter_params = income_info.merge(agreement_info)
         else
