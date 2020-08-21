@@ -22,9 +22,11 @@ describe Hackney::Income::SyncCasePriority do
 
   let(:automate_sending_letters) { spy }
   let(:update_agreement_state) { spy }
+  let(:migrate_court_case_usecase) { spy }
 
   let(:sync_case) do
     described_class.new(
+      migrate_court_case_usecase: migrate_court_case_usecase,
       automate_sending_letters: automate_sending_letters,
       prioritisation_gateway: prioritisation_gateway,
       stored_worktray_item_gateway: stored_worktray_item_gateway,
@@ -34,6 +36,8 @@ describe Hackney::Income::SyncCasePriority do
 
   before do
     expect(tenancy_classification_stub).to receive(:execute).once
+
+    expect(migrate_court_case_usecase).to receive(:migrate).once
 
     expect(document_model).to receive(:by_payment_ref).with(criteria.payment_ref).and_return([])
 

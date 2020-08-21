@@ -71,7 +71,7 @@ module Hackney
       end
 
       def map_court_outcome(outcome)
-        return nil if outcome.strip.empty?
+        return nil if outcome.nil? || outcome.strip.empty?
 
         case outcome.strip
         when Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION

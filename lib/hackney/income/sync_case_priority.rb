@@ -5,15 +5,18 @@ module Hackney
       DocumentModel = Hackney::Cloud::Document
       AgreementModel = Hackney::Income::Models::Agreement
 
-      def initialize(prioritisation_gateway:, stored_worktray_item_gateway:, automate_sending_letters:, update_agreement_state:)
+      def initialize(prioritisation_gateway:, stored_worktray_item_gateway:, automate_sending_letters:, update_agreement_state:, migrate_court_case_usecase:)
         @automate_sending_letters = automate_sending_letters
         @prioritisation_gateway = prioritisation_gateway
         @stored_worktray_item_gateway = stored_worktray_item_gateway
         @update_agreement_state = update_agreement_state
+        @migrate_court_case_usecase = migrate_court_case_usecase
       end
 
       def execute(tenancy_ref:)
         criteria = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref).fetch(:criteria)
+
+        migrate_court_case(criteria)
 
         detect_agreement_breaches(tenancy_ref: tenancy_ref, current_balance: criteria.balance)
 
@@ -54,6 +57,10 @@ module Hackney
 
       def send_automated_letters(case_priority:)
         @automate_sending_letters.execute(case_priority: case_priority) unless case_priority.paused?
+      end
+
+      def migrate_court_case(criteria)
+        @migrate_court_case_usecase.migrate(criteria)
       end
     end
   end

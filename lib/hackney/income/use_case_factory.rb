@@ -184,7 +184,16 @@ module Hackney
           automate_sending_letters: automate_sending_letters,
           prioritisation_gateway: prioritisation_gateway,
           stored_worktray_item_gateway: stored_worktray_item_gateway,
-          update_agreement_state: update_agreement_state
+          update_agreement_state: update_agreement_state,
+          migrate_court_case_usecase: migrate_court_case_usecase
+        )
+      end
+
+      def migrate_court_case_usecase
+        Hackney::Income::MigrateUhCourtCase.new(
+          create_court_case: create_court_case,
+          view_court_cases: view_court_cases,
+          update_court_case: update_court_case
         )
       end
 
@@ -252,10 +261,6 @@ module Hackney
 
       def update_court_case
         Hackney::Income::UpdateCourtCase.new
-      end
-
-      def migrate_uh_court_case
-        Hackney::Income::MigrateUhCourtCase.new(create_court_case: create_court_case)
       end
 
       private
