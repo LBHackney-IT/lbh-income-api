@@ -26,7 +26,7 @@ module Hackney
 
         return update_last_checked_date(agreement) if state_has_not_changed?(agreement, expected_balance, current_balance)
 
-        new_state = if current_balance <= 0
+        new_state = if current_balance <= 0 && strike_out_date_blank?(agreement)
                       :completed
                     elsif expected_balance < current_balance
                       :breached
@@ -109,6 +109,7 @@ module Hackney
       end
 
       def strike_out(agreement)
+        return unless agreement.court_case.strike_out_date.present?
         return unless agreement.court_case.strike_out_date <= Date.today
 
         agreement.update!(agreement_type: :informal)
@@ -118,6 +119,11 @@ module Hackney
         return false unless agreement.court_case.court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
         return false unless agreement.court_case.court_date + 6.years <= Date.today
         true
+      end
+
+      def strike_out_date_blank?(agreement)
+        return true if agreement.informal?
+        agreement.court_case.strike_out_date.blank?
       end
     end
   end
