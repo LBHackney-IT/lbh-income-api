@@ -49,10 +49,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
-            court_date: criteria_attributes[:courtdate]
-          )
+            court_date: criteria_attributes[:courtdate],
+            court_outcome: nil
+          }
         )
         subject
       end
@@ -68,10 +69,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
+            court_date: nil,
             court_outcome: criteria_attributes[:court_outcome]
-          )
+          }
         )
         subject
       end
@@ -87,11 +89,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
             court_date: criteria_attributes[:courtdate],
             court_outcome: criteria_attributes[:court_outcome]
-          )
+          }
         )
         subject
       end
@@ -109,7 +111,7 @@ describe Hackney::Income::MigrateUhCourtCase do
         },
         {
           input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
-          expected: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS
         },
         {
           input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
@@ -117,11 +119,11 @@ describe Hackney::Income::MigrateUhCourtCase do
         },
         {
           input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
         },
         {
           input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
-          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
         },
         {
           input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
@@ -152,7 +154,7 @@ describe Hackney::Income::MigrateUhCourtCase do
         it "maps the court outcome #{example[:input]} to #{example[:expected]}" do
           expect(create_court_case).to receive(:execute).with(
             hash_including(
-              court_outcome: example[:expected]
+              court_case_params: hash_including(court_outcome: example[:expected])
             )
           )
           subject
