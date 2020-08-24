@@ -13,7 +13,10 @@ FactoryBot.define do
         Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
         Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
         Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-        Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+        Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION,
+        Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS,
+        Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+        Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
       ].sample
     end
     terms { [true, false].sample if adjourned? }
