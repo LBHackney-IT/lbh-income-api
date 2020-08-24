@@ -4,7 +4,14 @@ RSpec.describe 'CourtCases', type: :request do
   let(:id) { Faker::Number.number(digits: 3).to_s }
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today).to_s }
-  let(:court_outcome) { 'MAA' }
+  let(:court_outcome) do
+    [
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+    ].sample
+  end
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365).to_s }
   let(:terms) { false }

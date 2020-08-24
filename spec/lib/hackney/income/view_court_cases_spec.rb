@@ -14,7 +14,7 @@ describe Hackney::Income::ViewCourtCases do
   context 'when there is a court case for the tenancy' do
     let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...1000) }
     let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
-    let(:court_outcome) { 'MAA' }
+    let(:court_outcome) { 'SOT' }
     let(:strike_out_date) { Faker::Date.forward(days: 365) }
     let(:court_cases_param) do
       {
