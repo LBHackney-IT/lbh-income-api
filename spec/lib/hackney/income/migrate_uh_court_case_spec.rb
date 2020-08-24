@@ -167,7 +167,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     let(:existing_court_cases) {
       [create(:court_case,
               court_date: DateTime.now.midnight - 1.month,
-              court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY),
+              court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE),
        create(:court_case,
               court_date: DateTime.now.midnight - 7.days,
               court_outcome: nil)]
@@ -176,7 +176,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided with any criteria' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
+          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
           courtdate: DateTime.now.midnight
         }
       }
@@ -274,7 +274,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       let(:existing_court_cases) {
         [create(:court_case,
                 court_date: nil,
-                court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY)]
+                court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE)]
       }
 
       context 'when provided a criteria without a court date or outcome' do

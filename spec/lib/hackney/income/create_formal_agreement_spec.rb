@@ -22,7 +22,7 @@ describe Hackney::Income::CreateFormalAgreement do
       tenancy_ref: tenancy_ref,
       balance_on_court_outcome_date: Faker::Commerce.price(range: 10...1000),
       court_date: Faker::Date.between(from: 2.days.ago, to: Date.today),
-      court_outcome: 'MAA',
+      court_outcome: 'SOT',
       strike_out_date: Faker::Date.forward(days: 365)
     )
   end
