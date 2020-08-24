@@ -39,7 +39,7 @@ module Hackney
         court_case_params[:court_date] = nil if existing_court_case.court_date.present?
         court_case_params[:court_outcome] = nil if existing_court_case.court_outcome.present?
 
-        if court_case_params[:court_date].nil? || court_case_params[:court_outcome].nil?
+        if court_case_params[:court_date].nil? && court_case_params[:court_outcome].nil?
           Rails.logger.debug { 'UH Criteria does not contain any new information' }
           return
         end
