@@ -49,10 +49,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
-            court_date: criteria_attributes[:courtdate]
-          )
+            court_date: criteria_attributes[:courtdate],
+            court_outcome: nil
+          }
         )
         subject
       end
@@ -68,10 +69,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
+            court_date: nil,
             court_outcome: criteria_attributes[:court_outcome]
-          )
+          }
         )
         subject
       end
@@ -87,11 +89,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
       it 'creates a partial court case' do
         expect(create_court_case).to receive(:execute).with(
-          hash_including(
+          court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
             court_date: criteria_attributes[:courtdate],
             court_outcome: criteria_attributes[:court_outcome]
-          )
+          }
         )
         subject
       end
@@ -132,8 +134,8 @@ describe Hackney::Income::MigrateUhCourtCase do
           expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
         },
         {
-          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
+          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE,
+          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
         },
         {
           input: 'SOME_OTHER_COURT_OUTCOME_CODE',
@@ -151,10 +153,13 @@ describe Hackney::Income::MigrateUhCourtCase do
 
         it "maps the court outcome #{example[:input]} to #{example[:expected]}" do
           expect(create_court_case).to receive(:execute).with(
-            hash_including(
+            court_case_params: {
+              tenancy_ref: criteria.tenancy_ref,
+              court_date: criteria_attributes[:courtdate],
               court_outcome: example[:expected]
-            )
+            }
           )
+
           subject
         end
       end
@@ -167,7 +172,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     let(:existing_court_cases) {
       [create(:court_case,
               court_date: DateTime.now.midnight - 1.month,
-              court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE),
+              court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY),
        create(:court_case,
               court_date: DateTime.now.midnight - 7.days,
               court_outcome: nil)]
@@ -176,7 +181,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided with any criteria' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
           courtdate: DateTime.now.midnight
         }
       }
@@ -261,9 +266,13 @@ describe Hackney::Income::MigrateUhCourtCase do
         it 'does update the court case with the court outcome only' do
           expect(create_court_case).not_to receive(:execute)
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: nil,
-            court_outcome: criteria_attributes[:court_outcome]
+            court_case_params: {
+              tenancy_ref: criteria.tenancy_ref,
+              court_date: nil,
+              court_outcome: criteria_attributes[:court_outcome],
+              id: existing_court_cases[0].id
+
+            }
           )
           subject
         end
@@ -274,7 +283,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       let(:existing_court_cases) {
         [create(:court_case,
                 court_date: nil,
-                court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE)]
+                court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY)]
       }
 
       context 'when provided a criteria without a court date or outcome' do
@@ -303,9 +312,13 @@ describe Hackney::Income::MigrateUhCourtCase do
         it 'does update the court case with the date' do
           expect(create_court_case).not_to receive(:execute)
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: criteria_attributes[:courtdate],
-            court_outcome: nil
+            court_case_params: {
+              tenancy_ref: criteria.tenancy_ref,
+              court_date: criteria_attributes[:courtdate],
+              court_outcome: nil,
+              id: existing_court_cases[0].id
+
+            }
           )
           subject
         end
@@ -321,9 +334,13 @@ describe Hackney::Income::MigrateUhCourtCase do
 
         it 'does update the court case with the court date only' do
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: criteria_attributes[:courtdate],
-            court_outcome: nil
+            court_case_params: {
+              tenancy_ref: criteria.tenancy_ref,
+              court_date: criteria_attributes[:courtdate],
+              court_outcome: nil,
+              id: existing_court_cases[0].id
+
+            }
           )
           subject
         end

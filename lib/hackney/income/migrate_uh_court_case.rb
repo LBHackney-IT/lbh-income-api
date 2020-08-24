@@ -18,7 +18,7 @@ module Hackney
         existing_court_cases = @view_court_cases.execute(tenancy_ref: criteria.tenancy_ref)
         if existing_court_cases.empty?
           Rails.logger.debug { "Found no existing court cases for tenancy ref #{criteria.tenancy_ref}" }
-          @create_court_case.execute(tenancy_ref: criteria.tenancy_ref, **map_criteria_to_court_case_params(criteria))
+          @create_court_case.execute(court_case_params: map_criteria_to_court_case_params(criteria))
           return
         end
 
@@ -39,12 +39,12 @@ module Hackney
         court_case_params[:court_date] = nil if existing_court_case.court_date.present?
         court_case_params[:court_outcome] = nil if existing_court_case.court_outcome.present?
 
-        if court_case_params.compact.keys.empty?
+        if court_case_params[:court_date].nil? || court_case_params[:court_outcome].nil?
           Rails.logger.debug { 'UH Criteria does not contain any new information' }
           return
         end
 
-        @update_court_case.execute(id: existing_court_case.id, **court_case_params)
+        @update_court_case.execute(court_case_params: { id: existing_court_case.id, **court_case_params })
       end
 
       private
@@ -59,6 +59,7 @@ module Hackney
 
       def map_criteria_to_court_case_params(criteria)
         {
+          tenancy_ref: criteria.tenancy_ref,
           court_date: get_courtdate(criteria.courtdate),
           court_outcome: map_court_outcome(criteria.court_outcome)
         }
@@ -71,7 +72,7 @@ module Hackney
       end
 
       def map_court_outcome(outcome)
-        return nil if outcome.nil? || outcome.strip.empty?
+        return nil if outcome.strip.empty?
 
         case outcome.strip
         when Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
@@ -88,8 +89,8 @@ module Hackney
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
         when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
-        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
+        when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_ANOTHER_HEARING_DATE
         end
       end
     end
