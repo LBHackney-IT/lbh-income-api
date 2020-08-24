@@ -14,6 +14,8 @@ module Hackney
         case template_path
         when *Hackney::IncomeCollection::Letter::InformalAgreement::TEMPLATE_PATHS
           Letter::InformalAgreement.new(letter_params)
+        when *Hackney::IncomeCollection::Letter::InformalAgreementBreach::TEMPLATE_PATHS
+          Letter::InformalAgreementBreach.new(letter_params)
         else
           new(letter_params)
         end

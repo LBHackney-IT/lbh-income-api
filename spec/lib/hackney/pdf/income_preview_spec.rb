@@ -127,7 +127,7 @@ describe Hackney::PDF::IncomePreview do
   end
 
   context 'when sending an agreement letter' do
-    let(:agreement) { create(:agreement, tenancy_ref: test_tenancy_ref, current_state: :breached) }
+    let(:agreement) { create(:agreement, tenancy_ref: test_tenancy_ref, current_state: :live) }
 
     it 'fetches rent and formats the agreement params' do
       expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
@@ -138,6 +138,30 @@ describe Hackney::PDF::IncomePreview do
             date_of_first_payment: agreement.start_date,
             rent: nil,
             title: '',
+            total_collectable_arrears_balance: test_collectable_arrears
+          ),
+          username: username
+        ).and_call_original
+
+      expect(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
+      expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
+      expect(get_templates_gateway).to receive(:execute).and_return([test_template])
+
+      subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, agreement: agreement)
+    end
+  end
+
+  context 'when sending an agreement breach letter' do
+    let(:agreement) { create(:agreement, tenancy_ref: test_tenancy_ref, current_state: :breached) }
+    let(:state) { create(:agreement_state, :breached, agreement: agreement, expected_balance: 500, checked_balance: 1000) }
+
+    it 'formats the agreement params' do
+      expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
+        .to receive(:execute).with(
+          letter_params: test_letter_params.merge(
+            created_date: agreement.created_at,
+            expected_balance: state.expected_balance,
+            checked_balance: state.checked_balance,
             total_collectable_arrears_balance: test_collectable_arrears
           ),
           username: username
