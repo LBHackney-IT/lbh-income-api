@@ -18,7 +18,15 @@ module Hackney
         existing_court_cases = @view_court_cases.execute(tenancy_ref: criteria.tenancy_ref)
         if existing_court_cases.empty?
           Rails.logger.debug { "Found no existing court cases for tenancy ref #{criteria.tenancy_ref}" }
-          @create_court_case.execute(tenancy_ref: criteria.tenancy_ref, **map_criteria_to_court_case_params(criteria))
+
+          court_case_params = map_criteria_to_court_case_params(criteria).merge(tenancy_ref: criteria.tenancy_ref)
+
+          # We are not syncing terms and disrepair_counter_claim but we validating presence of these if its an adjourned outcome
+          # will set these to false by default when syncing old data
+          court_case_params = court_case_params.merge(terms: false, disrepair_counter_claim: false) if adjourned?(court_case_params)
+
+          @create_court_case.execute(court_case_params: court_case_params)
+
           return
         end
 
@@ -77,13 +85,13 @@ module Hackney
         when Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
         when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
-          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS
         when Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
         when Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
-          Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
         when Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
-          Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+          Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
         when Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
         when Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
@@ -91,6 +99,10 @@ module Hackney
         when Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
           Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
         end
+      end
+
+      def adjourned?(court_case_params)
+        Hackney::Income::Models::CourtCase.new(court_case_params).adjourned?
       end
     end
   end

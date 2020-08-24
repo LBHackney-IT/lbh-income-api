@@ -13,7 +13,8 @@ module Hackney
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS
           ].freeze
 
         OTHER_COURT_OUTCOMES =
@@ -21,7 +22,9 @@ module Hackney
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION,
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
           ].freeze
 
         def adjourned?
