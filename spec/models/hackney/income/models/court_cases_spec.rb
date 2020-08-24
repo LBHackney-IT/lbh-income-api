@@ -72,8 +72,8 @@ describe Hackney::Income::Models::CourtCase, type: :model do
   context 'when the court outcome is adjourned' do
     before { allow(subject).to receive(:adjourned?).and_return(true) }
 
-    it { is_expected.to validate_presence_of(:terms) }
-    it { is_expected.to validate_presence_of(:disrepair_counter_claim) }
+    it { is_expected.to allow_value(%w[true false]).for(:terms) }
+    it { is_expected.to allow_value(%w[true false]).for(:disrepair_counter_claim) }
   end
 
   context 'when the court outcome is invalid' do

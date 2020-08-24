@@ -16,7 +16,7 @@ FactoryBot.define do
         Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
       ].sample
     end
-    terms { adjourned? }
-    disrepair_counter_claim { adjourned? }
+    terms { [true, false].sample if adjourned? }
+    disrepair_counter_claim { [true, false].sample if adjourned? }
   end
 end

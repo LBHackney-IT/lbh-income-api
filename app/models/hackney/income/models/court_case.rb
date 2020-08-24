@@ -3,8 +3,8 @@ module Hackney
     module Models
       class CourtCase < ApplicationRecord
         validates_presence_of :tenancy_ref
-        validates_presence_of :terms, if: :adjourned?
-        validates_presence_of :disrepair_counter_claim, if: :adjourned?
+        validates_inclusion_of :terms, in: [true, false], if: :adjourned?
+        validates_inclusion_of :disrepair_counter_claim, in: [true, false], if: :adjourned?
         validate :court_outcome_is_valid
         has_many :agreements, -> { where agreement_type: :formal }, class_name: 'Hackney::Income::Models::Agreement'
 
