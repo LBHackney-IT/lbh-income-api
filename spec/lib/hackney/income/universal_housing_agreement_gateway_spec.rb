@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 describe Hackney::Income::UniversalHousingAgreementGateway, universal: true do
-  subject(:agreements) { described_class.new(universal_housing_client).for_tenancy(tenancy_ref: tenancy_ref) }
+  subject(:agreements) { described_class.for_tenancy(database_connection, tenancy_ref) }
 
-  let(:universal_housing_client) { Hackney::UniversalHousing::Client.connection }
+  let(:database_connection) { Hackney::UniversalHousing::Client.connection }
+
   let(:tenancy_ref) { '012345/01' }
 
   context 'when provided a tenancy ref with a single agreement' do

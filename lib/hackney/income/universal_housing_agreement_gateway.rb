@@ -1,11 +1,7 @@
 module Hackney
   module Income
     class UniversalHousingAgreementGateway
-      def initialize(universal_housing_client)
-        @universal_housing_client = universal_housing_client
-      end
-
-      def for_tenancy(tenancy_ref:)
+      def self.for_tenancy(database_connection, tenancy_ref)
         sql = <<~SQL
           SELECT *
           FROM arag
@@ -14,7 +10,9 @@ module Hackney
           ORDER BY aragdet.aragdet_sid
         SQL
 
-        results = @universal_housing_client[sql, tenancy_ref].all
+        results = database_connection[sql, tenancy_ref].all
+
+        return [] if results.empty?
 
         agreements_by_ref = results.each_with_object({}) { |agreement, acc|
           acc[agreement[:arag_ref]] = [] unless acc.key?(agreement[:arag_ref])
@@ -24,9 +22,7 @@ module Hackney
         agreements_by_ref.map(&method(:map_agreement_changes)).flatten
       end
 
-      private
-
-      def map_agreement_changes(_, agreement_changes)
+      def self.map_agreement_changes(_, agreement_changes)
         agreement_changes.map.with_index do |agreement_change, index|
           final_update = index == agreement_changes.count - 1
           status = final_update ? agreement_change[:arag_status] : Hackney::Income::CANCELLED_ARREARS_AGREEMENT_STATUS
