@@ -25,28 +25,41 @@ module Hackney
 
         return unless uh_agreements.any?
 
-        ma_agreemnets = @view_agreements.execute(tenancy_ref: tenancy_ref)
+        ma_agreements = @view_agreements.execute(tenancy_ref: tenancy_ref)
 
-        return unless ma_agreemnets.empty?
+        return unless ma_agreements.empty?
 
         court_cases = @view_court_cases.execute(tenancy_ref: tenancy_ref)
 
         if court_cases.any?
-          last_agreement = uh_agreements.pop
+          formal_agreement = uh_agreements.pop
 
-          new_agreement = create_formal_agreement(tenancy_ref, last_agreement, court_cases.last.id)
+          uh_agreements.each do |agreement|
+            migrate_informal_agreement(agreement, tenancy_ref)
+          end
 
-          add_agreement_migration(last_agreement[:uh_id], new_agreement.id)
-        end
+          migrate_formal_agreement(court_cases, formal_agreement, tenancy_ref)
 
-        uh_agreements.each do |agreement|
-          new_agreement = create_informal_agreement(tenancy_ref, agreement)
-
-          add_agreement_migration(agreement[:uh_id], new_agreement.id)
+        else
+          uh_agreements.each do |agreement|
+            migrate_informal_agreement(agreement, tenancy_ref)
+          end
         end
       end
 
       private
+
+      def migrate_formal_agreement(court_cases, formal_agreement, tenancy_ref)
+        new_agreement = create_formal_agreement(tenancy_ref, formal_agreement, court_cases.last.id)
+
+        add_agreement_migration(formal_agreement[:uh_id], new_agreement.id)
+      end
+
+      def migrate_informal_agreement(agreement, tenancy_ref)
+        new_agreement = create_informal_agreement(tenancy_ref, agreement)
+
+        add_agreement_migration(agreement[:uh_id], new_agreement.id)
+      end
 
       def create_formal_agreement(tenancy_ref, agreement, court_case_id)
         @create_formal_agreement.execute(
