@@ -34,7 +34,7 @@ shared_examples 'TenancyClassification Internal' do |condition_matrix|
 
   let(:assign_classification) {
     described_class.new(
-      case_priority, criteria, []
+      case_priority, criteria, [], false
     )
   }
 

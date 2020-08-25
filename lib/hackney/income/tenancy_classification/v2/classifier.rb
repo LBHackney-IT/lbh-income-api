@@ -5,7 +5,7 @@ module Hackney
         class Classifier
           include Helpers
 
-          def initialize(case_priority, criteria, documents, use_ma_data = false)
+          def initialize(case_priority, criteria, documents, use_ma_data = true)
             @criteria = criteria
             @case_priority = case_priority
             @documents = documents
