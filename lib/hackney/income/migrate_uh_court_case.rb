@@ -20,7 +20,7 @@ module Hackney
           Rails.logger.debug { "Found no existing court cases for tenancy ref #{criteria.tenancy_ref}" }
 
           court_case_params = map_criteria_to_court_case_params(criteria).merge(tenancy_ref: criteria.tenancy_ref)
-          
+
           # We are not syncing terms and disrepair_counter_claim but we validating presence of these if an outcome can have terms
           # will set these to false by default when syncing old data
           court_case_params = court_case_params.merge(terms: false, disrepair_counter_claim: false) if can_have_terms?(court_case_params)

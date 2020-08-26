@@ -6,7 +6,7 @@ describe Hackney::Income::Models::CourtCase, type: :model do
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
     ].sample
   end
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }

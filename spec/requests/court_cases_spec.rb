@@ -6,10 +6,10 @@ RSpec.describe 'CourtCases', type: :request do
   let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today).to_s }
   let(:court_outcome) do
     [
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
     ].sample
   end
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
@@ -106,7 +106,7 @@ RSpec.describe 'CourtCases', type: :request do
         patch "/api/v1/court_case/#{id}/update", params: request_body
       end
 
-      context 'when adding a (not adjourned) court outcome' do
+      context 'when adding a court outcome that can not have terms' do
         let(:update_court_case_params) do
           {
             id: id,
@@ -138,7 +138,7 @@ RSpec.describe 'CourtCases', type: :request do
         end
       end
 
-      context 'when adding an adjourned court outcome' do
+      context 'when adding a court outcome that can have terms' do
         let(:court_outcome) { 'AAH' }
         let(:update_court_case_params) do
           {

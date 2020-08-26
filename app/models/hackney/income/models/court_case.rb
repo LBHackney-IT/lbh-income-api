@@ -8,7 +8,7 @@ module Hackney
         validate :court_outcome_is_valid
         has_many :agreements, -> { where agreement_type: :formal }, class_name: 'Hackney::Income::Models::Agreement'
 
-        COURT_OUTCOMES_THAT_CAN_HAVE_TERMS=
+        COURT_OUTCOMES_THAT_CAN_HAVE_TERMS =
           [
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
@@ -17,7 +17,6 @@ module Hackney
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
             Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
-
           ].freeze
 
         OTHER_COURT_OUTCOMES =
@@ -36,7 +35,9 @@ module Hackney
 
         def court_outcome_is_valid
           return unless court_outcome.present?
-          errors.add(:court_outcome, 'must be a valid court outcome code') unless (COURT_OUTCOMES_THAT_CAN_HAVE_TERMS + OTHER_COURT_OUTCOMES).include?(court_outcome)
+
+          valid_court_outcomes = COURT_OUTCOMES_THAT_CAN_HAVE_TERMS + OTHER_COURT_OUTCOMES
+          errors.add(:court_outcome, 'must be a valid court outcome code') unless valid_court_outcomes.include?(court_outcome)
         end
       end
     end
