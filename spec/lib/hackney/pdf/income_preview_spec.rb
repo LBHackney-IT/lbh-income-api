@@ -38,7 +38,8 @@ describe Hackney::PDF::IncomePreview do
       address_preamble: '',
       title: '',
       forename: 'Bloggs',
-      surname: 'Joe'
+      surname: 'Joe',
+      rent: weekly_rent
     }
   end
   let(:user) do
@@ -49,14 +50,12 @@ describe Hackney::PDF::IncomePreview do
   end
 
   let(:translated_html) { File.open('spec/lib/hackney/pdf/translated_test_income_template.html').read }
-  let(:balance) { Faker::Commerce.price(range: 10..1000.0) }
   let(:weekly_rent) { Faker::Commerce.price(range: 10..100.0) }
 
   before do
     create(:case_priority,
            tenancy_ref: test_tenancy_ref,
            collectable_arrears: test_collectable_arrears,
-           balance: balance,
            weekly_rent: weekly_rent)
   end
 
@@ -141,8 +140,7 @@ describe Hackney::PDF::IncomePreview do
             date_of_first_payment: agreement.start_date,
             rent: weekly_rent,
             title: '',
-            total_collectable_arrears_balance: test_collectable_arrears,
-            balance: balance
+            total_collectable_arrears_balance: test_collectable_arrears
           ),
           username: username
         ).and_call_original
