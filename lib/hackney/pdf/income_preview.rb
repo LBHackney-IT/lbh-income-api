@@ -57,10 +57,10 @@ module Hackney
 
         {
           rent: case_priority.weekly_rent,
+          balance: case_priority.balance,
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
           date_of_first_payment: agreement.start_date
-
         }
       end
 
