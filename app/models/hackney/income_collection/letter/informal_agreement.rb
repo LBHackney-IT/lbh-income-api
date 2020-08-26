@@ -7,9 +7,9 @@ module Hackney
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/income/informal_agreement_confirmation_letter.erb'
         ].freeze
-        MANDATORY_FIELDS = %i[rent balance agreement_frequency amount date_of_first_payment].freeze
+        MANDATORY_FIELDS = %i[rent agreement_frequency amount date_of_first_payment].freeze
 
-        attr_reader :rent, :agreement_frequency, :amount, :rent_charge, :total_amount_payable, :date_of_first_payment, :instalment_amount, :balance
+        attr_reader :rent, :agreement_frequency, :amount, :rent_charge, :total_amount_payable, :date_of_first_payment, :instalment_amount
 
         def initialize(params)
           super(params)
@@ -19,7 +19,6 @@ module Hackney
           @rent = validated_params[:rent]
           @instalment_amount = format('%.2f', validated_params[:amount]) unless validated_params[:amount].nil?
           @date_of_first_payment = format_date(validated_params[:date_of_first_payment])
-          @balance = validated_params[:balance]
 
           return unless @rent
           @rent_charge = format('%.2f', calculate_rent(@rent, @agreement_frequency))
