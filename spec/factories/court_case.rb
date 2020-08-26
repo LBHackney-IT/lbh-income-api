@@ -19,7 +19,7 @@ FactoryBot.define do
         Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
       ].sample
     end
-    terms { [true, false].sample if adjourned? }
-    disrepair_counter_claim { [true, false].sample if adjourned? }
+    terms { [true, false].sample if can_have_terms? }
+    disrepair_counter_claim { [true, false].sample if can_have_terms? }
   end
 end
