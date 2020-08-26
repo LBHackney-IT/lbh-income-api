@@ -86,7 +86,7 @@ describe TenanciesController, type: :controller do
           uc_direct_payment_requested: nil,
           uc_rent_verification: nil,
           universal_credit: nil,
-          weekly_rent: nil,
+          weekly_rent: tenancy_1.weekly_rent.to_s,
           created_at: tenancy_1.created_at.iso8601(3),
           updated_at: tenancy_1.updated_at.iso8601(3)
         )
