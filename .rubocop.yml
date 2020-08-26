@@ -30,7 +30,7 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 180
+  Max: 160
 
 Metrics/MethodLength:
   Enabled: false

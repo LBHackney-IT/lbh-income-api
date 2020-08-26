@@ -37,8 +37,7 @@ module Hackney
             starting_balance: agreement_change[:arag_startbal],
             comment: agreement_change[:aragdet_comment],
             amount: agreement_change[:aragdet_amount],
-            frequency: agreement_change[:aragdet_frequency].to_i,
-            uh_id: agreement_change[:aragdet_sid]
+            frequency: agreement_change[:aragdet_frequency].to_i
           }
         end
       end
