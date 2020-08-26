@@ -60,10 +60,4 @@ class LettersController < ApplicationController
   def generate_and_store_use_case
     UseCases::GenerateAndStoreLetter.new
   end
-
-  def income_collection_document?(document)
-    metadata = JSON.parse(document.metadata)
-    income_collection_templates = %w[income_collection_letter_1 income_collection_letter_2]
-    metadata['template']['id'].in?(income_collection_templates)
-  end
 end
