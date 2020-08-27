@@ -29,8 +29,8 @@ describe Hackney::Income::UpdateCourtCase do
     create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date)
   end
 
-  context 'when adding an (not adjourned) court outcome to an existing court case' do
-    let(:court_outcome) { 'SOT' }
+  context 'when adding a court outcome that can not have terms to an existing court case' do
+    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT }
 
     it 'updates and returns the court case' do
       court_case = subject.execute(court_case_params: court_case_params)
@@ -44,8 +44,8 @@ describe Hackney::Income::UpdateCourtCase do
     end
   end
 
-  context 'when adding an adjourned court outcome to an existing court case' do
-    let(:court_outcome) { 'AAH' }
+  context 'when adding a court outcome that can have terms to an existing court case' do
+    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE }
     let(:strike_out_date) { Faker::Date.forward(days: 30) }
     let(:terms) { false }
     let(:disrepair_counter_claim) { false }
@@ -81,12 +81,14 @@ describe Hackney::Income::UpdateCourtCase do
   end
 
   context 'when adding a court outcome without a court date to an existing court case' do
+    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS }
+
     it 'updates and returns the court case' do
-      court_case = subject.execute(court_case_params: { id: id, court_date: nil, court_outcome: 'SOT' })
+      court_case = subject.execute(court_case_params: { id: id, court_date: nil, court_outcome: court_outcome })
 
       expect(court_case.id).to eq(id)
       expect(court_case.court_date).not_to be_nil
-      expect(court_case.court_outcome).to eq('SOT')
+      expect(court_case.court_outcome).to eq(court_outcome)
     end
   end
 end

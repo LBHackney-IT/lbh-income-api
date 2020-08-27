@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Hackney::Income::Models::CourtCase, type: :model do
-  let(:valid_non_adjourned_outcome) do
+  let(:valid_outcomes_without_terms) do
     [
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
       Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
     ].sample
   end
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
@@ -31,7 +31,7 @@ describe Hackney::Income::Models::CourtCase, type: :model do
     court_case = described_class.create!(
       tenancy_ref: tenancy_ref,
       court_date: Faker::Date.between(from: 10.days.ago, to: 3.days.ago),
-      court_outcome: valid_non_adjourned_outcome,
+      court_outcome: valid_outcomes_without_terms,
       balance_on_court_outcome_date: Faker::Commerce.price(range: 10...100),
       strike_out_date: Faker::Date.forward(days: 365)
     )
@@ -62,15 +62,15 @@ describe Hackney::Income::Models::CourtCase, type: :model do
     it 'is still a valid court case' do
       court_case = described_class.create!(
         tenancy_ref: tenancy_ref,
-        court_outcome: valid_non_adjourned_outcome
+        court_outcome: valid_outcomes_without_terms
       )
 
       expect(court_case).to be_a Hackney::Income::Models::CourtCase
     end
   end
 
-  context 'when the court outcome is adjourned' do
-    before { allow(subject).to receive(:adjourned?).and_return(true) }
+  context 'when the court outcome can have terms' do
+    before { allow(subject).to receive(:can_have_terms?).and_return(true) }
 
     it { is_expected.to allow_value(%w[true false]).for(:terms) }
     it { is_expected.to allow_value(%w[true false]).for(:disrepair_counter_claim) }

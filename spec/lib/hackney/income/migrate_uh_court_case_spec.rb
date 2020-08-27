@@ -82,7 +82,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court date and a court outcome' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
           courtdate: DateTime.now.midnight - 7.days
         }
       }
@@ -92,7 +92,9 @@ describe Hackney::Income::MigrateUhCourtCase do
           court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
             court_date: criteria_attributes[:courtdate],
-            court_outcome: criteria_attributes[:court_outcome]
+            court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+            terms: false,
+            disrepair_counter_claim: false
           }
         )
         subject

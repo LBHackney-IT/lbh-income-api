@@ -21,9 +21,9 @@ module Hackney
 
           court_case_params = map_criteria_to_court_case_params(criteria).merge(tenancy_ref: criteria.tenancy_ref)
 
-          # We are not syncing terms and disrepair_counter_claim but we validating presence of these if its an adjourned outcome
+          # We are not syncing terms and disrepair_counter_claim but we validating presence of these if an outcome can have terms
           # will set these to false by default when syncing old data
-          court_case_params = court_case_params.merge(terms: false, disrepair_counter_claim: false) if adjourned?(court_case_params)
+          court_case_params = court_case_params.merge(terms: false, disrepair_counter_claim: false) if can_have_terms?(court_case_params)
 
           @create_court_case.execute(court_case_params: court_case_params)
 
@@ -101,8 +101,8 @@ module Hackney
         end
       end
 
-      def adjourned?(court_case_params)
-        Hackney::Income::Models::CourtCase.new(court_case_params).adjourned?
+      def can_have_terms?(court_case_params)
+        Hackney::Income::Models::CourtCase.new(court_case_params).can_have_terms?
       end
     end
   end
