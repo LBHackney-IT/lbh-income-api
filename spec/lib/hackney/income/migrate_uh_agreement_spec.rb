@@ -69,7 +69,7 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
 
     it 'nothing get\'s migrated' do
       expect(view_court_cases).not_to receive(:execute)
-      expect(create_agreement).not_to receive(:execute)
+      expect(create_agreement).not_to receive(:create_agreement)
       expect(create_agreement).not_to receive(:execute)
       expect(create_agreement_migration).not_to receive(:execute)
 
