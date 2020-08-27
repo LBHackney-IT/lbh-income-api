@@ -185,8 +185,23 @@ module Hackney
           prioritisation_gateway: prioritisation_gateway,
           stored_worktray_item_gateway: stored_worktray_item_gateway,
           update_agreement_state: update_agreement_state,
-          migrate_court_case_usecase: migrate_court_case_usecase
+          migrate_court_case_usecase: migrate_court_case_usecase,
+          migrate_uh_agreement: migrate_uh_agreement
         )
+      end
+
+      def migrate_uh_agreement
+        Hackney::Income::MigrateUhAgreement.new(
+          view_agreements: view_agreements,
+          view_court_cases: view_court_cases,
+          create_informal_agreement: create_informal_agreement,
+          create_formal_agreement: create_formal_agreement,
+          create_agreement_migration: create_agreement_migration
+        )
+      end
+
+      def create_agreement_migration
+        Hackney::Income::CreateAgreementMigration.new
       end
 
       def migrate_court_case_usecase
