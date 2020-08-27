@@ -116,8 +116,14 @@ module Hackney
 
       def end_of_lifecycle?(agreement)
         return false unless agreement.court_case.court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
-        return false unless agreement.court_case.court_date + 6.years <= Date.today
+
+        return false unless court_date_older_than_6_years(agreement.court_case.court_date)
         true
+      end
+
+      def court_date_older_than_6_years(court_date)
+        return false if court_date.nil?
+        court_date + 6.years <= Date.today
       end
 
       def strike_out_date_blank?(agreement)
