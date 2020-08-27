@@ -15,8 +15,8 @@ module Hackney
         Hackney::Income::Models::AgreementState.create!(
           agreement: new_agreement,
           agreement_state: state_params[:agreement_state] || :live,
-          expected_balance: state_params[:starting_balance],
-          checked_balance: state_params[:starting_balance],
+          expected_balance: state_params[:expected_balance] || new_agreement[:starting_balance],
+          checked_balance: state_params[:checked_balance] || new_agreement[:starting_balance],
           description: state_params[:description] || 'Agreement created'
         )
 

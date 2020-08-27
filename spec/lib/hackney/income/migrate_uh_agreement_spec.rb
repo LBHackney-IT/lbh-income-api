@@ -34,7 +34,6 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
       expect(view_agreements).not_to receive(:execute)
       expect(view_court_cases).not_to receive(:execute)
       expect(create_agreement).not_to receive(:execute)
-      expect(create_agreement).not_to receive(:execute)
       expect(create_agreement_migration).not_to receive(:execute)
 
       subject.migrate(tenancy_ref: tenancy_ref)
@@ -263,8 +262,7 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
 
     it 'migrates an informal and formal agreement' do
       expect(create_agreement).to receive(:create_agreement).with(
-        # informal
-        {
+          {
           tenancy_ref: tenancy_ref,
           agreement_type: :informal,
           starting_balance: informal_starting_balance,

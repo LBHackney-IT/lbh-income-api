@@ -98,11 +98,6 @@ module Hackney
           description: 'Managed Arrears migration from UH',
           agreement_state: get_state(agreement[:status])
         }]
-
-        # state_params[:agreement_state]
-        # state_params[:starting_balance]
-        # state_params[:starting_balance]
-        # state_params[:description]
       end
 
       def get_frequency(uh_frequency)
