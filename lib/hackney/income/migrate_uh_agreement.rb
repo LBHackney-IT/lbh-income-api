@@ -33,44 +33,49 @@ module Hackney
           formal_agreement = uh_agreements.pop
 
           uh_agreements.each do |agreement|
-            migrate_informal_agreement(agreement, tenancy_ref)
+            migrate_informal_agreement(agreement, tenancy_ref, true)
           end
 
           migrate_formal_agreement(court_cases, formal_agreement, tenancy_ref)
 
         else
+          last_agreement = uh_agreements.pop
+
           uh_agreements.each do |agreement|
-            migrate_informal_agreement(agreement, tenancy_ref)
+            migrate_informal_agreement(agreement, tenancy_ref, true)
           end
+
+          migrate_informal_agreement(last_agreement, tenancy_ref, false)
         end
       end
 
       private
 
       def migrate_formal_agreement(court_cases, formal_agreement, tenancy_ref)
-        new_agreement = create_formal_agreement(tenancy_ref, formal_agreement, court_cases.last.id)
+        agreement_params, state_params = generate_params(
+          tenancy_ref,
+          formal_agreement,
+          :formal,
+          court_cases.last.id
+        )
+
+        new_agreement = @create_agreement.create_agreement(
+          agreement_params, state_params
+        )
 
         add_agreement_migration(formal_agreement[:uh_id], new_agreement.id)
       end
 
-      def migrate_informal_agreement(agreement, tenancy_ref)
-        new_agreement = create_informal_agreement(tenancy_ref, agreement)
+      def migrate_informal_agreement(agreement, tenancy_ref, cancel_if_live)
+        agreement_params, state_params = generate_params(tenancy_ref, agreement, :informal)
+
+        state_params[:agreement_state] = :cancelled if cancel_if_live && state_params[:agreement_state] == :live
+
+        new_agreement = @create_agreement.create_agreement(
+          agreement_params, state_params
+        )
 
         add_agreement_migration(agreement[:uh_id], new_agreement.id)
-      end
-
-      def create_formal_agreement(tenancy_ref, agreement, court_case_id)
-        agreement_params, state_params = generate_params(tenancy_ref, agreement, :formal, court_case_id)
-        @create_agreement.create_agreement(
-          agreement_params, state_params
-        )
-      end
-
-      def create_informal_agreement(tenancy_ref, agreement)
-        agreement_params, state_params = generate_params(tenancy_ref, agreement, :informal)
-        @create_agreement.create_agreement(
-          agreement_params, state_params
-        )
       end
 
       def add_agreement_migration(legacy_id, agreement_id)

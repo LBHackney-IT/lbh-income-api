@@ -230,7 +230,7 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
     let(:uh_agreements) {
       [{
         start_date: informal_start_date,
-        status: '500       ',
+        status: '100       ',
         breached: true,
         last_check_balance: informal_last_check_balance,
         last_check_date: '2013-11-30',
@@ -262,7 +262,7 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
 
     it 'migrates an informal and formal agreement' do
       expect(create_agreement).to receive(:create_agreement).with(
-          {
+        {
           tenancy_ref: tenancy_ref,
           agreement_type: :informal,
           starting_balance: informal_starting_balance,
