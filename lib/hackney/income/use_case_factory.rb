@@ -194,9 +194,15 @@ module Hackney
         Hackney::Income::MigrateUhAgreement.new(
           view_agreements: view_agreements,
           view_court_cases: view_court_cases,
-          create_informal_agreement: create_informal_agreement,
-          create_formal_agreement: create_formal_agreement,
+          create_agreement: create_agreement,
           create_agreement_migration: create_agreement_migration
+        )
+      end
+
+      def create_agreement
+        Hackney::Income::CreateAgreement.new(
+          add_action_diary: add_action_diary,
+          cancel_agreement: cancel_agreement
         )
       end
 

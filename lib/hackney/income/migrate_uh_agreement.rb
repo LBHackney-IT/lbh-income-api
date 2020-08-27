@@ -4,14 +4,12 @@ module Hackney
       def initialize(
         view_agreements:,
         view_court_cases:,
-        create_informal_agreement:,
-        create_formal_agreement:,
+        create_agreement:,
         create_agreement_migration:
       )
         @view_agreements = view_agreements
         @view_court_cases = view_court_cases
-        @create_informal_agreement = create_informal_agreement
-        @create_formal_agreement = create_formal_agreement
+        @create_agreement = create_agreement
         @create_agreement_migration = create_agreement_migration
       end
 
@@ -62,14 +60,16 @@ module Hackney
       end
 
       def create_formal_agreement(tenancy_ref, agreement, court_case_id)
-        @create_formal_agreement.execute(
-          new_agreement_params: generate_params(tenancy_ref, agreement, :formal, court_case_id)
+        agreement_params, state_params = generate_params(tenancy_ref, agreement, :formal, court_case_id)
+        @create_agreement.create_agreement(
+          agreement_params, state_params
         )
       end
 
       def create_informal_agreement(tenancy_ref, agreement)
-        @create_informal_agreement.execute(
-          new_agreement_params: generate_params(tenancy_ref, agreement, :informal)
+        agreement_params, state_params = generate_params(tenancy_ref, agreement, :informal)
+        @create_agreement.create_agreement(
+          agreement_params, state_params
         )
       end
 
@@ -81,7 +81,7 @@ module Hackney
       end
 
       def generate_params(tenancy_ref, agreement, type, court_case_id = nil)
-        {
+        [{
           tenancy_ref: tenancy_ref,
           agreement_type: type,
           starting_balance: agreement[:starting_balance],
@@ -91,7 +91,18 @@ module Hackney
           created_by: 'Managed Arrears migration from UH',
           notes: agreement[:comment],
           court_case_id: court_case_id
-        }
+        }, {
+          starting_balance: agreement[:starting_balance],
+          expected_balance: agreement[:last_check_expected_balance],
+          checked_balance: agreement[:last_check_balance],
+          description: 'Managed Arrears migration from UH',
+          agreement_state: get_state(agreement[:status])
+        }]
+
+        # state_params[:agreement_state]
+        # state_params[:starting_balance]
+        # state_params[:starting_balance]
+        # state_params[:description]
       end
 
       def get_frequency(uh_frequency)
@@ -112,6 +123,34 @@ module Hackney
         ]
 
         frequency_mapping.find { |f| f[:uh_frequency] == uh_frequency }[:ma_frequency]
+      end
+
+      def get_state(uh_state)
+        state_mapping = [
+          {
+            uh_state: 100, # First Check
+            ma_state: :live
+          }, {
+            uh_state: 200, # Live
+            ma_state: :live
+          }, {
+            uh_state: 299, # Suspect
+            ma_state: :live
+          }, {
+            uh_state: 300, # Breached
+            ma_state: :breached
+          }, {
+            uh_state: 400, # Suspended
+            ma_state: :cancelled
+          }, {
+            uh_state: 500, # Cancelled
+            ma_state: :cancelled
+          }, {
+            uh_state: 600, # Complete
+            ma_state: :completed
+          }
+        ]
+        state_mapping.find { |f| f[:uh_state] == uh_state.to_i }[:ma_state]
       end
     end
   end
