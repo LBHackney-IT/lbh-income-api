@@ -6,8 +6,8 @@
 
 <div>
   <div class="blue_box">
-    <strong>Rent Account Balance: </strong> <br>
-    <strong>Account Number: </strong>
+    <strong>Rent Account Balance: </strong>£<%= @letter.total_collectable_arrears_balance %> <br>
+    <strong>Account Number: </strong><%= @letter.tenancy_ref %>
   </div>
 
   <p>
@@ -15,9 +15,9 @@
   </p>
 
   <ul class = "no_bullets">
-    <li>Weekly/Monthly Rent: <%= @letter.rent_charge %> </li>
-    <li>Amount towards the arrears: <%= @letter.instalment_amount %> </li>
-    <li>Total amount payable: <%= @letter.total_amount_payable %> </li>
+    <li>Weekly/Monthly Rent: £<%= @letter.rent_charge %> </li>
+    <li>Amount towards the arrears: £<%= @letter.instalment_amount %> </li>
+    <li>Total amount payable: £<%= @letter.total_amount_payable %> </li>
     <li>Date of first payment: <%= @letter.date_of_first_payment %> </li>
   </ul>
 

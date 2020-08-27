@@ -44,6 +44,7 @@ module Hackney
         info_from_uh = @income_information_gateway.get_income_info(tenancy_ref: tenancy_ref)
         stored_info = @tenancy_case_gateway.find(tenancy_ref: tenancy_ref)
         info_from_uh[:total_collectable_arrears_balance] = stored_info.collectable_arrears
+        info_from_uh[:rent] = stored_info.weekly_rent
         info_from_uh
       end
 
@@ -53,14 +54,10 @@ module Hackney
       end
 
       def get_agreement_info(tenancy_ref, agreement)
-        case_priority = Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
-
         {
-          rent: case_priority.weekly_rent,
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
           date_of_first_payment: agreement.start_date
-
         }
       end
 

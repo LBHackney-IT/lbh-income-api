@@ -4,8 +4,8 @@ describe Hackney::IncomeCollection::Letter::InformalAgreement do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:frequency) { 'weekly' }
   let(:amount) { 30 }
-  let(:start_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
-  let(:weekly_rent) { 10.to_f }
+  let(:start_date) { Date.parse('24/08/2020') }
+  let(:weekly_rent) { 10.to_d }
   let(:letter_params) {
     {
       tenancy_ref: tenancy_ref,
@@ -25,6 +25,14 @@ describe Hackney::IncomeCollection::Letter::InformalAgreement do
   }
 
   let!(:letter) { described_class.new(letter_params) }
+
+  it 'generates a readable date format for first payment date' do
+    expect(letter.date_of_first_payment).to eq('24 August 2020')
+  end
+
+  it 'generates 2 decimal point value for instalment amount' do
+    expect(letter.instalment_amount).to eq('30.00')
+  end
 
   context 'when the letter is being generated' do
     it 'checks that the template file exists' do

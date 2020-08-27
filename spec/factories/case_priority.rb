@@ -11,6 +11,7 @@ FactoryBot.define do
     days_in_arrears { Faker::Number.between(from: 5, to: 1000) }
     active_agreement { false }
     is_paused_until { nil }
+    weekly_rent { Faker::Commerce.price(range: 10..100.0) }
 
     trait :red do
       priority_band { 'red' }

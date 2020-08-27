@@ -93,9 +93,6 @@ describe Hackney::IncomeCollection::Letter do
           { message: 'missing mandatory field', name: 'rent' },
           { message: 'missing mandatory field', name: 'agreement_frequency' },
           { message: 'missing mandatory field', name: 'amount' },
-          { message: 'missing mandatory field', name: 'rent_charge' },
-          { message: 'missing mandatory field', name: 'instalment_amount' },
-          { message: 'missing mandatory field', name: 'total_amount_payable' },
           { message: 'missing mandatory field', name: 'date_of_first_payment' }
         ]
       end

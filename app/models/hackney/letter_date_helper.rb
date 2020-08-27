@@ -1,7 +1,7 @@
 module Hackney
   module LetterDateHelper
     def format_date(date)
-      return nil if date.nil?
+      return if date.nil?
 
       date.strftime('%d %B %Y')
     end

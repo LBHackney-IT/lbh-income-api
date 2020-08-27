@@ -20,12 +20,15 @@ describe UseCases::GenerateAndStoreLetter do
   let(:user_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
   let(:user_group) { ['leasehold-group'] }
+  let(:payment_ref) { nil }
+  let(:tenancy_ref) { nil }
+  let(:template_id) { 'letter_1_in_arrears_FH' }
 
   let(:params) do
     {
       payment_ref: payment_ref,
-      tenancy_ref: nil,
-      template_id: 'letter_1_in_arrears_FH',
+      tenancy_ref: tenancy_ref,
+      template_id: template_id,
       user: Hackney::Domain::User.new.tap do |u|
         u.name = user_name
         u.email = email
@@ -86,6 +89,30 @@ describe UseCases::GenerateAndStoreLetter do
             { message: 'missing mandatory field', name: 'total_collectable_arrears_balance' }
           ]
         )
+      end
+    end
+
+    context 'when the template is an informal agreement confirmation template' do
+      let(:tenancy_ref) { Faker::Number.number(digits: 4).to_s }
+      let(:user_group) { ['income-collection-group'] }
+      let(:template_id) { 'informal_agreement_confirmation_letter' }
+
+      it 'gets all the data and generates the letter' do
+        expect_any_instance_of(Hackney::Income::UniversalHousingIncomeGateway)
+          .to receive(:get_income_info).with(tenancy_ref: tenancy_ref)
+                                       .and_return(letter_fields)
+        expect_any_instance_of(Hackney::Income::SqlTenancyCaseGateway)
+          .to receive(:find).with(tenancy_ref: tenancy_ref)
+                            .and_return(
+                              build(:case_priority,
+                                    tenancy_ref: tenancy_ref,
+                                    collectable_arrears: Faker::Number.number(digits: 3))
+                            )
+        expect(Hackney::Income::Models::Agreement)
+          .to receive(:where).with(tenancy_ref: tenancy_ref)
+                             .and_return([build(:live_agreement, tenancy_ref: tenancy_ref)])
+
+        use_case_output
       end
     end
   end
