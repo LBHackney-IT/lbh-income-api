@@ -10,14 +10,14 @@ module Hackney
         Hackney::Income::Models::CasePriority.where(tenancy_ref: tenancy_ref).first
       end
 
-      def create_agreement(agreement_params)
+      def create_agreement(agreement_params, state_params = {})
         new_agreement = Hackney::Income::Models::Agreement.create!(agreement_params)
         Hackney::Income::Models::AgreementState.create!(
           agreement: new_agreement,
-          agreement_state: :live,
-          expected_balance: agreement_params[:starting_balance],
-          checked_balance: agreement_params[:starting_balance],
-          description: 'Agreement created'
+          agreement_state: state_params[:agreement_state] || :live,
+          expected_balance: state_params[:expected_balance] || new_agreement[:starting_balance],
+          checked_balance: state_params[:checked_balance] || new_agreement[:starting_balance],
+          description: state_params[:description] || 'Agreement created'
         )
 
         new_agreement
