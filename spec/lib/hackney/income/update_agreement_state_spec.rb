@@ -385,6 +385,23 @@ describe Hackney::Income::UpdateAgreementState do
           end
         end
       end
+
+      context 'when there is no court hearing date' do
+        let(:court_date) { nil }
+
+        it 'will not complete the agreement through end of lifecycle' do
+          create(:agreement_state, :live, agreement: agreement)
+          next_check_date = start_date + days_before_check.days
+
+          current_balance = 1000
+
+          Timecop.freeze(next_check_date) do
+            expect_any_instance_of(described_class).to receive(:end_of_lifecycle?).and_return(false)
+            subject.execute(agreement: agreement, current_balance: current_balance)
+            expect(agreement.current_state).to eq('breached')
+          end
+        end
+      end
     end
   end
 
