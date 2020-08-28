@@ -115,5 +115,29 @@ describe UseCases::GenerateAndStoreLetter do
         use_case_output
       end
     end
+
+    context 'when the template is an informal agreement breach letter template' do
+      let(:tenancy_ref) { Faker::Number.number(digits: 4).to_s }
+      let(:user_group) { ['income-collection-group'] }
+      let(:template_id) { 'informal_agreement_breach_letter' }
+
+      it 'gets all the data and generates the letter' do
+        expect_any_instance_of(Hackney::Income::UniversalHousingIncomeGateway)
+          .to receive(:get_income_info).with(tenancy_ref: tenancy_ref)
+                                       .and_return(letter_fields)
+        expect_any_instance_of(Hackney::Income::SqlTenancyCaseGateway)
+          .to receive(:find).with(tenancy_ref: tenancy_ref)
+                            .and_return(
+                              build(:case_priority,
+                                    tenancy_ref: tenancy_ref,
+                                    collectable_arrears: Faker::Number.number(digits: 3))
+                            )
+        expect(Hackney::Income::Models::Agreement)
+          .to receive(:where).with(tenancy_ref: tenancy_ref)
+                             .and_return([create(:agreement_state, :breached).agreement])
+
+        use_case_output
+      end
+    end
   end
 end

@@ -7,7 +7,7 @@ module Hackney
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/income/informal_agreement_breach_letter.erb'
         ].freeze
-        MANDATORY_FIELDS = %i[created_date expected_balance checked_balance shortfall_amount].freeze
+        MANDATORY_FIELDS = %i[created_date expected_balance checked_balance].freeze
 
         attr_reader :created_date, :expected_balance, :checked_balance, :shortfall_amount
 
