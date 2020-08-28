@@ -7,7 +7,7 @@ module UseCases
       letter_use_case_factory = Hackney::Letter::UseCaseFactory.new
 
       income_collection_templates = %w[income_collection_letter_1 income_collection_letter_2]
-      agreement_templates = %w[informal_agreement_confirmation_letter]
+      agreement_templates = %w[informal_agreement_confirmation_letter informal_agreement_breach_letter]
 
       if template_id.in?(income_collection_templates)
         letter_data = pdf_use_case_factory.get_income_preview.execute(
