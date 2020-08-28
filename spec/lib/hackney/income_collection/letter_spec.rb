@@ -108,8 +108,7 @@ describe Hackney::IncomeCollection::Letter do
         expect(letter.errors).to eq [
           { message: 'missing mandatory field', name: 'created_date' },
           { message: 'missing mandatory field', name: 'expected_balance' },
-          { message: 'missing mandatory field', name: 'checked_balance' },
-          { message: 'missing mandatory field', name: 'shortfall_amount' }
+          { message: 'missing mandatory field', name: 'checked_balance' }
         ]
       end
     end
