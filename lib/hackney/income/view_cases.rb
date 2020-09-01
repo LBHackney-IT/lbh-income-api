@@ -28,7 +28,9 @@ module Hackney
           tenancy = full_tenancies.find { |t| t.fetch(:ref) == case_priority.fetch(:tenancy_ref) }
           next if tenancy.nil?
 
-          build_tenancy_list_item(tenancy, case_priority)
+          agreement = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy.fetch(:ref)).last
+
+          build_tenancy_list_item(tenancy, case_priority, agreement)
         end.compact
 
         Response.new(cases, number_of_pages)
@@ -36,11 +38,11 @@ module Hackney
 
       private
 
-      def build_tenancy_list_item(tenancy, case_priority)
+      def build_tenancy_list_item(tenancy, case_priority, agreement)
         {
           ref: tenancy.fetch(:ref),
           current_balance: tenancy.fetch(:current_balance),
-          current_arrears_agreement_status: tenancy.fetch(:current_arrears_agreement_status),
+          current_arrears_agreement_status: agreement&.current_state,
           latest_action: {
             code: tenancy.dig(:latest_action, :code),
             date: tenancy.dig(:latest_action, :date)

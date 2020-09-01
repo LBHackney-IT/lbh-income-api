@@ -7,6 +7,7 @@ describe Hackney::Income::ViewCases do
   let(:number_per_page) { Faker::Number.number(digits: 2).to_i }
   let(:tenancy_api_gateway) { Hackney::Income::TenancyApiGatewayStub.new({}) }
   let(:stored_worktray_item_gateway) { Hackney::Income::StoredTenancyGatewayStub.new({}) }
+  let(:agreement_model) { Hackney::Income::Models::Agreement }
 
   let(:view_cases) do
     described_class.new(
@@ -79,8 +80,6 @@ describe Hackney::Income::ViewCases do
         expect(subject.cases).to include(a_hash_including(
                                            ref: tenancy_attributes.fetch(:ref),
                                            current_balance: tenancy_attributes.fetch(:current_balance),
-                                           current_arrears_agreement_status: tenancy_attributes.fetch(:current_arrears_agreement_status),
-
                                            latest_action: {
                                              code: tenancy_attributes.dig(:latest_action, :code),
                                              date: tenancy_attributes.dig(:latest_action, :date)
@@ -117,6 +116,56 @@ describe Hackney::Income::ViewCases do
                                              until: tenancy_priority_factors.fetch(:is_paused_until)
                                            }
                                          ))
+      end
+
+      context 'when there is no agreements for the tenancy' do
+        it 'returns for the correct tenancy with no agreement data' do
+          expect(agreement_model)
+            .to receive(:where)
+            .with(tenancy_ref: tenancy_attributes.fetch(:ref))
+            .and_return([])
+
+          expect(subject.cases).to include(a_hash_including(
+                                             ref: tenancy_attributes.fetch(:ref),
+                                             current_arrears_agreement_status: nil,
+
+                                             # TODO: the following fields needs update, no longer should be pulled from UH agreements
+                                             number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
+                                             active_agreement: tenancy_priority_factors.fetch(:active_agreement),
+                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
+                                             courtdate: tenancy_priority_factors.fetch(:courtdate),
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
+                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
+                                             breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
+                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                           ))
+        end
+      end
+
+      context 'when there are agreements for the tenancy' do
+        it 'returns for the correct tenancy with the latest agreement data' do
+          agreements = ['dumbdummy', build(:cancelled_agreement, tenancy_ref: tenancy_attributes.fetch(:ref))]
+
+          expect(agreement_model)
+            .to receive(:where)
+            .with(tenancy_ref: tenancy_attributes.fetch(:ref))
+            .and_return(agreements)
+
+          expect(subject.cases).to include(a_hash_including(
+                                             ref: tenancy_attributes.fetch(:ref),
+                                             current_arrears_agreement_status: agreements.last.current_state,
+
+                                             # TODO: the following fields needs update, no longer should be pulled from UH agreements
+                                             number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
+                                             active_agreement: tenancy_priority_factors.fetch(:active_agreement),
+                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
+                                             courtdate: tenancy_priority_factors.fetch(:courtdate),
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
+                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
+                                             breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
+                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                           ))
+        end
       end
 
       context 'when filtering out paused cases' do
@@ -290,7 +339,6 @@ describe Hackney::Income::ViewCases do
     {
       ref: tenancy_ref || Faker::Internet.slug,
       current_balance: Faker::Commerce.price,
-      current_arrears_agreement_status: Faker::Internet.slug,
       latest_action: {
         code: Faker::Internet.slug,
         date: Faker::Time.forward(days: 23, period: :morning)
