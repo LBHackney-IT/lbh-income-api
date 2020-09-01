@@ -7,7 +7,7 @@ module Hackney
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/income/informal_agreement_breach_letter.erb'
         ].freeze
-        MANDATORY_FIELDS = %i[created_date expected_balance checked_balance shortfall_amount].freeze
+        MANDATORY_FIELDS = %i[created_date expected_balance checked_balance].freeze
 
         attr_reader :created_date, :expected_balance, :checked_balance, :shortfall_amount
 
@@ -21,12 +21,6 @@ module Hackney
 
           return unless @expected_balance || @checked_balance
           @shortfall_amount = format('%.2f', calculate_shortfall_amount(@checked_balance, @expected_balance))
-        end
-
-        private
-
-        def calculate_shortfall_amount(actual_balance, expected_balance)
-          BigDecimal(actual_balance.to_s) - BigDecimal(expected_balance.to_s)
         end
       end
     end

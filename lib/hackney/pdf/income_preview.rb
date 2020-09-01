@@ -66,7 +66,6 @@ module Hackney
 
       def get_breached_agreement_info(agreement)
         state = agreement.agreement_states.last
-
         {
           created_date: agreement.created_at,
           expected_balance: state.expected_balance,

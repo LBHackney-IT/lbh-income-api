@@ -10,7 +10,7 @@
   </p>
 
   <p>
-    According to my records you haven’t paid your repayment agreement, which you made on <%= @letter.created_date %> .  This means that your current rent arrears have increased to <%= @letter.total_collectable_arrears_balance %> .
+    According to my records you haven’t paid your repayment agreement, which you made on <%= @letter.created_date %>.  This means that your current rent arrears have increased to £<%= @letter.total_collectable_arrears_balance %> .
   </p>
 
   <p>
@@ -18,7 +18,7 @@
   </p>
 
   <p>
-    <strong>You need to pay <%= @letter.shortfall_amount %> immediately to bring your agreement back to the agreed amount, and to prevent any further action being taken against you.</strong>
+    <strong>You need to pay £<%= @letter.shortfall_amount %> immediately to bring your agreement back to the agreed amount, and to prevent any further action being taken against you.</strong>
   </p>
 
   <p>

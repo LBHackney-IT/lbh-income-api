@@ -28,7 +28,7 @@ module Hackney
           @expected_balance = validated_params[:expected_balance]
           @checked_balance = validated_params[:checked_balance]
 
-          return unless @expected_balance || @checked_balance
+          return unless @expected_balance && @checked_balance
           @shortfall_amount = format('%.2f', calculate_shortfall_amount(@checked_balance, @expected_balance))
         end
       end
