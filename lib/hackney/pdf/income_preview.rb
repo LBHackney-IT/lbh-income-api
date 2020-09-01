@@ -12,12 +12,15 @@ module Hackney
         income_info = get_income_info(tenancy_ref)
 
         if agreement
+
           if agreement.breached?
-            agreement_info = get_breached_agreement_info(agreement)
+            agreement_data = agreement.formal? ? get_breached_formal_agreement_info(agreement) : get_breached_agreement_info(agreement)
           else
-            agreement_info = get_agreement_info(tenancy_ref, agreement)
+            agreement_data = get_agreement_info(agreement)
           end
-          letter_params = income_info.merge(agreement_info)
+
+          letter_params = income_info.merge(agreement_data)
+
         else
           letter_params = income_info
         end
@@ -53,7 +56,7 @@ module Hackney
         templates[templates.index { |temp| temp[:id] == template_id }]
       end
 
-      def get_agreement_info(tenancy_ref, agreement)
+      def get_agreement_info(agreement)
         {
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
@@ -66,6 +69,17 @@ module Hackney
 
         {
           created_date: agreement.created_at,
+          expected_balance: state.expected_balance,
+          checked_balance: state.checked_balance
+        }
+      end
+
+      def get_breached_formal_agreement_info(agreement)
+        state = agreement.agreement_states.last
+
+        {
+          court_date: agreement.court_case.court_date,
+          date_of_breach: state.created_at,
           expected_balance: state.expected_balance,
           checked_balance: state.checked_balance
         }
