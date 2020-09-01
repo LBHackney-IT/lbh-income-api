@@ -156,7 +156,7 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
       let(:nosp_notice_served_date) { 2.days.ago }
 
       it 'returns the nosp expiry date' do
-        expect(subject).to eq((Hackney::Domain::Nosp::ACTIVE_TIME - 2.days).from_now.to_date)
+        expect(subject).to eq((2.days.ago + Hackney::Domain::Nosp::ACTIVE_TIME).to_date)
       end
 
       context 'when UH returns no nosp expiry date (1900-01-01 00:00:00 +0000)' do
