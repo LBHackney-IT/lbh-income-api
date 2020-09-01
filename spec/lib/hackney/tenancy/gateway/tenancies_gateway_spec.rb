@@ -47,7 +47,6 @@ describe Hackney::Tenancy::Gateway::TenanciesGateway do
         expect(subject).to eq([{
           ref: '000015/01',
           current_balance: '£1000.00',
-          current_arrears_agreement_status: '200',
           latest_action: {
             code: 'FBI',
             date: Time.parse('2018-10-01 12:30:00Z')
@@ -73,7 +72,6 @@ describe Hackney::Tenancy::Gateway::TenanciesGateway do
         expect(subject).to eq([{
           ref: '000017/01',
           current_balance: '£19.99',
-          current_arrears_agreement_status: nil,
           latest_action: nil,
           primary_contact: nil
         }])
@@ -103,7 +101,6 @@ describe Hackney::Tenancy::Gateway::TenanciesGateway do
     {
       'ref' => '000015/01',
       'current_balance' => '£1000.00',
-      'current_arrears_agreement_status' => '200',
       'latest_action' => {
         'code' => 'FBI',
         'date' => '2018-10-01 12:30:00Z'
@@ -120,7 +117,6 @@ describe Hackney::Tenancy::Gateway::TenanciesGateway do
     {
       'ref' => '000017/01',
       'current_balance' => '£19.99',
-      'current_arrears_agreement_status' => nil,
       'latest_action' => {
         'code' => nil,
         'date' => '0001-01-01 00 => 00 => 00Z'

@@ -29,7 +29,6 @@ module Hackney
             {
               ref: tenancy.fetch('ref'),
               current_balance: tenancy.fetch('current_balance'),
-              current_arrears_agreement_status: tenancy.fetch('current_arrears_agreement_status'),
               latest_action: build_latest_action(tenancy),
               primary_contact: build_primary_contact(tenancy)
             }
