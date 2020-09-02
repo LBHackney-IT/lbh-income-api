@@ -115,7 +115,6 @@ module Hackney
           courtdate: model.courtdate,
           court_outcome: model.court_outcome,
           eviction_date: model.eviction_date,
-          latest_active_agreement_date: model.latest_active_agreement_date,
           breach_agreement_date: model.breach_agreement_date,
           expected_balance: model.expected_balance,
           pause_reason: model.pause_reason,

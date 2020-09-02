@@ -105,8 +105,6 @@ describe Hackney::Income::ViewCases do
 
                                            classification: tenancy_priority_factors.fetch(:classification),
                                            patch_code: tenancy_priority_factors.fetch(:patch_code),
-
-                                           latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                            breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                            expected_balance: tenancy_priority_factors.fetch(:expected_balance),
                                            pause: {
@@ -133,7 +131,6 @@ describe Hackney::Income::ViewCases do
                                              broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
                                              court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                              breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                              expected_balance: tenancy_priority_factors.fetch(:expected_balance)
                                            ))
@@ -156,7 +153,6 @@ describe Hackney::Income::ViewCases do
                                              broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
                                              court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                              breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
                                              expected_balance: tenancy_priority_factors.fetch(:expected_balance)
                                            ))
@@ -318,7 +314,6 @@ describe Hackney::Income::ViewCases do
       eviction_date: Date.today + 1.month,
       patch_code: Faker::Lorem.characters(number: 3),
       classification: 'no_action',
-      latest_active_agreement_date: 1.week.ago,
       breach_agreement_date: 5.days.ago,
       expected_balance: Faker::Commerce.price,
       pause_reason: Faker::Lorem.characters(number: 3),
