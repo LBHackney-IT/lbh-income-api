@@ -212,7 +212,6 @@ class StubSqlPauseTenancyGateway
       'balance' => '430.9',
       'days_in_arrears' => 1126,
       'days_since_last_payment' => 1227,
-      'number_of_broken_agreements' => 0,
       'active_agreement' => false,
       'broken_court_order' => false,
       'nosp_served' => false,

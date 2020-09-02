@@ -106,7 +106,6 @@ module Hackney
           balance: model.balance,
           days_in_arrears: model.days_in_arrears,
           days_since_last_payment: model.days_since_last_payment,
-          number_of_broken_agreements: model.number_of_broken_agreements,
           active_agreement: model.active_agreement,
           broken_court_order: model.broken_court_order,
           nosp_served: model.nosp_served,

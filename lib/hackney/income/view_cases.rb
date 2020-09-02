@@ -56,7 +56,6 @@ module Hackney
           balance: case_priority.fetch(:balance),
           days_in_arrears: case_priority.fetch(:days_in_arrears),
           days_since_last_payment: case_priority.fetch(:days_since_last_payment),
-          number_of_broken_agreements: case_priority.fetch(:number_of_broken_agreements),
           active_agreement: case_priority.fetch(:active_agreement),
           broken_court_order: case_priority.fetch(:broken_court_order),
           nosp_served: case_priority.fetch(:nosp_served),
