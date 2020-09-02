@@ -100,7 +100,6 @@ describe Hackney::Income::ViewCases do
                                            eviction_date: tenancy_priority_factors.fetch(:eviction_date),
                                            classification: tenancy_priority_factors.fetch(:classification),
                                            patch_code: tenancy_priority_factors.fetch(:patch_code),
-                                           expected_balance: tenancy_priority_factors.fetch(:expected_balance),
                                            pause: {
                                              reason: tenancy_priority_factors.fetch(:pause_reason),
                                              comment: tenancy_priority_factors.fetch(:pause_comment),
@@ -123,8 +122,7 @@ describe Hackney::Income::ViewCases do
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
                                              broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
         end
       end
@@ -144,8 +142,7 @@ describe Hackney::Income::ViewCases do
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
                                              broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
         end
       end
@@ -305,7 +302,6 @@ describe Hackney::Income::ViewCases do
       eviction_date: Date.today + 1.month,
       patch_code: Faker::Lorem.characters(number: 3),
       classification: 'no_action',
-      expected_balance: Faker::Commerce.price,
       pause_reason: Faker::Lorem.characters(number: 3),
       pause_comment: Faker::Lorem.characters(number: 3),
       is_paused_until: Date.today + 1.day

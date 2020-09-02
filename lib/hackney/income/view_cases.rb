@@ -64,7 +64,6 @@ module Hackney
           eviction_date: case_priority.fetch(:eviction_date),
           classification: case_priority.fetch(:classification),
           patch_code: case_priority.fetch(:patch_code),
-          expected_balance: case_priority.fetch(:expected_balance),
           pause: {
             reason: case_priority.fetch(:pause_reason),
             comment: case_priority.fetch(:pause_comment),
