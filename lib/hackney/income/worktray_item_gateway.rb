@@ -13,7 +13,6 @@ module Hackney
               collectable_arrears: criteria.collectable_arrears,
               weekly_rent: criteria.weekly_rent,
               days_since_last_payment: criteria.days_since_last_payment,
-              active_agreement: criteria.active_agreement?,
               nosp_served: criteria.nosp_served?,
               nosp_served_date: criteria.nosp_served_date,
               last_communication_action: criteria.last_communication_action,
@@ -105,7 +104,6 @@ module Hackney
           balance: model.balance,
           days_in_arrears: model.days_in_arrears,
           days_since_last_payment: model.days_since_last_payment,
-          active_agreement: model.active_agreement,
           nosp_served: model.nosp_served,
           active_nosp: model.active_nosp,
           patch_code: model.patch_code,
@@ -113,7 +111,6 @@ module Hackney
           courtdate: model.courtdate,
           court_outcome: model.court_outcome,
           eviction_date: model.eviction_date,
-          expected_balance: model.expected_balance,
           pause_reason: model.pause_reason,
           pause_comment: model.pause_comment,
           is_paused_until: model.is_paused_until

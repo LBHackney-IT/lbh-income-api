@@ -61,7 +61,6 @@ describe TenanciesController, type: :controller do
         a_hash_including(
           id: tenancy_1.id,
           tenancy_ref: tenancy_1.tenancy_ref,
-          active_agreement: false,
           active_nosp: nil,
           assigned_user_id: nil,
           balance: tenancy_1.balance.to_s,
