@@ -92,7 +92,6 @@ describe Hackney::Income::ViewCases do
                                            balance: tenancy_priority_factors.fetch(:balance),
                                            days_in_arrears: tenancy_priority_factors.fetch(:days_in_arrears),
                                            days_since_last_payment: tenancy_priority_factors.fetch(:days_since_last_payment),
-                                           broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                            nosp_served: tenancy_priority_factors.fetch(:nosp_served),
                                            active_nosp: tenancy_priority_factors.fetch(:active_nosp),
                                            courtdate: tenancy_priority_factors.fetch(:courtdate),
@@ -120,7 +119,6 @@ describe Hackney::Income::ViewCases do
                                              current_arrears_agreement_status: nil,
 
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
                                              court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
@@ -140,7 +138,6 @@ describe Hackney::Income::ViewCases do
                                              ref: tenancy_attributes.fetch(:ref),
                                              current_arrears_agreement_status: agreements.last.current_state,
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
                                              court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
@@ -294,7 +291,6 @@ describe Hackney::Income::ViewCases do
       balance: Faker::Commerce.price,
       days_in_arrears: Faker::Number.number(digits: 2),
       days_since_last_payment: Faker::Number.number(digits: 2),
-      broken_court_order: Faker::Number.between(from: 0, to: 1),
       nosp_served: Faker::Number.between(from: 0, to: 1),
       active_nosp: Faker::Number.between(from: 0, to: 1),
       courtdate: Date.today - 5,

@@ -72,10 +72,6 @@ module Stubs
       attributes[:patch_code]
     end
 
-    def broken_court_order?
-      attributes[:broken_court_order]
-    end
-
     def active_agreement?
       attributes[:most_recent_agreement].present? || attributes[:active_agreement].present?
     end
