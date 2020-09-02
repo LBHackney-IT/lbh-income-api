@@ -7,7 +7,7 @@ module UseCases
       letter_use_case_factory = Hackney::Letter::UseCaseFactory.new
 
       income_collection_templates = %w[income_collection_letter_1 income_collection_letter_2]
-      agreement_templates = %w[informal_agreement_confirmation_letter informal_agreement_breach_letter]
+      agreement_templates = %w[informal_agreement_confirmation_letter informal_agreement_breach_letter formal_agreement_breach_letter]
 
       if template_id.in?(income_collection_templates)
         letter_data = pdf_use_case_factory.get_income_preview.execute(
@@ -16,7 +16,7 @@ module UseCases
           user: user
         )
       elsif template_id.in?(agreement_templates)
-        agreement = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?).last
+        agreement = get_agreement(tenancy_ref, template_id)
         letter_data = pdf_use_case_factory.get_income_preview.execute(
           tenancy_ref: tenancy_ref,
           template_id: template_id,
@@ -63,6 +63,13 @@ module UseCases
       letter_data[:document_id] = document_model.id
 
       letter_data
+    end
+
+    private
+
+    def get_agreement(tenancy_ref, template_path)
+      return Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:breached?).last if template_path.include?('breach')
+      Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?).last
     end
   end
 end

@@ -16,6 +16,8 @@ module Hackney
           Letter::InformalAgreement.new(letter_params)
         when *Hackney::IncomeCollection::Letter::InformalAgreementBreach::TEMPLATE_PATHS
           Letter::InformalAgreementBreach.new(letter_params)
+        when *Hackney::IncomeCollection::Letter::FormalAgreementBreach::TEMPLATE_PATHS
+          Letter::FormalAgreementBreach.new(letter_params)
         else
           new(letter_params)
         end
@@ -51,6 +53,10 @@ module Hackney
         )
 
         letter_params
+      end
+
+      def calculate_shortfall_amount(actual_balance, expected_balance)
+        BigDecimal(actual_balance.to_s) - BigDecimal(expected_balance.to_s)
       end
 
       private

@@ -140,4 +140,48 @@ describe UseCases::GenerateAndStoreLetter do
       end
     end
   end
+
+  context 'when the template is an formal agreement breach template' do
+    let(:letter_fields) {
+      {
+        payment_ref: Faker::Number.number(digits: 4),
+        lessee_full_name: Faker::Name.name,
+        correspondence_address1: Faker::Address.street_address,
+        correspondence_address2: Faker::Address.secondary_address,
+        correspondence_address3: Faker::Address.city,
+        correspondence_postcode: Faker::Address.zip_code,
+        property_address: Faker::Address.street_address,
+        total_collectable_arrears_balance: Faker::Number.number(digits: 3)
+      }
+    }
+
+    let(:tenancy_ref) { Faker::Number.number(digits: 4).to_s }
+    let(:user_group) { ['income-collection-group'] }
+    let(:template_id) { 'formal_agreement_breach_letter' }
+
+    let!(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
+    let!(:agreement) { create(:agreement, tenancy_ref: tenancy_ref, agreement_type: 'formal', court_case_id: court_case.id) }
+
+    before do
+      create(:agreement_state, :breached, agreement: agreement)
+    end
+
+    it 'gets all the data and generates the letter' do
+      expect_any_instance_of(Hackney::Income::UniversalHousingIncomeGateway)
+        .to receive(:get_income_info).with(tenancy_ref: tenancy_ref)
+                                     .and_return(letter_fields)
+      expect_any_instance_of(Hackney::Income::SqlTenancyCaseGateway)
+        .to receive(:find).with(tenancy_ref: tenancy_ref)
+                          .and_return(
+                            build(:case_priority,
+                                  tenancy_ref: tenancy_ref,
+                                  collectable_arrears: Faker::Number.number(digits: 3))
+                          )
+      expect(Hackney::Income::Models::Agreement)
+        .to receive(:where).with(tenancy_ref: tenancy_ref)
+                           .and_return([agreement])
+
+      use_case_output
+    end
+  end
 end

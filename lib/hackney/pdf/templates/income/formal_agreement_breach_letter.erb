@@ -1,0 +1,71 @@
+<%= @logo %>
+<div class="top_space"></div>
+<%= @hackney_address %>
+
+<%= @tenant_address %>
+
+<div>
+  <p>
+    <%= @today_date %>
+  </p>
+
+  <p>
+    Dear <%= @letter.title %> <%= @letter.surname %>,
+  </p>
+
+  <p>
+    <strong>
+      PAY NOW AVOID EVICTION
+    </strong>
+  </p>
+
+  <p>
+    Account Number: <%= @letter.tenancy_ref %>
+  </p>
+
+  <p>
+    <strong>
+      BREACHED TERMS OF COURT ORDER
+    </strong>
+  </p>
+
+  <p>
+    You have failed to keep to the terms of the Court Order granted on  <%= @letter.court_date %>. As at <%= @letter.date_of_breach %>, your arrears amounted to £<%= @letter.checked_balance %>.  The shortfall in payment is £<%= @letter.shortfall_amount %>.
+  </p>
+
+  <p>
+    <strong>
+      Please pay this amount immediately to avoid further action being taken.
+    </strong>
+  </p>
+
+  <p>
+    If you are unable to do so, it is essential you contact us immediately in one of the following ways.
+  </p>
+
+  <ul>
+    <li>By telephone on 020 8356 3100</li>
+    <li>By email at income.services@hackney.gov.uk</li>
+    <li>In person at 1 Hillman Street, E8 1FB</li>
+  </ul>
+
+  <p>
+    If your income or circumstances have changed, you must inform the Housing Benefit Department as this may affect your entitlement to Housing Benefit and you may need to apply to the court to vary the terms of the Order. Information and advice about Housing Benefit/Welfare entitlements/Debt Counselling and Money Management is available at www.hackney.gov.uk.
+  </p>
+
+  <p>
+    If you fail to make contact, I will apply for the case to be re-listed in court where the Council will be seeking a Possession Order, and this could result in you losing your home.
+  </p>
+
+  <p>
+    Yours sincerely,
+  </p>
+
+  <p>
+    Credit Controller
+    <br>
+    London Borough of Hackney
+  </p>
+</div>
+
+<%= @payment_options %>
