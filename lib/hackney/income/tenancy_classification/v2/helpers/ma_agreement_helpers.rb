@@ -24,6 +24,7 @@ module Hackney
             def court_breach_agreement_ma?
               return false unless breached_agreement?
               return false unless most_recent_agreement.formal?
+              return false if most_recent_court_case.court_date.blank?
 
               most_recent_agreement.start_date > most_recent_court_case.court_date
             end
