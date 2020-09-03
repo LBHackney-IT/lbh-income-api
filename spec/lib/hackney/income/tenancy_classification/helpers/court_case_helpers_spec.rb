@@ -8,7 +8,6 @@ describe Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers do
       @case_priority = case_priority
       @criteria = criteria
       @documents = documents
-      @use_ma_data = true # This will call MACourtCaseHelpers trough the HelpersProxy class
     end
   end
 

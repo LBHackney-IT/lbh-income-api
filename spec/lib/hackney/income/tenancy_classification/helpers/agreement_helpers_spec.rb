@@ -8,7 +8,6 @@ describe Hackney::Income::TenancyClassification::Helpers::AgreementHelpers do
       @case_priority = case_priority
       @criteria = criteria
       @documents = documents
-      @use_ma_data = true # This will call MAAgreementHelpers trough the HelpersProxy class
     end
   end
   let(:agreement_model) { Hackney::Income::Models::Agreement }
