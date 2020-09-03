@@ -24,7 +24,7 @@ end
 # Alternatively, see any file that uses the Shared Example and see what they are supplying.
 #
 shared_examples 'TenancyClassification' do |condition_matrix|
-  describe Hackney::Income::TenancyClassification::V2::Classifier do
+  describe Hackney::Income::TenancyClassification::Classifier do
     it_behaves_like 'TenancyClassification Internal', condition_matrix
   end
 end
