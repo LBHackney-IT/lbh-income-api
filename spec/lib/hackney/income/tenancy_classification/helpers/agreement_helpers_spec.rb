@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Hackney::Income::TenancyClassification::Helpers::AgreementHelpers do
   class DummyAgreementHelperClass
-    include Hackney::Income::TenancyClassification::Helpers::HelpersProxy
+    include Hackney::Income::TenancyClassification::Helpers::AgreementHelpers
 
     def initialize(case_priority, criteria, documents)
       @case_priority = case_priority

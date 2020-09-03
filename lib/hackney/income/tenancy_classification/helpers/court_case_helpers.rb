@@ -5,7 +5,7 @@ module Hackney
         module CourtCaseHelpers
           include HelpersBase
 
-          def court_warrant_active_ma?
+          def court_warrant_active?
             return false if most_recent_court_case.blank?
             return false if most_recent_court_case.court_date.blank?
             return false if most_recent_court_case.court_outcome.blank?
@@ -24,27 +24,27 @@ module Hackney
             false
           end
 
-          def court_date_in_future_ma?
+          def court_date_in_future?
             return false unless most_recent_court_case.present? && most_recent_court_case.court_date.present?
             most_recent_court_case.court_date.future?
           end
 
-          def no_court_date_ma?
+          def no_court_date?
             most_recent_court_case.blank? || most_recent_court_case.court_date.blank?
           end
 
-          def court_outcome_missing_ma?
-            return false if court_date_in_future_ma?
-            return false if no_court_date_ma?
+          def court_outcome_missing?
+            return false if court_date_in_future?
+            return false if no_court_date?
 
             most_recent_court_case.court_outcome.blank?
           end
 
-          def court_date_ma
+          def court_date
             most_recent_court_case&.court_date
           end
 
-          def court_outcome_ma
+          def court_outcome
             most_recent_court_case&.court_outcome
           end
         end
