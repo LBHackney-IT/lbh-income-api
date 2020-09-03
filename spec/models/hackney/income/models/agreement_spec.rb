@@ -6,7 +6,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
     described_class.create(
       tenancy_ref: '123',
       created_by: user_name,
-      agreement_type: :informal
+      agreement_type: :informal,
+      frequency: :monthly
     )
   end
 
@@ -40,7 +41,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   describe 'agreement_type' do
-    it 'only accepts formal/informal as an agrement type' do
+    it 'only accepts formal/informal as an agreement type' do
       %w[formal informal].each do |agreement_type|
         expect { described_class.new(agreement_type: agreement_type) }.not_to raise_error
       end
@@ -65,6 +66,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
       expect { described_class.new(frequency: 'invalid_frequency') }
         .to raise_error ArgumentError, "'invalid_frequency' is not a valid frequency"
     end
+
+    it { is_expected.to validate_presence_of(:frequency) }
   end
 
   describe 'current_state' do
@@ -144,7 +147,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
         described_class.create!(
           tenancy_ref: '123',
           created_by: user_name,
-          agreement_type: :formal
+          agreement_type: :formal,
+          frequency: :weekly
         )
       }.to raise_error ActiveRecord::RecordInvalid, "Validation failed: Court case can't be blank"
     end

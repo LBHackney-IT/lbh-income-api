@@ -85,6 +85,19 @@ describe Hackney::Income::UpdateAgreementState do
     end
   end
 
+  context 'when the frequency of payment is :unsupported_legacy_frequency' do
+    it 'does not change the agreement state' do
+      agreement = stub_informal_agreement(
+        start_date: start_date,
+        frequency: :unsupported_legacy_frequency,
+        amount: 20,
+        starting_balance: 100
+      )
+
+      expect(subject.execute(agreement: agreement, current_balance: 23)).to be_falsy
+    end
+  end
+
   context 'when the frequency of payment is :monthly' do
     it 'updates the state of the agreement when its breached' do
       agreement = stub_informal_agreement(

@@ -7,6 +7,7 @@ module Hackney
 
       def execute(agreement:, current_balance:)
         return false unless agreement.active?
+        return false if agreement.frequency == 'unsupported_legacy_frequency'
         return false if date_of_first_check(agreement).future?
 
         update_status(agreement, current_balance)
