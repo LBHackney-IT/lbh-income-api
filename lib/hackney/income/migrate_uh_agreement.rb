@@ -52,7 +52,7 @@ module Hackney
       private
 
       def migrate_formal_agreement(court_cases, formal_agreement, tenancy_ref)
-        agreement_params, state_params = generate_params(
+        agreement_params, state_params = generate_agreement_and_state_params(
           tenancy_ref,
           formal_agreement,
           :formal,
@@ -67,7 +67,7 @@ module Hackney
       end
 
       def migrate_informal_agreement(agreement, tenancy_ref, cancel_if_live)
-        agreement_params, state_params = generate_params(tenancy_ref, agreement, :informal)
+        agreement_params, state_params = generate_agreement_and_state_params(tenancy_ref, agreement, :informal)
 
         state_params[:agreement_state] = :cancelled if cancel_if_live && state_params[:agreement_state] == :live
 
@@ -85,44 +85,88 @@ module Hackney
         })
       end
 
-      def generate_params(tenancy_ref, agreement, type, court_case_id = nil)
-        [{
+      def generate_agreement_and_state_params(tenancy_ref, agreement, type, court_case_id = nil)
+        agreement_frequency = get_frequency(agreement[:frequency])
+
+        agreement_notes = get_note(agreement, agreement_frequency)
+
+        agreement_params = {
           tenancy_ref: tenancy_ref,
           agreement_type: type,
           starting_balance: agreement[:starting_balance],
           amount: agreement[:amount],
           start_date: agreement[:start_date],
-          frequency: get_frequency(agreement[:frequency]),
+          frequency: agreement_frequency[:ma_frequency],
           created_by: 'Managed Arrears migration from UH',
-          notes: agreement[:comment],
+          notes: agreement_notes,
           court_case_id: court_case_id
-        }, {
+        }
+
+        state_params = {
           starting_balance: agreement[:starting_balance],
           expected_balance: agreement[:last_check_expected_balance],
           checked_balance: agreement[:last_check_balance],
           description: 'Managed Arrears migration from UH',
           agreement_state: get_state(agreement[:status])
-        }]
+        }
+
+        [agreement_params, state_params]
+      end
+
+      def get_note(agreement, agreement_frequency)
+        if agreement_frequency[:ma_frequency].nil?
+          "Frequency no longer supported, original frequency was '#{agreement_frequency[:description]}'. #{agreement[:comment]}"
+        else
+          agreement[:comment]
+        end
       end
 
       def get_frequency(uh_frequency)
         frequency_mapping = [
           {
-            uh_frequency: 0, # Monthly
+            description: 'Monthly',
+            uh_frequency: 0,
             ma_frequency: 1
           }, {
-            uh_frequency: 1, # Weekly
+            description: 'Weekly',
+            uh_frequency: 1,
             ma_frequency: 0
           }, {
-            uh_frequency: 2, # 2 Weekly
+            description: '2 Weekly',
+            uh_frequency: 2,
             ma_frequency: 2
           }, {
-            uh_frequency: 4, # 4 Weekly
+            description: '4 Weekly',
+            uh_frequency: 4,
             ma_frequency: 3
+          }, {
+            description: '3 Monthly',
+            uh_frequency: 5,
+            ma_frequency: nil
+          }, {
+            description: '6 Monthly',
+            uh_frequency: 6,
+            ma_frequency: nil
+          }, {
+            description: 'Annually',
+            uh_frequency: 7,
+            ma_frequency: nil
+          }, {
+            description: 'Daily',
+            uh_frequency: 8,
+            ma_frequency: nil
+          }, {
+            description: 'Irregular',
+            uh_frequency: 9,
+            ma_frequency: nil
+          }, {
+            description: 'Quarterly',
+            uh_frequency: 'Q',
+            ma_frequency: nil
           }
         ]
 
-        frequency_mapping.find { |f| f[:uh_frequency] == uh_frequency }[:ma_frequency]
+        frequency_mapping.find { |f| f[:uh_frequency] == uh_frequency }
       end
 
       def get_state(uh_state)
