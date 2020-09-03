@@ -26,7 +26,9 @@ describe Hackney::Income::Models::Agreement, type: :model do
       'tenancy_ref',
       'notes',
       'court_case_id',
-      'id'
+      'id',
+      'initial_payment_date',
+      'initial_payment_amount'
     )
   end
 
