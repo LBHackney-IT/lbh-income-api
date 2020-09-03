@@ -2,7 +2,7 @@ module Hackney
   module Income
     module TenancyClassification
       module Helpers
-        module MAAgreementHelpers
+        module AgreementHelpers
           include HelpersBase
 
           def active_agreement_ma?

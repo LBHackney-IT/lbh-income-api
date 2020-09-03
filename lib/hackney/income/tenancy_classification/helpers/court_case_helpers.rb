@@ -2,7 +2,7 @@ module Hackney
   module Income
     module TenancyClassification
       module Helpers
-        module MACourtCaseHelpers
+        module CourtCaseHelpers
           include HelpersBase
 
           def court_warrant_active_ma?

@@ -5,8 +5,8 @@ module Hackney
         module HelpersProxy
           # The intention of this class if to be able to run the existing classification engine
           # with both Manage Arrears data and Universal Housing data.
-          include Hackney::Income::TenancyClassification::Helpers::MAAgreementHelpers
-          include Hackney::Income::TenancyClassification::Helpers::MACourtCaseHelpers
+          include Hackney::Income::TenancyClassification::Helpers::AgreementHelpers
+          include Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers
 
           def active_agreement?
             active_agreement_ma?

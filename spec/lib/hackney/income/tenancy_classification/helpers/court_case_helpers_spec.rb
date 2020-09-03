@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Hackney::Income::TenancyClassification::Helpers::MACourtCaseHelpers do
+describe Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers do
   class DummyCourtCaseHelperClass
     include Hackney::Income::TenancyClassification::Helpers::HelpersProxy
 
