@@ -88,11 +88,12 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
     let(:start_date) { '2012-12-24' }
     let(:comment) { 'Something' }
     let(:frequency) { 4 }
+    let(:status) { '400       ' }
 
     let(:uh_agreements) {
       [{
         start_date: start_date,
-        status: '400       ',
+        status: status,
         breached: true,
         last_check_balance: last_check_balance,
         last_check_date: '2013-11-30',
@@ -152,7 +153,7 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
             starting_balance: starting_balance,
             amount: amount,
             start_date: start_date,
-            frequency: nil,
+            frequency: 4,
             created_by: 'Managed Arrears migration from UH',
             notes: "Frequency no longer supported, original frequency was '6 Monthly'. #{comment}",
             court_case_id: nil
@@ -172,6 +173,17 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
         )
 
         subject.migrate(tenancy_ref: tenancy_ref)
+      end
+    end
+
+    context 'when migrating a live agreement with not supported frequency' do
+      let(:status) { '200       ' }
+      let(:frequency) { 8 }
+
+      it 'raises an error' do
+        expect {
+          subject.migrate(tenancy_ref: tenancy_ref)
+        }.to raise_error StandardError, "Can not migrate live agreement with unsupported frequency, #{tenancy_ref}"
       end
     end
   end
