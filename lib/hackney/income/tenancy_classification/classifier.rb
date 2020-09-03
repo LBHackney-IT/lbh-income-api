@@ -41,9 +41,9 @@ module Hackney
               actions = %i[send_letter_one]
             else
               Rails.logger.error(
-                'CLASSIFIER: Multiple recommended actions from V2' \
-            "Actions: #{actions} " \
-            "tenancy_ref: #{@criteria.tenancy_ref}"
+                'CLASSIFIER: Multiple recommended actions ' \
+                "Actions: #{actions} " \
+                "tenancy_ref: #{@criteria.tenancy_ref}"
               )
             end
           end
