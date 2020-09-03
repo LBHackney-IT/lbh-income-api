@@ -1,6 +1,8 @@
 module Hackney
   module Income
     class MigrateUhAgreement
+      MigrateUhAgreementError = Class.new(StandardError)
+
       def initialize(
         view_agreements:,
         view_court_cases:,
@@ -88,6 +90,10 @@ module Hackney
       def generate_agreement_and_state_params(tenancy_ref, agreement, type, court_case_id = nil)
         agreement_frequency = get_frequency(agreement[:frequency])
 
+        agreement_state = get_state(agreement[:status])
+
+        raise MigrateUhAgreementError, "Can not migrate live agreement with unsupported frequency, #{tenancy_ref}" if can_not_migrate(agreement_frequency, agreement_state)
+
         agreement_notes = get_note(agreement, agreement_frequency)
 
         agreement_params = {
@@ -107,14 +113,18 @@ module Hackney
           expected_balance: agreement[:last_check_expected_balance],
           checked_balance: agreement[:last_check_balance],
           description: 'Managed Arrears migration from UH',
-          agreement_state: get_state(agreement[:status])
+          agreement_state: agreement_state
         }
 
         [agreement_params, state_params]
       end
 
+      def can_not_migrate(agreement_frequency, agreement_state)
+        agreement_frequency[:ma_frequency] == 4 && agreement_state == :live
+      end
+
       def get_note(agreement, agreement_frequency)
-        if agreement_frequency[:ma_frequency].nil?
+        if agreement_frequency[:ma_frequency] == 4
           "Frequency no longer supported, original frequency was '#{agreement_frequency[:description]}'. #{agreement[:comment]}"
         else
           agreement[:comment]
@@ -142,27 +152,27 @@ module Hackney
           }, {
             description: '3 Monthly',
             uh_frequency: 5,
-            ma_frequency: nil
+            ma_frequency: 4
           }, {
             description: '6 Monthly',
             uh_frequency: 6,
-            ma_frequency: nil
+            ma_frequency: 4
           }, {
             description: 'Annually',
             uh_frequency: 7,
-            ma_frequency: nil
+            ma_frequency: 4
           }, {
             description: 'Daily',
             uh_frequency: 8,
-            ma_frequency: nil
+            ma_frequency: 4
           }, {
             description: 'Irregular',
             uh_frequency: 9,
-            ma_frequency: nil
+            ma_frequency: 4
           }, {
             description: 'Quarterly',
             uh_frequency: 'Q',
-            ma_frequency: nil
+            ma_frequency: 4
           }
         ]
 
