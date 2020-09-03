@@ -6,6 +6,7 @@ module Hackney
 
         validates_presence_of :agreement_type
         validates_presence_of :court_case_id, if: :formal?
+        validates_presence_of :initial_payment_date, if: :variable_payment?
         belongs_to :court_case, optional: true, class_name: 'Hackney::Income::Models::CourtCase'
         has_many :agreement_states, class_name: 'Hackney::Income::Models::AgreementState'
         enum agreement_type: { informal: 'informal', formal: 'formal' }
@@ -41,6 +42,10 @@ module Hackney
 
         def completed?
           current_state == 'completed'
+        end
+
+        def variable_payment?
+          initial_payment_amount.present?
         end
       end
     end

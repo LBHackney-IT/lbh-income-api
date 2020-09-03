@@ -102,6 +102,34 @@ describe Hackney::Income::Models::Agreement, type: :model do
     end
   end
 
+  describe 'variable_payment?' do
+    let(:initial_payment_amount) { Faker::Commerce.price(range: 100...1000) }
+    let(:initial_payment_date) { Faker::Date.between(from: 100.days.ago, to: Date.today) }
+
+    it 'returns true when an agreement has initial payment amount and date' do
+      agreement = described_class.new(initial_payment_amount: nil, initial_payment_date: nil)
+      expect(agreement).not_to be_variable_payment
+
+      agreement = described_class.new(
+        initial_payment_amount: initial_payment_amount,
+        initial_payment_date: initial_payment_date
+      )
+      expect(agreement).to be_variable_payment
+    end
+
+    it 'validates the presence of initial_payment_date' do
+      expect {
+        described_class.create!(
+          tenancy_ref: '123',
+          created_by: user_name,
+          agreement_type: :informal,
+          initial_payment_amount: initial_payment_amount,
+          initial_payment_date: nil
+        )
+      }.to raise_error ActiveRecord::RecordInvalid, "Validation failed: Initial payment date can't be blank"
+    end
+  end
+
   context 'when formal agreement' do
     let(:agreement) do
       described_class.create(
