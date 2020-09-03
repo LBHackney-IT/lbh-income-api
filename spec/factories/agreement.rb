@@ -8,6 +8,8 @@ FactoryBot.define do
     frequency { [:weekly, :monthly, :fortnightly, '4 weekly'].sample }
     start_date { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     amount { Faker::Commerce.price(range: 10...100) }
+    initial_payment_date { nil }
+    initial_payment_amount { nil }
 
     factory :live_agreement do
       current_state { 'live' }
@@ -23,6 +25,11 @@ FactoryBot.define do
 
     factory :completed_agreement do
       current_state { 'completed' }
+    end
+
+    trait :variable_payment do
+      initial_payment_date { start_date - 1.day }
+      initial_payment_amount { Faker::Commerce.price(range: 100...200) }
     end
   end
 
