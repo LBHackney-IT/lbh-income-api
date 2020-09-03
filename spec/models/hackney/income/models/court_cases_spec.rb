@@ -47,6 +47,39 @@ describe Hackney::Income::Models::CourtCase, type: :model do
     expect(Hackney::Income::Models::Agreement.first.court_case).to eq(court_case)
   end
 
+  context 'when there is a case priority' do
+    let(:case_priority) { create(:case_priority, tenancy_ref: tenancy_ref, courtdate: nil, court_outcome: nil) }
+
+    it 'updates the court case details on the existing case priority' do
+      expected_court_date = Faker::Date.between(from: 10.days.ago, to: 3.days.ago)
+      expected_court_outcome = valid_outcomes_without_terms
+
+      expect(case_priority.courtdate).to be_nil
+      expect(case_priority.court_outcome).to be_nil
+
+      court_case = described_class.create!(
+        tenancy_ref: tenancy_ref,
+        court_date: expected_court_date,
+        court_outcome: expected_court_outcome
+      )
+
+      case_priority.reload
+
+      expect(case_priority.courtdate).to eq(expected_court_date)
+      expect(case_priority.court_outcome).to eq(expected_court_outcome)
+
+      updated_court_date = Faker::Date.between(from: 10.days.ago, to: 3.days.ago)
+      updated_court_outcome = valid_outcomes_without_terms
+
+      court_case.update!(court_outcome: updated_court_outcome, court_date: updated_court_date)
+
+      case_priority.reload
+
+      expect(case_priority.courtdate).to eq(updated_court_date)
+      expect(case_priority.court_outcome).to eq(updated_court_outcome)
+    end
+  end
+
   context 'when there is only a court date (e.g. adding a court date before the case takes place)' do
     it 'is still a valid court case' do
       court_case = described_class.create!(

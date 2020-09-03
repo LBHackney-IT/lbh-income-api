@@ -2,9 +2,11 @@ module Hackney
   module Income
     class WorktrayItemGateway
       GatewayModel = Hackney::Income::Models::CasePriority
+      CourtCaseModel = Hackney::Income::Models::CourtCase
 
       def store_worktray_item(tenancy_ref:, criteria:, classification:)
         gateway_model_instance = GatewayModel.find_or_initialize_by(tenancy_ref: tenancy_ref)
+        court_case = CourtCaseModel.where(tenancy_ref: tenancy_ref).last
 
         begin
           gateway_model_instance.tap do |tenancy|
@@ -20,8 +22,8 @@ module Hackney
               active_nosp: criteria.active_nosp?,
               classification: classification,
               patch_code: criteria.patch_code,
-              courtdate: criteria.courtdate,
-              court_outcome: criteria.court_outcome,
+              courtdate: court_case&.court_date,
+              court_outcome: court_case&.court_outcome,
               eviction_date: criteria.eviction_date,
               universal_credit: criteria.universal_credit,
               uc_rent_verification: criteria. uc_rent_verification,

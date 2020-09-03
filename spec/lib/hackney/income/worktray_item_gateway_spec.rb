@@ -8,9 +8,10 @@ describe Hackney::Income::WorktrayItemGateway do
   context 'when storing a tenancy' do
     subject(:store_worktray_item) { gateway.store_worktray_item(attributes) }
 
+    let(:tenancy_ref) { Faker::Internet.slug }
     let(:attributes) do
       {
-        tenancy_ref: Faker::Internet.slug,
+        tenancy_ref: tenancy_ref,
         criteria: stubbed_criteria,
         classification: classification
       }
@@ -24,7 +25,7 @@ describe Hackney::Income::WorktrayItemGateway do
 
       it 'creates the tenancy' do
         store_worktray_item
-        expect(created_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
+        expect(created_tenancy).to have_attributes(expected_serialised_tenancy(attributes, nil))
       end
 
       # FIXME: shouldn't return AR models from gateways
@@ -34,18 +35,18 @@ describe Hackney::Income::WorktrayItemGateway do
     end
 
     context 'when the tenancy already exists' do
+      let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
       let!(:pre_existing_tenancy) do
         tenancy_model.create!(
           tenancy_ref: attributes.fetch(:tenancy_ref),
-
           balance: attributes.fetch(:criteria).balance,
           weekly_rent: attributes.fetch(:criteria).weekly_rent,
           days_since_last_payment: attributes.fetch(:criteria).days_since_last_payment,
           nosp_served: attributes.fetch(:criteria).nosp_served?,
           active_nosp: attributes.fetch(:criteria).active_nosp?,
           patch_code: attributes.fetch(:criteria).patch_code,
-          courtdate: attributes.fetch(:criteria).courtdate,
-          court_outcome: attributes.fetch(:criteria).court_outcome,
+          courtdate: court_case.court_date,
+          court_outcome: court_case.court_outcome,
           eviction_date: attributes.fetch(:criteria).eviction_date,
           universal_credit: attributes.fetch(:criteria).universal_credit,
           uc_rent_verification: attributes.fetch(:criteria).uc_rent_verification,
@@ -54,12 +55,11 @@ describe Hackney::Income::WorktrayItemGateway do
           classification: classification
         )
       end
-
       let(:stored_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'updates the tenancy' do
         store_worktray_item
-        expect(stored_tenancy).to have_attributes(expected_serialised_tenancy(attributes))
+        expect(stored_tenancy).to have_attributes(expected_serialised_tenancy(attributes, court_case))
       end
 
       it 'does not create a new tenancy' do
@@ -633,7 +633,7 @@ describe Hackney::Income::WorktrayItemGateway do
     (items.to_f / number_per_page).ceil
   end
 
-  def expected_serialised_tenancy(attributes)
+  def expected_serialised_tenancy(attributes, court_case)
     {
       tenancy_ref: attributes.fetch(:tenancy_ref),
       balance: attributes.fetch(:criteria).balance,
@@ -641,8 +641,8 @@ describe Hackney::Income::WorktrayItemGateway do
       nosp_served: attributes.fetch(:criteria).nosp_served?,
       active_nosp: attributes.fetch(:criteria).active_nosp?,
       patch_code: attributes.fetch(:criteria).patch_code,
-      courtdate: attributes.fetch(:criteria).courtdate,
-      court_outcome: attributes.fetch(:criteria).court_outcome,
+      courtdate: court_case&.court_date,
+      court_outcome: court_case&.court_outcome,
       eviction_date: attributes.fetch(:criteria).eviction_date,
       universal_credit: attributes.fetch(:criteria).universal_credit,
       uc_rent_verification: attributes.fetch(:criteria).uc_rent_verification,

@@ -116,11 +116,7 @@ describe Hackney::Income::ViewCases do
 
           expect(subject.cases).to include(a_hash_including(
                                              ref: tenancy_attributes.fetch(:ref),
-                                             current_arrears_agreement_status: nil,
-
-                                             # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
+                                             current_arrears_agreement_status: nil
                                            ))
         end
       end
@@ -136,10 +132,7 @@ describe Hackney::Income::ViewCases do
 
           expect(subject.cases).to include(a_hash_including(
                                              ref: tenancy_attributes.fetch(:ref),
-                                             current_arrears_agreement_status: agreements.last.current_state,
-                                             # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
+                                             current_arrears_agreement_status: agreements.last.current_state
                                            ))
         end
       end

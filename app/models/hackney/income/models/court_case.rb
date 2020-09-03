@@ -2,6 +2,9 @@ module Hackney
   module Income
     module Models
       class CourtCase < ApplicationRecord
+        after_create :update_associated_worktray_item
+        after_update :update_associated_worktray_item
+
         validates_presence_of :tenancy_ref
         validates_inclusion_of :terms, in: [true, false], if: :can_have_terms?
         validates_inclusion_of :disrepair_counter_claim, in: [true, false], if: :can_have_terms?
@@ -38,6 +41,10 @@ module Hackney
 
           valid_court_outcomes = COURT_OUTCOMES_THAT_CAN_HAVE_TERMS + OTHER_COURT_OUTCOMES
           errors.add(:court_outcome, 'must be a valid court outcome code') unless valid_court_outcomes.include?(court_outcome)
+        end
+
+        def update_associated_worktray_item
+          Hackney::Income::Models::CasePriority.find_by(tenancy_ref: tenancy_ref)&.update!(court_outcome: court_outcome, courtdate: court_date)
         end
       end
     end
