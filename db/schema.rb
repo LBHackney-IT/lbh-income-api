@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_21_095601) do
+ActiveRecord::Schema.define(version: 2020_09_02_145954) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -71,9 +71,6 @@ ActiveRecord::Schema.define(version: 2020_08_21_095601) do
     t.decimal "balance", precision: 10, scale: 2
     t.integer "days_in_arrears"
     t.integer "days_since_last_payment"
-    t.integer "number_of_broken_agreements"
-    t.boolean "active_agreement"
-    t.boolean "broken_court_order"
     t.boolean "nosp_served"
     t.boolean "active_nosp"
     t.bigint "assigned_user_id"
@@ -95,9 +92,6 @@ ActiveRecord::Schema.define(version: 2020_08_21_095601) do
     t.datetime "uc_rent_verification"
     t.datetime "uc_direct_payment_requested"
     t.datetime "uc_direct_payment_received"
-    t.datetime "latest_active_agreement_date"
-    t.datetime "breach_agreement_date"
-    t.decimal "expected_balance", precision: 10, scale: 2
     t.string "payment_ref"
     t.decimal "collectable_arrears", precision: 10, scale: 2
     t.index ["assigned_user_id"], name: "index_case_priorities_on_assigned_user_id"

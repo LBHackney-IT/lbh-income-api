@@ -9,7 +9,6 @@ FactoryBot.define do
     tenancy_ref
     balance { Faker::Commerce.price(range: 10..1000.0) }
     days_in_arrears { Faker::Number.between(from: 5, to: 1000) }
-    active_agreement { false }
     is_paused_until { nil }
     weekly_rent { Faker::Commerce.price(range: 10..100.0) }
 

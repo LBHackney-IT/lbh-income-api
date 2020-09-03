@@ -84,32 +84,21 @@ describe Hackney::Income::ViewCases do
                                              code: tenancy_attributes.dig(:latest_action, :code),
                                              date: tenancy_attributes.dig(:latest_action, :date)
                                            },
-
                                            primary_contact: {
                                              name: tenancy_attributes.dig(:primary_contact, :name),
                                              short_address: tenancy_attributes.dig(:primary_contact, :short_address),
                                              postcode: tenancy_attributes.dig(:primary_contact, :postcode)
                                            },
-
                                            balance: tenancy_priority_factors.fetch(:balance),
                                            days_in_arrears: tenancy_priority_factors.fetch(:days_in_arrears),
                                            days_since_last_payment: tenancy_priority_factors.fetch(:days_since_last_payment),
-                                           number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
-                                           active_agreement: tenancy_priority_factors.fetch(:active_agreement),
-                                           broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                            nosp_served: tenancy_priority_factors.fetch(:nosp_served),
                                            active_nosp: tenancy_priority_factors.fetch(:active_nosp),
-
                                            courtdate: tenancy_priority_factors.fetch(:courtdate),
                                            court_outcome: tenancy_priority_factors.fetch(:court_outcome),
                                            eviction_date: tenancy_priority_factors.fetch(:eviction_date),
-
                                            classification: tenancy_priority_factors.fetch(:classification),
                                            patch_code: tenancy_priority_factors.fetch(:patch_code),
-
-                                           latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                           breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                           expected_balance: tenancy_priority_factors.fetch(:expected_balance),
                                            pause: {
                                              reason: tenancy_priority_factors.fetch(:pause_reason),
                                              comment: tenancy_priority_factors.fetch(:pause_comment),
@@ -130,14 +119,8 @@ describe Hackney::Income::ViewCases do
                                              current_arrears_agreement_status: nil,
 
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
-                                             active_agreement: tenancy_priority_factors.fetch(:active_agreement),
-                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                             breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
         end
       end
@@ -154,16 +137,9 @@ describe Hackney::Income::ViewCases do
           expect(subject.cases).to include(a_hash_including(
                                              ref: tenancy_attributes.fetch(:ref),
                                              current_arrears_agreement_status: agreements.last.current_state,
-
                                              # TODO: the following fields needs update, no longer should be pulled from UH agreements
-                                             number_of_broken_agreements: tenancy_priority_factors.fetch(:number_of_broken_agreements),
-                                             active_agreement: tenancy_priority_factors.fetch(:active_agreement),
-                                             broken_court_order: tenancy_priority_factors.fetch(:broken_court_order),
                                              courtdate: tenancy_priority_factors.fetch(:courtdate),
-                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome),
-                                             latest_active_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                             breach_agreement_date: tenancy_priority_factors.fetch(:latest_active_agreement_date),
-                                             expected_balance: tenancy_priority_factors.fetch(:expected_balance)
+                                             court_outcome: tenancy_priority_factors.fetch(:court_outcome)
                                            ))
         end
       end
@@ -315,20 +291,13 @@ describe Hackney::Income::ViewCases do
       balance: Faker::Commerce.price,
       days_in_arrears: Faker::Number.number(digits: 2),
       days_since_last_payment: Faker::Number.number(digits: 2),
-      number_of_broken_agreements: Faker::Number.number(digits: 1),
-      active_agreement: Faker::Number.between(from: 0, to: 1),
-      broken_court_order: Faker::Number.between(from: 0, to: 1),
       nosp_served: Faker::Number.between(from: 0, to: 1),
       active_nosp: Faker::Number.between(from: 0, to: 1),
-
       courtdate: Date.today - 5,
       court_outcome: Faker::Lorem.word,
       eviction_date: Date.today + 1.month,
       patch_code: Faker::Lorem.characters(number: 3),
       classification: 'no_action',
-      latest_active_agreement_date: 1.week.ago,
-      breach_agreement_date: 5.days.ago,
-      expected_balance: Faker::Commerce.price,
       pause_reason: Faker::Lorem.characters(number: 3),
       pause_comment: Faker::Lorem.characters(number: 3),
       is_paused_until: Date.today + 1.day

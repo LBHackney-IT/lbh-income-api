@@ -440,22 +440,6 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
       end
     end
 
-    describe '#broken_court_order?' do
-      context 'when the tenant has no court ordered agreements' do
-        it 'is false' do
-          expect(subject.broken_court_order?).to be(false)
-        end
-      end
-
-      context 'when the tenant has an informal breached agreement' do
-        before { create_uh_arrears_agreement(tenancy_ref: tenancy_ref, status: '300') }
-
-        it 'is false' do
-          expect(subject.broken_court_order?).to be(false)
-        end
-      end
-    end
-
     describe '#patch_code' do
       let(:patch_tenancy_code) { '100000/11' }
 

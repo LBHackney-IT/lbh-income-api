@@ -96,11 +96,6 @@ module Hackney
         inactive_agreement_statuses.exclude? attributes[:most_recent_agreement_status].squish
       end
 
-      # FIXME: implementation needs confirming, will return to later
-      def broken_court_order?
-        false
-      end
-
       def patch_code
         attributes.fetch(:patch_code)
       end

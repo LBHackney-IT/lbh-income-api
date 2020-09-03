@@ -6,10 +6,7 @@ class TenanciesController < ApplicationController
 
     render json: @tenancy.as_json(
       methods: :nosp,
-      except: %i[
-        days_in_arrears number_of_broken_agreements nosp_expiry_date latest_active_agreement_date
-        breach_agreement_date expected_balance
-      ]
+      except: %i[days_in_arrears nosp_expiry_date expected_balance]
     ), status: @tenancy.nil? ? :not_found : :ok
   end
 
