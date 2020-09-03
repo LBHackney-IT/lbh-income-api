@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe Hackney::Income::TenancyClassification::V2::Helpers do
+describe Hackney::Income::TenancyClassification::Helpers do
   class HelperClass
-    include Hackney::Income::TenancyClassification::V2::Helpers
+    include Hackney::Income::TenancyClassification::Helpers
 
     def initialize(case_priority, criteria, documents)
       @case_priority = case_priority
