@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_145954) do
+ActiveRecord::Schema.define(version: 2020_09_03_143523) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -61,6 +61,8 @@ ActiveRecord::Schema.define(version: 2020_09_02_145954) do
     t.string "created_by", null: false
     t.text "notes"
     t.bigint "court_case_id"
+    t.decimal "initial_payment_amount", precision: 10, scale: 2
+    t.datetime "initial_payment_date"
     t.index ["court_case_id"], name: "index_agreements_on_court_case_id"
   end
 
