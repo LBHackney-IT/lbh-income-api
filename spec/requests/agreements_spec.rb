@@ -27,7 +27,9 @@ RSpec.describe 'Agreements', type: :request do
                  frequency: frequency,
                  current_state: current_state,
                  created_by: created_by,
-                 notes: notes)
+                 notes: notes,
+                 initial_payment_amount: initial_payment_amount,
+                 initial_payment_date: initial_payment_date)
         ]
       end
 
@@ -58,6 +60,8 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['agreements'].first['notes']).to eq(notes)
         expect(parsed_response['agreements'].first['history']).to eq([])
         expect(parsed_response['agreements'].first['lastChecked']).to eq('')
+        expect(parsed_response['agreements'].first['initialPaymentAmount']).to eq(initial_payment_amount.to_s)
+        expect(parsed_response['agreements'].first['initialPaymentDate']).to eq(initial_payment_date.to_s)
       end
 
       it 'correctly maps all agreement_states in history' do
@@ -148,6 +152,8 @@ RSpec.describe 'Agreements', type: :request do
           expect(parsed_response['createdBy']).to eq(created_by)
           expect(parsed_response['notes']).to eq(notes)
           expect(parsed_response['history']).to eq([])
+          expect(parsed_response['initialPaymentAmount']).to eq(initial_payment_amount.to_s)
+          expect(parsed_response['initialPaymentDate']).to eq(initial_payment_date.to_s)
         end
       end
 
@@ -179,6 +185,8 @@ RSpec.describe 'Agreements', type: :request do
           expect(parsed_response['createdBy']).to eq(created_by)
           expect(parsed_response['notes']).to eq(notes)
           expect(parsed_response['history']).to eq([])
+          expect(parsed_response['initialPaymentAmount']).to eq(initial_payment_amount.to_s)
+          expect(parsed_response['initialPaymentDate']).to eq(initial_payment_date.to_s)
         end
       end
     end
