@@ -13,7 +13,7 @@ module Hackney
             tenancy.assign_attributes(
               balance: criteria.balance,
               collectable_arrears: criteria.collectable_arrears,
-              weekly_rent: criteria.weekly_rent,
+              weekly_rent: criteria.weekly_gross_rent,
               days_since_last_payment: criteria.days_since_last_payment,
               nosp_served: criteria.nosp_served?,
               nosp_served_date: criteria.nosp_served_date,
