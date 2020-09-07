@@ -194,6 +194,12 @@ definitions:
       startingBalance:
         type: number
         example: '1000'
+      initialPaymentAmount: 
+        type: number
+        example: '100'
+      initialPaymentDate:
+        type: string
+        format: date
       amount:
         type: number
         example: '50'

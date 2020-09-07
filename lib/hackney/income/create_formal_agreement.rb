@@ -12,17 +12,12 @@ module Hackney
         case_details = find_case_details(tenancy_ref)
         return if case_details.nil?
 
-        formal_agreement_params = {
-          tenancy_ref: tenancy_ref,
-          agreement_type: :formal,
-          starting_balance: case_details[:balance],
-          amount: new_agreement_params[:amount],
-          start_date: new_agreement_params[:start_date],
-          frequency: new_agreement_params[:frequency],
-          created_by: new_agreement_params[:created_by],
-          notes: new_agreement_params[:notes],
-          court_case_id: court_case.id
-        }
+        formal_agreement_params = assign_agreement_params(new_agreement_params)
+                                  .merge(
+                                    agreement_type: :formal,
+                                    starting_balance: case_details[:balance],
+                                    court_case_id: court_case.id
+                                  )
 
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
 

@@ -37,6 +37,19 @@ module Hackney
           @cancel_agreement.execute(agreement_id: agreement.id)
         end
       end
+
+      def assign_agreement_params(params)
+        {
+          tenancy_ref: params[:tenancy_ref],
+          amount: params[:amount],
+          start_date: params[:start_date],
+          frequency: params[:frequency],
+          created_by: params[:created_by],
+          notes: params[:notes],
+          initial_payment_amount: params[:initial_payment_amount],
+          initial_payment_date: params[:initial_payment_date]
+        }
+      end
     end
   end
 end
