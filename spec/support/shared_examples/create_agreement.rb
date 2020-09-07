@@ -8,6 +8,8 @@ RSpec.shared_examples 'CreateAgreement' do
   let(:created_by) { Faker::Name.name }
   let(:notes) { Faker::ChuckNorris.fact }
   let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
+  let(:initial_payment_amount) { nil }
+  let(:initial_payment_date) { nil }
 
   let(:existing_agreement_params) do
     {
@@ -27,7 +29,9 @@ RSpec.shared_examples 'CreateAgreement' do
       frequency: frequency,
       created_by: created_by,
       court_case_id: court_case.id,
-      notes: notes
+      notes: notes,
+      initial_payment_amount: initial_payment_amount,
+      initial_payment_date: initial_payment_date
     }
   end
 
@@ -104,6 +108,19 @@ RSpec.shared_examples 'CreateAgreement' do
 
       expect(agreements.last.tenancy_ref).to eq(new_agreement.tenancy_ref)
       expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
+    end
+  end
+
+  context 'when its a variable payment agreement' do
+    let(:initial_payment_amount) { Faker::Commerce.price(range: 10...200) }
+    let(:initial_payment_date) { Faker::Date.between(from: 10.days.ago, to: 3.days.ago) }
+
+    it 'creates and returns a new live agreement that has an initial payment amount and date' do
+      new_agreement = subject.execute(new_agreement_params: new_agreement_params)
+
+      expect(new_agreement.initial_payment_amount).to eq(initial_payment_amount)
+      expect(new_agreement.initial_payment_date).to eq(initial_payment_date)
+      expect(new_agreement).to be_variable_payment
     end
   end
 end

@@ -125,6 +125,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
         described_class.create!(
           tenancy_ref: '123',
           created_by: user_name,
+          frequency: :weekly,
           agreement_type: :informal,
           initial_payment_amount: initial_payment_amount,
           initial_payment_date: nil
