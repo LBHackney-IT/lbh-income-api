@@ -10,6 +10,8 @@ RSpec.describe 'Agreements', type: :request do
   let(:starting_balance) { Faker::Commerce.price(range: 100...1000) }
   let(:created_by) { Faker::Name.name }
   let(:notes) { Faker::ChuckNorris.fact }
+  let(:initial_payment_amount) { Faker::Commerce.price(range: 50...300) }
+  let(:initial_payment_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
 
   describe 'GET /api/v1/agreements/{tenancy_ref}' do
     path '/agreements/{tenancy_ref}' do
@@ -109,7 +111,9 @@ RSpec.describe 'Agreements', type: :request do
           frequency: frequency.to_sym,
           created_by: created_by,
           notes: notes,
-          court_case_id: nil
+          court_case_id: nil,
+          initial_payment_amount: initial_payment_amount.to_s,
+          initial_payment_date: initial_payment_date.to_s
         }
       end
 
