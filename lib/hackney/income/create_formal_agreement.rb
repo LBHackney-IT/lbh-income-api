@@ -21,7 +21,9 @@ module Hackney
           frequency: new_agreement_params[:frequency],
           created_by: new_agreement_params[:created_by],
           notes: new_agreement_params[:notes],
-          court_case_id: court_case.id
+          court_case_id: court_case.id,
+          initial_payment_amount: new_agreement_params[:initial_payment_amount],
+          initial_payment_date: new_agreement_params[:initial_payment_date]
         }
 
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
