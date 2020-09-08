@@ -15,7 +15,7 @@ module Hackney
         formal_agreement_params = assign_agreement_params(new_agreement_params)
                                   .merge(
                                     agreement_type: :formal,
-                                    starting_balance: new_agreement_params[:starting_balance],
+                                    starting_balance: court_case.balance_on_court_outcome_date,
                                     court_case_id: court_case.id
                                   )
 

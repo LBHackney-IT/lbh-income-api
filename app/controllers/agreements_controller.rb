@@ -23,7 +23,6 @@ class AgreementsController < ApplicationController
       frequency: params.fetch(:frequency).to_sym,
       created_by: params.fetch(:created_by),
       notes: params.fetch(:notes),
-      starting_balance: params.fetch(:starting_balance),
       court_case_id: params.dig(:court_case_id),
       initial_payment_amount: params.dig(:initial_payment_amount),
       initial_payment_date: params.dig(:initial_payment_date)
