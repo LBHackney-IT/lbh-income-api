@@ -60,8 +60,15 @@ RSpec.shared_examples 'CreateAgreement' do
 
     new_state = created_agreement.agreement_states.first
     expect(new_state.agreement_state).to eq('live')
-    expect(new_state.expected_balance).to eq(100)
-    expect(new_state.checked_balance).to eq(100)
+
+    if created_agreement.formal?
+      expect(new_state.expected_balance).to eq(court_case.balance_on_court_outcome_date)
+      expect(new_state.checked_balance).to eq(court_case.balance_on_court_outcome_date)
+    else
+      expect(new_state.expected_balance).to eq(100)
+      expect(new_state.checked_balance).to eq(100)
+    end
+
     expect(new_state.description).to eq('Agreement created')
   end
 
@@ -85,7 +92,13 @@ RSpec.shared_examples 'CreateAgreement' do
       expect(created_agreement.start_date).to eq(start_date)
       expect(created_agreement.frequency).to eq(frequency)
       expect(created_agreement.current_state).to eq('live')
-      expect(created_agreement.starting_balance).to eq(100)
+
+      if created_agreement.formal?
+        expect(created_agreement.starting_balance).to eq(court_case.balance_on_court_outcome_date)
+      else
+        expect(created_agreement.starting_balance).to eq(100)
+      end
+
       expect(created_agreement.created_by).to eq(created_by)
       expect(created_agreement.notes).to eq(notes)
     end
