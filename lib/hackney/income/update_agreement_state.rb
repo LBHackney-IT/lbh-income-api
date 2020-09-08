@@ -8,7 +8,6 @@ module Hackney
       def execute(agreement:, current_balance:)
         return false unless agreement.active?
         return false if agreement.frequency == 'unsupported_legacy_frequency'
-        return false if date_of_first_check(agreement).future?
 
         update_status(agreement, current_balance)
       end
@@ -38,9 +37,13 @@ module Hackney
       end
 
       def expected_balance(agreement)
-        date_of_first_check = date_of_first_check(agreement)
-        number_of_instalments = number_of_instalments(date_of_first_check, agreement.frequency)
-        expected_balance = agreement.starting_balance - (number_of_instalments * agreement.amount)
+        initial_payment_amount = initial_payment_amount(agreement)
+        first_recurring_payment_date = first_recurring_payment_date(agreement)
+
+        return prevent_negative(agreement.starting_balance - initial_payment_amount) if first_recurring_payment_date.future?
+
+        number_of_instalments = number_of_instalments(first_recurring_payment_date, agreement.frequency)
+        expected_balance = agreement.starting_balance - initial_payment_amount - (number_of_instalments * agreement.amount)
 
         prevent_negative(expected_balance)
       end
@@ -77,7 +80,7 @@ module Hackney
         [number, 0].max
       end
 
-      def date_of_first_check(agreement)
+      def first_recurring_payment_date(agreement)
         agreement.start_date + @tolerance_days.days
       end
 
@@ -130,6 +133,19 @@ module Hackney
       def strike_out_date_blank?(agreement)
         return true if agreement.informal?
         agreement.court_case.strike_out_date.blank?
+      end
+
+      def initial_payment_date(agreement)
+        return nil unless agreement.variable_payment?
+
+        agreement.initial_payment_date + @tolerance_days.days
+      end
+
+      def initial_payment_amount(agreement)
+        return 0 unless agreement.variable_payment?
+        return 0 if initial_payment_date(agreement).future?
+
+        agreement.initial_payment_amount
       end
     end
   end
