@@ -138,9 +138,9 @@ describe Hackney::PDF::IncomePreview do
             agreement_frequency: agreement.frequency,
             amount: agreement.amount,
             date_of_first_payment: agreement.start_date,
-            rent: weekly_rent,
+            rent: BigDecimal(weekly_rent, 4),
             title: '',
-            total_collectable_arrears_balance: test_collectable_arrears
+            total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5)
           ),
           username: username
         ).and_call_original
@@ -164,7 +164,8 @@ describe Hackney::PDF::IncomePreview do
             created_date: agreement.created_at,
             expected_balance: state.expected_balance,
             checked_balance: state.checked_balance,
-            total_collectable_arrears_balance: test_collectable_arrears
+            total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5),
+            rent: BigDecimal(weekly_rent, 4)
           ),
           username: username
         ).and_call_original
