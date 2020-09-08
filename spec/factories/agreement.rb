@@ -5,7 +5,7 @@ FactoryBot.define do
     notes { Faker::ChuckNorris.fact }
     created_by { Faker::Name.name }
     starting_balance { Faker::Commerce.price(range: 100...1000) }
-    frequency { [:weekly, :monthly, :fortnightly, '4 weekly'].sample }
+    frequency { [:weekly, :monthly, :fortnightly, '4 weekly', :one_off].sample }
     start_date { Faker::Date.between(from: 2.days.ago, to: Date.today) }
     amount { Faker::Commerce.price(range: 10...100) }
     initial_payment_date { nil }

@@ -206,6 +206,42 @@ describe Hackney::Income::UpdateAgreementState do
     end
   end
 
+  context "when the frequency of payment is 'one-off'" do
+    it 'updates the state of the agreement when it is breached or completed' do
+      agreement = stub_informal_agreement(
+        start_date: start_date,
+        frequency: :one_off,
+        amount: 100,
+        starting_balance: 100
+      )
+
+      current_balance = 50
+
+      after_payment_date = start_date + days_before_check.days
+      before_payment_date = after_payment_date - 1.day
+
+      Timecop.freeze(before_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('live')
+      end
+
+      Timecop.freeze(after_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('breached')
+      end
+
+      current_balance = 0
+
+      Timecop.freeze(after_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('completed')
+      end
+    end
+  end
+
   context 'when the agreement is already breached' do
     let(:agreement) do
       stub_informal_agreement(
