@@ -13,6 +13,8 @@ module AgreementResponseHelper
       createdBy: agreement.created_by,
       notes: agreement.notes,
       lastChecked: agreement.last_checked || '',
+      initialPaymentAmount: agreement.initial_payment_amount,
+      initialPaymentDate: agreement.initial_payment_date&.strftime('%F'),
       history: map_agreement_state_history(agreement.agreement_states)
     }
   end

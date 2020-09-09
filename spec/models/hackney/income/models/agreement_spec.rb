@@ -56,8 +56,8 @@ describe Hackney::Income::Models::Agreement, type: :model do
   end
 
   describe 'frequency' do
-    it 'only accepts :weekly/:monthly as frequency' do
-      ['weekly', 'monthly', 'fortnightly', '4 weekly'].each do |frequency|
+    it 'only accepts valid frequencies' do
+      ['weekly', 'monthly', 'fortnightly', '4 weekly', 'unsupported_legacy_frequency', 'one_off'].each do |frequency|
         expect { described_class.new(frequency: frequency) }.not_to raise_error
       end
     end
@@ -125,6 +125,7 @@ describe Hackney::Income::Models::Agreement, type: :model do
         described_class.create!(
           tenancy_ref: '123',
           created_by: user_name,
+          frequency: :weekly,
           agreement_type: :informal,
           initial_payment_amount: initial_payment_amount,
           initial_payment_date: nil

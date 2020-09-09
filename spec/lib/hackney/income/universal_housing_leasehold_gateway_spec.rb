@@ -19,7 +19,7 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
       aline1: Faker::Address.street_name,
       aline2: Faker::Address.community,
       aline3: Faker::Address.city,
-      aline4: Faker::Address.country,
+      aline4: Faker::Address.country_code,
       post_code: household_postcode
     }
   }
@@ -31,7 +31,7 @@ describe Hackney::Income::UniversalHousingLeaseholdGateway, universal: true do
       aline1: Faker::Address.street_name,
       aline2: Faker::Address.community,
       aline3: Faker::Address.city,
-      aline4: Faker::Address.country,
+      aline4: Faker::Address.country_code,
       post_code: property_postcode
     }
   }

@@ -206,6 +206,42 @@ describe Hackney::Income::UpdateAgreementState do
     end
   end
 
+  context "when the frequency of payment is 'one-off'" do
+    it 'updates the state of the agreement when it is breached or completed' do
+      agreement = stub_informal_agreement(
+        start_date: start_date,
+        frequency: :one_off,
+        amount: 100,
+        starting_balance: 100
+      )
+
+      current_balance = 50
+
+      after_payment_date = start_date + days_before_check.days
+      before_payment_date = after_payment_date - 1.day
+
+      Timecop.freeze(before_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('live')
+      end
+
+      Timecop.freeze(after_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('breached')
+      end
+
+      current_balance = 0
+
+      Timecop.freeze(after_payment_date) do
+        subject.execute(agreement: agreement, current_balance: current_balance)
+
+        expect(agreement.current_state).to eq('completed')
+      end
+    end
+  end
+
   context 'when the agreement is already breached' do
     let(:agreement) do
       stub_informal_agreement(
@@ -291,6 +327,98 @@ describe Hackney::Income::UpdateAgreementState do
         expect(agreement.agreement_states.last.description).to eq(next_check_date.strftime('Completed on %m/%d/%Y'))
         expect(agreement.current_state).to eq('completed')
         expect(agreement.last_checked).to eq(next_check_date)
+      end
+    end
+  end
+
+  context 'when its a variable payment agreement(optional one-off payment)' do
+    let(:initial_payment_amount) { 50 }
+    let(:starting_balance) { 100 }
+
+    context 'when the initial playment date is before the start date of recurring payment' do
+      let(:initial_payment_date) { start_date - 15.days }
+
+      it 'expects a single initial payment on the initial payment date' do
+        agreement = stub_informal_agreement(
+          start_date: start_date,
+          frequency: :weekly,
+          amount: 10,
+          starting_balance: starting_balance,
+          initial_payment_amount: initial_payment_amount,
+          initial_payment_date: initial_payment_date
+        )
+
+        Timecop.freeze(initial_payment_date) do
+          subject.execute(agreement: agreement, current_balance: starting_balance)
+
+          expect(agreement.current_state).to eq('live')
+        end
+
+        Timecop.freeze(initial_payment_date + days_before_check.days) do
+          subject.execute(agreement: agreement, current_balance: starting_balance)
+
+          expect(agreement.current_state).to eq('breached')
+        end
+
+        first_recurring_payment_date = start_date + days_before_check.days
+        day_before_first_recurring_payment_date = first_recurring_payment_date - 1.day
+
+        Timecop.freeze(day_before_first_recurring_payment_date) do
+          subject.execute(agreement: agreement, current_balance: starting_balance - initial_payment_amount)
+
+          expect(agreement.current_state).to eq('live')
+        end
+
+        Timecop.freeze(first_recurring_payment_date) do
+          subject.execute(agreement: agreement, current_balance: starting_balance - initial_payment_amount)
+
+          expect(agreement.current_state).to eq('breached')
+        end
+      end
+    end
+
+    context 'when the initial playment date is on the start date of recurring payment' do
+      let(:recurring_payment_amount) { 10 }
+
+      it 'expects a one off payment and the first instalment of the recurring payment on the same date' do
+        agreement = stub_informal_agreement(
+          start_date: start_date,
+          frequency: :weekly,
+          amount: recurring_payment_amount,
+          starting_balance: starting_balance,
+          initial_payment_amount: initial_payment_amount,
+          initial_payment_date: start_date
+        )
+
+        first_recurring_payment_date = start_date + days_before_check.days
+        day_before_first_recurring_payment_date = first_recurring_payment_date - 1.day
+
+        Timecop.freeze(day_before_first_recurring_payment_date) do
+          subject.execute(agreement: agreement, current_balance: starting_balance)
+
+          expect(agreement.current_state).to eq('live')
+        end
+
+        Timecop.freeze(first_recurring_payment_date) do
+          all_payment_completed = starting_balance - initial_payment_amount - recurring_payment_amount
+          subject.execute(agreement: agreement, current_balance: all_payment_completed)
+
+          expect(agreement.current_state).to eq('live')
+
+          missed_initial_payment_amount = starting_balance - recurring_payment_amount
+          subject.execute(agreement: agreement, current_balance: missed_initial_payment_amount)
+
+          expect(agreement.current_state).to eq('breached')
+
+          missed_recurring_payment_amount = starting_balance - initial_payment_amount
+          subject.execute(agreement: agreement, current_balance: missed_recurring_payment_amount)
+
+          expect(agreement.current_state).to eq('breached')
+
+          subject.execute(agreement: agreement, current_balance: 0)
+
+          expect(agreement.current_state).to eq('completed')
+        end
       end
     end
   end
@@ -449,13 +577,15 @@ describe Hackney::Income::UpdateAgreementState do
     end
   end
 
-  def stub_informal_agreement(start_date:, frequency:, amount:, starting_balance:)
+  def stub_informal_agreement(start_date:, frequency:, amount:, starting_balance:, initial_payment_amount: nil, initial_payment_date: nil)
     agreement = create(:agreement,
                        tenancy_ref: tenancy_ref,
                        start_date: start_date,
                        frequency: frequency,
                        amount: amount,
-                       starting_balance: starting_balance)
+                       starting_balance: starting_balance,
+                       initial_payment_amount: initial_payment_amount,
+                       initial_payment_date: initial_payment_date)
 
     create(:agreement_state,
            :live,
