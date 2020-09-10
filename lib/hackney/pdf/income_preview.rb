@@ -7,9 +7,17 @@ module Hackney
         @tenancy_case_gateway = tenancy_case_gateway
       end
 
-      def execute(tenancy_ref:, template_id:, user:, agreement: nil)
+      def execute(tenancy_ref:, template_id:, user:, agreement: nil, court_case: nil)
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
+
+        if court_case
+          court_case_data = get_court_info(court_case, agreement)
+
+          letter_params = income_info.merge(court_case_data)
+
+          letter_params = income_info
+        end
 
         if agreement
 
@@ -82,6 +90,13 @@ module Hackney
           expected_balance: state.expected_balance,
           checked_balance: state.checked_balance
         }
+      end
+
+      def get_court_info(court_case, agreement=nil)
+        court_details = { court_outcome: court_case.court_outcome }
+        court_details[:court_hearing_arrears] = court_case.balance_on_court_outcome_date if agreement
+
+        court_details
       end
     end
   end
