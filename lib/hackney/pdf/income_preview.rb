@@ -56,6 +56,7 @@ module Hackney
         stored_info = @tenancy_case_gateway.find(tenancy_ref: tenancy_ref)
         info_from_uh[:total_collectable_arrears_balance] = stored_info.collectable_arrears
         info_from_uh[:rent] = stored_info.weekly_rent
+        info_from_uh[:eviction_date] = stored_info.eviction_date
         info_from_uh
       end
 
