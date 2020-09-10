@@ -18,6 +18,8 @@ module Hackney
           Letter::InformalAgreementBreach.new(letter_params)
         when *Hackney::IncomeCollection::Letter::FormalAgreementBreach::TEMPLATE_PATHS
           Letter::FormalAgreementBreach.new(letter_params)
+        when *Hackney::IncomeCollection::Letter::CourtOutcome::TEMPLATE_PATHS
+          Letter::CourtOutcome.new(letter_params)
         else
           new(letter_params)
         end

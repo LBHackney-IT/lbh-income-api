@@ -11,27 +11,11 @@ module Hackney
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
 
-        if court_case
-          court_case_data = get_court_info(court_case, agreement)
+        letter_params = income_info
 
-          letter_params = income_info.merge(court_case_data)
+        letter_params = court_outcome_params(agreement, court_case, income_info) if court_case
 
-          letter_params = income_info
-        end
-
-        if agreement
-
-          if agreement.breached?
-            agreement_data = agreement.formal? ? get_breached_formal_agreement_info(agreement) : get_breached_agreement_info(agreement)
-          else
-            agreement_data = get_agreement_info(agreement)
-          end
-
-          letter_params = income_info.merge(agreement_data)
-
-        else
-          letter_params = income_info
-        end
+        letter_params = agreement_params(agreement, income_info) if agreement
 
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
           template_path: template[:path]
@@ -50,6 +34,23 @@ module Hackney
       end
 
       private
+
+      def court_outcome_params(agreement, court_case, income_info)
+        court_case_data = get_court_info(court_case, agreement)
+
+        return income_info.merge(court_case_data)
+      end
+
+      def agreement_params(agreement, income_info)
+
+        if agreement.breached?
+          agreement_data = agreement.formal? ? get_breached_formal_agreement_info(agreement) : get_breached_agreement_info(agreement)
+        else
+          agreement_data = get_agreement_info(agreement)
+        end
+
+        return income_info.merge(agreement_data)
+      end
 
       def get_income_info(tenancy_ref)
         info_from_uh = @income_information_gateway.get_income_info(tenancy_ref: tenancy_ref)
@@ -95,7 +96,7 @@ module Hackney
 
       def get_court_info(court_case, agreement=nil)
         court_details = { court_outcome: court_case.court_outcome }
-        court_details[:court_hearing_arrears] = court_case.balance_on_court_outcome_date if agreement
+        court_details[:balance_on_court_outcome_date] = court_case.balance_on_court_outcome_date if agreement
 
         court_details
       end
