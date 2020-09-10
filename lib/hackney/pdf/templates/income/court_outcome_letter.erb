@@ -19,7 +19,7 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
 
   <%= if @letter.formal_agreement? %>
     <p>
-      The Court has decided that you must pay the Council the total amount of <%= @letter.court_date_arrears %> by instalments of <%= @letter.instalment_amount %> per <%= @letter.frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid each week is £<%= @letter.weekly_payment %>. The first payment must be made on or before <%= @letter.start_date %>.
+      The Court has decided that you must pay the Council the total amount of <%= @letter.court_date_arrears %> by instalments of <%= @letter.instalment_amount %> per <%= @letter.frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid is £<%= @letter.total_amount_payable %>. The first payment must be made on or before <%= @letter.start_date %>.
     </p>
   <%= end %>
 
@@ -45,7 +45,7 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
 
   <%= if @letter.outright_order? %>
     <p>
-    If the Court has awarded Outright Possession, you must give the Council possession of (ADDRESS)  on (DATE).  If you do not pay the money owed as detailed above and give empty possession of the property, the Council may ask the Court Bailiff to evict you and remove your goods.
+    If the Court has awarded Outright Possession, you must give the Council possession of <%= @letter.tenant_address %>  on <%= @letter.eviction_date %>.  If you do not pay the money owed as detailed above and give empty possession of the property, the Council may ask the Court Bailiff to evict you and remove your goods.
     </p>
   <%= end %>
 
