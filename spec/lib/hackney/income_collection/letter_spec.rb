@@ -177,4 +177,17 @@ describe Hackney::IncomeCollection::Letter do
       end
     end
   end
+
+  it 'generates court date letter' do
+    expect(Hackney::IncomeCollection::Letter::CourtDate).to receive(:new).with(letter_params).and_call_original
+
+    letter = described_class.build(
+      letter_params: letter_params,
+      template_path: Hackney::IncomeCollection::Letter::CourtDate::TEMPLATE_PATHS.sample
+    )
+
+    expect(letter.errors).to eq [
+      { message: 'missing mandatory field', name: 'court_date' },
+    ]
+  end
 end
