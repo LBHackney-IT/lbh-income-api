@@ -23,6 +23,25 @@ module UseCases
           user: user,
           agreement: agreement
         )
+      elsif template_id.in?(court_case_templates)
+        court_case = get_court_case(tenancy_ref)
+        if court_case.agreements.exists?
+          agreement = get_agreement(tenancy_ref, template_id)
+          letter_data = pdf_use_case_factory.get_income_preview.execute(
+            tenancy_ref: tenancy_ref,
+            template_id: template_id,
+            user: user,
+            agreement: agreement,
+            court_case: court_case
+          )
+        else
+          letter_data = pdf_use_case_factory.get_income_preview.execute(
+            tenancy_ref: tenancy_ref,
+            template_id: template_id,
+            user: user,
+            court_case: court_case
+          )
+        end
       else
         letter_data = pdf_use_case_factory.get_preview.execute(
           payment_ref: payment_ref,
