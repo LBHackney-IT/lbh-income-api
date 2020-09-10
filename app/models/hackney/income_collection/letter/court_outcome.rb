@@ -7,9 +7,9 @@ module Hackney
         TEMPLATE_PATHS = [
           'lib/hackney/pdf/templates/income/court_outcome_letter.erb'
         ].freeze
-        MANDATORY_FIELDS = %i[court_outcome].freeze
+        MANDATORY_FIELDS = %i[court_outcome, court_date].freeze
 
-        attr_reader :court_outcome, :balance_on_court_outcome_date, :instalment_amount, :frequency, :rent, :date_of_first_payment, :eviction_date, :rent_charge, :total_amount_payable, :formal_agreement
+        attr_reader :court_outcome, :court_date, :balance_on_court_outcome_date, :instalment_amount, :frequency, :rent, :date_of_first_payment, :eviction_date, :rent_charge, :total_amount_payable, :formal_agreement
 
         def initialize(params)
           super(params)
@@ -29,6 +29,7 @@ module Hackney
           validated_params = validate_mandatory_fields(mandatory_outcome_fields, params)
 
           @court_outcome = validated_params[:court_outcome]
+          @court_date = format_date(court_date)
 
 
           if formal_agreement?
