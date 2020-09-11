@@ -8,13 +8,13 @@
 Dear <%= @letter.title %> <%= @letter.surname %>,
 
   <div class="red_box">
-    <strong>OUTCOME OF COURT HEARING</strong>
-    <strong>court outcome type</strong>
+    <strong>OUTCOME OF COURT HEARING</strong> <br>
+    <strong><%= @letter.court_outcome %></strong>
   </div>
 
   <p>
-    At the court hearing on DATE the judge granted the following:<br>
-    <strong>court outcome type</strong>
+    At the court hearing on <%= @letter.court_date %> the judge granted the following:<br><br>
+    <strong><%= @letter.court_outcome %></strong>
   </p>
 
   <% if @letter.formal_agreement? %>

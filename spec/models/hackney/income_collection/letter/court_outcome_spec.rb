@@ -4,6 +4,7 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:created_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
   let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY }
+  let(:court_date) {  2.days.ago }
   let(:letter_params) {
     {
       tenancy_ref: tenancy_ref,
@@ -15,7 +16,8 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
       correspondence_postcode: Faker::Address.zip_code,
       property_address: Faker::Address.street_address,
       total_collectable_arrears_balance: Faker::Number.number(digits: 3),
-      court_outcome: court_outcome
+      court_outcome: court_outcome,
+      court_date: court_date
     }
   }
 

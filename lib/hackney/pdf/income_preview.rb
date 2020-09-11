@@ -95,7 +95,7 @@ module Hackney
       end
 
       def get_court_info(court_case, agreement=nil)
-        court_details = { court_outcome: court_case.court_outcome }
+        court_details = { court_outcome: court_case.court_outcome, court_date: court_case.court_date }
         court_details[:balance_on_court_outcome_date] = court_case.balance_on_court_outcome_date if agreement
 
         court_details
