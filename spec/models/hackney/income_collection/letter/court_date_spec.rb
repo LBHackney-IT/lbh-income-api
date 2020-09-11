@@ -18,7 +18,7 @@ describe Hackney::IncomeCollection::Letter::CourtDate do
     }
   }
 
-  let!(:letter) { described_class.new(letter_params) }
+  let(:letter) { described_class.new(letter_params) }
 
   context 'when the letter is being generated' do
     it 'checks that the template file exists' do

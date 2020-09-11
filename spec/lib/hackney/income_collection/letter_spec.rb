@@ -187,7 +187,7 @@ describe Hackney::IncomeCollection::Letter do
     )
 
     expect(letter.errors).to eq [
-      { message: 'missing mandatory field', name: 'court_date' },
+      { message: 'missing mandatory field', name: 'court_date' }
     ]
   end
 end
