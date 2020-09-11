@@ -39,6 +39,7 @@ describe Hackney::PDF::IncomePreview do
       title: '',
       forename: 'Bloggs',
       surname: 'Joe',
+      eviction_date: nil,
       rent: weekly_rent
     }
   end
