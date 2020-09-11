@@ -212,7 +212,6 @@ describe UseCases::GenerateAndStoreLetter do
       expect_any_instance_of(Hackney::Income::UniversalHousingIncomeGateway)
         .to receive(:get_income_info).with(tenancy_ref: tenancy_ref)
                                      .and_return(letter_fields)
-
       expect_any_instance_of(Hackney::Income::SqlTenancyCaseGateway)
         .to receive(:find).with(tenancy_ref: tenancy_ref)
                           .and_return(
@@ -275,6 +274,53 @@ describe UseCases::GenerateAndStoreLetter do
 
         use_case_output
       end
+    end
+  end
+
+  context 'when the template is the court date template' do
+    let(:letter_fields) {
+      {
+        payment_ref: Faker::Number.number(digits: 4),
+        lessee_full_name: Faker::Name.name,
+        correspondence_address1: Faker::Address.street_address,
+        correspondence_address2: Faker::Address.secondary_address,
+        correspondence_address3: Faker::Address.city,
+        correspondence_postcode: Faker::Address.zip_code,
+        property_address: Faker::Address.street_address,
+        total_collectable_arrears_balance: Faker::Number.number(digits: 3)
+      }
+    }
+
+    let(:tenancy_ref) { Faker::Number.number(digits: 4).to_s }
+    let(:user_group) { ['income-collection-group'] }
+    let(:template_id) { 'court_date_letter' }
+
+    let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
+
+    it 'gets all the data and generates the letter' do
+      expect_any_instance_of(Hackney::Income::UniversalHousingIncomeGateway)
+        .to receive(:get_income_info).with(tenancy_ref: tenancy_ref)
+                                     .and_return(letter_fields)
+      expect_any_instance_of(Hackney::Income::SqlTenancyCaseGateway)
+        .to receive(:find).with(tenancy_ref: tenancy_ref)
+                          .and_return(
+                            build(:case_priority,
+                                  tenancy_ref: tenancy_ref,
+                                  collectable_arrears: Faker::Number.number(digits: 3))
+                          )
+      expect(Hackney::Income::Models::CourtCase)
+        .to receive(:where).with(tenancy_ref: tenancy_ref)
+                           .and_return([court_case])
+
+      expect_any_instance_of(Hackney::PDF::IncomePreview)
+        .to receive(:execute).with(
+          tenancy_ref: tenancy_ref,
+          template_id: template_id,
+          user: user,
+          court_case: court_case
+        ).and_call_original
+
+      use_case_output
     end
   end
 end
