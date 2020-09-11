@@ -11,11 +11,11 @@ module Hackney
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
 
-        letter_params = income_info
+        letter_params = income_info.merge({user_name: user.name})
 
-        letter_params = court_outcome_params(agreement, court_case, income_info) if court_case
+        letter_params = letter_params.merge(court_outcome_params(agreement, court_case, income_info)) if court_case
 
-        letter_params = agreement_params(agreement, income_info) if agreement
+        letter_params = letter_params.merge(agreement_params(agreement, income_info)) if agreement
 
         preview_with_errors = Hackney::PDF::IncomePreviewGenerator.new(
           template_path: template[:path]

@@ -20,6 +20,8 @@ module Hackney
         @tenant_address = load_erb_file(TENANT_ADDRESS_PARTIAL)
         @payment_options = load_erb_file(PAYMENT_OPTIONS_PARTIAL)
 
+        @username = username
+
         template = File.open(@template_path).read
         html = ERB.new(template).result(binding)
 

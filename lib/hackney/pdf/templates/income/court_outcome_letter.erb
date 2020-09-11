@@ -9,17 +9,16 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
 
   <div class="red_box">
     <strong>OUTCOME OF COURT HEARING</strong> <br>
-    <strong><%= @letter.court_outcome %></strong>
+    <strong><%= @letter.court_outcome %></strong>  <br>
   </div>
-
   <p>
     At the court hearing on <%= @letter.court_date %> the judge granted the following:<br><br>
     <strong><%= @letter.court_outcome %></strong>
   </p>
 
-  <% if @letter.formal_agreement? %>
+  <% if @letter.formal_agreement %>
     <p>
-      The Court has decided that you must pay the Council the total amount of <%= @letter.court_date_arrears %> by instalments of <%= @letter.instalment_amount %> per <%= @letter.frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid is £<%= @letter.total_amount_payable %>. The first payment must be made on or before <%= @letter.start_date %>.
+      The Court has decided that you must pay the Council the total amount of £<%= @letter.balance_on_court_outcome_date %> by instalments of £<%= @letter.instalment_amount %> <%= @letter.agreement_frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid is £<%= @letter.total_amount_payable %>. The first payment must be made on or before <%= @letter.date_of_first_payment %>.
     </p>
   <% end %>
 
@@ -43,9 +42,9 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
     You would have been informed in previous correspondence about the work carried out by our Financial Inclusion Team. They can offer advice and support to help you maximise your income by looking at benefits you may be entitled to and access other financial support. If you think that you would benefit from a referral to our Financial Inclusion Team then please contact me as soon as possible via email: income.services@hackney.gov.uk or telephone to speak to an Officer on 020 8356 3100.
   </p>
 
-  <% if @letter.outright_order? %>
+  <% if @letter.outright_order %>
     <p>
-    If the Court has awarded Outright Possession, you must give the Council possession of <%= @letter.tenant_address %>  on <%= @letter.eviction_date %>.  If you do not pay the money owed as detailed above and give empty possession of the property, the Council may ask the Court Bailiff to evict you and remove your goods.
+    If the Court has awarded Outright Possession, you must give the Council possession of <%= @letter.property_address %>  on <%= @letter.eviction_date %>.  If you do not pay the money owed as detailed above and give empty possession of the property, the Council may ask the Court Bailiff to evict you and remove your goods.
     </p>
   <% end %>
 
@@ -64,7 +63,12 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
   </div>
 
   <p>
-    Yours sincerely <br>
+    Yours sincerely,
+  </p>
+
+  <p>
     <%= @username %>
+    <br>
+    London Borough of Hackney
   </p>
 </div>

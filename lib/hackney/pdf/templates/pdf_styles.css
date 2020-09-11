@@ -55,7 +55,7 @@ p {
 
 .red_box {
   margin-top: 10pt;
-  padding: 8.64pt 8.64pt 0 8.64pt;
+  padding: 8.64pt;
   border: 4pt #ff0000 solid;
   text-align: center
 }
