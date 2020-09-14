@@ -11,7 +11,7 @@ module Hackney
         template = get_template_by_id(template_id, user)
         income_info = get_income_info(tenancy_ref)
 
-        letter_params = income_info.merge({user_name: user.name})
+        letter_params = income_info
 
         letter_params = letter_params.merge(court_outcome_params(agreement, court_case, income_info)) if court_case
 
@@ -38,18 +38,17 @@ module Hackney
       def court_outcome_params(agreement, court_case, income_info)
         court_case_data = get_court_info(court_case, agreement)
 
-        return income_info.merge(court_case_data)
+        income_info.merge(court_case_data)
       end
 
       def agreement_params(agreement, income_info)
-
         if agreement.breached?
           agreement_data = agreement.formal? ? get_breached_formal_agreement_info(agreement) : get_breached_agreement_info(agreement)
         else
           agreement_data = get_agreement_info(agreement)
         end
 
-        return income_info.merge(agreement_data)
+        income_info.merge(agreement_data)
       end
 
       def get_income_info(tenancy_ref)
@@ -94,7 +93,7 @@ module Hackney
         }
       end
 
-      def get_court_info(court_case, agreement=nil)
+      def get_court_info(court_case, agreement = nil)
         court_details = { court_outcome: court_case.court_outcome, court_date: court_case.court_date }
         court_details[:balance_on_court_outcome_date] = court_case.balance_on_court_outcome_date if agreement
 

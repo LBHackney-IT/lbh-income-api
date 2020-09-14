@@ -36,20 +36,19 @@ module Hackney
 
         private
 
-
         def human_readable_outcome(code)
           code_mapping = {
-              'AGP' => "Adjourned generally with permission to restore",
-              'AND' => "Adjourned to next open date",
-              'AAH' => "Adjourned to another hearing date",
-              'ADH' => "Adjourned for directions hearing",
-              'ADT' => "Adjourned on terms",
-              'OPF' => "Outright possession forthwith",
-              'OPD' => "Outright possession with date",
-              'SOT' => "Suspension on terms",
-              'STO' => "Struck out",
-              'WIT' => "Withdrawn on the day",
-              'SOE' => "Stay of execution"
+            'AGP' => 'Adjourned generally with permission to restore',
+            'AND' => 'Adjourned to next open date',
+            'AAH' => 'Adjourned to another hearing date',
+            'ADH' => 'Adjourned for directions hearing',
+            'ADT' => 'Adjourned on terms',
+            'OPF' => 'Outright possession forthwith',
+            'OPD' => 'Outright possession with date',
+            'SOT' => 'Suspension on terms',
+            'STO' => 'Struck out',
+            'WIT' => 'Withdrawn on the day',
+            'SOE' => 'Stay of execution'
           }
 
           code_mapping[code]
@@ -61,8 +60,8 @@ module Hackney
 
         def self.outright_order?(params)
           [
-              Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-              Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
           ].include?(params[:court_outcome])
         end
       end

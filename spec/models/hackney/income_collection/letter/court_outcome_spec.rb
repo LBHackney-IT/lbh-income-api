@@ -34,6 +34,5 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
   end
 
   context '#formal_agreement?' do
-
   end
 end
