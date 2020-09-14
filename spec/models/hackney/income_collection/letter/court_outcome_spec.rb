@@ -33,6 +33,33 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
     end
   end
 
-  context '#formal_agreement?' do
+  context 'when generating a court outcome letter with terms' do
+    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS }
+
+    let(:letter) {
+      described_class.new(letter_params.merge(
+                            balance_on_court_outcome_date: Faker::Number.number(digits: 3)
+                          ))
+    }
+
+    it 'formal agreement is true' do
+      expect(letter.formal_agreement).to eq(true)
+    end
+
+    it 'outright_order is false' do
+      expect(letter.outright_order).to eq(false)
+    end
+  end
+
+  context 'when generating a court outcome letter with terms' do
+    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH }
+
+    it 'outright_order is true' do
+      expect(letter.outright_order).to eq(true)
+    end
+
+    it 'formal agreement is false' do
+      expect(letter.formal_agreement).to eq(false)
+    end
   end
 end

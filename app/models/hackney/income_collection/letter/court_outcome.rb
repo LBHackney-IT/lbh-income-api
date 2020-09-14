@@ -20,7 +20,7 @@ module Hackney
           else
             new(letter_params)
           end
-      end
+        end
 
         def initialize(params)
           super(params)
@@ -54,15 +54,17 @@ module Hackney
           code_mapping[code]
         end
 
-        def self.with_terms?(params)
-          params[:balance_on_court_outcome_date].present?
-        end
+        class << self
+          def with_terms?(params)
+            params[:balance_on_court_outcome_date].present?
+          end
 
-        def self.outright_order?(params)
-          [
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
-          ].include?(params[:court_outcome])
+          def outright_order?(params)
+            [
+              Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+              Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+            ].include?(params[:court_outcome])
+          end
         end
       end
     end

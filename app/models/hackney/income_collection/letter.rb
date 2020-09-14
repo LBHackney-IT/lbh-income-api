@@ -62,21 +62,21 @@ module Hackney
       end
 
       def calculate_rent(rent, frequency)
+        rent = rent.to_f
         case frequency
         when 'monthly'
-          rent = (rent * 52) / 12
+          (rent * 52) / 12
         when 'fortnightly'
-          rent *= 2
+          rent * 2
         when '4 weekly'
-          rent *= 4
+          rent * 4
         else
           rent
         end
-        BigDecimal(rent.to_s)
       end
 
       def calculate_total_amount_payable(rent, instalment_amount)
-        BigDecimal(rent.to_s) + BigDecimal(instalment_amount.to_s)
+        rent.to_f + instalment_amount.to_f
       end
 
       private

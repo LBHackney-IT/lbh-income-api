@@ -112,5 +112,69 @@ describe Hackney::IncomeCollection::Letter do
         ]
       end
     end
+
+    context 'when generating a court outcome letter' do
+      it 'generates an court outcome letter' do
+        expect(Hackney::IncomeCollection::Letter::CourtOutcome).to receive(:new).with(letter_params).and_call_original
+
+        letter = described_class.build(
+          letter_params: letter_params,
+          template_path: Hackney::IncomeCollection::Letter::CourtOutcome::TEMPLATE_PATHS.sample
+        )
+
+        expect(letter.errors).to eq [
+          { message: 'missing mandatory field', name: 'court_outcome' },
+          { message: 'missing mandatory field', name: 'court_date' }
+        ]
+      end
+
+      context 'when generating a court outcome letter with terms' do
+        let(:court_letter_params) {
+          letter_params.merge(
+            balance_on_court_outcome_date: Faker::Number.number(digits: 3)
+          )
+        }
+
+        it 'generates an court outcome letter' do
+          expect(Hackney::IncomeCollection::Letter::CourtOutcome::WithTerms).to receive(:new).with(court_letter_params).and_call_original
+
+          letter = described_class.build(
+            letter_params: court_letter_params,
+            template_path: Hackney::IncomeCollection::Letter::CourtOutcome::TEMPLATE_PATHS.sample
+          )
+
+          expect(letter.errors).to eq [
+            { message: 'missing mandatory field', name: 'court_outcome' },
+            { message: 'missing mandatory field', name: 'court_date' },
+            { message: 'missing mandatory field', name: 'amount' },
+            { message: 'missing mandatory field', name: 'agreement_frequency' },
+            { message: 'missing mandatory field', name: 'rent' },
+            { message: 'missing mandatory field', name: 'date_of_first_payment' }
+          ]
+        end
+      end
+
+      context 'when generating a outright order court outcome letter' do
+        let(:court_letter_params) {
+          letter_params.merge(
+            court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+          )
+        }
+
+        it 'generates an court outcome letter' do
+          expect(Hackney::IncomeCollection::Letter::CourtOutcome::OutrightOrder).to receive(:new).with(court_letter_params).and_call_original
+
+          letter = described_class.build(
+            letter_params: court_letter_params,
+            template_path: Hackney::IncomeCollection::Letter::CourtOutcome::TEMPLATE_PATHS.sample
+          )
+
+          expect(letter.errors).to eq [
+            { message: 'missing mandatory field', name: 'court_date' },
+            { message: 'missing mandatory field', name: 'eviction_date' }
+          ]
+        end
+      end
+    end
   end
 end
