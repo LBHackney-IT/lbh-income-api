@@ -15,11 +15,18 @@
   </p>
 
   <ul class = "no_bullets">
-    <li><%= @letter.agreement_frequency.
-            capitalize %> rent: £<%= @letter.rent_charge %> </li>
-    <li>Amount towards the arrears: £<%= @letter.instalment_amount %> </li>
-    <li>Total amount payable £<%= @letter.total_amount_payable %> <%= @letter.agreement_frequency %></li>
-    <li>Date of first payment: <%= @letter.date_of_first_payment %> </li>
+    <% if @letter.agreement_frequency == 'one_off' %>
+      <li>Amount towards the rent: £<%= @letter.rent_charge %> </li>
+      <li>Amount towards the arrears: £<%= @letter.instalment_amount %> </li>
+      <li>Total amount payable £<%= @letter.total_amount_payable %></li>
+      <li>Date of payment: <%= @letter.date_of_first_payment %> </li>
+    <% else %>
+      <li><%= @letter.agreement_frequency.
+              capitalize %> rent: £<%= @letter.rent_charge %> </li>
+      <li>Amount towards the arrears: £<%= @letter.instalment_amount %> </li>
+      <li>Total amount payable £<%= @letter.total_amount_payable %> <%= @letter.agreement_frequency %></li>
+      <li>Date of first payment: <%= @letter.date_of_first_payment %> </li>
+    <% end %>
   </ul>
 
   <p>
