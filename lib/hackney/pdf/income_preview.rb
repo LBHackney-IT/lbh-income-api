@@ -69,8 +69,10 @@ module Hackney
         {
           agreement_frequency: agreement.frequency,
           amount: agreement.amount,
-          date_of_first_payment: agreement.start_date
-        }
+          date_of_first_payment: agreement.start_date,
+          initial_payment_amount: agreement.initial_payment_amount,
+          initial_payment_date: agreement.initial_payment_date
+        }.compact
       end
 
       def get_breached_agreement_info(agreement)
