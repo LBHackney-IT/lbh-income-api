@@ -9,7 +9,8 @@ module Hackney
         ].freeze
         MANDATORY_FIELDS = %i[rent agreement_frequency amount date_of_first_payment].freeze
 
-        attr_reader :rent, :agreement_frequency, :amount, :rent_charge, :total_amount_payable, :date_of_first_payment, :instalment_amount
+        attr_reader :rent, :agreement_frequency, :amount, :rent_charge, :total_amount_payable,
+                    :date_of_first_payment, :instalment_amount, :initial_payment_amount, :initial_payment_date
 
         def initialize(params)
           super(params)
@@ -19,6 +20,8 @@ module Hackney
           @rent = validated_params[:rent]
           @instalment_amount = format('%.2f', validated_params[:amount]) unless validated_params[:amount].nil?
           @date_of_first_payment = format_date(validated_params[:date_of_first_payment])
+          @initial_payment_amount = format('%.2f', params[:initial_payment_amount]) unless params[:initial_payment_amount].nil?
+          @initial_payment_date = format_date(params[:initial_payment_date]) unless params[:initial_payment_date].nil?
 
           return unless @rent
           @rent_charge = format('%.2f', calculate_rent(@rent, @agreement_frequency))
