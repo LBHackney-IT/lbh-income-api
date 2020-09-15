@@ -140,11 +140,13 @@ describe Hackney::PDF::IncomePreview do
     end
     let(:initial_payment_amount) { nil }
     let(:initial_payment_date) { nil }
-    let(:agreement) {
-      build(:agreement, frequency: :weekly, tenancy_ref: test_tenancy_ref, current_state: :live,
+    let(:frequency) { :weekly }
+    let(:agreement) do
+      build(:agreement, frequency: frequency, tenancy_ref: test_tenancy_ref, current_state: :live,
                         initial_payment_amount: initial_payment_amount,
                         initial_payment_date: initial_payment_date)
-    }
+    end
+    let(:rendered_letter) { subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, agreement: agreement) }
 
     before do
       allow(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
@@ -167,8 +169,6 @@ describe Hackney::PDF::IncomePreview do
             username: username
           ).and_call_original
 
-        rendered_letter = subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, agreement: agreement)
-
         expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
         expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
         expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
@@ -182,7 +182,7 @@ describe Hackney::PDF::IncomePreview do
       let(:initial_payment_amount) { Faker::Commerce.price(range: 10...100) }
       let(:initial_payment_date) { Faker::Date.between(from: 10.days.ago, to: Date.today) }
 
-      it 'fetches rent and formats the agreement params' do
+      it 'fetches rent and formats the agreement params and renders the right content' do
         expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
           .to receive(:execute).with(
             letter_params: test_letter_params.merge(
@@ -198,14 +198,23 @@ describe Hackney::PDF::IncomePreview do
             username: username
           ).and_call_original
 
-        rendered_letter = subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, agreement: agreement)
-
         expect(rendered_letter[:preview]).to include("Lump-sum payment amount: £#{agreement.initial_payment_amount}")
         expect(rendered_letter[:preview]).to include("Lump-sum payment date: #{agreement.initial_payment_date.strftime('%d %B %Y')}")
         expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
         expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
         expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
         expect(rendered_letter[:preview]).to include("Date of first payment: #{agreement.start_date.strftime('%d %B %Y')}")
+      end
+    end
+
+    context 'when its a one off payment agreement' do
+      let(:frequency) { :one_off }
+
+      it 'renders the right content' do
+        expect(rendered_letter[:preview]).to include("Amount towards the rent: £#{weekly_rent}")
+        expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
+        expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)}")
+        expect(rendered_letter[:preview]).to include("Date of payment: #{agreement.start_date.strftime('%d %B %Y')}")
       end
     end
   end
