@@ -284,6 +284,10 @@ module Hackney
         Hackney::Income::UpdateCourtCase.new
       end
 
+      def create_eviction_date
+        Hackney::Income::CreateEvictionDate.new
+      end
+
       private
 
       def cloud_storage
