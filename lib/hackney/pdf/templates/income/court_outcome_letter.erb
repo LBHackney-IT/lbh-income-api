@@ -1,0 +1,74 @@
+<%= @logo %>
+<div class="top_space"></div>
+<%= @hackney_address %>
+
+<%= @tenant_address %>
+
+<div>
+Dear <%= @letter.title %> <%= @letter.surname %>,
+
+  <div class="red_box">
+    <strong>OUTCOME OF COURT HEARING</strong> <br>
+    <strong><%= @letter.court_outcome %></strong>  <br>
+  </div>
+  <p>
+    At the court hearing on <%= @letter.court_date %> the judge granted the following:<br><br>
+    <strong><%= @letter.court_outcome %></strong>
+  </p>
+
+  <% if @letter.formal_agreement %>
+    <p>
+      The Court has decided that you must pay the Council the total amount of £<%= @letter.balance_on_court_outcome_date %> by instalments of £<%= @letter.instalment_amount %> <%= @letter.agreement_frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid is £<%= @letter.total_amount_payable %>. The first payment must be made on or before <%= @letter.date_of_first_payment %>.
+    </p>
+  <% end %>
+
+  <p>
+    The Court will send you a copy of the Order.
+  </p>
+
+  <p>
+    If you keep to these terms and make payments as agreed, no further action will be taken. If you do not keep to the terms as ordered by the Court, your case will be restored back to Court. If the Council have already been awarded a Suspended Possession Order,  we will apply to court for an eviction warrant which could result in you losing your time.
+  </p>
+
+  <p>
+    If you have been ordered to pay costs,  you will be sent an invoice for court costs and notified how to pay these in a separate letter.
+  </p>
+
+  <p>
+    We are aware that the coronavirus pandemic has had a direct impact on many of our tenants’ ability to pay their current rent so we will not escalate any case to Court if you can demonstrate that your arrears have accrued as a result of the impact of Covid-19 on your finances. You must however be able to show that you looked into the support available, claimed all the benefits to which you are entitled, and have taken any appropriate advice which is freely available.
+  </p>
+
+  <p>
+    You would have been informed in previous correspondence about the work carried out by our Financial Inclusion Team. They can offer advice and support to help you maximise your income by looking at benefits you may be entitled to and access other financial support. If you think that you would benefit from a referral to our Financial Inclusion Team then please contact me as soon as possible via email: income.services@hackney.gov.uk or telephone to speak to an Officer on 020 8356 3100.
+  </p>
+
+  <% if @letter.outright_order %>
+    <p>
+    If the Court has awarded Outright Possession, you must give the Council possession of <%= @letter.property_address %>  on <%= @letter.eviction_date %>.  If you do not pay the money owed as detailed above and give empty possession of the property, the Council may ask the Court Bailiff to evict you and remove your goods.
+    </p>
+  <% end %>
+
+  <p>
+    If you are evicted from your home the Council may not provide you and anyone else who is part of your household with other accommodation. You should contact the Housing Needs Section for further advice on what might happen if you are evicted. The Housing Needs address and telephone number is:
+  </p>
+
+  <div class="centre">
+    Hackney Service Centre
+    <br>
+    1 Hillman Street
+    <br>
+    London, E8 1DY
+    <br>
+    Telephone: 020 8356 3100
+  </div>
+
+  <p>
+    Yours sincerely,
+  </p>
+
+  <p>
+    <%= @username %>
+    <br>
+    London Borough of Hackney
+  </p>
+</div>

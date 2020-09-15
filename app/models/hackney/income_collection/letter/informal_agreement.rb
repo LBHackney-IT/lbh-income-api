@@ -24,26 +24,6 @@ module Hackney
           @rent_charge = format('%.2f', calculate_rent(@rent, @agreement_frequency))
           @total_amount_payable = format('%.2f', calculate_total_amount_payable(@rent_charge, @instalment_amount))
         end
-
-        private
-
-        def calculate_rent(rent, frequency)
-          case frequency
-          when 'monthly'
-            rent = (rent * 52) / 12
-          when 'fortnightly'
-            rent *= 2
-          when '4 weekly'
-            rent *= 4
-          else
-            rent
-          end
-          BigDecimal(rent.to_s)
-        end
-
-        def calculate_total_amount_payable(rent, instalment_amount)
-          BigDecimal(rent.to_s) + BigDecimal(instalment_amount.to_s)
-        end
       end
     end
   end

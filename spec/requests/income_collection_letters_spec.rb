@@ -67,6 +67,7 @@ RSpec.describe 'Income Collection Letters', type: :request do
             'forename' => 'Frank',
             'surname' => 'Enstein',
             'title' => 'Mr',
+            'eviction_date' => nil,
             'total_collectable_arrears_balance' => collectable_arrears.to_s,
             'rent' => weekly_rent.to_s
           },

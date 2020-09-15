@@ -18,6 +18,8 @@ module Hackney
           Letter::InformalAgreementBreach.new(letter_params)
         when *Hackney::IncomeCollection::Letter::FormalAgreementBreach::TEMPLATE_PATHS
           Letter::FormalAgreementBreach.new(letter_params)
+        when *Hackney::IncomeCollection::Letter::CourtOutcome::TEMPLATE_PATHS
+          Letter::CourtOutcome.build(letter_params)
         else
           new(letter_params)
         end
@@ -57,6 +59,24 @@ module Hackney
 
       def calculate_shortfall_amount(actual_balance, expected_balance)
         BigDecimal(actual_balance.to_s) - BigDecimal(expected_balance.to_s)
+      end
+
+      def calculate_rent(rent, frequency)
+        rent = rent.to_f
+        case frequency
+        when 'monthly'
+          (rent * 52) / 12
+        when 'fortnightly'
+          rent * 2
+        when '4 weekly'
+          rent * 4
+        else
+          rent
+        end
+      end
+
+      def calculate_total_amount_payable(rent, instalment_amount)
+        rent.to_f + instalment_amount.to_f
       end
 
       private
