@@ -7,11 +7,11 @@ describe Hackney::Income::CreateEvictionDate do
   let(:eviction_date) { Faker::Date.between(from: 10.days.ago, to: 2.days.ago) }
 
   let(:new_eviction_date_params) do
-  {
-    tenancy_ref: tenancy_ref,
-    eviction_date: eviction_date
-  }
-end
+    {
+      tenancy_ref: tenancy_ref,
+      eviction_date: eviction_date
+    }
+  end
 
   it 'creates and returns a new eviction date' do
     new_eviction_date = subject.execute(eviction_date_params: new_eviction_date_params)

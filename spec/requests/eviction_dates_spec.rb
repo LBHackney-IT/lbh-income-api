@@ -9,13 +9,13 @@ RSpec.describe 'EvictionDates', type: :request do
       context 'when creating a new eviction date' do
         let(:create_eviction_date_instance) { instance_double(Hackney::Income::CreateEvictionDate) }
         let(:new_eviction_date_params) do
-        {
-          tenancy_ref: tenancy_ref,
-          eviction_date: eviction_date
-        }
+          {
+            tenancy_ref: tenancy_ref,
+            eviction_date: eviction_date
+          }
         end
 
-        let(:created_eviction_date) {create(:eviction_date, new_eviction_date_params)}
+        let(:created_eviction_date) { create(:eviction_date, new_eviction_date_params) }
 
         before do
           allow(Hackney::Income::CreateEvictionDate).to receive(:new).and_return(create_eviction_date_instance)
