@@ -202,7 +202,8 @@ module Hackney
       def create_agreement
         Hackney::Income::CreateAgreement.new(
           add_action_diary: add_action_diary,
-          cancel_agreement: cancel_agreement
+          cancel_agreement: cancel_agreement,
+          update_agreement_state: update_agreement_state
         )
       end
 
@@ -257,14 +258,16 @@ module Hackney
       def create_informal_agreement
         Hackney::Income::CreateInformalAgreement.new(
           add_action_diary: add_action_diary,
-          cancel_agreement: cancel_agreement
+          cancel_agreement: cancel_agreement,
+          update_agreement_state: update_agreement_state
         )
       end
 
       def create_formal_agreement
         Hackney::Income::CreateFormalAgreement.new(
           add_action_diary: add_action_diary,
-          cancel_agreement: cancel_agreement
+          cancel_agreement: cancel_agreement,
+          update_agreement_state: update_agreement_state
         )
       end
 

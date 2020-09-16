@@ -1,9 +1,10 @@
 module Hackney
   module Income
     class CreateAgreement
-      def initialize(add_action_diary:, cancel_agreement:)
+      def initialize(add_action_diary:, cancel_agreement:, update_agreement_state:)
         @add_action_diary = add_action_diary
         @cancel_agreement = cancel_agreement
+        @update_agreement_state = update_agreement_state
       end
 
       def find_case_details(tenancy_ref)
@@ -49,6 +50,10 @@ module Hackney
           initial_payment_amount: params[:initial_payment_amount],
           initial_payment_date: params[:initial_payment_date]
         }
+      end
+
+      def update_agreement_state(agreement:, current_balance:)
+        @update_agreement_state.execute(agreement: agreement, current_balance: current_balance)
       end
     end
   end

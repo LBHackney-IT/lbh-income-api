@@ -22,6 +22,8 @@ module Hackney
 
         new_agreement = create_agreement(agreement_params)
 
+        update_agreement_state(agreement: new_agreement, current_balance: case_details.balance)
+
         add_action_diary_entry(
           tenancy_ref: tenancy_ref,
           comment: "Informal agreement created: #{agreement_params[:notes]}",

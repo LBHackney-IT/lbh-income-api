@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 describe Hackney::Income::CreateInformalAgreement do
-  subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement) }
+  subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement, update_agreement_state: update_agreement_state) }
 
   let(:cancel_agreement) { spy }
   let(:add_action_diary) { spy }
+  let(:update_agreement_state) { spy }
   let(:new_agreement_params) do
     {
       tenancy_ref: tenancy_ref,

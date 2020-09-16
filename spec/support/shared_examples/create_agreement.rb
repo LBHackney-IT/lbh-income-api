@@ -1,5 +1,5 @@
 RSpec.shared_examples 'CreateAgreement' do
-  subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement) }
+  subject { described_class.new(add_action_diary: add_action_diary, cancel_agreement: cancel_agreement, update_agreement_state: update_agreement_state) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:amount) { Faker::Commerce.price(range: 10...100) }
@@ -10,6 +10,7 @@ RSpec.shared_examples 'CreateAgreement' do
   let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
   let(:initial_payment_amount) { nil }
   let(:initial_payment_date) { nil }
+  let(:current_balance) { 100 }
 
   let(:existing_agreement_params) do
     {
@@ -37,9 +38,10 @@ RSpec.shared_examples 'CreateAgreement' do
 
   let(:add_action_diary) { spy }
   let(:cancel_agreement) { spy }
+  let(:update_agreement_state) { spy }
 
   before do
-    create(:case_priority, tenancy_ref: tenancy_ref, balance: 100)
+    create(:case_priority, tenancy_ref: tenancy_ref, balance: current_balance)
   end
 
   it 'calls the add_action_diary when a new agreement is created' do
@@ -50,6 +52,15 @@ RSpec.shared_examples 'CreateAgreement' do
       comment: expected_action_diray_note,
       username: created_by,
       action_code: 'AGR'
+    )
+  end
+
+  it 'calls update agreement state to make sure the state is always up to date' do
+    agreement = subject.execute(new_agreement_params: new_agreement_params)
+
+    expect(update_agreement_state).to have_received(:execute).with(
+      agreement: agreement,
+      current_balance: current_balance
     )
   end
 
