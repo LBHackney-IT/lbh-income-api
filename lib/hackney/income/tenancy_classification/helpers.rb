@@ -2,7 +2,8 @@ module Hackney
   module Income
     module TenancyClassification
       module Helpers
-        include Hackney::Income::TenancyClassification::Helpers::HelpersProxy
+        include Hackney::Income::TenancyClassification::Helpers::AgreementHelpers
+        include Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers
 
         def case_paused?
           @case_priority.paused?

@@ -1,14 +1,13 @@
 require 'rails_helper'
 
-describe Hackney::Income::TenancyClassification::Helpers::MAAgreementHelpers do
+describe Hackney::Income::TenancyClassification::Helpers::AgreementHelpers do
   class DummyAgreementHelperClass
-    include Hackney::Income::TenancyClassification::Helpers::HelpersProxy
+    include Hackney::Income::TenancyClassification::Helpers::AgreementHelpers
 
     def initialize(case_priority, criteria, documents)
       @case_priority = case_priority
       @criteria = criteria
       @documents = documents
-      @use_ma_data = true # This will call MAAgreementHelpers trough the HelpersProxy class
     end
   end
   let(:agreement_model) { Hackney::Income::Models::Agreement }
