@@ -172,7 +172,7 @@ describe Hackney::PDF::IncomePreview do
         expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
         expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
         expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
-        expect(rendered_letter[:preview]).to include("Date of first payment: #{agreement.start_date.strftime('%d %B %Y')}")
+        expect(rendered_letter[:preview]).to include("Date of first #{agreement.frequency} payment: #{agreement.start_date.strftime('%d %B %Y')}")
         expect(rendered_letter[:preview]).not_to include('Lump-sum payment amount:')
         expect(rendered_letter[:preview]).not_to include('Lump-sum payment date:')
       end
@@ -203,7 +203,7 @@ describe Hackney::PDF::IncomePreview do
         expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
         expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
         expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
-        expect(rendered_letter[:preview]).to include("Date of first payment: #{agreement.start_date.strftime('%d %B %Y')}")
+        expect(rendered_letter[:preview]).to include("Date of first #{agreement.frequency} payment: #{agreement.start_date.strftime('%d %B %Y')}")
       end
     end
 
