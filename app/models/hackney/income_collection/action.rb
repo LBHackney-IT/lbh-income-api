@@ -13,11 +13,7 @@ module Hackney
       end
 
       def metadata
-        JSON.parse(self[:metadata], symbolize_names: true)
-      end
-
-      def metadata=(value)
-        super(value.to_json)
+        (self[:metadata]).symbolize_keys
       end
     end
   end
