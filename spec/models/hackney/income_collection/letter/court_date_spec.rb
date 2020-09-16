@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Hackney::IncomeCollection::Letter::CourtDate do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
-  let(:court_date) { Faker::Date.between(from: Date.today, to: 2.days.from_now) }
+  let(:court_date) { Faker::Time.between(from: DateTime.now + 5, to: DateTime.now + 10) }
   let(:letter_params) {
     {
       tenancy_ref: tenancy_ref,

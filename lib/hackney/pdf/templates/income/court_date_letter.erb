@@ -13,20 +13,23 @@
     Dear <%= @letter.title %> <%= @letter.surname %>,
   </p>
 
-  <p>
-    <strong>
-      NOTICE TO ADVISE YOU OF A COURT HEARING
-    </strong>
-  </p>
+  <div class="red_box">
+    <p>
+      <strong>
+        NOTICE TO ADVISE YOU OF A COURT HEARING
+      </strong>
+    </p>
+  </div>
+  <div class="red_box">
+    <p>
+      <strong>
+        You Owe £<%= @letter.total_collectable_arrears_balance %> as at <%= @today_date %>
+      </strong>
+    </p>
+  </div>
 
   <p>
-    <strong>
-      You Owe £<%= @letter.total_collectable_arrears_balance %> as at <%= @today_date %>
-    </strong>
-  </p>
-
-  <p>
-    A Court Hearing date has been set for <%= @letter.court_date %> at [insert time]. The Court will have contacted you about this.
+    A Court Hearing date has been set for <%= @letter.court_date %> at <%= @letter.court_time %>. The Court will have contacted you about this.
   </p>
 
   <p>

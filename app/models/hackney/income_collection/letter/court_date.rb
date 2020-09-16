@@ -9,13 +9,14 @@ module Hackney
         ].freeze
         MANDATORY_FIELDS = %i[court_date].freeze
 
-        attr_reader :court_date
+        attr_reader :court_date, :court_time
 
         def initialize(params)
           super(params)
 
           validated_params = validate_mandatory_fields(MANDATORY_FIELDS, params)
           @court_date = format_date(validated_params[:court_date])
+          @court_time = format_time(validated_params[:court_date])
         end
       end
     end
