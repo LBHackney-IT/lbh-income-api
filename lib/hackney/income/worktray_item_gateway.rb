@@ -1,7 +1,10 @@
 module Hackney
   module Income
     class WorktrayItemGateway
-      GatewayModel = Hackney::Income::Models::CasePriority
+      GatewayModel = Hackney::IncomeCollection::Action
+      SERVICE_AREA = 'rent'.freeze
+      SECURE_TENURE_TYPE = 'SEC'.freeze
+
       CourtCaseModel = Hackney::Income::Models::CourtCase
 
       def store_worktray_item(tenancy_ref:, criteria:, classification:)
@@ -9,30 +12,34 @@ module Hackney
         court_case = CourtCaseModel.where(tenancy_ref: tenancy_ref).last
 
         begin
-          gateway_model_instance.tap do |tenancy|
-            tenancy.assign_attributes(
+          gateway_model_instance.tap do |action|
+            action.assign_attributes(
               balance: criteria.balance,
-              collectable_arrears: criteria.collectable_arrears,
-              weekly_rent: criteria.weekly_gross_rent,
-              days_since_last_payment: criteria.days_since_last_payment,
-              nosp_served: criteria.nosp_served?,
-              nosp_served_date: criteria.nosp_served_date,
-              last_communication_action: criteria.last_communication_action,
-              last_communication_date: criteria.last_communication_date,
-              active_nosp: criteria.active_nosp?,
               classification: classification,
+              payment_ref: criteria.payment_ref,
               patch_code: criteria.patch_code,
-              courtdate: court_case&.court_date,
-              court_outcome: court_case&.court_outcome,
-              eviction_date: criteria.eviction_date,
-              universal_credit: criteria.universal_credit,
-              uc_rent_verification: criteria. uc_rent_verification,
-              uc_direct_payment_requested: criteria.uc_direct_payment_requested,
-              uc_direct_payment_received: criteria.uc_direct_payment_received,
-              payment_ref: criteria.payment_ref
+              action_type: SECURE_TENURE_TYPE,
+              service_area_type: SERVICE_AREA,
+              metadata: {
+                collectable_arrears: criteria.collectable_arrears,
+                weekly_rent: criteria.weekly_gross_rent,
+                nosp_served: criteria.nosp_served?,
+                nosp_served_date: criteria.nosp_served_date,
+                active_nosp: criteria.active_nosp?,
+                last_communication_action: criteria.last_communication_action,
+                last_communication_date: criteria.last_communication_date,
+                courtdate: court_case&.court_date,
+                court_outcome: court_case&.court_outcome,
+                eviction_date: criteria.eviction_date,
+                universal_credit: criteria.universal_credit,
+                uc_rent_verification: criteria. uc_rent_verification,
+                uc_direct_payment_requested: criteria.uc_direct_payment_requested,
+                uc_direct_payment_received: criteria.uc_direct_payment_received,
+                days_since_last_payment: criteria.days_since_last_payment
+              }
             )
 
-            tenancy.save! if tenancy.changed?
+            action.save! if action.changed?
           end
         rescue ActiveRecord::RecordNotUnique
           Rails.logger.error("A Tenancy with tenancy_ref: '#{tenancy_ref}' was inserted during find_or_create_by create operation, retrying...")
@@ -45,12 +52,12 @@ module Hackney
 
         query = query.offset((page_number - 1) * number_per_page).limit(number_per_page) if page_number.present? && number_per_page.present?
 
-        order_options   = 'eviction_date' if filters[:upcoming_evictions].present?
-        order_options   = 'courtdate' if filters[:upcoming_court_dates].present?
-        order_options   = 'is_paused_until' if filters[:is_paused]
+        order_options   = "JSON_EXTRACT(metadata, '$.eviction_date')" if filters[:upcoming_evictions].present?
+        order_options   = "JSON_EXTRACT(metadata, '$.courtdate')" if filters[:upcoming_court_dates].present?
+        order_options   = 'pause_until' if filters[:is_paused]
         order_options ||= by_balance
 
-        query.order(order_options).map(&method(:build_tenancy_list_item))
+        query.order(Arel.sql(order_options)).map(&method(:build_tenancy_list_item))
       end
 
       def number_of_pages(number_per_page:, filters: {})
@@ -69,9 +76,10 @@ module Hackney
             query = query.where(patch_code: filters[:patch])
           end
         end
-
-        query = query.where('eviction_date >= ?', Time.zone.now.beginning_of_day) if filters[:upcoming_evictions].present?
-        query = query.where('courtdate >= ?', Time.zone.now.beginning_of_day) if filters[:upcoming_court_dates].present?
+        # query.where("JSON_EXTRACT(metadata, '$.weekly_rent') = ?", 51.15)
+        query = query.where("JSON_EXTRACT(metadata, '$.eviction_date') >= ?", Time.zone.now.beginning_of_day) if filters[:upcoming_evictions].present?
+        # byebug
+        query = query.where("JSON_EXTRACT(metadata, '$.courtdate') >= ?", Time.zone.now.beginning_of_day) if filters[:upcoming_court_dates].present?
 
         if filters[:classification].present?
           query = query.where(classification: filters[:classification])
@@ -84,7 +92,7 @@ module Hackney
         return query if filters[:is_paused].nil?
 
         if filters[:is_paused]
-          query = query.where('is_paused_until > ?', Time.zone.now.beginning_of_day)
+          query = query.where('pause_until > ?', Time.zone.now.beginning_of_day)
         else
           query = query.not_paused
         end
@@ -104,18 +112,17 @@ module Hackney
         {
           tenancy_ref: model.tenancy_ref,
           balance: model.balance,
-          days_in_arrears: model.days_in_arrears,
-          days_since_last_payment: model.days_since_last_payment,
-          nosp_served: model.nosp_served,
-          active_nosp: model.active_nosp,
+          days_since_last_payment: model.metadata[:days_since_last_payment],
+          nosp_served: model.metadata[:nosp_served],
+          active_nosp: model.metadata[:active_nosp],
           patch_code: model.patch_code,
           classification: model.classification,
-          courtdate: model.courtdate,
-          court_outcome: model.court_outcome,
-          eviction_date: model.eviction_date,
+          courtdate: model.metadata[:courtdate],
+          court_outcome: model.metadata[:court_outcome],
+          eviction_date: model.metadata[:eviction_date],
           pause_reason: model.pause_reason,
           pause_comment: model.pause_comment,
-          is_paused_until: model.is_paused_until
+          is_paused_until: model.pause_until
         }
       end
     end

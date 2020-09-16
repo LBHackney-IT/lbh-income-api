@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Hackney::Income::WorktrayItemGateway do
   let(:gateway) { described_class.new }
 
-  let(:tenancy_model) { Hackney::Income::Models::CasePriority }
+  let(:tenancy_model) { Hackney::IncomeCollection::Action }
 
   context 'when storing a tenancy' do
     subject(:store_worktray_item) { gateway.store_worktray_item(attributes) }
@@ -24,8 +24,9 @@ describe Hackney::Income::WorktrayItemGateway do
       let(:created_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
       it 'creates the tenancy' do
-        store_worktray_item
-        expect(created_tenancy).to have_attributes(expected_serialised_tenancy(attributes, nil))
+        expect {
+          store_worktray_item
+        }.to change(tenancy_model, :count).by(1)
       end
 
       # FIXME: shouldn't return AR models from gateways
@@ -37,9 +38,10 @@ describe Hackney::Income::WorktrayItemGateway do
     context 'when the tenancy already exists' do
       let(:court_case) { create(:court_case, tenancy_ref: tenancy_ref) }
       let!(:pre_existing_tenancy) do
-        tenancy_model.create!(
+        create(
+          :rent_action,
           tenancy_ref: attributes.fetch(:tenancy_ref),
-          balance: attributes.fetch(:criteria).balance,
+          balance: 0,
           weekly_rent: attributes.fetch(:criteria).weekly_rent,
           days_since_last_payment: attributes.fetch(:criteria).days_since_last_payment,
           nosp_served: attributes.fetch(:criteria).nosp_served?,
@@ -57,9 +59,13 @@ describe Hackney::Income::WorktrayItemGateway do
       end
       let(:stored_tenancy) { tenancy_model.find_by(tenancy_ref: attributes.fetch(:tenancy_ref)) }
 
+      let(:balance) { Faker::Number.between(from: 25, to: 1400) }
+
+      let(:stubbed_criteria) { Stubs::StubCriteria.new(balance: balance) }
+
       it 'updates the tenancy' do
         store_worktray_item
-        expect(stored_tenancy).to have_attributes(expected_serialised_tenancy(attributes, court_case))
+        expect(stored_tenancy.balance).to eq(balance)
       end
 
       it 'does not create a new tenancy' do
@@ -92,10 +98,9 @@ describe Hackney::Income::WorktrayItemGateway do
       context 'when the tenancies exist' do
         before do
           multiple_attributes.map do |attributes|
-            tenancy_model.create!(
-              tenancy_ref: attributes.fetch(:tenancy_ref),
-              balance: attributes.fetch(:balance)
-            )
+            create(:rent_action,
+                   tenancy_ref: attributes.fetch(:tenancy_ref),
+                   balance: attributes.fetch(:balance))
           end
         end
 
@@ -170,8 +175,8 @@ describe Hackney::Income::WorktrayItemGateway do
 
     context 'with there are ten tenancies in arrears and ten not in arrears' do
       before do
-        create_list(:case_priority, 10, balance: 1)
-        create_list(:case_priority, 10, balance: -1)
+        create_list(:rent_action, 10, balance: 1)
+        create_list(:rent_action, 10, balance: -1)
       end
 
       context 'when the number shown per page is five' do
@@ -182,7 +187,7 @@ describe Hackney::Income::WorktrayItemGateway do
     end
 
     context 'when there are nine tenancies' do
-      before { create_list(:case_priority, 9) }
+      before { create_list(:rent_action, 9) }
 
       context 'with five results per page' do
         let(:number_per_page) { 5 }
@@ -192,7 +197,7 @@ describe Hackney::Income::WorktrayItemGateway do
     end
 
     context 'when there are twelve tenancies' do
-      before { create_list(:case_priority, 12) }
+      before { create_list(:rent_action, 12) }
 
       context 'with three results per page' do
         let(:number_per_page) { 3 }
@@ -217,18 +222,18 @@ describe Hackney::Income::WorktrayItemGateway do
 
     before do
       num_paused_cases_with_reason.times do
-        create(:case_priority, balance: 40, is_paused_until: is_paused_until_date, pause_reason: pause_reason, pause_comment: pause_comment)
+        create(:rent_action, balance: 40, pause_until: is_paused_until_date, pause_reason: pause_reason, pause_comment: pause_comment)
       end
 
       num_paused_cases_without_reason.times do
-        create(:case_priority, balance: 40, is_paused_until: is_paused_until_date)
+        create(:rent_action, balance: 40, pause_until: is_paused_until_date)
       end
 
       (num_active_cases - 2).times do
-        create(:case_priority, balance: 40)
+        create(:rent_action, balance: 40)
       end
 
-      create_list(:case_priority, 2, balance: 40, is_paused_until: Faker::Date.backward(days: 1))
+      create_list(:rent_action, 2, balance: 40, pause_until: Faker::Date.backward(days: 1))
     end
 
     context 'when we call get_tenancies' do
@@ -361,7 +366,7 @@ describe Hackney::Income::WorktrayItemGateway do
 
         context 'with one no_action classification case' do
           before do
-            create(:case_priority, balance: 40, is_paused_until: Faker::Date.forward(days: 1), classification: :no_action)
+            create(:rent_action, balance: 40, pause_until: Faker::Date.forward(days: 1), classification: :no_action)
           end
 
           it 'shows the number of pages of paused cases with one no_action classification' do
@@ -396,10 +401,10 @@ describe Hackney::Income::WorktrayItemGateway do
 
     before do
       cases_with_upcoming_evictions.times do |index|
-        create(:case_priority, balance: 40 + index, eviction_date: Date.tomorrow + index)
+        create(:rent_action, balance: 40 + index, eviction_date: Date.tomorrow + index)
       end
       cases_with_no_upcoming_evictions.times do |index|
-        create(:case_priority, balance: 40 + index)
+        create(:rent_action, balance: 40 + index)
       end
     end
 
@@ -409,14 +414,21 @@ describe Hackney::Income::WorktrayItemGateway do
 
     it 'can return cases in order of their eviction date' do
       last_eviction_date_created = Date.tomorrow + cases_with_upcoming_evictions - 1
-      create(:case_priority, balance: 40, eviction_date: Date.today)
-      expect(subject.first[:eviction_date]).to eq(Date.today)
-      expect(subject.last[:eviction_date]).to eq(last_eviction_date_created)
+      create(:rent_action, balance: 40, eviction_date: Date.today)
+
+      first_eviction_date = Date.parse(subject.first[:eviction_date])
+      expect(first_eviction_date).to eq(Date.today)
+
+      last_eviction_date = Date.parse(subject.last[:eviction_date])
+      expect(last_eviction_date).to eq(last_eviction_date_created)
     end
 
     it 'can return cases in the future' do
-      create(:case_priority, balance: 40, eviction_date: Date.yesterday)
-      expect(subject.map { |v| v[:eviction_date] }.min).to be >= Time.zone.today
+      create(:rent_action, balance: 40, eviction_date: Date.yesterday)
+
+      eviction_date = Date.parse(subject.map { |v| v[:eviction_date] }.min)
+
+      expect(eviction_date).to be >= Time.zone.today
     end
   end
 
@@ -426,11 +438,11 @@ describe Hackney::Income::WorktrayItemGateway do
 
     before do
       cases_with_courtdate_in_future.times do
-        create(:case_priority, balance: 40, classification: nil, courtdate: Date.today + 20)
+        create(:rent_action, balance: 40, classification: nil, courtdate: Date.today + 20)
       end
 
       cases_with_courtdate_in_past.times do
-        create(:case_priority, balance: 40, classification: nil, courtdate: Date.today - 20)
+        create(:rent_action, balance: 40, classification: nil, courtdate: Date.today - 20)
       end
     end
 
@@ -462,11 +474,11 @@ describe Hackney::Income::WorktrayItemGateway do
 
     before do
       cases_with_no_action.times do
-        create(:case_priority, balance: 40, classification: no_action)
+        create(:rent_action, balance: 40, classification: no_action)
       end
 
       cases_with_warning_letter_action.times do
-        create(:case_priority, balance: 40, classification: send_letter_one)
+        create(:rent_action, balance: 40, classification: send_letter_one)
       end
     end
 
@@ -529,15 +541,15 @@ describe Hackney::Income::WorktrayItemGateway do
 
     before do
       num_cases_in_patch_1.times do
-        create(:case_priority, balance: 40, patch_code: patch_1)
+        create(:rent_action, balance: 40, patch_code: patch_1)
       end
 
       num_cases_in_patch_2.times do
-        create(:case_priority, balance: 40, patch_code: patch_2)
+        create(:rent_action, balance: 40, patch_code: patch_2)
       end
 
       num_cases_in_no_patches.times do
-        create(:case_priority, balance: 40, patch_code: nil)
+        create(:rent_action, balance: 40, patch_code: nil)
       end
     end
 
