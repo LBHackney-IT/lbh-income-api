@@ -66,10 +66,6 @@ describe Hackney::IncomeCollection::Action do
     }
 
     it 'saves metadata as json string and parses it when accessed' do
-      allow(JSON).to receive(:parse)
-        .with(metadata.to_json, symbolize_names: true)
-        .and_call_original
-
       expect(action_with_metadata.metadata).to eq(metadata)
     end
   end
