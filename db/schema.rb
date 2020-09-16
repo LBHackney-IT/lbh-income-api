@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_15_105700) do
+ActiveRecord::Schema.define(version: 2020_09_16_132752) do
 
   create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tenancy_ref"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2020_09_15_105700) do
     t.datetime "pause_until"
     t.string "action_type"
     t.string "service_area_type"
-    t.text "metadata"
+    t.json "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenancy_ref"], name: "index_actions_on_tenancy_ref", unique: true
