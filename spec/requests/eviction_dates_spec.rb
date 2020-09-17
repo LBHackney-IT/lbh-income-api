@@ -35,4 +35,29 @@ RSpec.describe 'EvictionDates', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/eviction_date/{tenancy_ref}' do
+    path '/eviction_dates/{tenancy_ref}' do
+      let(:view_eviction_dates_instance) { instance_double(Hackney::Income::ViewEvictionDates) }
+      let(:eviction_dates_array) { create_list(:eviction_date, 3, tenancy_ref: tenancy_ref) }
+
+      before do
+        allow(Hackney::Income::ViewEvictionDates).to receive(:new).and_return(view_eviction_dates_instance)
+        allow(view_eviction_dates_instance).to receive(:execute)
+          .with(tenancy_ref: tenancy_ref)
+          .and_return(eviction_dates_array)
+      end
+
+      it 'calls ViewEvictionDates and renders its response' do
+        get "/api/v1/eviction_dates/#{tenancy_ref}"
+
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response['evictionDates'].count).to eq(3)
+        parsed_response['evictionDates'].each do |court_case|
+          expect(court_case['tenancyRef']).to eq(tenancy_ref)
+        end
+      end
+    end
+  end
 end

@@ -288,6 +288,10 @@ module Hackney
         Hackney::Income::CreateEvictionDate.new
       end
 
+      def view_eviction_dates
+        Hackney::Income::ViewEvictionDates.new
+      end
+
       private
 
       def cloud_storage
