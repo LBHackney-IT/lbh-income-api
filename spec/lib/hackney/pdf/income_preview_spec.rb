@@ -294,4 +294,27 @@ describe Hackney::PDF::IncomePreview do
       end
     end
   end
+
+  context 'when sending an court date letter' do
+    let(:court_case) { create(:court_case, tenancy_ref: test_tenancy_ref, court_date: '01/01/2020') }
+
+    it 'formats the court case params' do
+      expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
+        .to receive(:execute).with(
+          letter_params: test_letter_params.merge(
+            court_date: court_case.court_date,
+            court_outcome: court_case.court_outcome,
+            total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5),
+            rent: BigDecimal(weekly_rent, 4)
+          ),
+          username: username
+        ).and_call_original
+
+      expect(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
+      expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
+      expect(get_templates_gateway).to receive(:execute).and_return([test_template])
+
+      subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, court_case: court_case)
+    end
+  end
 end
