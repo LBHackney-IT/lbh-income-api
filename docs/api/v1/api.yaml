@@ -172,6 +172,32 @@ paths:
       tags:
         - court_cases
 
+
+  /eviction_dates/{tenancy_ref}:
+    get:
+      summary: 'Find eviction dates by tenancy id'
+      description: Returns eviction dates with specified tenancy id
+      operationId: getEvictionDatesForTenancy
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: tenancy_ref
+          required: true
+          type: string
+          description: Eviction date for tenancy
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/evictionDateList'
+        400:
+          description: Invalid search parameter
+        404:
+          description: Eviction dates not found
+      tags:
+        - eviction_dates
+
   /eviction_date/{tenancy_ref}:
     post:
       summary: 'Create a eviction date for the tenancy id'
@@ -409,5 +435,12 @@ definitions:
         type: string
         format: date
         example: '01/08/2020'
+  evictionDateList:
+    type: object
+    properties:
+      evictionDates:
+        type: array
+        items:
+          $ref: '#/definitions/eviction_date'
 schemes:
   - https

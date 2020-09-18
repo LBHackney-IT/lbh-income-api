@@ -1,5 +1,16 @@
 class EvictionDatesController < ApplicationController
   include EvictionDateResponseHelper
+  def index
+    requested_eviction_date = income_use_case_factory.view_eviction_dates.execute(tenancy_ref: params.fetch(:tenancy_ref))
+
+    dates = requested_eviction_date.map do |e|
+      map_eviction_date_to_response(eviction_date: e)
+    end
+
+    response = { evictionDates: dates }
+    render json: response
+  end
+
   def create
     parameters = %i[tenancy_ref eviction_date].freeze
 
