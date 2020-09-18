@@ -359,6 +359,17 @@ describe Hackney::PDF::IncomePreview do
           expect(rendered_letter[:preview]).to include("Date of first #{agreement.frequency} payment: #{agreement.start_date.strftime('%d %B %Y')}")
         end
       end
+
+      context 'when it has a one_off payment agreement' do
+        let(:frequency) { :one_off }
+
+        it 'renders the right content' do
+          expect(rendered_letter[:preview]).to include("Amount towards the rent: £#{weekly_rent}")
+          expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
+          expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)}")
+          expect(rendered_letter[:preview]).to include("Date of payment: #{agreement.start_date.strftime('%d %B %Y')}")
+        end
+      end
     end
   end
 
