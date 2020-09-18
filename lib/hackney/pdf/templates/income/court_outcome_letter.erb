@@ -18,7 +18,18 @@ Dear <%= @letter.title %> <%= @letter.surname %>,
 
   <% if @letter.formal_agreement %>
     <p>
-      The Court has decided that you must pay the Council the total amount of £<%= @letter.balance_on_court_outcome_date %> by instalments of £<%= @letter.instalment_amount %> <%= @letter.agreement_frequency %> in addition to your current rent. The current rent is £<%= @letter.rent %> per week. The total amount to be paid is £<%= @letter.total_amount_payable %>. The first payment must be made on or before <%= @letter.date_of_first_payment %>.
+      The Court has decided that you must pay the Council the total amount of £<%= @letter.balance_on_court_outcome_date %> by instalments of:
+      <ul class = "no_bullets">
+          <% unless @letter.initial_payment_amount.nil? %>
+            <li>Lump-sum payment amount: £<%= @letter.initial_payment_amount %> </li>
+            <li>Lump-sum payment date: <%= @letter.initial_payment_date %> </li>
+          <% end %>
+          <li><%= @letter.agreement_frequency.
+                  capitalize %> rent: £<%= @letter.rent_charge %> </li>
+          <li>Amount towards the arrears: £<%= @letter.instalment_amount %> </li>
+          <li>Total amount payable £<%= @letter.total_amount_payable %> <%= @letter.agreement_frequency %></li>
+          <li>Date of first <%= @letter.agreement_frequency %> payment: <%= @letter.date_of_first_payment %> </li>
+      </ul>    
     </p>
   <% end %>
 

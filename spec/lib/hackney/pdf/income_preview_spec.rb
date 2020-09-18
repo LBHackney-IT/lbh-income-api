@@ -269,28 +269,95 @@ describe Hackney::PDF::IncomePreview do
     end
 
     context 'when sending a court outcome letter with terms' do
-      it 'fetches formats the court case params' do
-        expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
-          .to receive(:execute).with(
-            letter_params: test_letter_params.merge(
-              rent: BigDecimal(weekly_rent, 4),
-              court_date: court_case.court_date,
-              court_outcome: court_case.court_outcome,
-              agreement_frequency: agreement.frequency,
-              amount: agreement.amount,
-              balance_on_court_outcome_date: court_case.balance_on_court_outcome_date,
-              date_of_first_payment: agreement.start_date,
-              title: '',
-              total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5)
-            ),
-            username: username
-          ).and_call_original
+      let(:court_case) { create(:court_case, tenancy_ref: test_tenancy_ref, court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS, terms: true) }
+      let(:court_outcome_letter_template) do
+        [
+          {
+            path: 'lib/hackney/pdf/templates/income/court_outcome_letter.erb',
+            id: test_template_id
+          }
+        ]
+      end
+      let(:initial_payment_amount) { nil }
+      let(:initial_payment_date) { nil }
+      let(:frequency) { :weekly }
+      let(:agreement) do
+        build(:agreement, frequency: frequency, tenancy_ref: test_tenancy_ref, current_state: :live,
+                          initial_payment_amount: initial_payment_amount,
+                          initial_payment_date: initial_payment_date)
+      end
+      let(:rendered_letter) { subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, court_case: court_case, agreement: agreement) }
 
-        expect(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
-        expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
-        expect(get_templates_gateway).to receive(:execute).and_return([test_template])
+      before do
+        allow(income_information_gateway).to receive(:get_income_info).with(tenancy_ref: test_tenancy_ref).and_return(test_letter_params)
+        allow(get_templates_gateway).to receive(:execute).and_return(court_outcome_letter_template)
+      end
 
-        subject.execute(tenancy_ref: test_tenancy_ref, template_id: test_template_id, user: user, court_case: court_case, agreement: agreement)
+      context 'when it has a regular payment agreement' do
+        it 'fetches formats the court case params' do
+          expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
+            .to receive(:execute).with(
+              letter_params: test_letter_params.merge(
+                rent: BigDecimal(weekly_rent, 4),
+                court_date: court_case.court_date,
+                court_outcome: court_case.court_outcome,
+                agreement_frequency: agreement.frequency,
+                amount: agreement.amount,
+                balance_on_court_outcome_date: court_case.balance_on_court_outcome_date,
+                date_of_first_payment: agreement.start_date,
+                title: '',
+                total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5)
+              ),
+              username: username
+            ).and_call_original
+
+          expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
+
+          expect(rendered_letter[:preview])
+            .to include("The Court has decided that you must pay the Council the total amount of £#{court_case.balance_on_court_outcome_date} by instalments of")
+          expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
+          expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
+          expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
+          expect(rendered_letter[:preview]).to include("Date of first #{agreement.frequency} payment: #{agreement.start_date.strftime('%d %B %Y')}")
+          expect(rendered_letter[:preview]).not_to include('Lump-sum payment amount:')
+          expect(rendered_letter[:preview]).not_to include('Lump-sum payment date:')
+        end
+      end
+
+      context 'when it has a variable payment agreement' do
+        let(:initial_payment_amount) { Faker::Commerce.price(range: 10...100) }
+        let(:initial_payment_date) { Faker::Date.between(from: 10.days.ago, to: Date.today) }
+
+        it 'fetches formats the court case params' do
+          expect_any_instance_of(Hackney::PDF::IncomePreviewGenerator)
+            .to receive(:execute).with(
+              letter_params: test_letter_params.merge(
+                rent: BigDecimal(weekly_rent, 4),
+                court_date: court_case.court_date,
+                court_outcome: court_case.court_outcome,
+                agreement_frequency: agreement.frequency,
+                amount: agreement.amount,
+                balance_on_court_outcome_date: court_case.balance_on_court_outcome_date,
+                date_of_first_payment: agreement.start_date,
+                initial_payment_amount: initial_payment_amount,
+                initial_payment_date: initial_payment_date,
+                title: '',
+                total_collectable_arrears_balance: BigDecimal(test_collectable_arrears, 5)
+              ),
+              username: username
+            ).and_call_original
+
+          expect(tenancy_case_gateway).to receive(:find).with(tenancy_ref: test_tenancy_ref).and_call_original
+
+          expect(rendered_letter[:preview])
+            .to include("The Court has decided that you must pay the Council the total amount of £#{court_case.balance_on_court_outcome_date} by instalments of")
+          expect(rendered_letter[:preview]).to include("Lump-sum payment amount: £#{agreement.initial_payment_amount}")
+          expect(rendered_letter[:preview]).to include("Lump-sum payment date: #{agreement.initial_payment_date.strftime('%d %B %Y')}")
+          expect(rendered_letter[:preview]).to include("#{agreement.frequency.humanize} rent: £#{weekly_rent}")
+          expect(rendered_letter[:preview]).to include("Amount towards the arrears: £#{agreement.amount}")
+          expect(rendered_letter[:preview]).to include("Total amount payable £#{format('%.2f', agreement.amount + weekly_rent)} #{agreement.frequency}")
+          expect(rendered_letter[:preview]).to include("Date of first #{agreement.frequency} payment: #{agreement.start_date.strftime('%d %B %Y')}")
+        end
       end
     end
   end
