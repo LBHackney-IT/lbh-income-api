@@ -3,14 +3,14 @@ require 'rails_helper'
 describe Hackney::Income::Jobs::AddActionDiaryEntryJob do
   subject(:action_diary_job) { described_class }
 
-  let(:mock_action_diary_usecase) { double(UseCases::AddActionDiaryAndPauseCase) }
+  let(:mock_action_diary_usecase) { double(UseCases::AddActionDiaryAndSyncCase) }
 
   let(:tenancy_ref) { Faker::Internet.slug }
   let(:action_code) { Faker::Lorem.word }
   let(:comment) { Faker::Lorem.paragraph }
 
   before do
-    stub_const('UseCases::AddActionDiaryAndPauseCase', mock_action_diary_usecase)
+    stub_const('UseCases::AddActionDiaryAndSyncCase', mock_action_diary_usecase)
     allow(mock_action_diary_usecase).to receive(:new).and_return(mock_action_diary_usecase)
   end
 
