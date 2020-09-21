@@ -173,11 +173,11 @@ paths:
         - court_cases
 
 
-  /eviction_dates/{tenancy_ref}:
+  /evictions/{tenancy_ref}:
     get:
-      summary: 'Find eviction dates by tenancy id'
-      description: Returns eviction dates with specified tenancy id
-      operationId: getEvictionDatesForTenancy
+      summary: 'Find evictions by tenancy id'
+      description: Returns evictions with specified tenancy id
+      operationId: getEvictionsForTenancy
       produces:
         - application/json
       parameters:
@@ -185,24 +185,24 @@ paths:
           name: tenancy_ref
           required: true
           type: string
-          description: Eviction date for tenancy
+          description: Eviction for tenancy
       responses:
         200:
           description: successful operation
           schema:
-            $ref: '#/definitions/evictionDateList'
+            $ref: '#/definitions/evictionList'
         400:
           description: Invalid search parameter
         404:
-          description: Eviction dates not found
+          description: Evictions not found
       tags:
-        - eviction_dates
+        - evictions
 
-  /eviction_date/{tenancy_ref}:
+  /eviction/{tenancy_ref}:
     post:
-      summary: 'Create a eviction date for the tenancy id'
-      description: Create eviction date with specified tenancy id
-      operationId: postEvictionDateForTenancy
+      summary: 'Create a eviction for the tenancy id'
+      description: Create eviction with specified tenancy id
+      operationId: postEvictionForTenancy
       produces:
         - application/json
       parameters:
@@ -210,29 +210,29 @@ paths:
           name: tenancy_ref
           required: true
           type: string
-          description: Eviction date for tenancy
+          description: Eviction for tenancy
         - in: body
-          name: eviction_date
-          description: Eviction date to create
+          name: eviction
+          description: Eviction to create
           schema:
             type: object
             required:
-              - evictionDate
+              - eviction
             properties:
-              evictionDate:
+              date:
                 type: string
                 example: '01/08/2020'
       responses:
         200:
           description: successful operation
           schema:
-            $ref: '#/definitions/eviction_date'
+            $ref: '#/definitions/eviction'
         400:
           description: Invalid search parameter
         404:
-          description: Eviction date not found
+          description: Eviction not found
       tags:
-        - eviction_dates
+        - evictions
 
 definitions:
   agreementsList:
@@ -422,7 +422,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/action'
-  eviction_date:
+  eviction:
     type: object
     properties:
       id:
@@ -431,16 +431,16 @@ definitions:
       tenancyRef:
         type: string
         example: '1'
-      evictionDate:
+      date:
         type: string
         format: date
         example: '01/08/2020'
-  evictionDateList:
+  evictionList:
     type: object
     properties:
-      evictionDates:
+      evictions:
         type: array
         items:
-          $ref: '#/definitions/eviction_date'
+          $ref: '#/definitions/eviction'
 schemes:
   - https

@@ -284,12 +284,12 @@ module Hackney
         Hackney::Income::UpdateCourtCase.new
       end
 
-      def create_eviction_date
-        Hackney::Income::CreateEvictionDate.new
+      def create_eviction
+        Hackney::Income::CreateEviction.new
       end
 
-      def view_eviction_dates
-        Hackney::Income::ViewEvictionDates.new
+      def view_evictions
+        Hackney::Income::ViewEvictions.new
       end
 
       private
