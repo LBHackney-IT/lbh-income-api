@@ -41,14 +41,14 @@ module Hackney
       def send_manual_sms
         Hackney::Notification::SendManualSms.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_and_pause_case_usecase: add_action_diary_and_pause_case
+          add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case
         )
       end
 
       def send_manual_email
         Hackney::Notification::SendManualEmail.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_and_pause_case_usecase: add_action_diary_and_pause_case
+          add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case
         )
       end
 
@@ -61,7 +61,7 @@ module Hackney
       def send_precompiled_letter
         Hackney::Notification::SendManualPrecompiledLetter.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_and_pause_case_usecase: add_action_diary_and_pause_case,
+          add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case,
           leasehold_gateway: Hackney::Income::UniversalHousingLeaseholdGateway.new
         )
       end
@@ -76,7 +76,7 @@ module Hackney
         case_priority_store = Hackney::Income::Models
         Hackney::Notification::RequestPrecompiledLetterState.new(
           notification_gateway: notifications_gateway,
-          add_action_diary_and_pause_case_usecase: add_action_diary_and_pause_case,
+          add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case,
           case_priority_store: case_priority_store,
           document_store: cloud_storage
         )
@@ -138,11 +138,10 @@ module Hackney
         )
       end
 
-      def add_action_diary_and_pause_case
-        UseCases::AddActionDiaryAndPauseCase.new(
-          sql_pause_tenancy_gateway: sql_pause_tenancy_gateway,
-          add_action_diary: add_action_diary,
-          get_tenancy: get_tenancy
+      def add_action_diary_and_sync_case
+        UseCases::AddActionDiaryAndSyncCase.new(
+          sync_case_priority: sync_case_priority,
+          add_action_diary: add_action_diary
         )
       end
 
