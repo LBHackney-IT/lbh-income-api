@@ -26,7 +26,7 @@ module Hackney
       def add_action_diary_entry(tenancy_ref:, comment:, created_by:)
         @add_action_diary.execute(
           tenancy_ref: tenancy_ref,
-          action_code: 'AGR',
+          action_code: Hackney::Tenancy::ActionCodes::AGREEMENT_BROUGHT_UP_TO_DATE,
           comment: comment,
           username: created_by
         )

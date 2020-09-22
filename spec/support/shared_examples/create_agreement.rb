@@ -49,7 +49,7 @@ RSpec.shared_examples 'CreateAgreement' do
       tenancy_ref: tenancy_ref,
       comment: expected_action_diray_note,
       username: created_by,
-      action_code: 'AGR'
+      action_code: Hackney::Tenancy::ActionCodes::AGREEMENT_BROUGHT_UP_TO_DATE
     )
   end
 
