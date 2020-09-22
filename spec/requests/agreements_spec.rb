@@ -195,6 +195,15 @@ RSpec.describe 'Agreements', type: :request do
   describe 'POST /api/v1/agreements/{agreement_id}/cancel' do
     path '/agreements/{agreement_id}/cancel' do
       let(:cancel_agreement_instance) { instance_double(Hackney::Income::CancelAgreement) }
+      let(:cancellation_reason) { Faker::Lorem.characters(number: 40) }
+      let(:cancelled_by) { Faker::Name.name.to_s }
+      let(:cancellation_params) do
+        {
+          cancelled_by: cancelled_by,
+          cancellation_reason: cancellation_reason
+        }
+      end
+
       let(:agreement_params) do
         {
           tenancy_ref: tenancy_ref,
@@ -213,12 +222,12 @@ RSpec.describe 'Agreements', type: :request do
 
         allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
         allow(cancel_agreement_instance).to receive(:execute)
-          .with(agreement_id: agreement.id.to_s)
+          .with(agreement_id: agreement.id.to_s, cancelled_by: cancelled_by, cancellation_reason: cancellation_reason)
           .and_return(agreement)
       end
 
       it 'calls the cancel agreement use-case and returns the cancelled agreement' do
-        post "/api/v1/agreements/#{agreement.id}/cancel"
+        post "/api/v1/agreements/#{agreement.id}/cancel", params: cancellation_params
 
         parsed_response = JSON.parse(response.body)
 
@@ -232,6 +241,7 @@ RSpec.describe 'Agreements', type: :request do
         expect(parsed_response['createdAt']).to eq(Date.today.to_s)
         expect(parsed_response['createdBy']).to eq(created_by)
         expect(parsed_response['history'].last['state']).to eq('cancelled')
+        expect(parsed_response['history'].last['description']).to eq(agreement.agreement_states.last.description)
       end
 
       context 'when the agreement does not exist it returns 404' do
@@ -240,12 +250,12 @@ RSpec.describe 'Agreements', type: :request do
         before do
           allow(Hackney::Income::CancelAgreement).to receive(:new).and_return(cancel_agreement_instance)
           allow(cancel_agreement_instance).to receive(:execute)
-            .with(agreement_id: 'N0PE')
+            .with(agreement_id: 'N0PE', cancelled_by: cancelled_by, cancellation_reason: cancellation_reason)
             .and_return(nil)
         end
 
         it 'returns 404' do
-          post '/api/v1/agreements/N0PE/cancel'
+          post '/api/v1/agreements/N0PE/cancel', params: cancellation_params
 
           expect(response).to have_http_status(:not_found)
           expect(JSON.parse(response.body)['error']).to eq('agreement not found')
