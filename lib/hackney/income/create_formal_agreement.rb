@@ -21,7 +21,7 @@ module Hackney
 
         active_agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).select(&:active?)
 
-        cancel_active_agreements(active_agreements) if active_agreements.any?
+        cancel_active_agreements(active_agreements, cancelled_by: new_agreement_params[:created_by]) if active_agreements.any?
 
         new_agreement = create_agreement(formal_agreement_params)
 

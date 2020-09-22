@@ -120,7 +120,11 @@ RSpec.shared_examples 'CreateAgreement' do
       expect(agreements.count).to eq(2)
 
       expect(agreements.last.tenancy_ref).to eq(new_agreement.tenancy_ref)
-      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
+      expect(cancel_agreement).to have_received(:execute).with(
+        agreement_id: agreements.first.id,
+        cancelled_by: created_by,
+        cancellation_reason: 'New agreement created'
+      )
     end
   end
 

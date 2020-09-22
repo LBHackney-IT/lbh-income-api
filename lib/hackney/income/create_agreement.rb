@@ -32,9 +32,13 @@ module Hackney
         )
       end
 
-      def cancel_active_agreements(active_agreements)
+      def cancel_active_agreements(active_agreements, cancelled_by:)
         active_agreements.each do |agreement|
-          @cancel_agreement.execute(agreement_id: agreement.id)
+          @cancel_agreement.execute(
+            agreement_id: agreement.id,
+            cancelled_by: cancelled_by,
+            cancellation_reason: 'New agreement created'
+          )
         end
       end
 
