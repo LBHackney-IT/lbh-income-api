@@ -21,6 +21,9 @@ describe Hackney::Income::CancelAgreement do
     }
   end
 
+  let(:cancellation_reason) { Faker::Lorem.characters(number: 40) }
+  let(:cancelled_by) { Faker::Name.name.to_s }
+
   let!(:agreement) { create(:agreement, agreement_params) }
   let(:active_state) { %w[live breached].sample }
 
@@ -31,7 +34,11 @@ describe Hackney::Income::CancelAgreement do
   end
 
   it 'cancelles an active agreement' do
-    cancelled_agreement = subject.execute(agreement_id: agreement.id)
+    cancelled_agreement = subject.execute(
+      agreement_id: agreement.id,
+      cancelled_by: 'foo',
+      cancellation_reason: 'bar'
+    )
 
     expect(cancelled_agreement.id).to eq(agreement.id)
     expect(cancelled_agreement.tenancy_ref).to eq(tenancy_ref)
@@ -39,20 +46,24 @@ describe Hackney::Income::CancelAgreement do
   end
 
   it 'creates a new live state with expected balance and description' do
-    cancelled_agreement = subject.execute(agreement_id: agreement.id)
+    cancelled_agreement = subject.execute(
+      agreement_id: agreement.id,
+      cancelled_by: cancelled_by,
+      cancellation_reason: cancellation_reason
+    )
 
     new_state = cancelled_agreement.agreement_states.last
     expect(new_state.agreement_state).to eq('cancelled')
     expect(new_state.expected_balance).to eq(nil)
     expect(new_state.checked_balance).to eq(nil)
-    expect(new_state.description).to eq(Date.today.strftime('Cancelled on %m/%d/%Y'))
+    expect(new_state.description).to eq("Cancelled by #{cancelled_by}, reason: #{cancellation_reason}")
   end
 
   context 'when the agreement does not exist' do
     it 'returns nil' do
       non_existent_agreement_id = Faker::Number.number(digits: 10)
 
-      expect(subject.execute(agreement_id: non_existent_agreement_id)).to be_nil
+      expect(subject.execute(agreement_id: non_existent_agreement_id, cancelled_by: 'foo', cancellation_reason: 'bar')).to be_nil
     end
   end
 
@@ -67,7 +78,11 @@ describe Hackney::Income::CancelAgreement do
       expect(agreement.current_state).to eq('completed')
       expect(agreement.agreement_states.length).to eq(2)
 
-      cancelled_agreement = subject.execute(agreement_id: agreement.id)
+      cancelled_agreement = subject.execute(
+        agreement_id: agreement.id,
+        cancelled_by: 'foo',
+        cancellation_reason: 'bar'
+      )
 
       expect(cancelled_agreement.id).to eq(agreement.id)
       expect(cancelled_agreement.current_state).to eq('completed')
@@ -86,7 +101,11 @@ describe Hackney::Income::CancelAgreement do
       expect(agreement.current_state).to eq('cancelled')
       expect(agreement.agreement_states.length).to eq(2)
 
-      cancelled_agreement = subject.execute(agreement_id: agreement.id)
+      cancelled_agreement = subject.execute(
+        agreement_id: agreement.id,
+        cancelled_by: 'foo',
+        cancellation_reason: 'bar'
+      )
 
       expect(cancelled_agreement.id).to eq(agreement.id)
       expect(cancelled_agreement.current_state).to eq('cancelled')
