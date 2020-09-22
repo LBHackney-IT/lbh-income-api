@@ -185,7 +185,15 @@ module Hackney
           stored_worktray_item_gateway: stored_worktray_item_gateway,
           update_agreement_state: update_agreement_state,
           migrate_court_case_usecase: migrate_court_case_usecase,
+          migrate_uh_eviction: migrate_uh_eviction,
           migrate_uh_agreement: migrate_uh_agreement
+        )
+      end
+
+      def migrate_uh_eviction
+        Hackney::Income::MigrateUhEviction.new(
+          create_eviction: create_eviction,
+          view_evictions: view_evictions
         )
       end
 
