@@ -35,8 +35,8 @@ Rails.application.routes.draw do
     post '/court_case/:tenancy_ref', to: 'court_cases#create'
     patch '/court_case/:id/update', to: 'court_cases#update'
 
-    post '/eviction_date/:tenancy_ref', to: 'eviction_dates#create'
-    get '/eviction_dates/:tenancy_ref', to: 'eviction_dates#index'
+    post '/eviction/:tenancy_ref', to: 'evictions#create'
+    get '/evictions/:tenancy_ref', to: 'evictions#index'
 
     get 'actions', to: 'actions#index'
   end
