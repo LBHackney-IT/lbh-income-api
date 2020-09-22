@@ -10,6 +10,10 @@ module Hackney
           def most_recent_court_case
             @most_recent_court_case ||= Hackney::Income::Models::CourtCase.where(tenancy_ref: @criteria.tenancy_ref).last
           end
+
+          def eviction_date
+            @eviction_date ||= Hackney::Income::Models::Eviction.where(tenancy_ref: @criteria.tenancy_ref).last&.date
+          end
         end
       end
     end
