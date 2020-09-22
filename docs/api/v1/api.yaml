@@ -63,6 +63,46 @@ paths:
           required: true
           type: string
           description: Agreement for tenancy
+        - in: body
+          name: request_body
+          description: Agreement params
+          schema:
+            type: object
+            required: 
+            - agreementType
+            - startingBalance
+            - amount
+            - startDate
+            - frequency
+            - createdBy
+            properties:
+              agreementType:
+                type: string
+                example: 'informal'
+              startingBalance:
+                type: number
+                example: '1000'
+              initialPaymentAmount:
+                type: number
+                example: '100'
+              initialPaymentDate:
+                type: string
+                format: date
+              amount:
+                type: number
+                example: '50'
+              startDate:
+                type: string
+                format: date
+              frequency:
+                type: string
+                example: 'weekly'
+              createdBy:
+                type: string
+                example: 'Joe Bloggs'
+              notes:
+                type: string
+                example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
       responses:
         200:
           description: successful operation
