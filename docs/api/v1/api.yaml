@@ -87,6 +87,11 @@ paths:
           required: true
           type: string
           description: Id of an agreement
+        - in: body
+          name: request_body
+          required: true
+          schema: 
+            $ref: '#/definitions/cancel_agreement_body'
       responses:
         200:
           description: successful operation
@@ -309,6 +314,15 @@ definitions:
       description:
         type: string
         example: 'Agreement created'
+  cancel_agreement_body:
+    type: object
+    properties:
+      cancelled_by:
+        type: string
+        example: 'Joe Bloggs'
+      cancellation_reason:
+        type: string
+        example: 'New agreement created'
   court_case:
     type: object
     properties:
