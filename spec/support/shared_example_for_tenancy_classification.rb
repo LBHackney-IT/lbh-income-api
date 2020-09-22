@@ -42,6 +42,7 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
   let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
   let(:agreement_model) { Hackney::Income::Models::Agreement }
   let(:court_case_model) { Hackney::Income::Models::CourtCase }
+  let(:eviction_model) { Hackney::Income::Models::Eviction }
 
   let(:attributes) do
     {
@@ -91,6 +92,8 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
                                                   terms: terms)
         end
 
+        eviction = build_stubbed(:eviction, tenancy_ref: criteria.tenancy_ref, date: eviction_date) if eviction_date.present?
+
         if most_recent_agreement.present?
           agreement_type = court_case.present? ? :formal : :informal
           state = most_recent_agreement[:breached] == true ? :breached : :live
@@ -106,6 +109,7 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
 
         allow(court_case_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([court_case])
         allow(agreement_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([agreement])
+        allow(eviction_model).to receive(:where).with(tenancy_ref: criteria.tenancy_ref).and_return([eviction])
       end
 
       if options[:outcome]

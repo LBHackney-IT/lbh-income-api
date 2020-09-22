@@ -10,7 +10,7 @@ module Hackney
         end
 
         def case_has_eviction_date?
-          @criteria.eviction_date.present?
+          eviction_date.present?
         end
 
         def should_prevent_action?
