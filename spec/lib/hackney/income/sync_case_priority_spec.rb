@@ -24,6 +24,7 @@ describe Hackney::Income::SyncCasePriority do
   let(:update_agreement_state) { spy }
   let(:migrate_court_case_usecase) { spy }
   let(:migrate_uh_agreement) { spy }
+  let(:migrate_uh_eviction) { spy }
 
   let(:sync_case) do
     described_class.new(
@@ -32,6 +33,7 @@ describe Hackney::Income::SyncCasePriority do
       prioritisation_gateway: prioritisation_gateway,
       stored_worktray_item_gateway: stored_worktray_item_gateway,
       update_agreement_state: update_agreement_state,
+      migrate_uh_eviction: migrate_uh_eviction,
       migrate_uh_agreement: migrate_uh_agreement
     )
   end
@@ -40,6 +42,8 @@ describe Hackney::Income::SyncCasePriority do
     expect(tenancy_classification_stub).to receive(:execute).once
 
     expect(migrate_court_case_usecase).to receive(:migrate).once
+
+    expect(migrate_uh_eviction).to receive(:migrate).once
 
     expect(migrate_uh_agreement).to receive(:migrate).once
 

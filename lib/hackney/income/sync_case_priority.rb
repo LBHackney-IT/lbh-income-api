@@ -5,19 +5,30 @@ module Hackney
       DocumentModel = Hackney::Cloud::Document
       AgreementModel = Hackney::Income::Models::Agreement
 
-      def initialize(prioritisation_gateway:, stored_worktray_item_gateway:, automate_sending_letters:, update_agreement_state:, migrate_court_case_usecase:, migrate_uh_agreement:)
+      def initialize(
+        prioritisation_gateway:,
+        stored_worktray_item_gateway:,
+        automate_sending_letters:,
+        update_agreement_state:,
+        migrate_court_case_usecase:,
+        migrate_uh_agreement:,
+        migrate_uh_eviction:
+      )
         @automate_sending_letters = automate_sending_letters
         @prioritisation_gateway = prioritisation_gateway
         @stored_worktray_item_gateway = stored_worktray_item_gateway
         @update_agreement_state = update_agreement_state
         @migrate_court_case_usecase = migrate_court_case_usecase
         @migrate_uh_agreement = migrate_uh_agreement
+        @migrate_uh_eviction = migrate_uh_eviction
       end
 
       def execute(tenancy_ref:)
         criteria = @prioritisation_gateway.priorities_for_tenancy(tenancy_ref).fetch(:criteria)
 
         migrate_court_case(criteria)
+
+        migrate_eviction(criteria)
 
         migrate_agreements(tenancy_ref)
 
@@ -68,6 +79,10 @@ module Hackney
 
       def migrate_agreements(tenancy_ref)
         @migrate_uh_agreement.migrate(tenancy_ref: tenancy_ref)
+      end
+
+      def migrate_eviction(criteria)
+        @migrate_uh_eviction.migrate(criteria)
       end
     end
   end
