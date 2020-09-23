@@ -17,7 +17,7 @@ module Hackney
         if active_agreements.any?
           raise CreateAgreementError, 'There is an existing formal agreement for this tenancy' if active_agreements.any?(&:formal?)
 
-          cancel_active_agreements(active_agreements)
+          cancel_active_agreements(active_agreements, cancelled_by: new_agreement_params[:created_by])
         end
 
         new_agreement = create_agreement(agreement_params)

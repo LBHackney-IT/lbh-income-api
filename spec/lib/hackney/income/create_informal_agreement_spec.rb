@@ -44,7 +44,11 @@ describe Hackney::Income::CreateInformalAgreement do
 
       agreements = Hackney::Income::Models::Agreement.where(tenancy_ref: tenancy_ref).includes(:agreement_states)
 
-      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
+      expect(cancel_agreement).to have_received(:execute).with(
+        agreement_id: agreements.first.id,
+        cancelled_by: created_by,
+        cancellation_reason: 'New agreement created'
+      )
 
       expect(agreements.count).to eq(2)
       expect(agreements.second.current_state).to eq('live')

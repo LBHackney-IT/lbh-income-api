@@ -39,7 +39,11 @@ class AgreementsController < ApplicationController
   end
 
   def cancel
-    cancelled_agreement = income_use_case_factory.cancel_agreement.execute(agreement_id: params.fetch(:agreement_id))
+    cancelled_agreement = income_use_case_factory.cancel_agreement.execute(
+      agreement_id: params.fetch(:agreement_id),
+      cancelled_by: params.fetch(:cancelled_by),
+      cancellation_reason: params.fetch(:cancellation_reason)
+    )
     if cancelled_agreement
       response = map_agreement_to_response(agreement: cancelled_agreement)
       render json: response

@@ -49,7 +49,7 @@ RSpec.shared_examples 'CreateAgreement' do
       tenancy_ref: tenancy_ref,
       comment: expected_action_diray_note,
       username: created_by,
-      action_code: 'AGR'
+      action_code: Hackney::Tenancy::ActionCodes::AGREEMENT_BROUGHT_UP_TO_DATE
     )
   end
 
@@ -120,7 +120,11 @@ RSpec.shared_examples 'CreateAgreement' do
       expect(agreements.count).to eq(2)
 
       expect(agreements.last.tenancy_ref).to eq(new_agreement.tenancy_ref)
-      expect(cancel_agreement).to have_received(:execute).with(agreement_id: agreements.first.id)
+      expect(cancel_agreement).to have_received(:execute).with(
+        agreement_id: agreements.first.id,
+        cancelled_by: created_by,
+        cancellation_reason: 'New agreement created'
+      )
     end
   end
 

@@ -63,6 +63,46 @@ paths:
           required: true
           type: string
           description: Agreement for tenancy
+        - in: body
+          name: request_body
+          description: Agreement params
+          schema:
+            type: object
+            required: 
+            - agreementType
+            - startingBalance
+            - amount
+            - startDate
+            - frequency
+            - createdBy
+            properties:
+              agreementType:
+                type: string
+                example: 'informal'
+              startingBalance:
+                type: number
+                example: '1000'
+              initialPaymentAmount:
+                type: number
+                example: '100'
+              initialPaymentDate:
+                type: string
+                format: date
+              amount:
+                type: number
+                example: '50'
+              startDate:
+                type: string
+                format: date
+              frequency:
+                type: string
+                example: 'weekly'
+              createdBy:
+                type: string
+                example: 'Joe Bloggs'
+              notes:
+                type: string
+                example: 'When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated.'
       responses:
         200:
           description: successful operation
@@ -87,6 +127,11 @@ paths:
           required: true
           type: string
           description: Id of an agreement
+        - in: body
+          name: request_body
+          required: true
+          schema: 
+            $ref: '#/definitions/cancel_agreement_body'
       responses:
         200:
           description: successful operation
@@ -309,6 +354,15 @@ definitions:
       description:
         type: string
         example: 'Agreement created'
+  cancel_agreement_body:
+    type: object
+    properties:
+      cancelled_by:
+        type: string
+        example: 'Joe Bloggs'
+      cancellation_reason:
+        type: string
+        example: 'New agreement created'
   court_case:
     type: object
     properties:
