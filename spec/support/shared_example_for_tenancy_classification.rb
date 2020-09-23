@@ -39,7 +39,7 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
   }
 
   let(:criteria) { Stubs::StubCriteria.new(attributes) }
-  let(:case_priority) { build(:case_priority, is_paused_until: is_paused_until) }
+  let(:case_priority) { build_stubbed(:case_priority, is_paused_until: is_paused_until) }
   let(:agreement_model) { Hackney::Income::Models::Agreement }
   let(:court_case_model) { Hackney::Income::Models::CourtCase }
   let(:eviction_model) { Hackney::Income::Models::Eviction }
