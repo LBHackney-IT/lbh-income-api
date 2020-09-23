@@ -57,6 +57,7 @@ module Hackney
       STAGE_THREE_COMPLETE = 'ZR3'.freeze
 
       VISIT_MADE = 'VIM'.freeze
+      COURT_BREACH_VISIT_MADE = 'CBV'.freeze
 
       WARRANT_OF_POSSESSION = 'WPA'.freeze
 

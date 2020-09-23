@@ -10,7 +10,7 @@ describe '"Court Breach - No Payment" examples' do
     nosp_served_date: 8.months.ago.to_date,
     courtdate: 14.days.ago.to_date,
     court_outcome: 'Jail',
-    last_communication_action: Hackney::Tenancy::ActionCodes::VISIT_MADE,
+    last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE,
     last_communication_date: 8.days.ago.to_date,
     days_since_last_payment: 8,
     most_recent_agreement: {

@@ -15,7 +15,7 @@ module Hackney
             return false if @criteria.last_communication_action.in?([
               Hackney::Tenancy::ActionCodes::INFORMAL_BREACH_LETTER_SENT,
               Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
+              Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE
             ])
 
             if @criteria.last_communication_date.present?
