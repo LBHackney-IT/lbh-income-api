@@ -16,6 +16,7 @@ RSpec.describe 'CourtCases', type: :request do
   let(:strike_out_date) { Faker::Date.forward(days: 365).to_s }
   let(:terms) { false }
   let(:disrepair_counter_claim) { false }
+  let(:username) { Faker::Name.name }
 
   describe 'POST /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{tenancy_ref}' do
@@ -97,7 +98,8 @@ RSpec.describe 'CourtCases', type: :request do
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
             strike_out_date: nil,
             terms: nil,
-            disrepair_counter_claim: nil
+            disrepair_counter_claim: nil,
+            username: username
           }
 
         expect(update_court_case_instance).to receive(:execute)
@@ -107,7 +109,7 @@ RSpec.describe 'CourtCases', type: :request do
       end
 
       context 'when adding a court outcome that can not have terms' do
-        let(:update_court_case_params) do
+        let(:court_case_params) do
           {
             id: id,
             court_date: court_date,
@@ -119,7 +121,8 @@ RSpec.describe 'CourtCases', type: :request do
           }
         end
 
-        let(:updated_court_case) { create(:court_case, update_court_case_params) }
+        let(:updated_court_case) { create(:court_case, court_case_params) }
+        let(:update_court_case_params) { court_case_params.merge(username: username) }
 
         before do
           allow(update_court_case_instance).to receive(:execute)
@@ -140,7 +143,7 @@ RSpec.describe 'CourtCases', type: :request do
 
       context 'when adding a court outcome that can have terms' do
         let(:court_outcome) { 'AAH' }
-        let(:update_court_case_params) do
+        let(:court_case_params) do
           {
             id: id,
             court_date: court_date,
@@ -152,7 +155,8 @@ RSpec.describe 'CourtCases', type: :request do
           }
         end
 
-        let(:updated_court_case) { build(:court_case, update_court_case_params) }
+        let(:updated_court_case) { build(:court_case, court_case_params) }
+        let(:update_court_case_params) { court_case_params.merge(username: username) }
 
         before do
           allow(update_court_case_instance).to receive(:execute)
@@ -184,7 +188,8 @@ RSpec.describe 'CourtCases', type: :request do
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
             strike_out_date: nil,
             terms: nil,
-            disrepair_counter_claim: nil
+            disrepair_counter_claim: nil,
+            username: username
           }
         end
 
