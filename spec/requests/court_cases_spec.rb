@@ -21,6 +21,7 @@ RSpec.describe 'CourtCases', type: :request do
     path '/court_case/{tenancy_ref}' do
       context 'when creating a new court case by adding a court date'
       let(:create_court_case_instance) { instance_double(Hackney::Income::CreateCourtCase) }
+      let(:username) { Faker::Name.name }
       let(:new_court_case_params) do
         {
           tenancy_ref: tenancy_ref,
@@ -29,7 +30,8 @@ RSpec.describe 'CourtCases', type: :request do
           balance_on_court_outcome_date: nil,
           strike_out_date: nil,
           terms: nil,
-          disrepair_counter_claim: nil
+          disrepair_counter_claim: nil,
+          username: username
         }
       end
 

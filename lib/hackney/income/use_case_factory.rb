@@ -280,7 +280,9 @@ module Hackney
       end
 
       def create_court_case
-        Hackney::Income::CreateCourtCase.new
+        Hackney::Income::CreateCourtCase.new(
+          add_action_diary_and_sync_case: add_action_diary_and_sync_case
+        )
       end
 
       def view_court_cases

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Hackney::Income::CreateCourtCase do
-  subject { described_class.new }
+  subject { described_class.new(add_action_diary_and_sync_case: add_action_diary_and_sync_case) }
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:court_date) { Faker::Date.between(from: 10.days.ago, to: 2.days.ago) }
@@ -10,6 +10,9 @@ describe Hackney::Income::CreateCourtCase do
   let(:strike_out_date) { Faker::Date.forward(days: 365) }
   let(:terms) { [true, false].sample }
   let(:disrepair_counter_claim) { [true, false].sample }
+  let(:username) { Faker::Name.name }
+
+  let(:add_action_diary_and_sync_case) { spy }
 
   let(:new_court_case_params) do
     {
@@ -19,8 +22,20 @@ describe Hackney::Income::CreateCourtCase do
       balance_on_court_outcome_date: balance_on_court_outcome_date,
       strike_out_date: strike_out_date,
       terms: terms,
-      disrepair_counter_claim: disrepair_counter_claim
+      disrepair_counter_claim: disrepair_counter_claim,
+      username: username
     }
+  end
+
+  it 'calls the add_action_diary_and_sync_case when a new court case is created' do
+    subject.execute(court_case_params: new_court_case_params)
+
+    expect(add_action_diary_and_sync_case).to have_received(:execute).with(
+      tenancy_ref: tenancy_ref,
+      action_code: 'CDS',
+      comment: 'Court case created',
+      username: username
+    )
   end
 
   it 'creates and returns a new court case' do

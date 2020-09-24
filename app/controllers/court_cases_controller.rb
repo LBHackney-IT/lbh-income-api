@@ -12,7 +12,7 @@ class CourtCasesController < ApplicationController
   end
 
   def create
-    parameters = %i[tenancy_ref court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim].freeze
+    parameters = %i[tenancy_ref court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim username].freeze
 
     create_court_case_params = params.permit(parameters)
 
@@ -23,7 +23,8 @@ class CourtCasesController < ApplicationController
       balance_on_court_outcome_date: create_court_case_params[:balance_on_court_outcome_date],
       strike_out_date: create_court_case_params[:strike_out_date],
       terms: create_court_case_params[:terms],
-      disrepair_counter_claim: create_court_case_params[:disrepair_counter_claim]
+      disrepair_counter_claim: create_court_case_params[:disrepair_counter_claim],
+      username: create_court_case_params[:username]
     }
 
     new_court_case = income_use_case_factory.create_court_case.execute(court_case_params: court_case_params)
