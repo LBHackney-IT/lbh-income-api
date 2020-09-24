@@ -25,7 +25,7 @@ module Hackney
             return false unless most_recent_agreement.formal?
             return false if most_recent_court_case.court_date.blank?
 
-            most_recent_agreement.start_date > most_recent_court_case.court_date
+            most_recent_agreement.start_date >= most_recent_court_case.court_date
           end
         end
       end
