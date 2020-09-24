@@ -8,6 +8,7 @@ module Hackney
         }
 
         eviction = Hackney::Income::Models::Eviction.create!(params)
+
         eviction
       end
     end

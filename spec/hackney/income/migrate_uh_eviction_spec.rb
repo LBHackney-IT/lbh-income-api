@@ -37,8 +37,8 @@ describe Hackney::Income::MigrateUhEviction do
   context 'when there are multiple evictions in MA' do
     let(:existing_evictions) {
       [
-        OpenStruct.new(eviction_date: DateTime.now.midnight - 1.month),
-        OpenStruct.new(eviction_date: DateTime.now.midnight - 7.days)
+        create(:eviction, date: DateTime.now.midnight - 1.month),
+        create(:eviction, date: DateTime.now.midnight - 7.days)
       ]
     }
 

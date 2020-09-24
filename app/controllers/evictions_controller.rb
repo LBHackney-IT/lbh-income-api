@@ -21,7 +21,7 @@ class EvictionsController < ApplicationController
       date: create_eviction_params[:date]
     }
 
-    new_eviction = income_use_case_factory.create_eviction.execute(eviction_params: eviction_params)
+    new_eviction = income_use_case_factory.create_eviction_and_sync.execute(eviction_params: eviction_params)
     response = map_eviction_to_response(eviction: new_eviction)
 
     render json: response
