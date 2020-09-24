@@ -116,4 +116,44 @@ describe Hackney::Income::Models::CourtCase, type: :model do
                         'Validation failed: Court outcome must be a valid court outcome code'
     end
   end
+
+  describe '#struck_out?' do
+    it 'returns false if strike_out_date is nil' do
+      expect(described_class.new(strike_out_date: nil).send(:struck_out?)).to be_falsey
+    end
+
+    it 'returns false if strike_out_date is in the future' do
+      expect(described_class.new(strike_out_date: Date.today + 1.day).send(:struck_out?)).to be_falsey
+    end
+
+    it 'returns false if strike_out_date is on day or past' do
+      expect(described_class.new(strike_out_date: Date.today).send(:struck_out?)).to be_truthy
+    end
+  end
+
+  describe '#end_of_life?' do
+    it 'returns false if court_date is nil' do
+      expect(described_class.new(court_date: nil).send(:end_of_life?)).to be_falsey
+    end
+
+    it 'returns true if court_outcome is SUSPENSION_ON_TERMS and passed 6 years life' do
+      expect(described_class.new(
+        court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+        court_date: Date.today - 6.years
+      ).send(:end_of_life?)).to be_falsey
+
+      expect(described_class.new(
+        court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+        court_date: Date.today - 6.years
+      ).send(:end_of_life?)).to be_truthy
+    end
+  end
+
+  describe '#expired?' do
+    it 'returns true when a court case within life with terms' do
+      allow(Hackney::Income::Models::CourtCase.new).to receive(:expired?).and_return(false)
+      expect(described_class.new(terms: false)).not_to be_result_in_agreement
+      expect(described_class.new(terms: true)).to be_result_in_agreement
+    end
+  end
 end
