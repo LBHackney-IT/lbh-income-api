@@ -8,7 +8,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
     balance: 15.0, # 3 * weekly_rent
     collectable_arrears: 15.0, # 3 * weekly_rent
     active_agreement: false,
-    court_outcome: 'Jail',
+    court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
     last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
     last_communication_date: 2.weeks.ago,
     courtdate: 14.days.ago.to_date,
@@ -34,6 +34,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
     base_example.deep_merge(
       description: 'when there is no agreement',
       outcome: :no_action,
+      court_outcome: 'no agreement needed',
       most_recent_agreement: nil
     ),
     base_example.deep_merge(
