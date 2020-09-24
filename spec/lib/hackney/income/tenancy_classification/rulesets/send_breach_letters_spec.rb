@@ -40,6 +40,13 @@ describe 'Various "Send breach letter" examples (new)' do
       court_outcome: 'something'
     ),
     base_example.merge(
+      description: 'with a last_communication_action which is visit made',
+      outcome: :address_court_agreement_breach,
+      courtdate: 4.months.ago,
+      court_outcome: 'something',
+      last_communication_action: Hackney::Tenancy::ActionCodes::VISIT_MADE
+    ),
+    base_example.merge(
       description: 'with the last communication being a court breach letter',
       outcome: :no_action,
       last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,

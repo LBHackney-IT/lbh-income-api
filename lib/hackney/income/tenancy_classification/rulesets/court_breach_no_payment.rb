@@ -21,7 +21,7 @@ module Hackney
 
           def valid_actions_for_court_breach_no_payment
             [
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
+              Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE
             ]
           end
         end

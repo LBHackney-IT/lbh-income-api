@@ -19,7 +19,7 @@ module Hackney
           def valid_actions_to_address_court_agreement_breach
             [
               Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
-              Hackney::Tenancy::ActionCodes::VISIT_MADE
+              Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE
             ]
           end
         end
