@@ -13,7 +13,7 @@ describe Hackney::Income::CreateCourtCaseAndSync do
 
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:court_date) { Faker::Date.between(from: 10.days.ago, to: 2.days.ago) }
-  let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS }
+  let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { Faker::Date.forward(days: 365) }
   let(:terms) { [true, false].sample }
