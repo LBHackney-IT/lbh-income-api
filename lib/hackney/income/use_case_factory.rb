@@ -279,6 +279,13 @@ module Hackney
         Hackney::Income::CancelAgreement.new
       end
 
+      def create_court_case_and_sync
+        Hackney::Income::CreateCourtCaseAndSync.new(
+          create_court_case: create_court_case,
+          add_action_diary_and_sync_case_usecase: add_action_diary_and_sync_case
+        )
+      end
+
       def create_court_case
         Hackney::Income::CreateCourtCase.new
       end

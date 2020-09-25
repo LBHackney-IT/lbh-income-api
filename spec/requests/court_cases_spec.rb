@@ -20,7 +20,8 @@ RSpec.describe 'CourtCases', type: :request do
   describe 'POST /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{tenancy_ref}' do
       context 'when creating a new court case by adding a court date'
-      let(:create_court_case_instance) { instance_double(Hackney::Income::CreateCourtCase) }
+      let(:create_court_case_and_sync_instance) { instance_double(Hackney::Income::CreateCourtCaseAndSync) }
+      let(:username) { Faker::Name.name }
       let(:new_court_case_params) do
         {
           tenancy_ref: tenancy_ref,
@@ -30,20 +31,21 @@ RSpec.describe 'CourtCases', type: :request do
           strike_out_date: nil,
           terms: nil,
           disrepair_counter_claim: nil
+
         }
       end
 
       let(:created_court_case) { create(:court_case, new_court_case_params) }
 
       before do
-        allow(Hackney::Income::CreateCourtCase).to receive(:new).and_return(create_court_case_instance)
-        allow(create_court_case_instance).to receive(:execute)
-          .with(court_case_params: new_court_case_params)
+        allow(Hackney::Income::CreateCourtCaseAndSync).to receive(:new).and_return(create_court_case_and_sync_instance)
+        allow(create_court_case_and_sync_instance).to receive(:execute)
+          .with(court_case_params: new_court_case_params, username: username)
           .and_return(created_court_case)
       end
 
       it 'creates a new active court_case for the given tenancy_ref' do
-        post "/api/v1/court_case/#{tenancy_ref}", params: new_court_case_params
+        post "/api/v1/court_case/#{tenancy_ref}", params: new_court_case_params.merge(username: username)
 
         parsed_response = JSON.parse(response.body)
 

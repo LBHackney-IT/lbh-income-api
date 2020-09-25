@@ -13,6 +13,7 @@ module Hackney
         }
 
         court_case = Hackney::Income::Models::CourtCase.create!(params)
+
         court_case
       end
     end
