@@ -14,7 +14,7 @@ describe Hackney::Income::UpdateCourtCaseAndSync do
   let(:id) { Faker::Number.number(digits: 2) }
   let(:tenancy_ref) { "#{Faker::Number.number(digits: 6)}/#{Faker::Number.number(digits: 2)}" }
   let(:court_date) { Faker::Date.between(from: 10.days.ago, to: 2.days.ago) }
-  let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT }
+  let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT }
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
   let(:strike_out_date) { nil }
   let(:terms) { nil }
@@ -64,12 +64,6 @@ describe Hackney::Income::UpdateCourtCaseAndSync do
       ).and_return(court_case)
 
       expect(add_action_diary_and_sync_case_usecase).not_to receive(:execute)
-        .with(
-          username: username,
-          tenancy_ref: tenancy_ref,
-          action_code: 'IC6',
-          comment: 'Court outcome added: Struck out'
-        )
 
       updated_court_case = subject.execute(court_case_params: court_case_params)
 
