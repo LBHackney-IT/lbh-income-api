@@ -83,11 +83,11 @@ RSpec.describe 'CourtCases', type: :request do
 
   describe 'PATCH /api/v1/court_case/{tenancy_ref}' do
     path '/court_case/{id}/update' do
-      let(:update_court_case_instance) { instance_double(Hackney::Income::UpdateCourtCase) }
+      let(:update_court_case_and_sync_instance) { instance_double(Hackney::Income::UpdateCourtCaseAndSync) }
       let(:existing_court_case) { create(:court_case, id: id, tenancy_ref: tenancy_ref, court_date: court_date) }
 
       before do
-        allow(Hackney::Income::UpdateCourtCase).to receive(:new).and_return(update_court_case_instance)
+        allow(Hackney::Income::UpdateCourtCaseAndSync).to receive(:new).and_return(update_court_case_and_sync_instance)
       end
 
       it 'passes the request body and court case id to update court case use-case' do
@@ -98,14 +98,13 @@ RSpec.describe 'CourtCases', type: :request do
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
             strike_out_date: nil,
             terms: nil,
-            disrepair_counter_claim: nil,
-            username: username
+            disrepair_counter_claim: nil
           }
 
-        expect(update_court_case_instance).to receive(:execute)
-          .with(court_case_params: request_body.merge(id: id))
+        expect(update_court_case_and_sync_instance).to receive(:execute)
+          .with(court_case_params: request_body.merge(id: id), username: username)
 
-        patch "/api/v1/court_case/#{id}/update", params: request_body
+        patch "/api/v1/court_case/#{id}/update", params: request_body.merge(username: username)
       end
 
       context 'when adding a court outcome that can not have terms' do
@@ -125,8 +124,8 @@ RSpec.describe 'CourtCases', type: :request do
         let(:update_court_case_params) { court_case_params.merge(username: username) }
 
         before do
-          allow(update_court_case_instance).to receive(:execute)
-            .with(court_case_params: update_court_case_params)
+          allow(update_court_case_and_sync_instance).to receive(:execute)
+            .with(court_case_params: court_case_params, username: username)
             .and_return(updated_court_case)
         end
 
@@ -159,8 +158,8 @@ RSpec.describe 'CourtCases', type: :request do
         let(:update_court_case_params) { court_case_params.merge(username: username) }
 
         before do
-          allow(update_court_case_instance).to receive(:execute)
-            .with(court_case_params: update_court_case_params)
+          allow(update_court_case_and_sync_instance).to receive(:execute)
+            .with(court_case_params: court_case_params, username: username)
             .and_return(updated_court_case)
         end
 
@@ -180,7 +179,7 @@ RSpec.describe 'CourtCases', type: :request do
 
       context 'when the court case does not exist' do
         let(:non_existent_id) { '0' }
-        let(:update_court_case_params) do
+        let(:court_case_params) do
           {
             id: non_existent_id,
             court_date: court_date,
@@ -188,14 +187,15 @@ RSpec.describe 'CourtCases', type: :request do
             balance_on_court_outcome_date: balance_on_court_outcome_date.to_s,
             strike_out_date: nil,
             terms: nil,
-            disrepair_counter_claim: nil,
-            username: username
+            disrepair_counter_claim: nil
           }
         end
 
+        let(:update_court_case_params) { court_case_params.merge(username: username) }
+
         before do
-          allow(update_court_case_instance).to receive(:execute)
-            .with(court_case_params: update_court_case_params)
+          allow(update_court_case_and_sync_instance).to receive(:execute)
+            .with(court_case_params: court_case_params, username: username)
             .and_return(nil)
         end
 

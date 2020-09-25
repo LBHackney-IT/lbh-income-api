@@ -44,11 +44,12 @@ class CourtCasesController < ApplicationController
       balance_on_court_outcome_date: update_court_case_params[:balance_on_court_outcome_date],
       strike_out_date: update_court_case_params[:strike_out_date],
       terms: update_court_case_params[:terms],
-      disrepair_counter_claim: update_court_case_params[:disrepair_counter_claim],
-      username: update_court_case_params[:username]
+      disrepair_counter_claim: update_court_case_params[:disrepair_counter_claim]
     }
 
-    updated_court_case = income_use_case_factory.update_court_case.execute(court_case_params: court_case_params)
+    username = update_court_case_params[:username]
+
+    updated_court_case = income_use_case_factory.update_court_case_and_sync.execute(court_case_params: court_case_params, username: username)
 
     if updated_court_case
       response = map_court_case_to_response(court_case: updated_court_case)
