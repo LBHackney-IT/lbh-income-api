@@ -298,6 +298,13 @@ module Hackney
         Hackney::Income::UpdateCourtCase.new
       end
 
+      def update_court_case_and_sync
+        Hackney::Income::UpdateCourtCaseAndSync.new(
+          update_court_case: update_court_case,
+          add_action_diary_and_sync_case: add_action_diary_and_sync_case
+        )
+      end
+
       def create_eviction_and_sync
         Hackney::Income::CreateEvictionAndSync.new(
           create_eviction: create_eviction,

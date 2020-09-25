@@ -33,7 +33,7 @@ class CourtCasesController < ApplicationController
   end
 
   def update
-    parameters = %i[id court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim].freeze
+    parameters = %i[id court_date court_outcome balance_on_court_outcome_date strike_out_date terms disrepair_counter_claim username].freeze
 
     update_court_case_params = params.permit(parameters)
 
@@ -47,7 +47,9 @@ class CourtCasesController < ApplicationController
       disrepair_counter_claim: update_court_case_params[:disrepair_counter_claim]
     }
 
-    updated_court_case = income_use_case_factory.update_court_case.execute(court_case_params: court_case_params)
+    username = update_court_case_params[:username]
+
+    updated_court_case = income_use_case_factory.update_court_case_and_sync.execute(court_case_params: court_case_params, username: username)
 
     if updated_court_case
       response = map_court_case_to_response(court_case: updated_court_case)
