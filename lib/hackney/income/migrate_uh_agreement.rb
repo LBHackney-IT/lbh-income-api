@@ -132,51 +132,63 @@ module Hackney
       end
 
       def get_frequency(uh_frequency)
-        frequency_mapping = [
+        case uh_frequency
+        when 0
           {
             description: 'Monthly',
-            uh_frequency: 0,
             ma_frequency: 1
-          }, {
+          }
+        when 1
+          {
             description: 'Weekly',
-            uh_frequency: 1,
             ma_frequency: 0
-          }, {
+          }
+        when 2
+          {
             description: '2 Weekly',
-            uh_frequency: 2,
             ma_frequency: 2
-          }, {
+          }
+        when 4
+          {
             description: '4 Weekly',
-            uh_frequency: 4,
             ma_frequency: 3
-          }, {
+          }
+        when 5
+          {
             description: '3 Monthly',
-            uh_frequency: 5,
-            ma_frequency: 4
-          }, {
-            description: '6 Monthly',
-            uh_frequency: 6,
-            ma_frequency: 4
-          }, {
-            description: 'Annually',
-            uh_frequency: 7,
-            ma_frequency: 4
-          }, {
-            description: 'Daily',
-            uh_frequency: 8,
-            ma_frequency: 4
-          }, {
-            description: 'Irregular',
-            uh_frequency: 9,
-            ma_frequency: 4
-          }, {
-            description: 'Quarterly',
-            uh_frequency: 'Q',
             ma_frequency: 4
           }
-        ]
-
-        frequency_mapping.find { |f| f[:uh_frequency] == uh_frequency }
+        when 6
+          {
+            description: '6 Monthly',
+            ma_frequency: 4
+          }
+        when 7
+          {
+            description: 'Annually',
+            ma_frequency: 4
+          }
+        when 8
+          {
+            description: 'Daily',
+            ma_frequency: 4
+          }
+        when 9
+          {
+            description: 'Irregular',
+            ma_frequency: 4
+          }
+        when 'Q'
+          {
+            description: 'Quarterly',
+            ma_frequency: 4
+          }
+        else
+          {
+            description: 'Unknown',
+            ma_frequency: 4
+          }
+        end
       end
 
       def get_state(uh_state)
