@@ -1,6 +1,6 @@
 module Hackney
   module Tenancy
-    module CourtOutcomeCodes
+    module OldCourtOutcomeCodes
       # These are the legacy outcome codes from UH, should not be used other than migrating old agreement data from UH
 
       OUTRIGHT_POSSESSION_WITH_DATE = 'OPD'.freeze
