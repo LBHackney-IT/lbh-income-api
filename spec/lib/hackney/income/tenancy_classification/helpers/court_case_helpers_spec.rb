@@ -190,7 +190,7 @@ describe Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers do
       end
 
       context 'when the court outcome is not blank' do
-        let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
+        let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
 
         it 'returns false' do
           expect(subject).to eq(false)
@@ -211,7 +211,7 @@ describe Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers do
       end
 
       context 'when the court outcome is not blank' do
-        let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
+        let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE }
 
         it 'returns false' do
           expect(subject).to eq(false)
