@@ -62,7 +62,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court outcome but without a court date' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
           courtdate: UH_NIL_DATE
         }
       }
@@ -82,7 +82,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided a criteria with a court date and a court outcome' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
+          court_outcome: Hackney::Tenancy::OldCourtOutcomeCodes::SUSPENDED_POSSESSION,
           courtdate: DateTime.now.midnight - 7.days
         }
       }
@@ -92,7 +92,7 @@ describe Hackney::Income::MigrateUhCourtCase do
           court_case_params: {
             tenancy_ref: criteria.tenancy_ref,
             court_date: criteria_attributes[:courtdate],
-            court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS,
             terms: false,
             disrepair_counter_claim: false
           }
@@ -104,40 +104,40 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when setting the court outcome it maps old UH outcomes to the new MA outcomes' do
       examples = [
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::SUSPENDED_POSSESSION,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS
         },
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::POSTPONED_POSSESSION,
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::POSTPONED_POSSESSION,
           expected: nil
         },
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::ADJOURNED_ON_TERMS,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
         },
         {
-          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT
+          input: Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT
         },
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH
         },
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
         },
         {
-          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
+          input: Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
         },
         {
-          input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+          input: Hackney::Tenancy::OldCourtOutcomeCodes::ADJOURNED_GENERALLY,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
         },
         {
-          input: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
-          expected: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
+          input: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+          expected: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE
         },
         {
           input: 'SOME_OTHER_COURT_OUTCOME_CODE',
@@ -171,7 +171,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     let(:existing_court_cases) {
       [create(:court_case,
               court_date: DateTime.now.midnight - 1.month,
-              court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE),
+              court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE),
        create(:court_case,
               court_date: DateTime.now.midnight - 7.days,
               court_outcome: nil)]
@@ -180,7 +180,7 @@ describe Hackney::Income::MigrateUhCourtCase do
     context 'when provided with any criteria' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
           courtdate: DateTime.now.midnight
         }
       }
@@ -197,13 +197,13 @@ describe Hackney::Income::MigrateUhCourtCase do
     let(:existing_court_cases) {
       [create(:court_case,
               court_date: DateTime.now.midnight - 14.days,
-              court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS)]
+              court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS)]
     }
 
     context 'when provided with a criteria' do
       let(:criteria_attributes) {
         {
-          court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+          court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
           courtdate: DateTime.now.midnight - 7.days
         }
       }
@@ -257,7 +257,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with a court date and an outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+            court_outcome: Hackney::Tenancy::OldCourtOutcomeCodes::ADJOURNED_ON_TERMS,
             courtdate: DateTime.now.midnight
           }
         }
@@ -278,7 +278,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       let(:existing_court_cases) {
         [create(:court_case,
                 court_date: nil,
-                court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE)]
+                court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE)]
       }
 
       context 'when provided a criteria without a court date or outcome' do
@@ -318,7 +318,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with a court date and an outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
+            court_outcome: Hackney::Tenancy::OldCourtOutcomeCodes::SUSPENDED_POSSESSION,
             courtdate: DateTime.now.midnight
           }
         }
@@ -336,7 +336,7 @@ describe Hackney::Income::MigrateUhCourtCase do
       context 'when provided a criteria with only an outcome' do
         let(:criteria_attributes) {
           {
-            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION,
+            court_outcome: Hackney::Tenancy::OldCourtOutcomeCodes::SUSPENDED_POSSESSION,
             courtdate: UH_NIL_DATE
           }
         }

@@ -157,7 +157,7 @@ describe Hackney::IncomeCollection::Letter do
       context 'when generating a outright order court outcome letter' do
         let(:court_letter_params) {
           letter_params.merge(
-            court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+            court_outcome: Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
           )
         }
 

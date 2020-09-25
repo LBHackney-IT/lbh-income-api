@@ -67,8 +67,8 @@ module Hackney
 
       C19_COURT_ORDER_BREACHED = 'CVB'.freeze
 
-      ADJOURNED_GENERALLY = Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY
-      ADJOURNED_ON_TERMS = Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS
+      ADJOURNED_GENERALLY = Hackney::Tenancy::OldCourtOutcomeCodes::ADJOURNED_GENERALLY
+      ADJOURNED_ON_TERMS = Hackney::Tenancy::OldCourtOutcomeCodes::ADJOURNED_ON_TERMS
       CHARGE_AGAINST_PROPERTY = 'CAP'.freeze
       COSTS_AWARDED = 'CAW'.freeze
       COURT_BREACH_LETTER = 'CBL'.freeze
@@ -92,10 +92,10 @@ module Hackney
       OFFICE_INTERVIEW = 'OFI'.freeze
       OUT_OF_HOURS_CALL = 'OOC'.freeze
       OUTGOING_TELEPHONE_CALL = 'OTC'.freeze
-      POSTPONED_POSSESSION = Hackney::Tenancy::CourtOutcomeCodes::POSTPONED_POSSESSION
+      POSTPONED_POSSESSION = Hackney::Tenancy::OldCourtOutcomeCodes::POSTPONED_POSSESSION
       PROMISE_OF_PAYMENT = 'POP'.freeze
       REFERRED_FOR_DEBT_ADVICE = 'DEB'.freeze
-      SUSPENDED_POSSESSION = Hackney::Tenancy::CourtOutcomeCodes::SUSPENDED_POSSESSION
+      SUSPENDED_POSSESSION = Hackney::Tenancy::OldCourtOutcomeCodes::SUSPENDED_POSSESSION
       UNIVERSAL_CREDIT = 'UCC'.freeze
       UNSUCCESSFUL_VISIT = 'VIU'.freeze
 

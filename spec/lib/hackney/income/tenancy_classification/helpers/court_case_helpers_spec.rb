@@ -114,12 +114,12 @@ describe Hackney::Income::TenancyClassification::Helpers::CourtCaseHelpers do
     context 'when there is a court outcome' do
       let(:court_outcome) {
         [
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
-          Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
+          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+          Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+          Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS,
+          Hackney::Tenancy::CourtOutcomeCodes::STAY_OF_EXECUTION
         ].sample
       }
       let(:most_recent_court_case) { { court_outcome: court_outcome, court_date: court_date } }

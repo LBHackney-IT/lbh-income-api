@@ -30,7 +30,7 @@ describe Hackney::Income::UpdateCourtCase do
   end
 
   context 'when adding a court outcome that can not have terms to an existing court case' do
-    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT }
+    let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT }
 
     it 'updates and returns the court case' do
       court_case = subject.execute(court_case_params: court_case_params)
@@ -45,7 +45,7 @@ describe Hackney::Income::UpdateCourtCase do
   end
 
   context 'when adding a court outcome that can have terms to an existing court case' do
-    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE }
+    let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE }
     let(:strike_out_date) { Faker::Date.forward(days: 30) }
     let(:terms) { false }
     let(:disrepair_counter_claim) { false }
@@ -81,7 +81,7 @@ describe Hackney::Income::UpdateCourtCase do
   end
 
   context 'when adding a court outcome without a court date to an existing court case' do
-    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS }
+    let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS }
 
     it 'updates and returns the court case' do
       court_case = subject.execute(court_case_params: { id: id, court_date: nil, court_outcome: court_outcome })

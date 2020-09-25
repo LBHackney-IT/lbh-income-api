@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Hackney::IncomeCollection::Letter::CourtOutcome do
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
   let(:created_date) { Faker::Date.between(from: 2.days.ago, to: Date.today) }
-  let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY }
+  let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY }
   let(:court_date) {  2.days.ago }
   let(:letter_params) {
     {
@@ -34,7 +34,7 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
   end
 
   context 'when generating a court outcome letter with terms' do
-    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS }
+    let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS }
 
     let(:letter) {
       described_class.new(letter_params.merge(
@@ -52,7 +52,7 @@ describe Hackney::IncomeCollection::Letter::CourtOutcome do
   end
 
   context 'when generating a court outcome letter with terms' do
-    let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH }
+    let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH }
 
     it 'outright_order is true' do
       expect(letter.outright_order).to eq(true)

@@ -6,10 +6,10 @@ RSpec.describe 'CourtCases', type: :request do
   let(:court_date) { Faker::Date.between(from: 2.days.ago, to: Date.today).to_s }
   let(:court_outcome) do
     [
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+      Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT,
+      Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+      Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+      Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
     ].sample
   end
   let(:balance_on_court_outcome_date) { Faker::Commerce.price(range: 10...100) }
