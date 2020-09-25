@@ -27,7 +27,7 @@ module Hackney
           return
         end
 
-        return unless uh_eviction.present? && existing_evictions.last.eviction_date < uh_eviction
+        return unless uh_eviction.present? && existing_evictions.last.date < uh_eviction
 
         Rails.logger.info { "UH eviction is older than existing MA date, adding newer eviction for tenancy ref #{criteria.tenancy_ref}" }
         eviction_params = map_criteria_to_eviction_params(criteria).merge(tenancy_ref: criteria.tenancy_ref)
