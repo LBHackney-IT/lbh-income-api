@@ -176,6 +176,41 @@ describe Hackney::Income::MigrateUhAgreement, universal: true do
       end
     end
 
+    context 'when migrating an agreement with not supported, unknown, frequency' do
+      let(:frequency) { 100 }
+      let(:comment) { 'Original comment from UH bla bla bla' }
+
+      it 'migrates an informal agreement with no frequency and a custom note' do
+        expect(create_agreement).to receive(:create_agreement).with(
+          {
+            tenancy_ref: tenancy_ref,
+            agreement_type: :informal,
+            starting_balance: starting_balance,
+            amount: amount,
+            start_date: start_date,
+            frequency: 4,
+            created_by: 'Managed Arrears migration from UH',
+            notes: "Frequency no longer supported, original frequency was 'Unknown'. #{comment}",
+            court_case_id: nil
+          },
+          starting_balance: starting_balance,
+          expected_balance: last_check_expected_balance,
+          checked_balance: last_check_balance,
+          description: 'Managed Arrears migration from UH',
+          agreement_state: :cancelled
+        ).and_return(new_agreement)
+
+        expect(create_agreement_migration).to receive(:execute).with(
+          agreement_migration_params: {
+            agreement_id: new_agreement.id,
+            legacy_id: uh_id
+          }
+        )
+
+        subject.migrate(tenancy_ref: tenancy_ref)
+      end
+    end
+
     context 'when migrating a live agreement with not supported frequency' do
       let(:status) { '200       ' }
       let(:frequency) { 8 }
