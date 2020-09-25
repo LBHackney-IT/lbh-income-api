@@ -1,10 +1,6 @@
 module Hackney
   module Income
     class CreateCourtCase
-      def initialize(add_action_diary_and_sync_case:)
-        @add_action_diary_and_sync_case = add_action_diary_and_sync_case
-      end
-
       def execute(court_case_params:)
         params = {
           tenancy_ref: court_case_params[:tenancy_ref],
@@ -17,13 +13,6 @@ module Hackney
         }
 
         court_case = Hackney::Income::Models::CourtCase.create!(params)
-
-        @add_action_diary_and_sync_case.execute(
-          tenancy_ref: court_case_params[:tenancy_ref],
-          action_code: Hackney::Tenancy::ActionCodes::COURT_DATE_SET,
-          comment: 'Court case created',
-          username: court_case_params[:username]
-        )
 
         court_case
       end
