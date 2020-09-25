@@ -8,7 +8,7 @@ describe 'Send Court Breach Letter Rule', type: :feature do
     balance: 15.0, # 3 * weekly_rent
     collectable_arrears: 15.0, # 3 * weekly_rent
     active_agreement: false,
-    court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+    court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
     last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_LETTER_SENT,
     last_communication_date: 2.weeks.ago,
     courtdate: 14.days.ago.to_date,

@@ -465,7 +465,7 @@ describe Hackney::Income::UpdateAgreementState do
     end
 
     context 'when the court outcome is suspended on terms' do
-      let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS }
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS }
       let(:next_check_date) { start_date + days_before_check.days }
       let(:court_case) do
         create(:court_case,

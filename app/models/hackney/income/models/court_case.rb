@@ -13,21 +13,21 @@ module Hackney
 
         COURT_OUTCOMES_THAT_CAN_HAVE_TERMS =
           [
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::STAY_OF_EXECUTION
+            Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+            Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_NEXT_OPEN_DATE,
+            Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_TO_ANOTHER_HEARING_DATE,
+            Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_FOR_DIRECTIONS_HEARING,
+            Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS,
+            Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS,
+            Hackney::Tenancy::CourtOutcomeCodes::STAY_OF_EXECUTION
           ].freeze
 
         OTHER_COURT_OUTCOMES =
           [
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-            Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
+            Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT,
+            Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY,
+            Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+            Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE
           ].freeze
 
         def can_have_terms?
@@ -52,7 +52,7 @@ module Hackney
         def end_of_life?
           return false if court_date.nil?
 
-          court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS && court_date.to_date + 6.years <= Date.today
+          court_outcome == Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS && court_date.to_date + 6.years <= Date.today
         end
 
         private

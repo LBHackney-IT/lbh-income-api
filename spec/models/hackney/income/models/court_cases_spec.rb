@@ -3,10 +3,10 @@ require 'rails_helper'
 describe Hackney::Income::Models::CourtCase, type: :model do
   let(:valid_outcomes_without_terms) do
     [
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::STRUCK_OUT,
-      Hackney::Tenancy::UpdatedCourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
+      Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_FORTHWITH,
+      Hackney::Tenancy::CourtOutcomeCodes::OUTRIGHT_POSSESSION_WITH_DATE,
+      Hackney::Tenancy::CourtOutcomeCodes::STRUCK_OUT,
+      Hackney::Tenancy::CourtOutcomeCodes::WITHDRAWN_ON_THE_DAY
     ].sample
   end
   let(:tenancy_ref) { Faker::Number.number(digits: 2).to_s }
@@ -138,12 +138,12 @@ describe Hackney::Income::Models::CourtCase, type: :model do
 
     it 'returns true if court_outcome is SUSPENSION_ON_TERMS and passed 6 years life' do
       expect(described_class.new(
-        court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+        court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
         court_date: Date.today - 6.years
       ).send(:end_of_life?)).to be_falsey
 
       expect(described_class.new(
-        court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS,
+        court_outcome: Hackney::Tenancy::CourtOutcomeCodes::SUSPENSION_ON_TERMS,
         court_date: Date.today - 6.years
       ).send(:end_of_life?)).to be_truthy
     end

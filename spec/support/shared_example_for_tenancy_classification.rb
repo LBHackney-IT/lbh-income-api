@@ -79,11 +79,11 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
 
       before do
         if courtdate.present? || court_outcome.present?
-          if court_outcome.present? && court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+          if court_outcome.present? && court_outcome == Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
             # We should update these on the examples once UH examples are decommissioned so we won't need this mapping
             disrepair_counter_claim = true
             terms = true
-            outcome = Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
+            outcome = Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
           end
           court_case = build_stubbed(:court_case, tenancy_ref: criteria.tenancy_ref,
                                                   court_date: courtdate,

@@ -1,6 +1,6 @@
 module Hackney
   module Tenancy
-    module UpdatedCourtOutcomeCodes
+    module CourtOutcomeCodes
       ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE = 'AGP'.freeze
       ADJOURNED_TO_NEXT_OPEN_DATE = 'AND'.freeze
       ADJOURNED_TO_ANOTHER_HEARING_DATE = 'AAH'.freeze

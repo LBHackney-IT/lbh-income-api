@@ -9,7 +9,7 @@ describe '"Court Breach - No Payment" examples' do
     balance: 15.0,
     nosp_served_date: 8.months.ago.to_date,
     courtdate: 14.days.ago.to_date,
-    court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
+    court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
     last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE,
     last_communication_date: 8.days.ago.to_date,
     days_since_last_payment: 8,

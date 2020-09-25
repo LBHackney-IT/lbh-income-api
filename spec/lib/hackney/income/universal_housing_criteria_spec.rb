@@ -99,7 +99,7 @@ describe Hackney::Income::UniversalHousingCriteria, universal: true do
     describe '#court_outcome' do
       subject { criteria.court_outcome }
 
-      let(:court_outcome) { Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE }
+      let(:court_outcome) { Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE }
 
       it 'returns a court_outcome' do
         expect(subject).to eq(court_outcome)

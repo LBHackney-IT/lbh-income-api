@@ -269,7 +269,7 @@ describe Hackney::PDF::IncomePreview do
     end
 
     context 'when sending a court outcome letter with terms' do
-      let(:court_case) { create(:court_case, tenancy_ref: test_tenancy_ref, court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_ON_TERMS, terms: true) }
+      let(:court_case) { create(:court_case, tenancy_ref: test_tenancy_ref, court_outcome: Hackney::Tenancy::CourtOutcomeCodes::ADJOURNED_ON_TERMS, terms: true) }
       let(:court_outcome_letter_template) do
         [
           {
