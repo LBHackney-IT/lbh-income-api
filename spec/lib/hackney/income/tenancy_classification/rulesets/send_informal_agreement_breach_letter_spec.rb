@@ -31,22 +31,16 @@ describe 'Various "Send informal breach letter" examples (new)' do
       most_recent_agreement: { start_date: nil }
     ),
     base_example.merge(
-      description: 'with a court date after the agreement',
-      outcome: :send_informal_agreement_breach_letter,
-      courtdate: 1.day.ago,
-      court_outcome: 'something'
-    ),
-    base_example.merge(
-      description: 'with a court date before the agreement',
+      description: 'with a court date before the court agreement',
       outcome: :address_court_agreement_breach,
       courtdate: 2.weeks.ago,
-      court_outcome: 'something'
+      court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
     ),
     base_example.merge(
-      description: 'with a court date more than three months before the agreement',
+      description: 'with a court date more than three months before the court agreement',
       outcome: :address_court_agreement_breach,
       courtdate: 4.months.ago,
-      court_outcome: 'something'
+      court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
     ),
     base_example.merge(
       description: 'with the last communication being an informal breach letter',

@@ -135,10 +135,9 @@ describe Hackney::Income::TenancyClassification::Helpers::AgreementHelpers do
     end
 
     context 'when agreemnt is not court ordered and it breached' do
-      it 'returns false' do
-        allow(helpers).to receive(:court_breach_agreement?).and_return(false)
-        allow(helpers).to receive(:breached_agreement?).and_return(true)
+      let(:most_recent_agreement) { { start_date: 1.week.ago, state: :breached, agreement_type: :informal } }
 
+      it 'returns true' do
         expect(subject).to eq(true)
       end
     end

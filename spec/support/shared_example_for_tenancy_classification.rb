@@ -79,7 +79,7 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
 
       before do
         if courtdate.present? || court_outcome.present?
-          if court_outcome.present? && court_outcome == 'AGE'
+          if court_outcome.present? && court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE
             # We should update these on the examples once UH examples are decommissioned so we won't need this mapping
             disrepair_counter_claim = true
             terms = true
@@ -95,7 +95,7 @@ shared_examples 'TenancyClassification examples' do |condition_matrix|
         eviction = build_stubbed(:eviction, tenancy_ref: criteria.tenancy_ref, date: eviction_date) if eviction_date.present?
 
         if most_recent_agreement.present?
-          agreement_type = court_case.present? ? :formal : :informal
+          agreement_type = court_case.present? && court_case.result_in_agreement? ? :formal : :informal
           state = most_recent_agreement[:breached] == true ? :breached : :live
           agreement = build_stubbed(:agreement,
                                     agreement_type: agreement_type,

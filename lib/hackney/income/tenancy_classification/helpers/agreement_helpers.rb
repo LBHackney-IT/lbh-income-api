@@ -10,7 +10,7 @@ module Hackney
           end
 
           def informal_breached_agreement?
-            breached_agreement? && !court_breach_agreement?
+            breached_agreement? && most_recent_agreement&.informal?
           end
 
           def breached_agreement?

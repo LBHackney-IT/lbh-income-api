@@ -16,7 +16,16 @@ module Hackney
             # Cases with court outcomes must have court dates recorded
             return true if !case_paused? && no_court_date? && court_outcome.present?
 
+            # Cases with court case that should have agreement
+            return true if !case_paused? && court_agreement_missing?
+
             false
+          end
+
+          def court_agreement_missing?
+            return false unless most_recent_court_case.present? && most_recent_court_case.result_in_agreement?
+            return true unless most_recent_agreement.present? && most_recent_agreement.formal?
+            most_recent_agreement.start_date < most_recent_court_case.court_date
           end
         end
       end

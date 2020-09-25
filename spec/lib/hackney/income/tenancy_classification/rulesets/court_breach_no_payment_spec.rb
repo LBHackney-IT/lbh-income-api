@@ -9,7 +9,7 @@ describe '"Court Breach - No Payment" examples' do
     balance: 15.0,
     nosp_served_date: 8.months.ago.to_date,
     courtdate: 14.days.ago.to_date,
-    court_outcome: 'Jail',
+    court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
     last_communication_action: Hackney::Tenancy::ActionCodes::COURT_BREACH_VISIT_MADE,
     last_communication_date: 8.days.ago.to_date,
     days_since_last_payment: 8,
@@ -34,6 +34,7 @@ describe '"Court Breach - No Payment" examples' do
     base_example.deep_merge(
       description: 'when there is no agreement',
       outcome: :no_action,
+      court_outcome: 'No agreement outcome',
       most_recent_agreement: nil
     ),
     base_example.deep_merge(
@@ -51,6 +52,7 @@ describe '"Court Breach - No Payment" examples' do
     base_example.deep_merge(
       description: 'when the court date is in the future',
       outcome: :no_action,
+      court_outcome: nil,
       courtdate: 3.months.from_now.to_date
     ),
     base_example.deep_merge(

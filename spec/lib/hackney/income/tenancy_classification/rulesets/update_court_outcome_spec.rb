@@ -72,9 +72,10 @@ describe '"Update court outcome" examples' do
       courtdate: 367.days.from_now.to_date
     ),
     base_example.merge(
-      description: 'with no court outcome and breached court agreement',
+      description: 'with valid court outcome and breached court agreement',
       outcome: :address_court_agreement_breach,
       courtdate: 14.days.ago.to_date,
+      court_outcome: Hackney::Tenancy::UpdatedCourtOutcomeCodes::ADJOURNED_GENERALLY_WITH_PERMISSION_TO_RESTORE,
       most_recent_agreement: {
         start_date: 1.week.ago,
         breached: true
