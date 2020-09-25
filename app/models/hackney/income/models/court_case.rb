@@ -45,6 +45,16 @@ module Hackney
           false
         end
 
+        def struck_out?
+          strike_out_date.present? && strike_out_date.to_date <= Date.today
+        end
+
+        def end_of_life?
+          return false if court_date.nil?
+
+          court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS && court_date.to_date + 6.years <= Date.today
+        end
+
         private
 
         def court_outcome_is_valid
@@ -56,16 +66,6 @@ module Hackney
 
         def update_associated_worktray_item
           Hackney::Income::Models::CasePriority.find_by(tenancy_ref: tenancy_ref)&.update!(court_outcome: court_outcome, courtdate: court_date)
-        end
-
-        def struck_out?
-          strike_out_date.present? && strike_out_date.to_date <= Date.today
-        end
-
-        def end_of_life?
-          return false if court_date.nil?
-
-          court_outcome == Hackney::Tenancy::UpdatedCourtOutcomeCodes::SUSPENSION_ON_TERMS && court_date.to_date + 6.years <= Date.today
         end
       end
     end
