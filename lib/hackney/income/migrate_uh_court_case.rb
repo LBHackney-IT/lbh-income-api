@@ -42,17 +42,18 @@ module Hackney
           return
         end
 
-        court_case_params = map_criteria_to_court_case_params(criteria)
+        court_case_data = map_criteria_to_court_case_params(criteria)
 
-        court_case_params[:court_date] = nil if existing_court_case.court_date.present?
-        court_case_params[:court_outcome] = nil if existing_court_case.court_outcome.present?
+        court_case_data[:court_date] = nil if existing_court_case.court_date.present?
+        court_case_data[:court_outcome] = nil if existing_court_case.court_outcome.present?
 
-        if court_case_params.compact.keys.empty?
+        if court_case_data.compact.keys.empty?
           Rails.logger.debug { 'UH Criteria does not contain any new information' }
           return
         end
 
-        @update_court_case.execute(id: existing_court_case.id, **court_case_params)
+        court_case_params = court_case_data.merge(id: existing_court_case.id)
+        @update_court_case.execute(court_case_params: court_case_params)
       end
 
       private

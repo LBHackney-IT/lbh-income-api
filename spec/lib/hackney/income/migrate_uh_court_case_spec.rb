@@ -265,9 +265,11 @@ describe Hackney::Income::MigrateUhCourtCase do
         it 'does update the court case with the court outcome only' do
           expect(create_court_case).not_to receive(:execute)
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: nil,
-            court_outcome: criteria_attributes[:court_outcome]
+            court_case_params: {
+              id: existing_court_cases[0].id,
+              court_date: nil,
+              court_outcome: criteria_attributes[:court_outcome]
+            }
           )
           subject
         end
@@ -307,9 +309,11 @@ describe Hackney::Income::MigrateUhCourtCase do
         it 'does update the court case with the date' do
           expect(create_court_case).not_to receive(:execute)
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: criteria_attributes[:courtdate],
-            court_outcome: nil
+            court_case_params: {
+              id: existing_court_cases[0].id,
+              court_date: criteria_attributes[:courtdate],
+              court_outcome: nil
+            }
           )
           subject
         end
@@ -325,9 +329,11 @@ describe Hackney::Income::MigrateUhCourtCase do
 
         it 'does update the court case with the court date only' do
           expect(update_court_case).to receive(:execute).with(
-            id: existing_court_cases[0].id,
-            court_date: criteria_attributes[:courtdate],
-            court_outcome: nil
+            court_case_params: {
+              id: existing_court_cases[0].id,
+              court_date: criteria_attributes[:courtdate],
+              court_outcome: nil
+            }
           )
           subject
         end
