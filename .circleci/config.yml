@@ -203,7 +203,8 @@ workflows:
             branches:
               ignore: master
       - development_release:
-#          requires:
+          requires:
+            - assume-role-development
 #            - check
           filters:
             branches:
