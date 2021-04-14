@@ -94,20 +94,20 @@ jobs:
           name: Build new application Docker image
           command: docker build --build-arg RAILS_ENV=staging --tag hackney/apps/income-api .
       - run:
-          name: Tag new image for staging release
+          name: Tag new image for development release
           command: |
             docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
             docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:latest
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:staging
+            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:development
       - run:
           name: Release new image to ECR
           command: |
             docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
             docker push $ECR_IMAGE_URL:latest
-            docker push $ECR_IMAGE_URL:staging
+            docker push $ECR_IMAGE_URL:development
       - run:
           name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_DEVELOPMENT_CLUSTER --service-name $ECS_DEVELOPMENT_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_DEVELOPMENT_CLUSTER --service-name $ECS_DEVELOPMENT_APP_NAME --image $ECR_IMAGE_URL:development --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
           no_output_timeout: 20m
   development_release_manual:
     <<: *development_release
