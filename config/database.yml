@@ -1,11 +1,11 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: app-database-<%= ENV.fetch("RAILS_ENV") %>
+  database: <%= ENV.fetch("DATABASE_NAME") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password: bar
-  host: incomeapi-db
+  username: <%= ENV.fetch("DATABASE_USERNAME") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
+  host: <%= ENV.fetch("DATABASE_HOST") %>
 test:
   adapter: mysql2
   encoding: utf8

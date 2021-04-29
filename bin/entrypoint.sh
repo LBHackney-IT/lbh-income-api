@@ -4,7 +4,7 @@ set -e
 
 echo "Starting $RAILS_ENV"
 
-if [ "$RAILS_ENV" = "test" ] || [ "$RAILS_ENV" = "development" ]
+if [ "$RAILS_ENV" = "test" ]
 then
   DATABASE_SERVICE=tcp://incomeapi-db:3306
   echo "Waiting for database to come up on $DATABASE_SERVICE"

@@ -1,4 +1,38 @@
-version: 2
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+  aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+
+executors:
+  docker-python:
+    docker:
+      - image: circleci/python:3.7
+
+references:
+  workspace_root: &workspace_root "~"
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+commands:
+  assume-role-and-persist-workspace:
+    description: "Assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: "LBH_Circle_CI_Deployment_Role"
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+
 jobs:
   check:
     machine: true
@@ -21,6 +55,62 @@ jobs:
           command: make lint
       - store_artifacts:
           path: coverage
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
+  development_release: &development_release
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Install AWS CLI
+          command: pip install awscli --upgrade --user
+      - run:
+          name: Install jq
+          command: |
+            sudo apt-get update
+            sudo apt-get install jq
+      - run:
+          name: Install ecs-deploy
+          command: |
+            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
+            sudo chmod +x /usr/bin/ecs-deploy
+      - run:
+          name: Login to ECR
+          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
+      - run:
+          name: Build new application Docker image
+          command: docker build --build-arg RAILS_ENV=development --tag hackney/apps/income-api .
+      - run:
+          name: Tag new image for development release
+          command: |
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+      - run:
+          name: Release new image to ECR
+          command: |
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+      - run:
+          name: Force new application deployment
+          command: ecs-deploy --region eu-west-2 --cluster ecs-cluster-for-income-api --service-name income-api-development --image 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development --timeout 20000 --use-latest-task-def
+          no_output_timeout: 20m
+  development_release_manual:
+    <<: *development_release
 
   staging_release: &staging_release
     machine: true
@@ -104,30 +194,44 @@ workflows:
   version: 2
   continuous_delivery:
     jobs:
-      - check
-      - staging_release:
-          requires:
-            - check
-          filters:
-            branches:
-              only: master
-      - permit_manual_staging_release:
-          type: approval
-          requires:
-            - check
+#      - check
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
+#          requires:
+#            - check
           filters:
             branches:
               ignore: master
-      - staging_release_manual:
+      - development_release:
           requires:
-            - permit_manual_staging_release
+            - assume-role-development
+#            - check
           filters:
             branches:
               ignore: master
-      - permit_production_release:
-          type: approval
-          requires:
-            - staging_release
-      - production_release:
-          requires:
-            - permit_production_release
+#      - staging_release:
+#          requires:
+#            - check
+#          filters:
+#            branches:
+#              only: master
+#      - permit_manual_staging_release:
+#          type: approval
+#          requires:
+#            - check
+#          filters:
+#            branches:
+#              ignore: master
+#      - staging_release_manual:
+#          requires:
+#            - permit_manual_staging_release
+#          filters:
+#            branches:
+#              ignore: master
+#      - permit_production_release:
+#          type: approval
+#          requires:
+#            - staging_release
+#      - production_release:
+#          requires:
+#            - permit_production_release
