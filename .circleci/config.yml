@@ -9,6 +9,9 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
+  docker-terraform:
+    docker:
+      - image: "hashicorp/terraform:light"
 
 references:
   workspace_root: &workspace_root "~"
@@ -32,7 +35,27 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+      sha1:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -var sha1=<<parameters.sha1>> -auto-approve
 jobs:
   check:
     machine: true
@@ -70,6 +93,7 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+
   development_release: &development_release
     machine: true
     steps:
@@ -77,16 +101,6 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -105,10 +119,6 @@ jobs:
             docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
             docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
             docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region eu-west-2 --cluster ecs-cluster-for-income-api --service-name income-api-development --image 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development --timeout 20000 --use-latest-task-def
-          no_output_timeout: 20m
   development_release_manual:
     <<: *development_release
 
@@ -119,16 +129,6 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -147,10 +147,6 @@ jobs:
             docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
             docker push $ECR_IMAGE_URL:latest
             docker push $ECR_IMAGE_URL:staging
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
-          no_output_timeout: 20m
   staging_release_manual:
     <<: *staging_release
 
@@ -161,16 +157,6 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -185,10 +171,25 @@ jobs:
           name: Release new image to ECR
           command: |
             docker push $ECR_IMAGE_URL:production
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
-          no_output_timeout: 50m
+
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+          sha1: $CIRCLE_SHA1
 
 workflows:
   version: 2
@@ -199,39 +200,66 @@ workflows:
           context: api-assume-role-housing-development-context
 #          requires:
 #            - check
-          filters:
-            branches:
-              ignore: master
       - development_release:
+          context: api-assume-role-housing-development-context
           requires:
             - assume-role-development
+#          filters:
+#            branches:
+#              only: development
+      - terraform-init-and-apply-to-development:
+          context: api-assume-role-housing-development-context
+          requires:
+            - development_release
+#          filters:
+#            branches:
+#              only: development
+      - assume-role-staging:
+          context: api-assume-role-housing-staging-context
+#          requires:
 #            - check
           filters:
             branches:
-              ignore: master
-#      - staging_release:
-#          requires:
-#            - check
-#          filters:
-#            branches:
-#              only: master
-#      - permit_manual_staging_release:
-#          type: approval
-#          requires:
-#            - check
-#          filters:
-#            branches:
-#              ignore: master
-#      - staging_release_manual:
-#          requires:
-#            - permit_manual_staging_release
-#          filters:
-#            branches:
-#              ignore: master
-#      - permit_production_release:
-#          type: approval
-#          requires:
-#            - staging_release
-#      - production_release:
-#          requires:
-#            - permit_production_release
+              only: master
+      - staging_release:
+          context: api-assume-role-housing-staging-context
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-staging:
+          context: api-assume-role-housing-staging-context
+          requires:
+            - staging_release
+          filters:
+            branches:
+              only: master
+      - permit_production_release:
+          type: approval
+          requires:
+            - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - permit_production_release
+          filters:
+            branches:
+              only: master
+      - production_release:
+          context: api-assume-role-housing-production-context
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - production_release
+          filters:
+            branches:
+              only: master
