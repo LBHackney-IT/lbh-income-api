@@ -195,11 +195,11 @@ workflows:
   version: 2
   continuous_delivery:
     jobs:
-      - check
+#      - check
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
-            - check
+#          requires:
+#            - check
       - development_release:
           context: api-assume-role-housing-development-context
           requires:
@@ -216,8 +216,8 @@ workflows:
               only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
-          requires:
-            - check
+#          requires:
+#            - check
           filters:
             branches:
               only: master
