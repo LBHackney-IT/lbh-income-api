@@ -14,7 +14,7 @@ data "aws_ssm_parameter" "housing_finance_db_host" {
   name = "/housing-finance/development/uh-database-host"
 }
 data "aws_ssm_parameter" "housing_finance_db_database" {
-  name = "/housing-finance/development/uh-database-database"
+  name = "/housing-finance/development/uh-database-name"
 }
 data "aws_ssm_parameter" "housing_finance_db_username" {
   name = "/housing-finance/development/uh-database-username"
