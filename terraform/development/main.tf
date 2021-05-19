@@ -11,100 +11,100 @@ locals {
 
 # SSM Parameters - Systems Manager/Parameter Store
 data "aws_ssm_parameter" "housing_finance_db_host" {
-  name = "/housing-finance/${var.environment_name}/uh-database-host"
+  name = "/housing-finance/development/uh-database-host"
 }
 data "aws_ssm_parameter" "housing_finance_db_database" {
-  name = "/housing-finance/${var.environment_name}/uh-database-database"
+  name = "/housing-finance/development/uh-database-database"
 }
 data "aws_ssm_parameter" "housing_finance_db_username" {
-  name = "/housing-finance/${var.environment_name}/uh-database-username"
+  name = "/housing-finance/development/uh-database-username"
 }
 data "aws_ssm_parameter" "housing_finance_db_password" {
-  name = "/housing-finance/${var.environment_name}/uh-database-password"
+  name = "/housing-finance/development/uh-database-password"
 }
 data "aws_ssm_parameter" "housing_finance_aws_access_key_id" {
-  name = "/housing-finance/${var.environment_name}/aws-access-key-id"
+  name = "/housing-finance/development/aws-access-key-id"
 }
 data "aws_ssm_parameter" "housing_finance_aws_region" {
-  name = "/housing-finance/${var.environment_name}/aws-region"
+  name = "/housing-finance/development/aws-region"
 }
 data "aws_ssm_parameter" "housing_finance_aws_secret_access_key" {
-  name = "/housing-finance/${var.environment_name}/aws-secret-access-key"
+  name = "/housing-finance/development/aws-secret-access-key"
 }
 data "aws_ssm_parameter" "housing_finance_can_automate_letters" {
-  name = "/housing-finance/${var.environment_name}/can-automate-letters"
+  name = "/housing-finance/development/can-automate-letters"
 }
 data "aws_ssm_parameter" "housing_finance_customer_managed_key" {
-  name = "/housing-finance/${var.environment_name}/customer-managed-key"
+  name = "/housing-finance/development/customer-managed-key"
 }
 data "aws_ssm_parameter" "housing_finance_database_url" {
-  name = "/housing-finance/${var.environment_name}/database-url"
+  name = "/housing-finance/development/database-url"
 }
 data "aws_ssm_parameter" "housing_finance_enable_tenancy_sync" {
-  name = "/housing-finance/${var.environment_name}/enable-tenancy-sync"
+  name = "/housing-finance/development/enable-tenancy-sync"
 }
 data "aws_ssm_parameter" "housing_finance_gov_notify_api_key" {
-  name = "/housing-finance/${var.environment_name}/gov-notify-api-key"
+  name = "/housing-finance/development/gov-notify-api-key"
 }
 data "aws_ssm_parameter" "housing_finance_gov_notify_sender_id" {
-  name = "/housing-finance/${var.environment_name}/gov-notify-sender-id"
+  name = "/housing-finance/development/gov-notify-sender-id"
 }
 data "aws_ssm_parameter" "housing_finance_hardcoded_tenancies" {
-  name = "/housing-finance/${var.environment_name}/hardcoded-tenancies"
+  name = "/housing-finance/development/hardcoded-tenancies"
 }
 data "aws_ssm_parameter" "housing_finance_new_relic_env" {
-  name = "/housing-finance/${var.environment_name}/new-relic-env"
+  name = "/housing-finance/development/new-relic-env"
 }
 data "aws_ssm_parameter" "housing_finance_patch_codes_for_letter_automation" {
-  name = "/housing-finance/${var.environment_name}/patch-codes-for-letter-automation"
+  name = "/housing-finance/development/patch-codes-for-letter-automation"
 }
 data "aws_ssm_parameter" "housing_finance_rack_env" {
-  name = "/housing-finance/${var.environment_name}/rack-env"
+  name = "/housing-finance/development/rack-env"
 }
 data "aws_ssm_parameter" "housing_finance_rails_env" {
-  name = "/housing-finance/${var.environment_name}/rails-env"
+  name = "/housing-finance/development/rails-env"
 }
 data "aws_ssm_parameter" "housing_finance_rails_log_to_stdout" {
-  name = "/housing-finance/${var.environment_name}/rails-log-to-stdout"
+  name = "/housing-finance/development/rails-log-to-stdout"
 }
 data "aws_ssm_parameter" "housing_finance_redis_url" {
-  name = "/housing-finance/${var.environment_name}/redis-url"
+  name = "/housing-finance/development/redis-url"
 }
 data "aws_ssm_parameter" "housing_finance_secret_key_base" {
-  name = "/housing-finance/${var.environment_name}/secret-key-base"
+  name = "/housing-finance/development/secret-key-base"
 }
 data "aws_ssm_parameter" "housing_finance_send_live_communications" {
-  name = "/housing-finance/${var.environment_name}/send-live-communications"
+  name = "/housing-finance/development/send-live-communications"
 }
 data "aws_ssm_parameter" "housing_finance_sentry_dsn" {
-  name = "/housing-finance/${var.environment_name}/sentry-dsn"
+  name = "/housing-finance/development/sentry-dsn"
 }
 data "aws_ssm_parameter" "housing_finance_sentry_environment" {
-  name = "/housing-finance/${var.environment_name}/sentry-environment"
+  name = "/housing-finance/development/sentry-environment"
 }
 data "aws_ssm_parameter" "housing_finance_sidekiq_password" {
-  name = "/housing-finance/${var.environment_name}/sidekiq-password"
+  name = "/housing-finance/development/sidekiq-password"
 }
 data "aws_ssm_parameter" "housing_finance_sidekiq_username" {
-  name = "/housing-finance/${var.environment_name}/sidekiq-username"
+  name = "/housing-finance/development/sidekiq-username"
 }
 data "aws_ssm_parameter" "housing_finance_tenancy_api_host" {
-  name = "/housing-finance/${var.environment_name}/tenancy-api-host"
+  name = "/housing-finance/development/tenancy-api-host"
 }
 data "aws_ssm_parameter" "housing_finance_tenancy_api_key" {
-  name = "/housing-finance/${var.environment_name}/tenancy-api-key"
+  name = "/housing-finance/development/tenancy-api-key"
 }
 data "aws_ssm_parameter" "housing_finance_test_email_address" {
-  name = "/housing-finance/${var.environment_name}/test-email-address"
+  name = "/housing-finance/development/test-email-address"
 }
 data "aws_ssm_parameter" "housing_finance_test_phone_number" {
-  name = "/housing-finance/${var.environment_name}/test-phone-number"
+  name = "/housing-finance/development/test-phone-number"
 }
 
 # Terraform State Management
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-housing-${var.environment_name}"
+    bucket  = "terraform-state-housing-development"
     encrypt = true
     region  = "eu-west-2"
     key     = "services/lbh-income-api/state"
@@ -162,8 +162,8 @@ resource "aws_ecs_service" "income-api-ecs-service" {
     desired_count = 1
     load_balancer {
       target_group_arn = aws_lb_target_group.lb_tg.arn
-      container_name   = "${var.app_name}-container"
-      container_port   = var.app_port
+      container_name   = "income-api-container"
+      container_port   = 3000
   }
 }
 
@@ -177,22 +177,22 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     container_definitions    = <<DEFINITION
 [
   {
-    "name": "${var.app_name}-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest",
+    "name": "income-api-container",
+    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
     "memory": 4096,
     "cpu": 512,
     "essential": true,
     "portMappings": [
       {
-        "containerPort": ${var.app_port}
+        "containerPort": 3000
       }
     ],
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "ecs-task-definition-${var.app_name}",
+            "awslogs-group": "ecs-task-definition-income-api",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "${var.app_name}-logs"
+            "awslogs-stream-prefix": "income-api-logs"
         }
     },
     "environment": [
@@ -340,7 +340,7 @@ DEFINITION
 
 # MySQL Database Setup
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "housing-finance-db-subnet-${var.environment_name}"
+  name       = "housing-finance-db-subnet-development"
   subnet_ids = ["subnet-05ce390ba88c42bfd","subnet-0140d06fb84fdb547"]
   lifecycle {
     create_before_destroy = true
@@ -348,7 +348,7 @@ resource "aws_db_subnet_group" "db_subnets" {
 }
 
 resource "aws_db_instance" "housing-mysql-db" {
-  identifier                  = "housing-finance-db-${var.environment_name}"
+  identifier                  = "housing-finance-db-development"
   engine                      = "mysql"
   engine_version              = "8.0.20"
   instance_class              = "db.t2.micro" //this should be a more production appropriate instance in production
@@ -360,7 +360,7 @@ resource "aws_db_instance" "housing-mysql-db" {
   password                    = data.aws_ssm_parameter.housing_finance_db_password.value
   vpc_security_group_ids      = ["sg-00d2e14f38245dd0b"]
   db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
-  name                        = "housingfinancedb${var.environment_name}"
+  name                        = "housingfinancedbdevelopment"
   monitoring_interval         = 0 //this is for enhanced Monitoring there will already be some basic monitoring available
   backup_retention_period     = 30
   storage_encrypted           = false  //this should be true for production
@@ -374,8 +374,8 @@ resource "aws_db_instance" "housing-mysql-db" {
   publicly_accessible = false
 
   tags = {
-    Name              = "housing-finance-db-${var.environment_name}"
-    Environment       = var.environment_name
+    Name              = "housing-finance-db-development"
+    Environment       = "development"
     terraform-managed = true
     project_name      = "Housing Finance"
   }
@@ -383,13 +383,13 @@ resource "aws_db_instance" "housing-mysql-db" {
 
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "lb" {
-  name               = "lb-${var.app_name}"
+  name               = "lb-income-api"
   internal           = true
   load_balancer_type = "network"
   subnets            = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]// Get this from AWS (data)
   enable_deletion_protection = false
   tags = {
-    Environment = var.environment_name
+    Environment = "development"
   }
 }
 resource "aws_lb_target_group" "lb_tg" {
@@ -397,7 +397,7 @@ resource "aws_lb_target_group" "lb_tg" {
     aws_lb.lb
   ]
   name_prefix = "ma-tg-"
-  port        = var.app_port
+  port        = 3000
   protocol    = "TCP"
   vpc_id      = "vpc-0d15f152935c8716f" // Get this from AWS (data)
   target_type = "ip"
@@ -412,7 +412,7 @@ resource "aws_lb_target_group" "lb_tg" {
 # Redirect all traffic from the NLB to the target group
 resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.lb.id
-  port              = var.app_port
+  port              = 3000
   protocol    = "TCP"
   default_action {
     target_group_arn = aws_lb_target_group.lb_tg.id
@@ -424,14 +424,14 @@ resource "aws_lb_listener" "lb_listener" {
 
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
-  name = "vpc-link-${var.app_name}"
+  name = "vpc-link-income-api"
   target_arns = [aws_lb.lb.arn]
 }
 # API Gateway, Private Integration with VPC Link
 # and deployment of a single resource that will take ANY
 # HTTP method and proxy the request to the NLB
 resource "aws_api_gateway_rest_api" "main" {
-  name = "${var.environment_name}-${var.app_name}"
+  name = "development-income-api"
 }
 resource "aws_api_gateway_resource" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -456,14 +456,14 @@ resource "aws_api_gateway_integration" "main" {
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+  uri                     = "http://${aws_lb.lb.dns_name}:3000/{proxy}"
   integration_http_method = "ANY"
   connection_type = "VPC_LINK"
   connection_id   = aws_api_gateway_vpc_link.this.id
 }
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  stage_name = var.environment_name
+  stage_name = "development"
   depends_on = [aws_api_gateway_integration.main]
   variables = {
     # just to trigger redeploy on resource changes
