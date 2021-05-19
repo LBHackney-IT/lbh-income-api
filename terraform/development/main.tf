@@ -9,25 +9,102 @@ locals {
     parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
 }
 
+# SSM Parameters - Systems Manager/Parameter Store
 data "aws_ssm_parameter" "housing_finance_db_host" {
-  name = "/housing-finance/development/mysql-host"
+  name = "/housing-finance/${var.environment_name}/uh-database-host"
 }
-
 data "aws_ssm_parameter" "housing_finance_db_database" {
-  name = "/housing-finance/development/mysql-database"
+  name = "/housing-finance/${var.environment_name}/uh-database-database"
 }
-
 data "aws_ssm_parameter" "housing_finance_db_username" {
-  name = "/housing-finance/development/mysql-username"
+  name = "/housing-finance/${var.environment_name}/uh-database-username"
 }
-
 data "aws_ssm_parameter" "housing_finance_db_password" {
-  name = "/housing-finance/development/mysql-password"
+  name = "/housing-finance/${var.environment_name}/uh-database-password"
+}
+data "aws_ssm_parameter" "housing_finance_aws_access_key_id" {
+  name = "/housing-finance/${var.environment_name}/aws-access-key-id"
+}
+data "aws_ssm_parameter" "housing_finance_aws_region" {
+  name = "/housing-finance/${var.environment_name}/aws-region"
+}
+data "aws_ssm_parameter" "housing_finance_aws_secret_access_key" {
+  name = "/housing-finance/${var.environment_name}/aws-secret-access-key"
+}
+data "aws_ssm_parameter" "housing_finance_can_automate_letters" {
+  name = "/housing-finance/${var.environment_name}/can-automate-letters"
+}
+data "aws_ssm_parameter" "housing_finance_customer_managed_key" {
+  name = "/housing-finance/${var.environment_name}/customer-managed-key"
+}
+data "aws_ssm_parameter" "housing_finance_database_url" {
+  name = "/housing-finance/${var.environment_name}/database-url"
+}
+data "aws_ssm_parameter" "housing_finance_enable_tenancy_sync" {
+  name = "/housing-finance/${var.environment_name}/enable-tenancy-sync"
+}
+data "aws_ssm_parameter" "housing_finance_gov_notify_api_key" {
+  name = "/housing-finance/${var.environment_name}/gov-notify-api-key"
+}
+data "aws_ssm_parameter" "housing_finance_gov_notify_sender_id" {
+  name = "/housing-finance/${var.environment_name}/gov-notify-sender-id"
+}
+data "aws_ssm_parameter" "housing_finance_hardcoded_tenancies" {
+  name = "/housing-finance/${var.environment_name}/hardcoded-tenancies"
+}
+data "aws_ssm_parameter" "housing_finance_new_relic_env" {
+  name = "/housing-finance/${var.environment_name}/new-relic-env"
+}
+data "aws_ssm_parameter" "housing_finance_patch_codes_for_letter_automation" {
+  name = "/housing-finance/${var.environment_name}/patch-codes-for-letter-automation"
+}
+data "aws_ssm_parameter" "housing_finance_rack_env" {
+  name = "/housing-finance/${var.environment_name}/rack-env"
+}
+data "aws_ssm_parameter" "housing_finance_rails_env" {
+  name = "/housing-finance/${var.environment_name}/rails-env"
+}
+data "aws_ssm_parameter" "housing_finance_rails_log_to_stdout" {
+  name = "/housing-finance/${var.environment_name}/rails-log-to-stdout"
+}
+data "aws_ssm_parameter" "housing_finance_redis_url" {
+  name = "/housing-finance/${var.environment_name}/redis-url"
+}
+data "aws_ssm_parameter" "housing_finance_secret_key_base" {
+  name = "/housing-finance/${var.environment_name}/secret-key-base"
+}
+data "aws_ssm_parameter" "housing_finance_send_live_communications" {
+  name = "/housing-finance/${var.environment_name}/send-live-communications"
+}
+data "aws_ssm_parameter" "housing_finance_sentry_dsn" {
+  name = "/housing-finance/${var.environment_name}/sentry-dsn"
+}
+data "aws_ssm_parameter" "housing_finance_sentry_environment" {
+  name = "/housing-finance/${var.environment_name}/sentry-environment"
+}
+data "aws_ssm_parameter" "housing_finance_sidekiq_password" {
+  name = "/housing-finance/${var.environment_name}/sidekiq-password"
+}
+data "aws_ssm_parameter" "housing_finance_sidekiq_username" {
+  name = "/housing-finance/${var.environment_name}/sidekiq-username"
+}
+data "aws_ssm_parameter" "housing_finance_tenancy_api_host" {
+  name = "/housing-finance/${var.environment_name}/tenancy-api-host"
+}
+data "aws_ssm_parameter" "housing_finance_tenancy_api_key" {
+  name = "/housing-finance/${var.environment_name}/tenancy-api-key"
+}
+data "aws_ssm_parameter" "housing_finance_test_email_address" {
+  name = "/housing-finance/${var.environment_name}/test-email-address"
+}
+data "aws_ssm_parameter" "housing_finance_test_phone_number" {
+  name = "/housing-finance/${var.environment_name}/test-phone-number"
 }
 
+# Terraform State Management
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-housing-development"
+    bucket  = "terraform-state-housing-${var.environment_name}"
     encrypt = true
     region  = "eu-west-2"
     key     = "services/lbh-income-api/state"
@@ -121,15 +198,15 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     "environment": [
       {
         "name": "CUSTOMER_MANAGED_KEY",
-        "value": "customer_key1"
+        "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
       },
       {
         "name": "AWS_ACCESS_KEY_ID",
-        "value": "access_key"
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
       },
       {
         "name": "AWS_SECRET_ACCESS_KEY",
-        "value": "secret_key"
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_secret_access_key.value}"
       },
       {
         "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
@@ -141,111 +218,103 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       },
       {
         "name": "AWS_REGION",
-        "value": "eu-west-2"
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_region.value}"
       },
       {
         "name": "CAN_AUTOMATE_LETTERS",
-        "value": "false"
+        "value": "${data.aws_ssm_parameter.housing_finance_can_automate_letters.value}"
       },
       {
         "name": "ENABLE_TENANCY_SYNC",
-        "value": "false"
+        "value": "${data.aws_ssm_parameter.housing_finance_enable_tenancy_sync.value}"
       },
       {
         "name": "GOV_NOTIFY_API_KEY",
-        "value": "notify-key2"
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_api_key.value}"
       },
       {
         "name": "GOV_NOTIFY_SENDER_ID",
-        "value": "sender-id"
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_sender_id.value}"
       },
       {
         "name": "HARDCODED_TENANCIES",
-        "value": "0114084/01,029533/01,0115514/01,030793/01,064966/01,007472/01,030793/01,0102966/02,046085/01,050678/01,0100984/01,065919/01,0900845/01,091549/01,022893/01,0106280/01,0100518/02,0906592/01,032494/01,036679/01,017526/01,0113066/01,016467/01,040939/01,066228/01,0111614/01,032494/01,033405/01,024667/01,0900226/01"
-      },
-      {
-        "name": "INCOME_COLLECTION_API_HOST",
-        "value": "https://g6bw0g0ojk.execute-api.eu-west-2.amazonaws.com/staging/tenancy/api/v1"
-      },
-      {
-        "name": "INCOME_COLLECTION_API_KEY",
-        "value": "ic_key"
+        "value": "${data.aws_ssm_parameter.housing_finance_hardcoded_tenancies.value}"
       },
       {
         "name": "PATCH_CODES_FOR_LETTER_AUTOMATION",
-        "value": "W02, W03"
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_letter_automation.value}"
       },
       {
         "name": "RACK_ENV",
-        "value": "development"
+        "value": "${data.aws_ssm_parameter.housing_finance_rack_env.value}"
       },
       {
         "name": "RAILS_ENV",
-        "value": "development"
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_env.value}"
       },
       {
         "name": "RAILS_LOG_TO_STDOUT",
-        "value": "true"
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_log_to_stdout.value}"
       },
       {
         "name": "REDIS_URL",
-        "value": "redis://redis-staging.mfk1c9.ng.0001.euw2.cache.amazonaws.com:6379"
+        "value": "${data.aws_ssm_parameter.housing_finance_redis_url.value}"
       },
       {
         "name": "SECRET_KEY_BASE",
-        "value": "e1595bf08376c13f4494fa5c7ef65f3d547097113ceec483ed669387a44f716b09f12bedf2021c031fefb651cc0c8b4408cd8c24aab43e16cc1e7df6d18142d3"
+        "value": "${data.aws_ssm_parameter.housing_finance_secret_key_base.value}"
       },
       {
         "name": "SEND_LIVE_COMMUNICATIONS",
-        "value": "false"
+        "value": "${data.aws_ssm_parameter.housing_finance_send_live_communications.value}"
       },
       {
         "name": "SENTRY_DSN",
-        "value": "https://157a2d5f7d7441cbad977d92b21851ef:60c753947b834e0d87b8f0928df05eac@sentry.io/1276456"
+        "value": "${data.aws_ssm_parameter.housing_finance_sentry_dsn.value}"
       },
       {
         "name": "SIDEKIQ_PASSWORD",
-        "value": "sideq-password"
+        "value": "${data.aws_ssm_parameter.housing_finance_sidekiq_password.value}"
       },
       {
         "name": "SIDEKIQ_USERNAME",
-        "value": "developers"
+        "value": "${data.aws_ssm_parameter.housing_finance_sidekiq_username.value}"
       },
       {
         "name": "TENANCY_API_HOST",
-        "value": "https://g6bw0g0ojk.execute-api.eu-west-2.amazonaws.com/staging/tenancy"
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_host.value}"
       },
       {
         "name": "TENANCY_API_KEY",
-        "value": "api-key"
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_key.value}"
       },
       {
         "name": "TEST_EMAIL_ADDRESS",
-        "value": "soraya.clarke@hackney.gov.uk"
+        "value": "${data.aws_ssm_parameter.housing_finance_test_email_address.value}"
       },
       {
         "name": "TEST_PHONE_NUMBER",
-        "value": "07976662022"
+        "value": "${data.aws_ssm_parameter.housing_finance_test_phone_number.value}"
       },
       {
         "name": "UH_DATABASE_HOST",
-        "value": "10.80.65.4"
+        "value": "${data.aws_ssm_parameter.housing_finance_db_host.value}"
       },
       {
         "name": "UH_DATABASE_NAME",
-        "value": "StagedDB"
+        "value": "${data.aws_ssm_parameter.housing_finance_db_database.value}"
       },
       {
         "name": "UH_DATABASE_PASSWORD",
-        "value": "pwd"
+        "value": "${data.aws_ssm_parameter.housing_finance_db_password.value}"
       },
       {
         "name": "UH_DATABASE_PORT",
-        "value": "1433"
+        "value": "3306"
       },
       {
         "name": "UH_DATABASE_USERNAME",
-        "value": "HackneyAPIIncomeCollection"
+        "value": "${data.aws_ssm_parameter.housing_finance_db_username.value}"
       },
       {
         "name": "DATABASE_HOST",
@@ -313,7 +382,6 @@ resource "aws_db_instance" "housing-mysql-db" {
 }
 
 # Network Load Balancer (NLB) setup
-
 resource "aws_lb" "lb" {
   name               = "lb-${var.app_name}"
   internal           = true
