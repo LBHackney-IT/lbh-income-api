@@ -8,7 +8,7 @@ orbs:
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.10
+      - image: circleci/python:3.8
   docker-terraform:
     docker:
       - image: "hashicorp/terraform:light"
