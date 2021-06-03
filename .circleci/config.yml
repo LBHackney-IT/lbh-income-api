@@ -100,7 +100,7 @@ jobs:
       - checkout
       - run:
           name: Install AWS CLI
-          command: sudo apt-get update && sudo apt-get -y install python3-pip && pip3 install awscli --upgrade --user
+          command: sudo apt-get update && sudo apt-get -y install python3-pip && pip install awscli --upgrade --user
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
