@@ -100,25 +100,26 @@ jobs:
       - checkout
       - run:
           name: Install AWS CLI
-          command: sudo apt-get update && sudo apt-get -y install python3-pip && pip install awscli --upgrade --user
-      - run:
-          name: Login to ECR
-          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
-      - run:
-          name: Build new application Docker image
-          command: docker build --build-arg RAILS_ENV=development --tag hackney/apps/income-api .
-      - run:
-          name: Tag new image for development release
-          command: |
-            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
-            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
-            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
-      - run:
-          name: Release new image to ECR
-          command: |
-            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
-            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
-            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+          command: python --version
+#          command: sudo apt-get update && sudo apt-get -y install python3-pip && pip install awscli --upgrade --user
+#      - run:
+#          name: Login to ECR
+#          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
+#      - run:
+#          name: Build new application Docker image
+#          command: docker build --build-arg RAILS_ENV=development --tag hackney/apps/income-api .
+#      - run:
+#          name: Tag new image for development release
+#          command: |
+#            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+#            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+#            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+#      - run:
+#          name: Release new image to ECR
+#          command: |
+#            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+#            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+#            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
   development_release_manual:
     <<: *development_release
 
@@ -207,13 +208,13 @@ workflows:
           filters:
             branches:
               only: development
-      - terraform-init-and-apply-to-development:
-          context: api-assume-role-housing-development-context
-          requires:
-            - development_release
-          filters:
-            branches:
-              only: development
+#      - terraform-init-and-apply-to-development:
+#          context: api-assume-role-housing-development-context
+#          requires:
+#            - development_release
+#          filters:
+#            branches:
+#              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
 #          requires:
