@@ -99,6 +99,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Set Python Version"
+          command: pyenv global 3.7.0
+      - run:
           name: Install AWS CLI
           command: python --version
 #          command: sudo apt-get update && sudo apt-get -y install python3-pip && pip install awscli --upgrade --user
