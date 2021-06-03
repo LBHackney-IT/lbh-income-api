@@ -26,7 +26,7 @@ data "aws_ssm_parameter" "housing_finance_mysql_host" {
   name = "/housing-finance/development/mysql-host"
 }
 data "aws_ssm_parameter" "housing_finance_mysql_database" {
-  name = "/housing-finance/development/mysql-name"
+  name = "/housing-finance/development/mysql-database"
 }
 data "aws_ssm_parameter" "housing_finance_mysql_username" {
   name = "/housing-finance/development/mysql-username"
