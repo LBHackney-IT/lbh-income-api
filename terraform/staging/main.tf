@@ -10,19 +10,31 @@ locals {
 }
 
 data "aws_ssm_parameter" "housing_finance_db_host" {
-  name = "/housing-finance/development/mysql-host"
+  name = "/housing-finance/staging/mysql-host"
 }
 
 data "aws_ssm_parameter" "housing_finance_db_database" {
-  name = "/housing-finance/development/mysql-database"
+  name = "/housing-finance/staging/mysql-database"
 }
 
 data "aws_ssm_parameter" "housing_finance_db_username" {
-  name = "/housing-finance/development/mysql-username"
+  name = "/housing-finance/staging/mysql-username"
 }
 
 data "aws_ssm_parameter" "housing_finance_db_password" {
-  name = "/housing-finance/development/mysql-password"
+  name = "/housing-finance/staging/mysql-password"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_host" {
+  name = "/housing-finance/staging/mysql-host"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_database" {
+  name = "/housing-finance/staging/mysql-name"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_username" {
+  name = "/housing-finance/staging/mysql-username"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_password" {
+  name = "/housing-finance/staging/mysql-password"
 }
 
 terraform {
@@ -266,11 +278,11 @@ resource "aws_db_instance" "housing-mysql-db" {
   storage_type                = "gp2" //ssd
   port                        = 3306
   backup_window               = "00:01-00:31"
-  username                    = data.aws_ssm_parameter.housing_finance_db_username.value
-  password                    = data.aws_ssm_parameter.housing_finance_db_password.value
+  username                    = data.aws_ssm_parameter.housing_finance_mysql_username.value
+  password                    = data.aws_ssm_parameter.housing_finance_mysql_password.value
   vpc_security_group_ids      = ["sg-00d2e14f38245dd0b"]
   db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
-  name                        = "housingfinancedb${var.environment_name}"
+  name                        = data.aws_ssm_parameter.housing_finance_mysql_database.value
   monitoring_interval         = 0 //this is for enhanced Monitoring there will already be some basic monitoring available
   backup_retention_period     = 30
   storage_encrypted           = false  //this should be true for production

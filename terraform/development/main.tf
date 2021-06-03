@@ -22,6 +22,18 @@ data "aws_ssm_parameter" "housing_finance_db_username" {
 data "aws_ssm_parameter" "housing_finance_db_password" {
   name = "/housing-finance/development/uh-database-password"
 }
+data "aws_ssm_parameter" "housing_finance_mysql_host" {
+  name = "/housing-finance/development/mysql-host"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_database" {
+  name = "/housing-finance/development/mysql-name"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_username" {
+  name = "/housing-finance/development/mysql-username"
+}
+data "aws_ssm_parameter" "housing_finance_mysql_password" {
+  name = "/housing-finance/development/mysql-password"
+}
 data "aws_ssm_parameter" "housing_finance_aws_access_key_id" {
   name = "/housing-finance/development/aws-access-key-id"
 }
@@ -318,19 +330,19 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       },
       {
         "name": "DATABASE_HOST",
-        "value": "${data.aws_ssm_parameter.housing_finance_db_host.value}"
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_host.value}"
       },
       {
         "name": "DATABASE_USERNAME",
-        "value": "${data.aws_ssm_parameter.housing_finance_db_username.value}"
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_username.value}"
       },
       {
         "name": "DATABASE_PASSWORD",
-        "value": "${data.aws_ssm_parameter.housing_finance_db_password.value}"
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_password.value}"
       },
       {
         "name": "DATABASE_NAME",
-        "value": "${data.aws_ssm_parameter.housing_finance_db_database.value}"
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_database.value}"
       }
     ]
   }
@@ -356,11 +368,11 @@ resource "aws_db_instance" "housing-mysql-db" {
   storage_type                = "gp2" //ssd
   port                        = 3306
   backup_window               = "00:01-00:31"
-  username                    = data.aws_ssm_parameter.housing_finance_db_username.value
-  password                    = data.aws_ssm_parameter.housing_finance_db_password.value
+  username                    = data.aws_ssm_parameter.housing_finance_mysql_username.value
+  password                    = data.aws_ssm_parameter.housing_finance_mysql_password.value
   vpc_security_group_ids      = ["sg-00d2e14f38245dd0b"]
   db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
-  name                        = "housingfinancedbdevelopment"
+  name                        = data.aws_ssm_parameter.housing_finance_mysql_database.value
   monitoring_interval         = 0 //this is for enhanced Monitoring there will already be some basic monitoring available
   backup_retention_period     = 30
   storage_encrypted           = false  //this should be true for production
