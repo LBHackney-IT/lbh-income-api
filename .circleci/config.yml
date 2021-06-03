@@ -198,7 +198,7 @@ workflows:
 #      - check
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
+#          requires:
 #            - check
       - development_release:
           context: api-assume-role-housing-development-context
