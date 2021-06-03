@@ -63,7 +63,7 @@ jobs:
       - checkout
       - run:
           name: Install AWS CLI
-          command: pip install awscli --upgrade --user
+          command: pip install --upgrade pip && pip install awscli --upgrade --user
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -200,17 +200,17 @@ workflows:
           context: api-assume-role-housing-development-context
 #          requires:
 #            - check
-      - development_release:
-          context: api-assume-role-housing-development-context
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: development
+#      - development_release:
+#          context: api-assume-role-housing-development-context
+#          requires:
+#            - assume-role-development
+#          filters:
+#            branches:
+#              only: development
       - terraform-init-and-apply-to-development:
           context: api-assume-role-housing-development-context
           requires:
-            - development_release
+            - assume-role-development
           filters:
             branches:
               only: development
