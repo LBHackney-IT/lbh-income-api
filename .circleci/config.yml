@@ -95,7 +95,8 @@ jobs:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
   development_release: &development_release
-    machine: true
+    machine:
+      image: circleci/classic:201808-01
     steps:
       - checkout
       - run:
