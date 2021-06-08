@@ -404,6 +404,7 @@ resource "aws_lb" "lb" {
     Environment = "development"
   }
 }
+
 resource "aws_lb_target_group" "lb_tg" {
   depends_on  = [
     aws_lb.lb
@@ -421,6 +422,7 @@ resource "aws_lb_target_group" "lb_tg" {
     create_before_destroy = true
   }
 }
+
 # Redirect all traffic from the NLB to the target group
 resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.lb.id
@@ -433,7 +435,6 @@ resource "aws_lb_listener" "lb_listener" {
 }
 
 # API Gateway setup
-
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
   name = "vpc-link-income-api"
