@@ -13,6 +13,9 @@ locals {
 data "aws_ssm_parameter" "housing_finance_db_host" {
   name = "/housing-finance/development/uh-database-host"
 }
+data "aws_ssm_parameter" "housing_finance_db_port" {
+  name = "/housing-finance/development/uh-database-port"
+}
 data "aws_ssm_parameter" "housing_finance_db_database" {
   name = "/housing-finance/development/uh-database-name"
 }
@@ -322,7 +325,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       },
       {
         "name": "UH_DATABASE_PORT",
-        "value": "3306"
+        "value": ""value": "${data.aws_ssm_parameter.housing_finance_db_port.value}""
       },
       {
         "name": "UH_DATABASE_USERNAME",
