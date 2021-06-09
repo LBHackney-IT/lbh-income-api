@@ -325,7 +325,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       },
       {
         "name": "UH_DATABASE_PORT",
-        "value": "value": "${data.aws_ssm_parameter.housing_finance_db_port.value}"
+        "value": "${data.aws_ssm_parameter.housing_finance_db_port.value}"
       },
       {
         "name": "UH_DATABASE_USERNAME",
