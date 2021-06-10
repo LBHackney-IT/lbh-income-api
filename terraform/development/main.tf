@@ -459,6 +459,7 @@ resource "aws_api_gateway_method" "main" {
   resource_id   = aws_api_gateway_resource.main.id
   http_method   = "ANY"
   authorization = "NONE"
+  api_key_required = true
   request_parameters = {
     "method.request.path.proxy" = true
     "method.request.header.Authorization" = false
@@ -490,4 +491,23 @@ resource "aws_api_gateway_deployment" "main" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_api_gateway_usage_plan" "main" {
+  name = "income_api_development_usage_plan"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.main.id
+    stage  = aws_api_gateway_deployment.main.stage_name
+  }
+}
+
+resource "aws_api_gateway_api_key" "main" {
+  name = "income_api_development_key"
+}
+
+resource "aws_api_gateway_usage_plan_key" "main" {
+  key_id        = aws_api_gateway_api_key.main.id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.main.id
 }
