@@ -346,6 +346,10 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       {
         "name": "DATABASE_NAME",
         "value": "${data.aws_ssm_parameter.housing_finance_mysql_database.value}"
+      },
+      {
+        "name": "DATABASE_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_database_url.value}"
       }
     ]
   }
