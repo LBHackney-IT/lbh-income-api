@@ -181,7 +181,7 @@ module Hackney
           DECLARE @LastPaymentDate SMALLDATETIME = (
             SELECT post_date FROM (
               SELECT ROW_NUMBER() OVER (ORDER BY post_date DESC) AS row, post_date
-              FROM [dbo].[rtrans] WITH (NOLOCK)
+              FROM [dbo].[UhTransaction] WITH (NOLOCK)
               WHERE tag_ref = @TenancyRef
               AND trans_type IN (SELECT payment_type FROM @PaymentTypes)
             ) t
@@ -191,7 +191,7 @@ module Hackney
           DECLARE @TotalPaymentAmountInWeek NUMERIC(9,2) = (
             SELECT total_amount_in_week FROM (
               SELECT SUM(real_value) as total_amount_in_week
-              FROM [dbo].[rtrans] WITH (NOLOCK)
+              FROM [dbo].[UhTransaction] WITH (NOLOCK)
               WHERE tag_ref = @TenancyRef
               AND trans_type IN (SELECT payment_type FROM @PaymentTypes)
               AND post_date >= '#{beginning_of_week}'
@@ -201,7 +201,7 @@ module Hackney
           DECLARE @SumOfTransactionsInWeek NUMERIC(9,2) = (
             SELECT total_amount_in_week FROM (
               SELECT SUM(real_value) as total_amount_in_week
-              FROM [dbo].[rtrans] WITH (NOLOCK)
+              FROM [dbo].[UHTransaction] WITH (NOLOCK)
               WHERE tag_ref = @TenancyRef
               AND post_date >= '#{beginning_of_week}'
             ) a
@@ -217,41 +217,41 @@ module Hackney
 
           DECLARE @UniversalCredit SMALLDATETIME = (
             SELECT TOP 1 action_date
-            FROM araction WITH (NOLOCK)
+            FROM UHAraction WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             AND action_code = 'UCC'
             ORDER BY action_date DESC
           )
           DECLARE @UCVerificationComplete SMALLDATETIME = (
             SELECT TOP 1 action_date
-            FROM araction WITH (NOLOCK)
+            FROM UHAraction WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             AND action_code = 'UC1'
             ORDER BY action_date DESC
           )
           DECLARE @UCDirectPaymentRequested SMALLDATETIME = (
             SELECT TOP 1 action_date
-            FROM araction WITH (NOLOCK)
+            FROM UHAraction WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             AND action_code = 'UC2'
             ORDER BY action_date DESC
           )
           DECLARE @UCDirectPaymentReceived SMALLDATETIME = (
             SELECT TOP 1 action_date
-            FROM araction WITH (NOLOCK)
+            FROM UHAraction WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             AND action_code = 'UC3'
             ORDER BY action_date DESC
           )
           DECLARE @MostRecentAgreementDate SMALLDATETIME = (
             SELECT TOP 1 arag_startdate
-            FROM [dbo].[arag] WITH (NOLOCK)
+            FROM [dbo].[UHArag] WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             ORDER BY arag_startdate DESC
           )
           DECLARE @MostRecentAgreementStatus CHAR(10) = (
             SELECT TOP 1 arag_status
-            FROM [dbo].[arag] WITH (NOLOCK)
+            FROM [dbo].[UHArag] WITH (NOLOCK)
             WHERE tag_ref = @TenancyRef
             ORDER BY arag_startdate DESC
           )
@@ -278,8 +278,8 @@ module Hackney
             @MostRecentAgreementStatus as most_recent_agreement_status,
             @TotalPaymentAmountInWeek as total_payment_amount_in_week,
             @SumOfTransactionsInWeek as sum_of_transactions_in_week
-          FROM [dbo].[tenagree] WITH (NOLOCK)
-          LEFT OUTER JOIN [dbo].[property] WITH (NOLOCK) ON [dbo].[property].prop_ref = [dbo].[tenagree].prop_ref
+          FROM [dbo].[UHTenagree] tenagree WITH (NOLOCK)
+          LEFT OUTER JOIN [dbo].[UHProperty] property WITH (NOLOCK) ON property.prop_ref = tenagree.prop_ref
           WHERE tag_ref = @TenancyRef
         SQL
       end
