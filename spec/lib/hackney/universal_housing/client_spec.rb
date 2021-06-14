@@ -8,6 +8,6 @@ describe Hackney::UniversalHousing::Client do
   end
 
   it 'can execute queries against the database' do
-    expect(uh_client.table_exists?('tenagree')).to be(true)
+    expect(uh_client.table_exists?('MATenancyAgreement')).to be(true)
   end
 end

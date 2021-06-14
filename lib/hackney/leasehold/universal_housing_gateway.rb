@@ -26,7 +26,7 @@ module Hackney
           database.extension :identifier_mangling
           database.identifier_input_method = database.identifier_output_method = nil
 
-          query = database[:tenagree]
+          query = database[:MATenancyAgreement]
 
           query
             .select(:tag_ref)

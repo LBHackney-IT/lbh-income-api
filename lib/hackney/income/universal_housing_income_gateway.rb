@@ -28,9 +28,9 @@ module Hackney
         def get_income_info(tenancy_ref:)
           res = tenancy_agreement
                 .exclude(Sequel.trim(Sequel.qualify(:prop_table, :prop_ref)) => '')
-                .join(property, { prop_ref: Sequel.qualify(:tenagree, :prop_ref) }, table_alias: 'prop_table')
+                .join(property, { prop_ref: Sequel.qualify(:MATenancyAgreement, :prop_ref) }, table_alias: 'prop_table')
                 .join(postcode, post_code: Sequel.qualify(:prop_table, :post_code))
-                .join(member, house_ref: Sequel.qualify(:tenagree, :house_ref))
+                .join(member, house_ref: Sequel.qualify(:MATenancyAgreement, :house_ref))
                 .where(tag_ref: tenancy_ref)
                 .first
 
@@ -69,19 +69,19 @@ module Hackney
         end
 
         def tenancy_agreement
-          @tenancy_agreement ||= database[:tenagree]
+          @tenancy_agreement ||= database[:MATenancyAgreement]
         end
 
         def postcode
-          @postcode ||= database[:postcode]
+          @postcode ||= database[:UHPostCode]
         end
 
         def property
-          @property ||= database[:property]
+          @property ||= database[:MAProperty]
         end
 
         def member
-          @member ||= database[:member]
+          @member ||= database[:MAMember]
         end
       end
     end

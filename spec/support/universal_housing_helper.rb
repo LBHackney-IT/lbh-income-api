@@ -6,7 +6,7 @@ module UniversalHousingHelper
                                   money_judgement: 0.0, charging_order: 0.0, bal_dispute: 0.0, courtdate: '1900-01-01 00:00:00 +0000',
                                   court_outcome: nil, eviction_date: '1900-01-01 00:00:00 +0000', agreement_type: 'M',
                                   service: 0.0, other_charge: 0.0, rentgrp_ref: 'HRA')
-    Hackney::UniversalHousing::Client.connection[:tenagree].insert(
+    Hackney::UniversalHousing::Client.connection[:MATenancyAgreement].insert(
       tag_ref: tenancy_ref,
       cur_bal: current_balance,
       rent: rent,
@@ -68,9 +68,9 @@ module UniversalHousingHelper
                           aragdet_amount:,
                           aragdet_comment:,
                           aragdet_frequency:)
-    arag_sid = Hackney::UniversalHousing::Client.connection[:arag].count
+    arag_sid = Hackney::UniversalHousing::Client.connection[:UHArag].count
 
-    Hackney::UniversalHousing::Client.connection[:arag].insert(
+    Hackney::UniversalHousing::Client.connection[:UHArag].insert(
       arag_ref: arag_sid,
       arag_sid: arag_sid,
       tag_ref: tag_ref,
@@ -84,7 +84,7 @@ module UniversalHousingHelper
       arag_comment: arag_comment
     )
 
-    Hackney::UniversalHousing::Client.connection[:aragdet].insert(
+    Hackney::UniversalHousing::Client.connection[:UHAragdet].insert(
       arag_sid: arag_sid,
       aragdet_sid: arag_sid,
       aragdet_amount: aragdet_amount,
@@ -98,14 +98,14 @@ module UniversalHousingHelper
   # rubocop:enable Metrics/ParameterLists
 
   def update_uh_agreement(tag_ref:, aragdet_comment:, aragdet_amount:)
-    arag = Hackney::UniversalHousing::Client.connection[:arag].where(tag_ref: tag_ref).first
-    aragdet = Hackney::UniversalHousing::Client.connection[:aragdet].where(arag_sid: arag[:arag_sid]).first
+    arag = Hackney::UniversalHousing::Client.connection[:UHArag].where(tag_ref: tag_ref).first
+    aragdet = Hackney::UniversalHousing::Client.connection[:UHAragdet].where(arag_sid: arag[:arag_sid]).first
 
     aragdet[:aragdet_sid] += 1000
     aragdet[:aragdet_comment] = aragdet_comment
     aragdet[:aragdet_amount] = aragdet_amount
 
-    Hackney::UniversalHousing::Client.connection[:aragdet].insert(aragdet)
+    Hackney::UniversalHousing::Client.connection[:UHAragdet].insert(aragdet)
   end
 
   def create_valid_uh_records_for_an_income_letter(
@@ -205,7 +205,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_transaction(tenancy_ref:, amount: 0.0, date: Date.today, type: '')
-    Hackney::UniversalHousing::Client.connection[:rtrans].insert(
+    Hackney::UniversalHousing::Client.connection[:SSMiniTransaction].insert(
       tag_ref: tenancy_ref,
       real_value: amount,
       post_date: date,
@@ -225,7 +225,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_arrears_agreement(tenancy_ref:, status:, status_entry_date: nil, expected_balance: nil, agreement_start_date: nil)
-    Hackney::UniversalHousing::Client.connection[:arag].insert(
+    Hackney::UniversalHousing::Client.connection[:UHArag].insert(
       arag_ref: Faker::IDNumber.valid,
       tag_ref: tenancy_ref,
       arag_status: status,
@@ -237,7 +237,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_action(tenancy_ref:, code:, date:, comment: '')
-    table = Hackney::UniversalHousing::Client.connection[:araction]
+    table = Hackney::UniversalHousing::Client.connection[:UHAraction]
     table.insert(
       tag_ref: tenancy_ref,
       action_code: code,
@@ -250,7 +250,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_property(property_ref:, patch_code: '', post_preamble: '', address1: '', post_code: '', post_desig: '')
-    Hackney::UniversalHousing::Client.connection[:property].insert(
+    Hackney::UniversalHousing::Client.connection[:MAProperty].insert(
       prop_ref: property_ref,
       arr_patch: patch_code,
       managed_property: false,
@@ -279,7 +279,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_househ(house_ref:, prop_ref: '', corr_preamble: '', corr_desig: '', post_code: '', corr_postcode: '', house_desc: '')
-    Hackney::UniversalHousing::Client.connection[:househ].insert(
+    Hackney::UniversalHousing::Client.connection[:UHHousehold].insert(
       house_ref: house_ref,
       prop_ref: prop_ref,
       corr_preamble: corr_preamble,
@@ -305,7 +305,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_postcode(post_code:, aline1:, aline2: '', aline3: '', aline4: '')
-    Hackney::UniversalHousing::Client.connection[:postcode].insert(
+    Hackney::UniversalHousing::Client.connection[:UHPostCode].insert(
       post_code: post_code,
       aline1: aline1,
       aline2: aline2,
@@ -342,7 +342,7 @@ module UniversalHousingHelper
   def create_uh_direct_debit(tenancy_ref:, ddagree_status: 399, lu_type: 'DDS', lu_desc:, ddstart: '2020-05-23 00:00:00')
     ddagree_ref = Faker::Number.number(digits: 8).to_s
 
-    Hackney::UniversalHousing::Client.connection[:ddagacc].insert(
+    Hackney::UniversalHousing::Client.connection[:UHDdagacc].insert(
       tag_ref: tenancy_ref,
       due_per_period_ta: 1.0,
       ddagree_ref: ddagree_ref,
@@ -365,7 +365,7 @@ module UniversalHousingHelper
       reduction_aa: 0,
       smooth_rough: 0
     )
-    Hackney::UniversalHousing::Client.connection[:ddagree].insert(
+    Hackney::UniversalHousing::Client.connection[:UHDdagree].insert(
       ddagree_ref: ddagree_ref,
       ddsched_version: 0,
       ddpayer_ref: 'abc',
@@ -402,7 +402,7 @@ module UniversalHousingHelper
   end
 
   def create_uh_member(house_ref:, title:, forename:, surname:)
-    Hackney::UniversalHousing::Client.connection[:member].insert(
+    Hackney::UniversalHousing::Client.connection[:MAMember].insert(
       house_ref: house_ref,
       title: title,
       forename: forename,
@@ -438,19 +438,19 @@ module UniversalHousingHelper
   end
 
   def truncate_uh_tables
-    Hackney::UniversalHousing::Client.connection[:tenagree].truncate
-    Hackney::UniversalHousing::Client.connection[:rtrans].truncate
-    Hackney::UniversalHousing::Client.connection[:arag].truncate
-    Hackney::UniversalHousing::Client.connection[:aragdet].truncate
-    Hackney::UniversalHousing::Client.connection[:araction].truncate
-    Hackney::UniversalHousing::Client.connection[:property].truncate
-    Hackney::UniversalHousing::Client.connection[:househ].truncate
-    Hackney::UniversalHousing::Client.connection[:postcode].truncate
+    Hackney::UniversalHousing::Client.connection[:MATenancyAgreement].truncate
+    Hackney::UniversalHousing::Client.connection[:SSMiniTransaction].truncate
+    Hackney::UniversalHousing::Client.connection[:UHArag].truncate
+    Hackney::UniversalHousing::Client.connection[:UHAragdet].truncate
+    Hackney::UniversalHousing::Client.connection[:UHAraction].truncate
+    Hackney::UniversalHousing::Client.connection[:MAProperty].truncate
+    Hackney::UniversalHousing::Client.connection[:UHHousehold].truncate
+    Hackney::UniversalHousing::Client.connection[:UHPostCode].truncate
     Hackney::UniversalHousing::Client.connection[:rent].truncate
     Hackney::UniversalHousing::Client.connection[:u_letsvoids].truncate
-    Hackney::UniversalHousing::Client.connection[:member].truncate
-    Hackney::UniversalHousing::Client.connection[:ddagacc].truncate
-    Hackney::UniversalHousing::Client.connection[:ddagree].truncate
+    Hackney::UniversalHousing::Client.connection[:MAMember].truncate
+    Hackney::UniversalHousing::Client.connection[:UHDdagacc].truncate
+    Hackney::UniversalHousing::Client.connection[:UHDdagree].truncate
     Hackney::UniversalHousing::Client.connection[:lookup].truncate
   end
 end
