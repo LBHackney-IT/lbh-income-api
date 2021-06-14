@@ -186,7 +186,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     family                   = "ecs-task-definition-income-api"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
-    memory                   = "4096"
+    memory                   = "2048"
     cpu                      = "512"
     execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
     container_definitions    = <<DEFINITION
@@ -194,7 +194,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
   {
     "name": "income-api-container",
     "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
-    "memory": 4096,
+    "memory": 2048,
     "cpu": 512,
     "essential": true,
     "portMappings": [
