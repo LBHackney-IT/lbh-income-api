@@ -42,12 +42,12 @@ module Hackney
 
         def get_leasehold_info(payment_ref:)
           res = tenancy_agreement
-                .select_append(Sequel.qualify(:tenagree, :prop_ref).as(:tenancy_prop_ref))
-                .select_append(Sequel.qualify(:tenagree, :tenure).as(:tenure_type))
+                .select_append(Sequel.qualify(:MATenancyAgreement, :prop_ref).as(:tenancy_prop_ref))
+                .select_append(Sequel.qualify(:MATenancyAgreement, :tenure).as(:tenure_type))
                 .where(u_saff_rentacc: payment_ref)
-                .exclude(Sequel.trim(Sequel.qualify(:tenagree, :prop_ref)) => '')
-                .join(rent, prop_ref: Sequel.qualify(:tenagree, :prop_ref))
-                .join(household, house_ref: Sequel.qualify(:tenagree, :house_ref))
+                .exclude(Sequel.trim(Sequel.qualify(:MATenancyAgreement, :prop_ref)) => '')
+                .join(rent, prop_ref: Sequel.qualify(:MATenancyAgreement, :prop_ref))
+                .join(household, house_ref: Sequel.qualify(:MATenancyAgreement, :house_ref))
                 .first
 
           raise TenancyNotFoundError unless res.present?
@@ -88,23 +88,23 @@ module Hackney
         private
 
         def tenancy_agreement
-          @tenancy_agreement ||= database[:tenagree]
+          @tenancy_agreement ||= database[:MATenancyAgreement]
         end
 
         def postcode
-          @postcode ||= database[:postcode]
+          @postcode ||= database[:UHPostCode]
         end
 
         def rent
-          @rent ||= database[:rent]
+          @rent ||= database[:UHRent]
         end
 
         def property
-          @property ||= database[:property]
+          @property ||= database[:MAProperty]
         end
 
         def household
-          @household ||= database[:househ]
+          @household ||= database[:UHHousehold]
         end
 
         def get_correspondence_address(corr_postcode:, prop_postcode:, household_res:, property_res:)

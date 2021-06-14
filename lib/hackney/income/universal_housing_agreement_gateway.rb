@@ -4,8 +4,8 @@ module Hackney
       def self.for_tenancy(database_connection, tenancy_ref)
         sql = <<~SQL
           SELECT *
-          FROM arag
-          JOIN aragdet on arag.arag_sid = aragdet.arag_sid
+          FROM UHArag arag
+          JOIN UHAragdet aragdet on arag.arag_sid = aragdet.arag_sid
           WHERE arag.tag_ref = ?
           ORDER BY aragdet.aragdet_sid
         SQL

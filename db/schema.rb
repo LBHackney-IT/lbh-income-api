@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_09_18_105527) do
 
-  create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "actions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "tenancy_ref"
     t.string "payment_ref"
     t.float "balance"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["tenancy_ref"], name: "index_actions_on_tenancy_ref", unique: true
   end
 
-  create_table "agreement_legacy_migrations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "agreement_legacy_migrations", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "legacy_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["agreement_id"], name: "index_agreement_legacy_migrations_on_agreement_id"
   end
 
-  create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "agreement_states", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "agreement_id"
     t.string "agreement_state"
     t.datetime "created_at", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["agreement_id"], name: "index_agreement_states_on_agreement_id"
   end
 
-  create_table "agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "agreement_type"
     t.decimal "starting_balance", precision: 10, scale: 2
     t.decimal "amount", precision: 10, scale: 2
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["court_case_id"], name: "index_agreements_on_court_case_id"
   end
 
-  create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "case_priorities", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "tenancy_ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -101,13 +101,13 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["tenancy_ref"], name: "index_case_priorities_on_tenancy_ref", unique: true
   end
 
-  create_table "cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "cases", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "tenancy_ref"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "court_cases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "court_cases", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.datetime "court_date"
     t.text "court_outcome"
     t.decimal "balance_on_court_outcome_date", precision: 10, scale: 2
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.boolean "disrepair_counter_claim"
   end
 
-  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "uuid", null: false
     t.string "extension", null: false
     t.text "metadata"
@@ -150,14 +150,14 @@ ActiveRecord::Schema.define(version: 2020_09_18_105527) do
     t.index ["uuid"], name: "index_documents_on_uuid", unique: true
   end
 
-  create_table "evictions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "evictions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.datetime "date", null: false
     t.string "tenancy_ref", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "provider_uid"
     t.string "provider"
     t.string "name"
