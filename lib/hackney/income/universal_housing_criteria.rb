@@ -279,7 +279,7 @@ module Hackney
             @TotalPaymentAmountInWeek as total_payment_amount_in_week,
             @SumOfTransactionsInWeek as sum_of_transactions_in_week
           FROM [dbo].[MATenancyAgreement] tenagree WITH (NOLOCK)
-          LEFT OUTER JOIN [dbo].[MAProperty] property WITH (NOLOCK) ON [dbo].[MAProperty].prop_ref = [dbo].[MATenancyAgreement].prop_ref
+          LEFT OUTER JOIN [dbo].[MAProperty] property WITH (NOLOCK) ON property.prop_ref = tenagree.prop_ref
           WHERE tag_ref = @TenancyRef
         SQL
       end

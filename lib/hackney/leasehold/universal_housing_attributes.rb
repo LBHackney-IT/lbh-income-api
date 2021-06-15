@@ -108,9 +108,9 @@ module Hackney
             @LastLetterActionCode as latest_letter,
             @LastLetterDate as latest_letter_date
           FROM [dbo].[MATenancyAgreement] tenagree WITH (NOLOCK)
-            LEFT OUTER JOIN [dbo].[UHTenure] tenure On [dbo].[UHTenure].ten_type = [dbo].[MATenancyAgreement].tenure
-            LEFT OUTER JOIN [dbo].[MAProperty] property WITH (NOLOCK) ON [dbo].[MAProperty].prop_ref = [dbo].[MATenancyAgreement].prop_ref
-            LEFT OUTER JOIN [dbo].[UHHousehold] househ WITH (NOLOCK) ON [dbo].[UHHousehold].house_ref = [dbo].[MATenancyAgreement].house_ref
+            LEFT OUTER JOIN [dbo].[UHTenure] tenure On tenure.ten_type = tenagree.tenure
+            LEFT OUTER JOIN [dbo].[MAProperty] property WITH (NOLOCK) ON property.prop_ref = tenagree.prop_ref
+            LEFT OUTER JOIN [dbo].[UHHousehold] househ WITH (NOLOCK) ON househ.house_ref = tenagree.house_ref
           WHERE tag_ref = @TenancyRef
         SQL
       end
