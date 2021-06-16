@@ -46,6 +46,15 @@ data "aws_ssm_parameter" "housing_finance_aws_region" {
 data "aws_ssm_parameter" "housing_finance_aws_secret_access_key" {
   name = "/housing-finance/development/aws-secret-access-key"
 }
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_letter_one" {
+  name = "/housing-finance/development/automate-income-collection-letter-one"
+}
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_letter_two" {
+  name = "/housing-finance/development/automate-income-collection-letter-two"
+}
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_sms" {
+  name = "/housing-finance/development/automate-income-collection-sms"
+}
 data "aws_ssm_parameter" "housing_finance_can_automate_letters" {
   name = "/housing-finance/development/can-automate-letters"
 }
@@ -72,6 +81,15 @@ data "aws_ssm_parameter" "housing_finance_new_relic_env" {
 }
 data "aws_ssm_parameter" "housing_finance_patch_codes_for_letter_automation" {
   name = "/housing-finance/development/patch-codes-for-letter-automation"
+}
+data "aws_ssm_parameter" "housing_finance_restrict_patches" {
+  name = "/housing-finance/development/restrict-patches"
+}
+data "aws_ssm_parameter" "housing_finance_permitted_patches" {
+  name = "/housing-finance/development/permitted-patches"
+}
+data "aws_ssm_parameter" "housing_finance_patch_codes_for_sms_automation" {
+  name = "/housing-finance/development/patch-codes-for-sms-automation"
 }
 data "aws_ssm_parameter" "housing_finance_rack_env" {
   name = "/housing-finance/development/rack-env"
@@ -186,7 +204,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     family                   = "ecs-task-definition-income-api"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
-    memory                   = "2048"
+    memory                   = "4096"
     cpu                      = "512"
     execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
     container_definitions    = <<DEFINITION
@@ -195,7 +213,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     "name": "income-api-container",
     "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
     "memory": 2048,
-    "cpu": 512,
+    "cpu": 1024,
     "essential": true,
     "portMappings": [
       {
@@ -225,11 +243,11 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       },
       {
         "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
-        "value": "false"
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_one.value}"
       },
       {
         "name": "AUTOMATE_INCOME_COLLECTION_LETTER_TWO",
-        "value": "false"
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_two.value}"
       },
       {
         "name": "AWS_REGION",
@@ -294,6 +312,172 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
       {
         "name": "SIDEKIQ_USERNAME",
         "value": "${data.aws_ssm_parameter.housing_finance_sidekiq_username.value}"
+      },
+      {
+        "name": "TENANCY_API_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_host.value}"
+      },
+      {
+        "name": "TENANCY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_key.value}"
+      },
+      {
+        "name": "TEST_EMAIL_ADDRESS",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_email_address.value}"
+      },
+      {
+        "name": "TEST_PHONE_NUMBER",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_phone_number.value}"
+      },
+      {
+        "name": "UH_DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_host.value}"
+      },
+      {
+        "name": "UH_DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_database.value}"
+      },
+      {
+        "name": "UH_DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_password.value}"
+      },
+      {
+        "name": "UH_DATABASE_PORT",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_port.value}"
+      },
+      {
+        "name": "UH_DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_username.value}"
+      },
+      {
+        "name": "DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_host.value}"
+      },
+      {
+        "name": "DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_username.value}"
+      },
+      {
+        "name": "DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_password.value}"
+      },
+      {
+        "name": "DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_database.value}"
+      },
+      {
+        "name": "DATABASE_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_database_url.value}"
+      }
+    ]
+  },
+  {
+    "name": "income-api-worker-container",
+    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
+    "memory": 2048,
+    "cpu": 512,
+    "essential": true,
+    "command": ["sh","-c","sidekiq -C ./schedule.yml & sidekiq"],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "ecs-task-definition-income-api-worker",
+            "awslogs-region": "eu-west-2",
+            "awslogs-stream-prefix": "income-api-worker-logs"
+        }
+    },
+    "environment": [
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_one.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_TWO",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_two.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_SMS",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_sms.value}"
+      },
+      {
+        "name": "CUSTOMER_MANAGED_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_secret_access_key.value}"
+      },
+      {
+        "name": "AWS_REGION",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_region.value}"
+      },
+      {
+        "name": "CAN_AUTOMATE_LETTERS",
+        "value": "${data.aws_ssm_parameter.housing_finance_can_automate_letters.value}"
+      },
+      {
+        "name": "ENABLE_TENANCY_SYNC",
+        "value": "${data.aws_ssm_parameter.housing_finance_enable_tenancy_sync.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_api_key.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_SENDER_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_sender_id.value}"
+      },
+      {
+        "name": "HARDCODED_TENANCIES",
+        "value": "${data.aws_ssm_parameter.housing_finance_hardcoded_tenancies.value}"
+      },
+      {
+        "name": "PATCH_CODES_FOR_LETTER_AUTOMATION",
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_letter_automation.value}"
+      },
+      {
+        "name": "PATCH_CODES_FOR_SMS_AUTOMATION",
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_sms_automation.value}"
+      },
+      {
+        "name": "PERMITTED_PATCHES",
+        "value": "${data.aws_ssm_parameter.housing_finance_permitted_patches.value}"
+      },
+      {
+        "name": "RACK_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rack_env.value}"
+      },
+      {
+        "name": "RAILS_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_env.value}"
+      },
+      {
+        "name": "RAILS_LOG_TO_STDOUT",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_log_to_stdout.value}"
+      },
+      {
+        "name": "REDIS_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_redis_url.value}"
+      },
+      {
+        "name": "RESTRICT_PATCHES",
+        "value": "${data.aws_ssm_parameter.housing_finance_restrict_patches.value}"
+      },
+      {
+        "name": "SECRET_KEY_BASE",
+        "value": "${data.aws_ssm_parameter.housing_finance_secret_key_base.value}"
+      },
+      {
+        "name": "SEND_LIVE_COMMUNICATIONS",
+        "value": "${data.aws_ssm_parameter.housing_finance_send_live_communications.value}"
+      },
+      {
+        "name": "SENTRY_DSN",
+        "value": "${data.aws_ssm_parameter.housing_finance_sentry_dsn.value}"
       },
       {
         "name": "TENANCY_API_HOST",
