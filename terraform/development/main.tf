@@ -10,6 +10,9 @@ locals {
 }
 
 # SSM Parameters - Systems Manager/Parameter Store
+data "aws_ssm_parameter" "housing_finance_docs_bucket" {
+  name = "/housing-finance/development/docs-bucket"
+}
 data "aws_ssm_parameter" "housing_finance_db_host" {
   name = "/housing-finance/development/uh-database-host"
 }
@@ -387,6 +390,10 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
         }
     },
     "environment": [
+      {
+        "name": "HOUSING_DOCS_BUCKET",
+        "value": "${data.aws_ssm_parameter.housing_finance_docs_bucket.value}"
+      },
       {
         "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
         "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_one.value}"
