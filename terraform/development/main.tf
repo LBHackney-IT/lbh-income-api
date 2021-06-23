@@ -233,9 +233,14 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
     },
     "environment": [
       {
+        "name": "HOUSING_DOCS_BUCKET",
+        "value": "${data.aws_ssm_parameter.housing_finance_docs_bucket.value}"
+      },
+      {
         "name": "CUSTOMER_MANAGED_KEY",
         "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
       },
+
       {
         "name": "AWS_ACCESS_KEY_ID",
         "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
