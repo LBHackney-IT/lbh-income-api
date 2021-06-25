@@ -9,26 +9,30 @@ locals {
   parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
 }
 
+# SSM Parameters - Systems Manager/Parameter Store
+data "aws_ssm_parameter" "housing_finance_docs_bucket" {
+  name = "/housing-finance/staging/docs-bucket"
+}
 data "aws_ssm_parameter" "housing_finance_db_host" {
-  name = "/housing-finance/staging/mysql-host"
+  name = "/housing-finance/staging/uh-database-host"
 }
-
+data "aws_ssm_parameter" "housing_finance_db_port" {
+  name = "/housing-finance/staging/uh-database-port"
+}
 data "aws_ssm_parameter" "housing_finance_db_database" {
-  name = "/housing-finance/staging/mysql-database"
+  name = "/housing-finance/staging/uh-database-name"
 }
-
 data "aws_ssm_parameter" "housing_finance_db_username" {
-  name = "/housing-finance/staging/mysql-username"
+  name = "/housing-finance/staging/uh-database-username"
 }
-
 data "aws_ssm_parameter" "housing_finance_db_password" {
-  name = "/housing-finance/staging/mysql-password"
+  name = "/housing-finance/staging/uh-database-password"
 }
 data "aws_ssm_parameter" "housing_finance_mysql_host" {
   name = "/housing-finance/staging/mysql-host"
 }
 data "aws_ssm_parameter" "housing_finance_mysql_database" {
-  name = "/housing-finance/staging/mysql-name"
+  name = "/housing-finance/staging/mysql-database"
 }
 data "aws_ssm_parameter" "housing_finance_mysql_username" {
   name = "/housing-finance/staging/mysql-username"
@@ -36,270 +40,631 @@ data "aws_ssm_parameter" "housing_finance_mysql_username" {
 data "aws_ssm_parameter" "housing_finance_mysql_password" {
   name = "/housing-finance/staging/mysql-password"
 }
+data "aws_ssm_parameter" "housing_finance_aws_access_key_id" {
+  name = "/housing-finance/staging/aws-access-key-id"
+}
+data "aws_ssm_parameter" "housing_finance_aws_region" {
+  name = "/housing-finance/staging/aws-region"
+}
+data "aws_ssm_parameter" "housing_finance_aws_secret_access_key" {
+  name = "/housing-finance/staging/aws-secret-access-key"
+}
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_letter_one" {
+  name = "/housing-finance/staging/automate-income-collection-letter-one"
+}
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_letter_two" {
+  name = "/housing-finance/staging/automate-income-collection-letter-two"
+}
+data "aws_ssm_parameter" "housing_finance_automate_income_collection_sms" {
+  name = "/housing-finance/staging/automate-income-collection-sms"
+}
+data "aws_ssm_parameter" "housing_finance_can_automate_letters" {
+  name = "/housing-finance/staging/can-automate-letters"
+}
+data "aws_ssm_parameter" "housing_finance_customer_managed_key" {
+  name = "/housing-finance/staging/customer-managed-key"
+}
+data "aws_ssm_parameter" "housing_finance_database_url" {
+  name = "/housing-finance/staging/database-url"
+}
+data "aws_ssm_parameter" "housing_finance_enable_tenancy_sync" {
+  name = "/housing-finance/staging/enable-tenancy-sync"
+}
+data "aws_ssm_parameter" "housing_finance_gov_notify_api_key" {
+  name = "/housing-finance/staging/gov-notify-api-key"
+}
+data "aws_ssm_parameter" "housing_finance_gov_notify_sender_id" {
+  name = "/housing-finance/staging/gov-notify-sender-id"
+}
+data "aws_ssm_parameter" "housing_finance_hardcoded_tenancies" {
+  name = "/housing-finance/staging/hardcoded-tenancies"
+}
+data "aws_ssm_parameter" "housing_finance_new_relic_env" {
+  name = "/housing-finance/staging/new-relic-env"
+}
+data "aws_ssm_parameter" "housing_finance_patch_codes_for_letter_automation" {
+  name = "/housing-finance/staging/patch-codes-for-letter-automation"
+}
+data "aws_ssm_parameter" "housing_finance_restrict_patches" {
+  name = "/housing-finance/staging/restrict-patches"
+}
+data "aws_ssm_parameter" "housing_finance_permitted_patches" {
+  name = "/housing-finance/staging/permitted-patches"
+}
+data "aws_ssm_parameter" "housing_finance_patch_codes_for_sms_automation" {
+  name = "/housing-finance/staging/patch-codes-for-sms-automation"
+}
+data "aws_ssm_parameter" "housing_finance_rack_env" {
+  name = "/housing-finance/staging/rack-env"
+}
+data "aws_ssm_parameter" "housing_finance_rails_env" {
+  name = "/housing-finance/staging/rails-env"
+}
+data "aws_ssm_parameter" "housing_finance_rails_log_to_stdout" {
+  name = "/housing-finance/staging/rails-log-to-stdout"
+}
+data "aws_ssm_parameter" "housing_finance_redis_url" {
+  name = "/housing-finance/staging/redis-url"
+}
+data "aws_ssm_parameter" "housing_finance_secret_key_base" {
+  name = "/housing-finance/staging/secret-key-base"
+}
+data "aws_ssm_parameter" "housing_finance_send_live_communications" {
+  name = "/housing-finance/staging/send-live-communications"
+}
+data "aws_ssm_parameter" "housing_finance_sentry_dsn" {
+  name = "/housing-finance/staging/sentry-dsn"
+}
+data "aws_ssm_parameter" "housing_finance_sentry_environment" {
+  name = "/housing-finance/staging/sentry-environment"
+}
+data "aws_ssm_parameter" "housing_finance_sidekiq_password" {
+  name = "/housing-finance/staging/sidekiq-password"
+}
+data "aws_ssm_parameter" "housing_finance_sidekiq_username" {
+  name = "/housing-finance/staging/sidekiq-username"
+}
+data "aws_ssm_parameter" "housing_finance_tenancy_api_host" {
+  name = "/housing-finance/staging/tenancy-api-host"
+}
+data "aws_ssm_parameter" "housing_finance_tenancy_api_key" {
+  name = "/housing-finance/staging/tenancy-api-key"
+}
+data "aws_ssm_parameter" "housing_finance_test_email_address" {
+  name = "/housing-finance/staging/test-email-address"
+}
+data "aws_ssm_parameter" "housing_finance_test_phone_number" {
+  name = "/housing-finance/staging/test-phone-number"
+}
 
+# Terraform State Management
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-housing-development"
+    bucket  = "terraform-state-housing-staging"
     encrypt = true
     region  = "eu-west-2"
     key     = "services/lbh-income-api/state"
   }
 }
 
-//resource "aws_ecr_repository" "income-api" {
-//  name                 = "hackney/apps/income-api"
-//  image_tag_mutability = "MUTABLE"
-//}
-//
-//resource "aws_ecr_repository_policy" "income-api-policy" {
-//  repository = aws_ecr_repository.income-api.name
-//  policy     = <<EOF
-//  {
-//    "Version": "2008-10-17",
-//    "Statement": [
-//      {
-//        "Sid": "adds full ecr access to the repository",
-//        "Effect": "Allow",
-//        "Principal": "*",
-//        "Action": [
-//          "ecr:BatchCheckLayerAvailability",
-//          "ecr:BatchGetImage",
-//          "ecr:CompleteLayerUpload",
-//          "ecr:GetDownloadUrlForLayer",
-//          "ecr:GetLifecyclePolicy",
-//          "ecr:InitiateLayerUpload",
-//          "ecr:PutImage",
-//          "ecr:UploadLayerPart",
-//          "logs:CreateLogGroup"
-//        ]
-//      }
-//    ]
-//  }
-//  EOF
-//}
-//
-//resource "aws_ecs_cluster" "income-api-ecs-cluster" {
-//  name = "ecs-cluster-for-income-api"
-//}
-//
-//resource "aws_ecs_service" "income-api-ecs-service" {
-//  name            = "income-api-ecs-service"
-//  cluster         = aws_ecs_cluster.income-api-ecs-cluster.id
-//  task_definition = aws_ecs_task_definition.income-api-ecs-task-definition.arn
-//  launch_type     = "FARGATE"
-//  network_configuration {
-//    subnets          = ["subnet-029aded4e4b739233", "subnet-0c522aafcb373a205"]
-//    security_groups = ["sg-00d2e14f38245dd0b"]
-//    assign_public_ip = true
-//  }
-//  desired_count = 1
-//}
-//
-//resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
-//  family                   = "ecs-task-definition-income-api"
-//  network_mode             = "awsvpc"
-//  requires_compatibilities = ["FARGATE"]
-//  memory                   = "4096"
-//  cpu                      = "512"
-//  execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
-//  container_definitions    = <<DEFINITION
-//[
-//  {
-//    "name": "income-api-container",
-//    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api-1:latest",
-//    "memory": 4096,
-//    "cpu": 512,
-//    "essential": true,
-//    "command":  ["sh","-c","rails s"],
-//    "portMappings": [
-//      {
-//        "containerPort": 3000,
-//        "hostPort": 3000
-//      }
-//    ],
-//    "logConfiguration": {
-//        "logDriver": "awslogs",
-//        "options": {
-//            "awslogs-group": "ecs-task-definition-income-api",
-//            "awslogs-region": "eu-west-2",
-//            "awslogs-stream-prefix": "income-api-logs"
-//        }
-//    },
-//    "environment": [
-//      {
-//        "name": "CUSTOMER_MANAGED_KEY",
-//        "value": "customer_key1"
-//      },
-//      {
-//        "name": "AWS_ACCESS_KEY_ID",
-//        "value": "access_key"
-//      },
-//      {
-//        "name": "AWS_SECRET_ACCESS_KEY",
-//        "value": "secret_key"
-//      },
-//      {
-//        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
-//        "value": "false"
-//      },
-//      {
-//        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_TWO",
-//        "value": "false"
-//      },
-//      {
-//        "name": "AWS_REGION",
-//        "value": "eu-west-2"
-//      },
-//      {
-//        "name": "CAN_AUTOMATE_LETTERS",
-//        "value": "true"
-//      },
-//      {
-//        "name": "ENABLE_TENANCY_SYNC",
-//        "value": "false"
-//      },
-//      {
-//        "name": "GOV_NOTIFY_API_KEY",
-//        "value": "notify-key2"
-//      },
-//      {
-//        "name": "GOV_NOTIFY_SENDER_ID",
-//        "value": "sender-id"
-//      },
-//      {
-//        "name": "HARDCODED_TENANCIES",
-//        "value": "0114084/01,029533/01,0115514/01,030793/01,064966/01,007472/01,030793/01,0102966/02,046085/01,050678/01,0100984/01,065919/01,0900845/01,091549/01,022893/01,0106280/01,0100518/02,0906592/01,032494/01,036679/01,017526/01,0113066/01,016467/01,040939/01,066228/01,0111614/01,032494/01,033405/01,024667/01,0900226/01"
-//      },
-//      {
-//        "name": "INCOME_COLLECTION_API_HOST",
-//        "value": "https://g6bw0g0ojk.execute-api.eu-west-2.amazonaws.com/staging/tenancy/api/v1"
-//      },
-//      {
-//        "name": "INCOME_COLLECTION_API_KEY",
-//        "value": "ic_key"
-//      },
-//      {
-//        "name": "PATCH_CODES_FOR_LETTER_AUTOMATION",
-//        "value": "W02, W03"
-//      },
-//      {
-//        "name": "RACK_ENV",
-//        "value": "staging"
-//      },
-//      {
-//        "name": "RAILS_ENV",
-//        "value": "staging"
-//      },
-//      {
-//        "name": "RAILS_LOG_TO_STDOUT",
-//        "value": "true"
-//      },
-//      {
-//        "name": "REDIS_URL",
-//        "value": "redis://redis-staging.mfk1c9.ng.0001.euw2.cache.amazonaws.com:6379"
-//      },
-//      {
-//        "name": "SECRET_KEY_BASE",
-//        "value": "e1595bf08376c13f4494fa5c7ef65f3d547097113ceec483ed669387a44f716b09f12bedf2021c031fefb651cc0c8b4408cd8c24aab43e16cc1e7df6d18142d3"
-//      },
-//      {
-//        "name": "SEND_LIVE_COMMUNICATIONS",
-//        "value": "false"
-//      },
-//      {
-//        "name": "SENTRY_DSN",
-//        "value": "https://157a2d5f7d7441cbad977d92b21851ef:60c753947b834e0d87b8f0928df05eac@sentry.io/1276456"
-//      },
-//      {
-//        "name": "SIDEKIQ_PASSWORD",
-//        "value": "sideq-password"
-//      },
-//      {
-//        "name": "SIDEKIQ_USERNAME",
-//        "value": "developers"
-//      },
-//      {
-//        "name": "TENANCY_API_HOST",
-//        "value": "https://g6bw0g0ojk.execute-api.eu-west-2.amazonaws.com/staging/tenancy"
-//      },
-//      {
-//        "name": "TENANCY_API_KEY",
-//        "value": "api-key"
-//      },
-//      {
-//        "name": "TEST_EMAIL_ADDRESS",
-//        "value": "soraya.clarke@hackney.gov.uk"
-//      },
-//      {
-//        "name": "TEST_PHONE_NUMBER",
-//        "value": "07976662022"
-//      },
-//      {
-//        "name": "UH_DATABASE_HOST",
-//        "value": "10.80.65.49"
-//      },
-//      {
-//        "name": "UH_DATABASE_NAME",
-//        "value": "StagedDB"
-//      },
-//      {
-//        "name": "UH_DATABASE_PASSWORD",
-//        "value": "pwd"
-//      },
-//      {
-//        "name": "UH_DATABASE_PORT",
-//        "value": "1433"
-//      },
-//      {
-//        "name": "UH_DATABASE_USERNAME",
-//        "value": "HackneyAPIIncomeCollection"
-//      }
-//    ]
-//  }
-//]
-//DEFINITION
-//}
+resource "aws_ecr_repository" "income-api" {
+  name                 = "hackney/apps/income-api"
+  image_tag_mutability = "MUTABLE"
+}
 
-resource "aws_db_subnet_group" "db_subnets" {
-  name       = "housing-finance-db-subnet-${var.environment_name}"
-  subnet_ids = ["subnet-05ce390ba88c42bfd","subnet-0140d06fb84fdb547"]
+#Elastic Container Registry (ECR) setup
+resource "aws_ecr_repository_policy" "income-api-policy" {
+  repository = aws_ecr_repository.income-api.name
+  policy     = <<EOF
+  {
+    "Version": "2008-10-17",
+    "Statement": [
+      {
+        "Sid": "adds full ecr access to the repository",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetLifecyclePolicy",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart",
+          "logs:CreateLogGroup"
+        ]
+      }
+    ]
+  }
+  EOF
+}
 
+# Elastic Container Service (ECS) setup
+resource "aws_ecs_cluster" "manage-arrears-ecs-cluster" {
+  name = "ecs-cluster-for-manage-arrears"
+}
+
+resource "aws_ecs_service" "income-api-ecs-service" {
+  name            = "income-api-ecs-service"
+  cluster         = aws_ecs_cluster.manage-arrears-ecs-cluster.id
+  task_definition = aws_ecs_task_definition.income-api-ecs-task-definition.arn
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = ["subnet-0743d86e9b362fa38","subnet-0ea0020a44b98a2ca"]
+    security_groups = ["sg-0be329a40ea5c4828"]
+    assign_public_ip = false
+  }
+  desired_count = 1
+  load_balancer {
+    target_group_arn = aws_lb_target_group.lb_tg.arn
+    container_name   = "income-api-container"
+    container_port   = 3000
+  }
+}
+
+resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
+  family                   = "ecs-task-definition-income-api"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  memory                   = "4096"
+  cpu                      = "1024"
+  execution_role_arn       = "arn:aws:iam::087586271961:role/ecsTaskExecutionRole"
+  container_definitions    = <<DEFINITION
+[
+  {
+    "name": "income-api-container",
+    "image": "087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
+    "memory": 2048,
+    "cpu": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 3000
+      }
+    ],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "ecs-task-definition-income-api",
+            "awslogs-region": "eu-west-2",
+            "awslogs-stream-prefix": "income-api-logs"
+        }
+    },
+    "environment": [
+      {
+        "name": "HOUSING_DOCS_BUCKET",
+        "value": "${data.aws_ssm_parameter.housing_finance_docs_bucket.value}"
+      },
+      {
+        "name": "CUSTOMER_MANAGED_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
+      },
+
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_secret_access_key.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_one.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_TWO",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_two.value}"
+      },
+      {
+        "name": "AWS_REGION",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_region.value}"
+      },
+      {
+        "name": "CAN_AUTOMATE_LETTERS",
+        "value": "${data.aws_ssm_parameter.housing_finance_can_automate_letters.value}"
+      },
+      {
+        "name": "ENABLE_TENANCY_SYNC",
+        "value": "${data.aws_ssm_parameter.housing_finance_enable_tenancy_sync.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_api_key.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_SENDER_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_sender_id.value}"
+      },
+      {
+        "name": "HARDCODED_TENANCIES",
+        "value": "${data.aws_ssm_parameter.housing_finance_hardcoded_tenancies.value}"
+      },
+      {
+        "name": "PATCH_CODES_FOR_LETTER_AUTOMATION",
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_letter_automation.value}"
+      },
+      {
+        "name": "RACK_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rack_env.value}"
+      },
+      {
+        "name": "RAILS_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_env.value}"
+      },
+      {
+        "name": "RAILS_LOG_TO_STDOUT",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_log_to_stdout.value}"
+      },
+      {
+        "name": "REDIS_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_redis_url.value}"
+      },
+      {
+        "name": "SECRET_KEY_BASE",
+        "value": "${data.aws_ssm_parameter.housing_finance_secret_key_base.value}"
+      },
+      {
+        "name": "SEND_LIVE_COMMUNICATIONS",
+        "value": "${data.aws_ssm_parameter.housing_finance_send_live_communications.value}"
+      },
+      {
+        "name": "SENTRY_DSN",
+        "value": "${data.aws_ssm_parameter.housing_finance_sentry_dsn.value}"
+      },
+      {
+        "name": "SIDEKIQ_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_sidekiq_password.value}"
+      },
+      {
+        "name": "SIDEKIQ_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_sidekiq_username.value}"
+      },
+      {
+        "name": "TENANCY_API_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_host.value}"
+      },
+      {
+        "name": "TENANCY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_key.value}"
+      },
+      {
+        "name": "TEST_EMAIL_ADDRESS",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_email_address.value}"
+      },
+      {
+        "name": "TEST_PHONE_NUMBER",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_phone_number.value}"
+      },
+      {
+        "name": "UH_DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_host.value}"
+      },
+      {
+        "name": "UH_DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_database.value}"
+      },
+      {
+        "name": "UH_DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_password.value}"
+      },
+      {
+        "name": "UH_DATABASE_PORT",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_port.value}"
+      },
+      {
+        "name": "UH_DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_username.value}"
+      },
+      {
+        "name": "DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_host.value}"
+      },
+      {
+        "name": "DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_username.value}"
+      },
+      {
+        "name": "DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_password.value}"
+      },
+      {
+        "name": "DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_database.value}"
+      },
+      {
+        "name": "DATABASE_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_database_url.value}"
+      }
+    ]
+  },
+  {
+    "name": "income-api-worker-container",
+    "image": "087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
+    "memory": 2048,
+    "cpu": 512,
+    "essential": true,
+    "command": ["sh","-c","sidekiq -C ./schedule.yml & sidekiq"],
+    "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "ecs-task-definition-income-api-worker",
+            "awslogs-region": "eu-west-2",
+            "awslogs-stream-prefix": "income-api-worker-logs"
+        }
+    },
+    "environment": [
+      {
+        "name": "HOUSING_DOCS_BUCKET",
+        "value": "${data.aws_ssm_parameter.housing_finance_docs_bucket.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_ONE",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_one.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_LETTER_TWO",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_letter_two.value}"
+      },
+      {
+        "name": "AUTOMATE_INCOME_COLLECTION_SMS",
+        "value": "${data.aws_ssm_parameter.housing_finance_automate_income_collection_sms.value}"
+      },
+      {
+        "name": "CUSTOMER_MANAGED_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
+      },
+      {
+        "name": "AWS_ACCESS_KEY_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
+      },
+      {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_secret_access_key.value}"
+      },
+      {
+        "name": "AWS_REGION",
+        "value": "${data.aws_ssm_parameter.housing_finance_aws_region.value}"
+      },
+      {
+        "name": "CAN_AUTOMATE_LETTERS",
+        "value": "${data.aws_ssm_parameter.housing_finance_can_automate_letters.value}"
+      },
+      {
+        "name": "ENABLE_TENANCY_SYNC",
+        "value": "${data.aws_ssm_parameter.housing_finance_enable_tenancy_sync.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_api_key.value}"
+      },
+      {
+        "name": "GOV_NOTIFY_SENDER_ID",
+        "value": "${data.aws_ssm_parameter.housing_finance_gov_notify_sender_id.value}"
+      },
+      {
+        "name": "HARDCODED_TENANCIES",
+        "value": "${data.aws_ssm_parameter.housing_finance_hardcoded_tenancies.value}"
+      },
+      {
+        "name": "PATCH_CODES_FOR_LETTER_AUTOMATION",
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_letter_automation.value}"
+      },
+      {
+        "name": "PATCH_CODES_FOR_SMS_AUTOMATION",
+        "value": "${data.aws_ssm_parameter.housing_finance_patch_codes_for_sms_automation.value}"
+      },
+      {
+        "name": "PERMITTED_PATCHES",
+        "value": "${data.aws_ssm_parameter.housing_finance_permitted_patches.value}"
+      },
+      {
+        "name": "RACK_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rack_env.value}"
+      },
+      {
+        "name": "RAILS_ENV",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_env.value}"
+      },
+      {
+        "name": "RAILS_LOG_TO_STDOUT",
+        "value": "${data.aws_ssm_parameter.housing_finance_rails_log_to_stdout.value}"
+      },
+      {
+        "name": "REDIS_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_redis_url.value}"
+      },
+      {
+        "name": "RESTRICT_PATCHES",
+        "value": "${data.aws_ssm_parameter.housing_finance_restrict_patches.value}"
+      },
+      {
+        "name": "SECRET_KEY_BASE",
+        "value": "${data.aws_ssm_parameter.housing_finance_secret_key_base.value}"
+      },
+      {
+        "name": "SEND_LIVE_COMMUNICATIONS",
+        "value": "${data.aws_ssm_parameter.housing_finance_send_live_communications.value}"
+      },
+      {
+        "name": "SENTRY_DSN",
+        "value": "${data.aws_ssm_parameter.housing_finance_sentry_dsn.value}"
+      },
+      {
+        "name": "TENANCY_API_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_host.value}"
+      },
+      {
+        "name": "TENANCY_API_KEY",
+        "value": "${data.aws_ssm_parameter.housing_finance_tenancy_api_key.value}"
+      },
+      {
+        "name": "TEST_EMAIL_ADDRESS",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_email_address.value}"
+      },
+      {
+        "name": "TEST_PHONE_NUMBER",
+        "value": "${data.aws_ssm_parameter.housing_finance_test_phone_number.value}"
+      },
+      {
+        "name": "UH_DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_host.value}"
+      },
+      {
+        "name": "UH_DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_database.value}"
+      },
+      {
+        "name": "UH_DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_password.value}"
+      },
+      {
+        "name": "UH_DATABASE_PORT",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_port.value}"
+      },
+      {
+        "name": "UH_DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_db_username.value}"
+      },
+      {
+        "name": "DATABASE_HOST",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_host.value}"
+      },
+      {
+        "name": "DATABASE_USERNAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_username.value}"
+      },
+      {
+        "name": "DATABASE_PASSWORD",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_password.value}"
+      },
+      {
+        "name": "DATABASE_NAME",
+        "value": "${data.aws_ssm_parameter.housing_finance_mysql_database.value}"
+      },
+      {
+        "name": "DATABASE_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_database_url.value}"
+      }
+    ]
+  }
+]
+DEFINITION
+}
+
+# Network Load Balancer (NLB) setup
+resource "aws_lb" "lb" {
+  name               = "lb-income-api"
+  internal           = true
+  load_balancer_type = "network"
+  subnets            = ["subnet-0743d86e9b362fa38","subnet-0ea0020a44b98a2ca"]
+  enable_deletion_protection = false
+  tags = {
+    Environment = "staging"
+  }
+}
+
+resource "aws_lb_target_group" "lb_tg" {
+  depends_on  = [
+    aws_lb.lb
+  ]
+  name_prefix = "ma-tg-"
+  port        = 3000
+  protocol    = "TCP"
+  vpc_id      = "vpc-064521a7a4109ba31"
+  target_type = "ip"
+  stickiness {
+    enabled = false
+    type = "lb_cookie"
+  }
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_db_instance" "housing-mysql-db" {
-  identifier                  = "housing-finance-db-${var.environment_name}"
-  engine                      = "mysql"
-  engine_version              = "8.0.20"
-  instance_class              = "db.t2.micro" //this should be a more production appropriate instance in production
-  allocated_storage           = 10
-  storage_type                = "gp2" //ssd
-  port                        = 3306
-  backup_window               = "00:01-00:31"
-  username                    = data.aws_ssm_parameter.housing_finance_mysql_username.value
-  password                    = data.aws_ssm_parameter.housing_finance_mysql_password.value
-  vpc_security_group_ids      = ["sg-00d2e14f38245dd0b"]
-  db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
-  name                        = data.aws_ssm_parameter.housing_finance_mysql_database.value
-  monitoring_interval         = 0 //this is for enhanced Monitoring there will already be some basic monitoring available
-  backup_retention_period     = 30
-  storage_encrypted           = false  //this should be true for production
-  deletion_protection         = false
-  multi_az                    = false //this should be true for production
-  auto_minor_version_upgrade  = true
-  allow_major_version_upgrade = false
-
-  apply_immediately   = false
-  skip_final_snapshot = true
-  publicly_accessible = false
-
-  tags = {
-    Name              = "housing-finance-db-${var.environment_name}"
-    Environment       = var.environment_name
-    terraform-managed = true
-    project_name      = "Housing Finance"
+# Redirect all traffic from the NLB to the target group
+resource "aws_lb_listener" "lb_listener" {
+  load_balancer_arn = aws_lb.lb.id
+  port              = 3000
+  protocol    = "TCP"
+  default_action {
+    target_group_arn = aws_lb_target_group.lb_tg.id
+    type             = "forward"
   }
 }
 
+# API Gateway setup
+# VPC Link
+resource "aws_api_gateway_vpc_link" "this" {
+  name = "vpc-link-income-api"
+  target_arns = [aws_lb.lb.arn]
+}
+# API Gateway, Private Integration with VPC Link
+# and deployment of a single resource that will take ANY
+# HTTP method and proxy the request to the NLB
+resource "aws_api_gateway_rest_api" "main" {
+  name = "staging-income-api"
+}
+resource "aws_api_gateway_resource" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "{proxy+}"
+}
+resource "aws_api_gateway_method" "main" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.main.id
+  http_method   = "ANY"
+  authorization = "NONE"
+  api_key_required = true
+  request_parameters = {
+    "method.request.path.proxy" = true
+    "method.request.header.Authorization" = false
+  }
+}
+resource "aws_api_gateway_integration" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.main.id
+  http_method = aws_api_gateway_method.main.http_method
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }
+  type                    = "HTTP_PROXY"
+  uri                     = "http://${aws_lb.lb.dns_name}:3000/{proxy}"
+  integration_http_method = "ANY"
+  connection_type = "VPC_LINK"
+  connection_id   = aws_api_gateway_vpc_link.this.id
+}
+resource "aws_api_gateway_deployment" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  stage_name = "staging"
+  depends_on = [aws_api_gateway_integration.main]
+  variables = {
+    # just to trigger redeploy on resource changes
+    resources = join(", ", [aws_api_gateway_resource.main.id])
+    # note: redeployment might be required with other gateway changes.
+    # when necessary run `terraform taint <this resource's address>`
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_usage_plan" "main" {
+  name = "income_api_staging_usage_plan"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.main.id
+    stage  = aws_api_gateway_deployment.main.stage_name
+  }
+}
+
+resource "aws_api_gateway_api_key" "main" {
+  name = "income_api_staging_key"
+}
+
+resource "aws_api_gateway_usage_plan_key" "main" {
+  key_id        = aws_api_gateway_api_key.main.id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.main.id
+}
