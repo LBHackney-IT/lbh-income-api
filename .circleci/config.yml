@@ -182,11 +182,11 @@ jobs:
       - run:
           name: Tag new image for production release
           command: |
-            docker tag hackney/apps/income-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
+            docker tag hackney/apps/income-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
       - run:
           name: Release new image to ECR
           command: |
-            docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
+            docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
 
   terraform-init-and-apply-to-development:
     executor: docker-terraform
