@@ -1,4 +1,4 @@
-FROM ruby:2.5.3
+FROM ruby:2.7.1
 
 ARG RAILS_ENV=development
 WORKDIR /app
@@ -14,6 +14,7 @@ RUN wget -q https://www.freetds.org/files/stable/freetds-1.00.27.tar.gz && \
   make install
 
 ENV DOCKERIZE_VERSION=v0.3.0
+
 RUN wget --quiet https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
  tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
  rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -32,4 +33,4 @@ ENTRYPOINT ["entrypoint.sh"]
 COPY . /app
 EXPOSE 3000
 
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]

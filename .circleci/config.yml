@@ -1,12 +1,73 @@
-version: 2
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+  aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+
+executors:
+  docker-python:
+    docker:
+      - image: circleci/python:3.8
+  docker-terraform:
+    docker:
+      - image: "hashicorp/terraform:light"
+
+references:
+  workspace_root: &workspace_root "~"
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+commands:
+  assume-role-and-persist-workspace:
+    description: "Assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: "LBH_Circle_CI_Deployment_Role"
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+      sha1:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -var sha1=<<parameters.sha1>> -auto-approve
 jobs:
   check:
-    machine: true
+    machine:
+      image: circleci/classic:201808-01
     steps:
       - checkout
       - run:
+          name: Set Python Version
+          command: pyenv global 3.7.0
+      - run:
           name: Install AWS CLI
-          command: pip install awscli --upgrade --user
+          command: pip3 install awscli --upgrade --user
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -21,24 +82,65 @@ jobs:
           command: make lint
       - store_artifacts:
           path: coverage
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
 
-  staging_release: &staging_release
-    machine: true
+  development_release: &development_release
+    machine:
+      image: circleci/classic:201808-01
     steps:
       - checkout
       - run:
+          name: Set Python Version
+          command: pyenv global 3.7.0
+      - run:
           name: Install AWS CLI
-          command: pip install awscli --upgrade --user
+          command: pip3 install awscli --upgrade --user
       - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
+          name: Login to ECR
+          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
-          name: Install ecs-deploy
+          name: Build new application Docker image
+          command: docker build --build-arg RAILS_ENV=development --tag hackney/apps/income-api .
+      - run:
+          name: Tag new image for development release
           command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker tag hackney/apps/income-api:latest 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+      - run:
+          name: Release new image to ECR
+          command: |
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker push 364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:development
+  development_release_manual:
+    <<: *development_release
+
+  staging_release: &staging_release
+    machine:
+      image: circleci/classic:201808-01
+    steps:
+      - checkout
+      - run:
+          name: Set Python Version
+          command: pyenv global 3.7.0
+      - run:
+          name: Install AWS CLI
+          command: pip3 install awscli --upgrade --user
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -48,39 +150,29 @@ jobs:
       - run:
           name: Tag new image for staging release
           command: |
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:latest
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:staging
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:staging
       - run:
           name: Release new image to ECR
           command: |
-            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker push $ECR_IMAGE_URL:latest
-            docker push $ECR_IMAGE_URL:staging
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
-          no_output_timeout: 20m
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:staging
   staging_release_manual:
     <<: *staging_release
 
   production_release:
-    machine: true
+    machine:
+      image: circleci/classic:201808-01
     steps:
       - checkout
       - run:
+          name: Set Python Version
+          command: pyenv global 3.7.0
+      - run:
           name: Install AWS CLI
-          command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
+          command: pip3 install awscli --upgrade --user
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -90,44 +182,103 @@ jobs:
       - run:
           name: Tag new image for production release
           command: |
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:production
+            docker tag hackney/apps/income-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
       - run:
           name: Release new image to ECR
           command: |
-            docker push $ECR_IMAGE_URL:production
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
-          no_output_timeout: 50m
+            docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
+
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+          sha1: $CIRCLE_SHA1
 
 workflows:
   version: 2
   continuous_delivery:
     jobs:
-      - check
-      - staging_release:
+#      - check
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
+#          requires:
+#            - check
+          filters:
+            branches:
+              only: development
+      - development_release:
+          context: api-assume-role-housing-development-context
           requires:
-            - check
+            - assume-role-development
+          filters:
+            branches:
+              only: development
+      - terraform-init-and-apply-to-development:
+          context: api-assume-role-housing-development-context
+          requires:
+            - development_release
+          filters:
+            branches:
+              only: development
+      - assume-role-staging:
+          context: api-assume-role-housing-staging-context
+#          requires:
+#            - check
           filters:
             branches:
               only: master
-      - permit_manual_staging_release:
-          type: approval
+      - staging_release:
+          context: api-assume-role-housing-staging-context
           requires:
-            - check
+            - assume-role-staging
           filters:
             branches:
-              ignore: master
-      - staging_release_manual:
+              only: master
+      - terraform-init-and-apply-to-staging:
+          context: api-assume-role-housing-staging-context
           requires:
-            - permit_manual_staging_release
+            - staging_release
           filters:
             branches:
-              ignore: master
+              only: master
       - permit_production_release:
           type: approval
           requires:
-            - staging_release
-      - production_release:
+            - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
           requires:
             - permit_production_release
+          filters:
+            branches:
+              only: master
+      - production_release:
+          context: api-assume-role-housing-production-context
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - production_release
+          filters:
+            branches:
+              only: master

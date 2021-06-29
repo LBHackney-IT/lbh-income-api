@@ -76,7 +76,7 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   end
 
   def when_the_tenancy_balance_in_uh_is(balance:)
-    Hackney::UniversalHousing::Client.connection[:tenagree]
+    Hackney::UniversalHousing::Client.connection[:MATenancyAgreement]
                                      .where(tag_ref: tenancy_ref)
                                      .update(cur_bal: balance)
   end
@@ -93,8 +93,8 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   end
 
   def then_there_is_a_paused_action_diary_entry
-    expect(Hackney::UniversalHousing::Client.connection[:araction].count).to eq(1)
-    action = Hackney::UniversalHousing::Client.connection[:araction].first
+    expect(Hackney::UniversalHousing::Client.connection[:UHAraction].count).to eq(1)
+    action = Hackney::UniversalHousing::Client.connection[:UHAraction].first
     expect(action[:action_code]).to eq(Hackney::Tenancy::ActionCodes::PAUSED_MISSING_DATA)
     errors = "'forename: missing mandatory field; surname: missing mandatory field'"
     expect(action[:action_comment]).to match(

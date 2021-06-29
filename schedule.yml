@@ -1,9 +1,9 @@
 # WARN: schedule.yml must be in the root and can only contain schedules
 # sidekiq -C ./schedule.yml -r ./lib/schedules.rb
 :schedule:
-  hello_healthcheck:
-    every: 55s
-    class: HelloHealthcheck
+#  hello_healthcheck:
+#    every: 55s
+#    class: HelloHealthcheck
 
   # We need to run the sync after the Data Warehouse is refreshed. That task starts at 9pm and takes
   # around 9 hours to complete. However, the first couple of hours is where the data we care about

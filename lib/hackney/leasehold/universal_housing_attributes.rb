@@ -56,7 +56,7 @@ module Hackney
       def self.build_last_letter_sql_query(column:)
         <<-SQL
           SELECT TOP 1 #{column}
-          FROM araction WITH (NOLOCK)
+          FROM UHAraction WITH (NOLOCK)
           WHERE tag_ref = @TenancyRef
           AND (
             action_code IN (SELECT letter_codes FROM @LetterCodes)
@@ -84,9 +84,9 @@ module Hackney
             SELECT TOP 1
               lookup.lu_desc
             FROM
-              ddagacc
+              UHDdagacc ddagacc
               INNER JOIN
-                ddagree
+                UHDdagree ddagree
                 ON ddagacc.ddagree_ref = ddagree.ddagree_ref
               LEFT JOIN
                 lookup
@@ -107,10 +107,10 @@ module Hackney
             @DirectDebitStatus as direct_debit_status,
             @LastLetterActionCode as latest_letter,
             @LastLetterDate as latest_letter_date
-          FROM [dbo].[tenagree] WITH (NOLOCK)
-            LEFT OUTER JOIN [dbo].[tenure] On [dbo].[tenure].ten_type = [dbo].[tenagree].tenure
-            LEFT OUTER JOIN [dbo].[property] WITH (NOLOCK) ON [dbo].[property].prop_ref = [dbo].[tenagree].prop_ref
-            LEFT OUTER JOIN [dbo].[househ] WITH (NOLOCK) ON [dbo].[househ].house_ref = [dbo].[tenagree].house_ref
+          FROM [dbo].[MATenancyAgreement] tenagree WITH (NOLOCK)
+            LEFT OUTER JOIN [dbo].[UHTenure] tenure On tenure.ten_type = tenagree.tenure
+            LEFT OUTER JOIN [dbo].[MAProperty] property WITH (NOLOCK) ON property.prop_ref = tenagree.prop_ref
+            LEFT OUTER JOIN [dbo].[UHHousehold] househ WITH (NOLOCK) ON househ.house_ref = tenagree.house_ref
           WHERE tag_ref = @TenancyRef
         SQL
       end

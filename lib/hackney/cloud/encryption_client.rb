@@ -8,11 +8,7 @@ module Hackney
       end
 
       def create
-        Aws::S3::Encryption::Client.new(
-          kms_key_id: kms_key_id,
-          kms_client: kms_client,
-          client: client
-        )
+        Aws::S3::Client.new
       end
 
       private

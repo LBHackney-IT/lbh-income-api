@@ -101,7 +101,7 @@ describe 'syncing triggers automatic sending of letters', type: :feature do
   end
 
   def when_the_tenancy_balance_in_uh_is(balance:)
-    Hackney::UniversalHousing::Client.connection[:tenagree]
+    Hackney::UniversalHousing::Client.connection[:MATenancyAgreement]
                                      .where(tag_ref: tenancy_ref)
                                      .update(cur_bal: balance)
   end

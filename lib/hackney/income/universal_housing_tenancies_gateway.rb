@@ -11,12 +11,12 @@ module Hackney
           database.extension :identifier_mangling
           database.identifier_input_method = database.identifier_output_method = nil
 
-          query = database[:tenagree]
+          query = database[:MATenancyAgreement]
 
           if @restrict_patches
-            query = query.left_join(:property, prop_ref: :prop_ref)
-                         .where(Sequel[:property][:arr_patch] => @permitted_patches)
-                         .or(Sequel[:property][:arr_patch] => nil)
+            query = query.left_join(:MAProperty, prop_ref: :prop_ref)
+                         .where(Sequel[:MAProperty][:arr_patch] => @permitted_patches)
+                         .or(Sequel[:MAProperty][:arr_patch] => nil)
           end
 
           query

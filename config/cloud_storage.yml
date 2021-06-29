@@ -3,13 +3,13 @@ test:
   customer_managed_key: '-'
 
 development:
-  bucket_docs: hackney-income-document-development
+  bucket_docs: <%= ENV['HOUSING_DOCS_BUCKET'] %>
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 production:
-  bucket_docs: hackney-income-document-production
+  bucket_docs: <%= ENV['HOUSING_DOCS_BUCKET'] %>
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
 staging:
-  bucket_docs: hackney-income-document-staging
+  bucket_docs: <%= ENV['HOUSING_DOCS_BUCKET'] %>
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>

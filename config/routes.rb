@@ -9,7 +9,6 @@ Rails.application.routes.draw do
   scope '/api/v1' do
     get '/cases', to: 'cases#index'
     get '/sync-cases', to: 'cases#sync'
-
     post '/users/find-or-create', to: 'users#create'
     patch '/tenancies/:tenancy_ref', to: 'tenancies#update'
     get '/tenancies/:tenancy_ref/pause', to: 'tenancies#pause'
@@ -18,26 +17,20 @@ Rails.application.routes.draw do
     post '/messages/send_sms', to: 'messages#send_sms'
     post '/messages/send_email', to: 'messages#send_email'
     get '/messages/get_templates', to: 'messages#get_templates'
-
     get '/documents/:id/download/', to: 'documents#download'
     get '/documents/', to: 'documents#index'
     patch '/documents/:id/review_failure', to: 'documents#review_failure'
-
     post '/messages/letters/send', to: 'letters#send_letter'
     post '/messages/letters', to: 'letters#create'
     get '/messages/letters/get_templates', to: 'letters#get_templates'
-
     get '/agreements/:tenancy_ref', to: 'agreements#index'
     post '/agreement/:tenancy_ref', to: 'agreements#create'
     post '/agreements/:agreement_id/cancel', to: 'agreements#cancel'
-
     get '/court_cases/:tenancy_ref', to: 'court_cases#index'
     post '/court_case/:tenancy_ref', to: 'court_cases#create'
     patch '/court_case/:id/update', to: 'court_cases#update'
-
     post '/eviction/:tenancy_ref', to: 'evictions#create'
     get '/evictions/:tenancy_ref', to: 'evictions#index'
-
     get 'actions', to: 'actions#index'
   end
 end
