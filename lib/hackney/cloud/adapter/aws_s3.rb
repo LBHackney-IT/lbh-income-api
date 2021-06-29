@@ -18,6 +18,9 @@ module Hackney
         end
 
         def download(bucket_name:, filename:)
+          puts '********************'
+          puts bucket_name
+          puts client.inspect
           response = client.get_object(bucket: bucket_name, key: filename)
           convert_response_to_tempfile(filename: filename, response: response)
         end

@@ -150,15 +150,15 @@ jobs:
       - run:
           name: Tag new image for staging release
           command: |
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:latest
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:staging
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker tag hackney/apps/income-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:staging
       - run:
           name: Release new image to ECR
           command: |
-            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker push $ECR_IMAGE_URL:latest
-            docker push $ECR_IMAGE_URL:staging
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:$CIRCLE_SHA1
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:latest
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:staging
   staging_release_manual:
     <<: *staging_release
 
@@ -182,11 +182,11 @@ jobs:
       - run:
           name: Tag new image for production release
           command: |
-            docker tag hackney/apps/income-api:latest $ECR_IMAGE_URL:production
+            docker tag hackney/apps/income-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
       - run:
           name: Release new image to ECR
           command: |
-            docker push $ECR_IMAGE_URL:production
+            docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:production
 
   terraform-init-and-apply-to-development:
     executor: docker-terraform
@@ -216,6 +216,9 @@ workflows:
           context: api-assume-role-housing-development-context
 #          requires:
 #            - check
+          filters:
+            branches:
+              only: development
       - development_release:
           context: api-assume-role-housing-development-context
           requires:
