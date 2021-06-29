@@ -1,6 +1,5 @@
 provider "aws" {
   region  = "eu-west-2"
-  version = "~> 2.0"
 }
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
@@ -215,7 +214,7 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
   {
     "name": "income-api-container",
     "image": "282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/income-api:${var.sha1}",
-    "memory": 2048,
+    "memory": 1024,
     "cpu": 512,
     "essential": true,
     "portMappings": [
@@ -240,7 +239,6 @@ resource "aws_ecs_task_definition" "income-api-ecs-task-definition" {
         "name": "CUSTOMER_MANAGED_KEY",
         "value": "${data.aws_ssm_parameter.housing_finance_customer_managed_key.value}"
       },
-
       {
         "name": "AWS_ACCESS_KEY_ID",
         "value": "${data.aws_ssm_parameter.housing_finance_aws_access_key_id.value}"
