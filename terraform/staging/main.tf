@@ -618,7 +618,6 @@ resource "aws_api_gateway_method" "main" {
   api_key_required = true
   request_parameters = {
     "method.request.path.proxy" = true
-    "method.request.header.Authorization" = false
   }
 }
 resource "aws_api_gateway_integration" "main" {

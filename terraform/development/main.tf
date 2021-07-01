@@ -1,6 +1,5 @@
 provider "aws" {
   region  = "eu-west-2"
-  version = "~> 2.0"
 }
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
@@ -662,7 +661,6 @@ resource "aws_api_gateway_method" "main" {
   api_key_required = true
   request_parameters = {
     "method.request.path.proxy" = true
-    "method.request.header.Authorization" = false
   }
 }
 resource "aws_api_gateway_integration" "main" {
