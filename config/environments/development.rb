@@ -40,5 +40,8 @@ Rails.application.configure do
 
   # Configure the Cloud storage service
   encryption_client = Hackney::Cloud::EncryptionClient.new(config_for('cloud_storage')['customer_managed_key']).create
+  download_client = Hackney::Cloud::DownloadEncryptionClient.new(config_for('cloud_storage')['download_key']).create
+
   config.cloud_adapter = Hackney::Cloud::Adapter::AwsS3.new(encryption_client)
+  config.download_adapter = Hackney::Cloud::Adapter::AwsS3.new(download_client)
 end

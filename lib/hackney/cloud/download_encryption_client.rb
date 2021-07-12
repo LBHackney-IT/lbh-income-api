@@ -1,6 +1,6 @@
 module Hackney
   module Cloud
-    class EncryptionClient
+    class DownloadEncryptionClient
       attr_writer :kms_key_id
 
       def initialize(customer_managed_key)
@@ -20,11 +20,17 @@ module Hackney
       attr_reader :kms_key_id
 
       def kms_client
-        Aws::KMS::Client.new
+        Aws::KMS::Client.new(
+          access_key_id: ENV['OLD_ACCOUNT_ACCESS_KEY_ID'],
+          secret_access_key: ENV['OLD_ACCOUNT_SECRET_ACCESS_KEY']
+        )
       end
 
       def client
-        Aws::S3::Client.new
+        Aws::S3::Client.new(
+          access_key_id: ENV['OLD_ACCOUNT_ACCESS_KEY_ID'],
+          secret_access_key: ENV['OLD_ACCOUNT_SECRET_ACCESS_KEY']
+        )
       end
 
     end

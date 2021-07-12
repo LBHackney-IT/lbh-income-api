@@ -3,6 +3,8 @@ test:
   customer_managed_key: '-'
 
 development:
+  download_bucket: <%= ENV['DOWNLOAD_BUCKET'] %>
+  download_key: <%= ENV['DOWNLOAD_KEY'] %>
   bucket_docs: <%= ENV['HOUSING_DOCS_BUCKET'] %>
   customer_managed_key: <%= ENV['CUSTOMER_MANAGED_KEY'] %>
 
